@@ -1,0 +1,1071 @@
+[
+  {
+    "id": "dsa-big-o-basics",
+    "level": "intern",
+    "topic": "Big-O",
+    "q": {
+      "vi": "Big-O là gì? Hãy xếp các độ phức tạp thường gặp từ nhanh đến chậm và cho ví dụ cho từng loại.",
+      "en": "What is Big-O? Rank the common complexities from fastest to slowest and give an example of each."
+    },
+    "a": {
+      "vi": "Big-O mô tả tốc độ tăng của thời gian (hoặc bộ nhớ) khi kích thước input n tăng, bỏ qua hằng số và các số hạng nhỏ. Thường ta nói về trường hợp xấu nhất.\n\nThứ tự thường gặp:\n- O(1): truy cập mảng theo index, get/set trong hash map (trung bình)\n- O(log n): binary search, thao tác trên heap\n- O(n): duyệt mảng một lần\n- O(n log n): merge sort, heap sort\n- O(n²): hai vòng lặp lồng nhau\n- O(2ⁿ), O(n!): sinh mọi tập con, mọi hoán vị\n\nCách phân tích nhanh: vòng lặp lồng nhau thì nhân, các bước nối tiếp thì cộng rồi giữ số hạng lớn nhất. Đừng quên space complexity, kể cả call stack của đệ quy.\n\nAmortized: push vào mảng động thỉnh thoảng phải copy O(n) khi tăng gấp đôi dung lượng, nhưng chia đều cho n lần push thì mỗi lần vẫn là O(1).",
+      "en": "Big-O describes how running time (or memory) grows as the input size n grows, ignoring constants and lower-order terms. We usually talk about the worst case.\n\nCommon classes:\n- O(1): array access by index, hash map get/set (average)\n- O(log n): binary search, heap operations\n- O(n): a single pass over an array\n- O(n log n): merge sort, heap sort\n- O(n²): two nested loops\n- O(2ⁿ), O(n!): generating all subsets, all permutations\n\nQuick analysis: nested loops multiply, sequential steps add, then keep the dominant term. Do not forget space complexity, including the recursion call stack.\n\nAmortized: pushing to a dynamic array occasionally costs O(n) to copy when capacity doubles, but spread over n pushes each push is still O(1)."
+    },
+    "tip": {
+      "vi": "Luôn nói cả time lẫn space complexity và nêu rõ đó là trung bình, xấu nhất hay amortized.",
+      "en": "Always state both time and space complexity and say whether it is average, worst case or amortized."
+    },
+    "followUps": [
+      {
+        "vi": "Amortized O(1) khác average O(1) thế nào?",
+        "en": "How is amortized O(1) different from average O(1)?"
+      },
+      {
+        "vi": "Nếu n ≤ 10⁵ thì thuật toán khoảng độ phức tạp nào là chấp nhận được?",
+        "en": "If n ≤ 10⁵, roughly which complexity is acceptable?"
+      }
+    ],
+    "source": "https://www.bigocheatsheet.com/"
+  },
+  {
+    "id": "dsa-two-sum",
+    "level": "intern",
+    "topic": "Hash Map",
+    "q": {
+      "vi": "Two Sum: cho mảng số nguyên và target, tìm 2 chỉ số có tổng bằng target. Ví dụ [2, 7, 11, 15], target = 9 → [0, 1]. Độ phức tạp tốt nhất?",
+      "en": "Two Sum: given an integer array and a target, find two indices whose values add up to target. Example: [2, 7, 11, 15], target = 9 → [0, 1]. What is the best complexity?"
+    },
+    "a": {
+      "vi": "Cách ngây thơ: thử mọi cặp bằng 2 vòng lặp, O(n²) thời gian, O(1) bộ nhớ.\n\nCách tốt: duyệt 1 lần, dùng hash map lưu giá trị → chỉ số. Với mỗi phần tử x, kiểm tra target − x đã có trong map chưa; có thì trả về, chưa thì thêm x vào map. Thời gian O(n), bộ nhớ O(n). Kiểm tra trước rồi mới thêm giúp tránh dùng một phần tử hai lần.\n\nNếu mảng đã sắp xếp: dùng two pointers từ hai đầu, O(n) thời gian và O(1) bộ nhớ.\n\nEdge case: mảng ít hơn 2 phần tử, giá trị trùng nhau (ví dụ [3, 3], target 6), không có đáp án.\n\nKhi phỏng vấn: nói cách ngây thơ trước, rồi tối ưu, hỏi lại về trùng lặp và trường hợp không có đáp án.",
+      "en": "Naive: try every pair with two nested loops, O(n²) time, O(1) space.\n\nBetter: one pass with a hash map of value → index. For each x, check whether target − x is already in the map; if so return it, otherwise add x. O(n) time, O(n) space. Checking before inserting prevents using the same element twice.\n\nIf the array is sorted: two pointers from both ends, O(n) time and O(1) space.\n\nEdge cases: fewer than 2 elements, duplicate values (e.g. [3, 3], target 6), no answer.\n\nIn the interview: state the naive approach first, then optimize; ask about duplicates and the no-answer case."
+    },
+    "code": "function twoSum(nums: number[], target: number): [number, number] | null {\n  const seen = new Map<number, number>();\n  for (let i = 0; i < nums.length; i++) {\n    const j = seen.get(target - nums[i]);\n    if (j !== undefined) return [j, i];\n    seen.set(nums[i], i);\n  }\n  return null;\n}",
+    "tip": {
+      "vi": "Nói rõ trade-off: đổi O(n) bộ nhớ để giảm thời gian từ O(n²) xuống O(n).",
+      "en": "Name the trade-off explicitly: spend O(n) memory to cut time from O(n²) to O(n)."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu cần trả về mọi cặp khác nhau thì sao?",
+        "en": "What if you must return all distinct pairs?"
+      },
+      {
+        "vi": "Nếu dữ liệu quá lớn không vừa bộ nhớ thì làm thế nào?",
+        "en": "What if the data is too large to fit in memory?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/two-sum/"
+  },
+  {
+    "id": "dsa-group-anagrams",
+    "level": "junior",
+    "topic": "Hash Map",
+    "q": {
+      "vi": "Nhóm các chuỗi là anagram của nhau. Ví dụ [\"eat\", \"tea\", \"tan\", \"ate\", \"nat\", \"bat\"] → [[\"eat\", \"tea\", \"ate\"], [\"tan\", \"nat\"], [\"bat\"]].",
+      "en": "Group strings that are anagrams of each other. Example: [\"eat\", \"tea\", \"tan\", \"ate\", \"nat\", \"bat\"] → [[\"eat\", \"tea\", \"ate\"], [\"tan\", \"nat\"], [\"bat\"]]."
+    },
+    "a": {
+      "vi": "Ý tưởng chính: hai chuỗi là anagram khi chúng có cùng \"chữ ký\". Ta cần một key giống nhau cho mọi anagram, rồi gom nhóm bằng hash map key → danh sách chuỗi.\n\nCách 1: key là chuỗi đã sắp xếp ký tự (\"eat\" → \"aet\"). Với n chuỗi dài tối đa k: O(n · k log k).\n\nCách 2: nếu chỉ có chữ thường a-z, key là mảng đếm 26 ký tự nối thành chuỗi, ví dụ \"1#0#0#...\". Thời gian O(n · k), không cần sort.\n\nBrute force so sánh từng cặp sẽ là O(n² · k), nên nên nhắc qua rồi bỏ.\n\nEdge case: chuỗi rỗng (cũng là một nhóm), ký tự Unicode (cách đếm 26 chữ cái không còn đúng, cách sort vẫn ổn), thứ tự output thường không quan trọng.",
+      "en": "Key idea: two strings are anagrams when they share the same \"signature\". Build a key that is identical for all anagrams, then group with a hash map key → list of strings.\n\nOption 1: the key is the string with its characters sorted (\"eat\" → \"aet\"). For n strings of length up to k: O(n · k log k).\n\nOption 2: if the input is only lowercase a-z, the key is a 26-slot count array joined into a string, e.g. \"1#0#0#...\". O(n · k) time, no sorting.\n\nBrute force comparing every pair is O(n² · k), so mention it and move on.\n\nEdge cases: empty strings (they form a group too), Unicode characters (the 26-letter count breaks, sorting still works), output order usually does not matter."
+    },
+    "code": "function groupAnagrams(strs: string[]): string[][] {\n  const groups = new Map<string, string[]>();\n  for (const s of strs) {\n    const key = [...s].sort().join(\"\");\n    const group = groups.get(key);\n    if (group) group.push(s);\n    else groups.set(key, [s]);\n  }\n  return [...groups.values()];\n}",
+    "tip": {
+      "vi": "Hỏi về bảng ký tự trước khi chọn key: chỉ a-z thì dùng mảng đếm, còn lại thì sort.",
+      "en": "Ask about the character set before choosing the key: counts for a-z only, sorting otherwise."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao kiểm tra nhanh hai chuỗi có phải anagram không?",
+        "en": "How do you quickly check whether two strings are anagrams?"
+      },
+      {
+        "vi": "Nếu danh sách chuỗi đến dạng stream thì sao?",
+        "en": "What if the strings arrive as a stream?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/group-anagrams/"
+  },
+  {
+    "id": "dsa-two-pointers-3sum",
+    "level": "mid",
+    "topic": "Two Pointers",
+    "q": {
+      "vi": "3Sum: tìm mọi bộ ba không trùng lặp trong mảng có tổng bằng 0. Ví dụ [-1, 0, 1, 2, -1, -4] → [[-1, -1, 2], [-1, 0, 1]].",
+      "en": "3Sum: find all unique triplets in an array that sum to 0. Example: [-1, 0, 1, 2, -1, -4] → [[-1, -1, 2], [-1, 0, 1]]."
+    },
+    "a": {
+      "vi": "Brute force: 3 vòng lặp O(n³), rồi phải dùng set để loại bộ trùng.\n\nTối ưu: sắp xếp mảng, cố định phần tử a[i], rồi bài toán còn lại là Two Sum trên đoạn đã sắp xếp phía sau, giải bằng two pointers:\n- l = i + 1, r = cuối mảng\n- tổng < 0 thì tăng l, tổng > 0 thì giảm r, bằng 0 thì ghi nhận rồi dịch cả hai\n\nLoại trùng: bỏ qua i nếu a[i] bằng a[i - 1]; sau khi tìm được một bộ, dịch l qua các giá trị trùng. Có thể dừng sớm khi a[i] > 0 vì các số sau đều dương.\n\nĐộ phức tạp: O(n²) thời gian (sort O(n log n) không đáng kể), O(1) bộ nhớ phụ ngoài output và bộ nhớ cho sort.\n\nEdge case: mảng ít hơn 3 phần tử, toàn số 0, nhiều giá trị trùng.",
+      "en": "Brute force: three loops, O(n³), plus a set to drop duplicate triplets.\n\nOptimized: sort the array, fix a[i], and the rest becomes Two Sum on the sorted suffix, solved with two pointers:\n- l = i + 1, r = last index\n- sum < 0 moves l right, sum > 0 moves r left, sum = 0 records the triplet and moves both\n\nDeduplication: skip i when a[i] equals a[i - 1]; after a match, move l past equal values. You can stop early once a[i] > 0 because everything after it is positive.\n\nComplexity: O(n²) time (the O(n log n) sort is dominated), O(1) extra space besides the output and the sort.\n\nEdge cases: fewer than 3 elements, all zeros, many duplicates."
+    },
+    "code": "function threeSum(nums: number[]): number[][] {\n  const a = [...nums].sort((x, y) => x - y);\n  const res: number[][] = [];\n  for (let i = 0; i < a.length - 2; i++) {\n    if (a[i] > 0) break;\n    if (i > 0 && a[i] === a[i - 1]) continue;\n    let l = i + 1;\n    let r = a.length - 1;\n    while (l < r) {\n      const sum = a[i] + a[l] + a[r];\n      if (sum < 0) l++;\n      else if (sum > 0) r--;\n      else {\n        res.push([a[i], a[l], a[r]]);\n        l++;\n        r--;\n        while (l < r && a[l] === a[l - 1]) l++;\n      }\n    }\n  }\n  return res;\n}",
+    "tip": {
+      "vi": "Giải thích vì sao sắp xếp giúp vừa dùng được two pointers vừa loại trùng dễ dàng.",
+      "en": "Explain why sorting enables both two pointers and easy deduplication."
+    },
+    "followUps": [
+      {
+        "vi": "Mở rộng thành 4Sum hoặc kSum thế nào?",
+        "en": "How do you generalize to 4Sum or kSum?"
+      },
+      {
+        "vi": "Nếu không được sắp xếp mảng thì làm sao?",
+        "en": "What if you are not allowed to sort the array?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/3sum/"
+  },
+  {
+    "id": "dsa-sliding-window-longest-substring",
+    "level": "junior",
+    "topic": "Sliding Window",
+    "q": {
+      "vi": "Tìm độ dài chuỗi con dài nhất không có ký tự lặp lại. Ví dụ \"abcabcbb\" → 3 (\"abc\"), \"bbbbb\" → 1.",
+      "en": "Find the length of the longest substring without repeating characters. Example: \"abcabcbb\" → 3 (\"abc\"), \"bbbbb\" → 1."
+    },
+    "a": {
+      "vi": "Brute force: xét mọi chuỗi con và kiểm tra trùng, O(n²) đến O(n³).\n\nSliding window: giữ một cửa sổ [start, i] luôn không có ký tự trùng. Mở rộng bằng cách tăng i; khi s[i] đã xuất hiện bên trong cửa sổ thì thu hẹp bằng cách nhảy start tới ngay sau vị trí lần cuối của s[i].\n\nDùng hash map lưu vị trí xuất hiện gần nhất của mỗi ký tự để start nhảy thẳng, không phải dịch từng bước. Chú ý điều kiện prev >= start: vị trí cũ nằm ngoài cửa sổ thì không tính.\n\nMỗi ký tự được xử lý một lần: O(n) thời gian, O(min(n, kích thước bảng chữ)) bộ nhớ.\n\nEdge case: chuỗi rỗng → 0, mọi ký tự giống nhau, toàn ký tự khác nhau.",
+      "en": "Brute force: check every substring for duplicates, O(n²) to O(n³).\n\nSliding window: keep a window [start, i] that never contains a duplicate. Grow it by advancing i; when s[i] already appears inside the window, shrink it by jumping start to just after the last position of s[i].\n\nA hash map of each character's last index lets start jump directly instead of moving one step at a time. Note the prev >= start check: an old position outside the window does not count.\n\nEach character is processed once: O(n) time, O(min(n, alphabet size)) space.\n\nEdge cases: empty string → 0, all characters the same, all characters distinct."
+    },
+    "code": "function lengthOfLongestSubstring(s: string): number {\n  const lastSeen = new Map<string, number>();\n  let start = 0;\n  let best = 0;\n  for (let i = 0; i < s.length; i++) {\n    const prev = lastSeen.get(s[i]);\n    if (prev !== undefined && prev >= start) start = prev + 1;\n    lastSeen.set(s[i], i);\n    best = Math.max(best, i - start + 1);\n  }\n  return best;\n}",
+    "tip": {
+      "vi": "Phát biểu rõ bất biến của cửa sổ (không có ký tự trùng) trước khi code, interviewer sẽ đánh giá cao.",
+      "en": "State the window invariant (no duplicates inside) before coding; interviewers love hearing it."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu cho phép tối đa k ký tự khác nhau thì sửa thế nào?",
+        "en": "How would you change it to allow at most k distinct characters?"
+      },
+      {
+        "vi": "Khi nào sliding window không áp dụng được?",
+        "en": "When does sliding window not apply?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/longest-substring-without-repeating-characters/"
+  },
+  {
+    "id": "dsa-prefix-sum-subarray-sum-k",
+    "level": "mid",
+    "topic": "Prefix Sum",
+    "q": {
+      "vi": "Đếm số mảng con liên tiếp có tổng bằng k. Mảng có thể chứa số âm. Ví dụ [1, 1, 1], k = 2 → 2; [1, 2, 3], k = 3 → 2.",
+      "en": "Count the contiguous subarrays whose sum equals k. The array may contain negative numbers. Example: [1, 1, 1], k = 2 → 2; [1, 2, 3], k = 3 → 2."
+    },
+    "a": {
+      "vi": "Brute force: thử mọi cặp (i, j) và cộng dồn, O(n²).\n\nSliding window không dùng được vì có số âm: mở rộng cửa sổ không đảm bảo tổng tăng.\n\nPrefix sum: gọi P[j] là tổng của j phần tử đầu. Tổng đoạn (i, j] = P[j] − P[i]. Ta cần P[j] − P[i] = k, tức là P[i] = P[j] − k.\n\nVậy duyệt một lần, giữ tổng hiện tại sum và một hash map đếm số lần mỗi prefix sum đã xuất hiện. Tại mỗi bước, cộng thêm count[sum − k] vào kết quả rồi tăng count[sum]. Khởi tạo count[0] = 1 để tính cả các đoạn bắt đầu từ đầu mảng.\n\nĐộ phức tạp: O(n) thời gian, O(n) bộ nhớ.\n\nEdge case: k = 0, mảng toàn số 0 (rất nhiều đoạn), số âm.",
+      "en": "Brute force: try every pair (i, j) with a running sum, O(n²).\n\nSliding window fails because of negative numbers: growing the window does not guarantee a larger sum.\n\nPrefix sums: let P[j] be the sum of the first j elements. The sum of (i, j] is P[j] − P[i]. We need P[j] − P[i] = k, i.e. P[i] = P[j] − k.\n\nSo make one pass, keep the running sum and a hash map counting how often each prefix sum has appeared. At each step add count[sum − k] to the answer, then increment count[sum]. Seed count[0] = 1 so subarrays starting at index 0 are counted.\n\nComplexity: O(n) time, O(n) space.\n\nEdge cases: k = 0, all zeros (many subarrays), negative numbers."
+    },
+    "code": "function subarraySum(nums: number[], k: number): number {\n  const count = new Map<number, number>([[0, 1]]);\n  let sum = 0;\n  let res = 0;\n  for (const x of nums) {\n    sum += x;\n    res += count.get(sum - k) ?? 0;\n    count.set(sum, (count.get(sum) ?? 0) + 1);\n  }\n  return res;\n}",
+    "tip": {
+      "vi": "Chủ động giải thích vì sao sliding window sai khi có số âm, đó là điểm phân loại ứng viên.",
+      "en": "Proactively explain why sliding window breaks with negatives; that is what separates candidates here."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu cần trả về đoạn dài nhất có tổng bằng k thì sao?",
+        "en": "What if you need the longest subarray with sum k?"
+      },
+      {
+        "vi": "Làm sao trả lời nhiều truy vấn tổng đoạn [l, r] nhanh?",
+        "en": "How do you answer many range-sum queries [l, r] quickly?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/subarray-sum-equals-k/"
+  },
+  {
+    "id": "dsa-stack-valid-parentheses",
+    "level": "intern",
+    "topic": "Stack & Queue",
+    "q": {
+      "vi": "Kiểm tra chuỗi chỉ gồm ()[]{} có hợp lệ không: mỗi ngoặc mở phải được đóng đúng loại và đúng thứ tự. Ví dụ \"([]{})\" → true, \"(]\" → false, \"([)]\" → false.",
+      "en": "Check whether a string of ()[]{} is valid: every opening bracket must be closed by the same type in the right order. Example: \"([]{})\" → true, \"(]\" → false, \"([)]\" → false."
+    },
+    "a": {
+      "vi": "Ngoặc đóng gần nhất phải khớp với ngoặc mở gần nhất chưa được đóng, đó chính là hành vi LIFO của stack.\n\nThuật toán:\n- Gặp ngoặc mở: push vào stack.\n- Gặp ngoặc đóng: pop phần tử trên cùng; nếu stack rỗng hoặc không đúng loại thì trả về false.\n- Cuối cùng stack phải rỗng, nếu không là còn ngoặc mở chưa đóng.\n\nĐộ phức tạp: O(n) thời gian, O(n) bộ nhớ trong trường hợp toàn ngoặc mở.\n\nEdge case: chuỗi rỗng (hợp lệ), chỉ có ngoặc đóng \")\" (stack rỗng khi pop), độ dài lẻ (có thể trả false sớm).\n\nChỉ đếm số ngoặc là sai: \"([)]\" có số lượng cân bằng nhưng thứ tự sai.",
+      "en": "The latest closing bracket must match the most recent unclosed opening bracket, which is exactly the LIFO behaviour of a stack.\n\nAlgorithm:\n- Opening bracket: push it.\n- Closing bracket: pop the top; if the stack is empty or the type does not match, return false.\n- At the end the stack must be empty, otherwise some brackets were never closed.\n\nComplexity: O(n) time, O(n) space in the all-opening case.\n\nEdge cases: empty string (valid), only closing brackets like \")\" (pop on empty stack), odd length (can return false early).\n\nJust counting brackets is wrong: \"([)]\" has balanced counts but the wrong order."
+    },
+    "code": "function isValid(s: string): boolean {\n  const pairs: Record<string, string> = { \")\": \"(\", \"]\": \"[\", \"}\": \"{\" };\n  const stack: string[] = [];\n  for (const ch of s) {\n    if (ch in pairs) {\n      if (stack.pop() !== pairs[ch]) return false;\n    } else {\n      stack.push(ch);\n    }\n  }\n  return stack.length === 0;\n}",
+    "tip": {
+      "vi": "Nêu ví dụ \"([)]\" để cho thấy vì sao chỉ đếm là không đủ.",
+      "en": "Bring up \"([)]\" to show why counting alone is not enough."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu chỉ có một loại ngoặc, có làm được với O(1) bộ nhớ không?",
+        "en": "With only one bracket type, can you do it in O(1) space?"
+      },
+      {
+        "vi": "Tìm độ dài đoạn ngoặc hợp lệ dài nhất?",
+        "en": "How would you find the longest valid parentheses substring?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/valid-parentheses/"
+  },
+  {
+    "id": "dsa-monotonic-stack-daily-temperatures",
+    "level": "mid",
+    "topic": "Stack & Queue",
+    "q": {
+      "vi": "Cho nhiệt độ từng ngày, với mỗi ngày tính phải chờ bao nhiêu ngày mới có ngày ấm hơn (0 nếu không có). Ví dụ [73, 74, 75, 71, 69, 72, 76, 73] → [1, 1, 4, 2, 1, 1, 0, 0].",
+      "en": "Given daily temperatures, for each day compute how many days you wait until a warmer day (0 if none). Example: [73, 74, 75, 71, 69, 72, 76, 73] → [1, 1, 4, 2, 1, 1, 0, 0]."
+    },
+    "a": {
+      "vi": "Brute force: với mỗi ngày quét về phía sau tìm ngày ấm hơn, O(n²).\n\nMonotonic stack: giữ stack chứa index của các ngày \"chưa tìm được câu trả lời\", nhiệt độ giảm dần từ đáy lên đỉnh. Khi gặp ngày i:\n- Trong khi nhiệt độ ở đỉnh stack thấp hơn temps[i], pop index j ra và ghi res[j] = i − j, vì i chính là ngày ấm hơn đầu tiên của j.\n- Push i vào stack.\n\nCác index còn lại trong stack ở cuối không có ngày ấm hơn, giữ giá trị 0.\n\nMỗi index được push và pop tối đa một lần nên tổng cộng O(n) thời gian, dù có vòng while lồng bên trong. Bộ nhớ O(n).\n\nMẫu này dùng cho mọi bài dạng \"phần tử lớn hơn/nhỏ hơn tiếp theo\": next greater element, stock span, largest rectangle in histogram.",
+      "en": "Brute force: for each day scan forward for a warmer one, O(n²).\n\nMonotonic stack: keep a stack of indices of days still \"waiting for an answer\", with temperatures decreasing from bottom to top. At day i:\n- While the temperature at the top is lower than temps[i], pop index j and set res[j] = i − j, because i is the first warmer day for j.\n- Push i.\n\nIndices left in the stack at the end have no warmer day and keep 0.\n\nEach index is pushed and popped at most once, so the total is O(n) time despite the inner while loop. Space O(n).\n\nThe same pattern solves every \"next greater/smaller element\" problem: next greater element, stock span, largest rectangle in histogram."
+    },
+    "code": "function dailyTemperatures(temps: number[]): number[] {\n  const res = new Array<number>(temps.length).fill(0);\n  const stack: number[] = []; // indices, temperatures decreasing from bottom to top\n  for (let i = 0; i < temps.length; i++) {\n    while (stack.length > 0 && temps[stack[stack.length - 1]] < temps[i]) {\n      const j = stack.pop()!;\n      res[j] = i - j;\n    }\n    stack.push(i);\n  }\n  return res;\n}",
+    "tip": {
+      "vi": "Giải thích phân tích amortized: mỗi phần tử vào và ra stack đúng một lần nên vẫn là O(n).",
+      "en": "Give the amortized argument: each element enters and leaves the stack once, so it is still O(n)."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu mảng là vòng tròn (circular) thì sao?",
+        "en": "What if the array is circular?"
+      },
+      {
+        "vi": "Áp dụng mẫu này cho bài largest rectangle in histogram thế nào?",
+        "en": "How does this pattern apply to largest rectangle in histogram?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/daily-temperatures/"
+  },
+  {
+    "id": "dsa-linked-list-reverse",
+    "level": "intern",
+    "topic": "Linked List",
+    "q": {
+      "vi": "Đảo ngược một singly linked list. Ví dụ 1 → 2 → 3 → null thành 3 → 2 → 1 → null.",
+      "en": "Reverse a singly linked list. Example: 1 → 2 → 3 → null becomes 3 → 2 → 1 → null."
+    },
+    "a": {
+      "vi": "Cách lặp (nên dùng): đi qua danh sách với ba con trỏ prev, cur, next.\n- Lưu next = cur.next trước khi phá liên kết.\n- Đảo chiều: cur.next = prev.\n- Dịch: prev = cur, cur = next.\nKhi cur là null, prev là head mới. O(n) thời gian, O(1) bộ nhớ.\n\nCách đệ quy: đảo phần còn lại từ head.next, rồi cho head.next.next = head và head.next = null. Code gọn hơn nhưng tốn O(n) call stack, có thể tràn stack với danh sách dài.\n\nEdge case: danh sách rỗng, một node, hai node.\n\nMẹo khi phỏng vấn: vẽ ba ô prev/cur/next và chạy tay một hai bước. Lỗi phổ biến nhất là quên lưu next trước khi gán cur.next, làm mất phần còn lại của danh sách.",
+      "en": "Iterative (preferred): walk the list with three pointers prev, cur, next.\n- Save next = cur.next before breaking the link.\n- Flip it: cur.next = prev.\n- Advance: prev = cur, cur = next.\nWhen cur is null, prev is the new head. O(n) time, O(1) space.\n\nRecursive: reverse the rest starting at head.next, then set head.next.next = head and head.next = null. Shorter, but uses O(n) call stack and can overflow on long lists.\n\nEdge cases: empty list, one node, two nodes.\n\nInterview trick: draw the prev/cur/next boxes and trace one or two steps by hand. The most common bug is forgetting to save next before assigning cur.next, which loses the rest of the list."
+    },
+    "code": "type ListNode = { val: number; next: ListNode | null };\n\nfunction reverseList(head: ListNode | null): ListNode | null {\n  let prev: ListNode | null = null;\n  let cur = head;\n  while (cur) {\n    const next = cur.next;\n    cur.next = prev;\n    prev = cur;\n    cur = next;\n  }\n  return prev;\n}",
+    "tip": {
+      "vi": "Viết cả hai cách nếu còn thời gian và so sánh bộ nhớ O(1) với O(n) call stack.",
+      "en": "If time allows, show both versions and compare O(1) space against the O(n) call stack."
+    },
+    "followUps": [
+      {
+        "vi": "Đảo ngược đoạn từ vị trí m đến n thì sao?",
+        "en": "How do you reverse only the part between positions m and n?"
+      },
+      {
+        "vi": "Đảo theo từng nhóm k node?",
+        "en": "How do you reverse nodes in groups of k?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/reverse-linked-list/"
+  },
+  {
+    "id": "dsa-linked-list-cycle",
+    "level": "junior",
+    "topic": "Linked List",
+    "q": {
+      "vi": "Kiểm tra linked list có chu trình không. Làm được với O(1) bộ nhớ không?",
+      "en": "Detect whether a linked list has a cycle. Can you do it in O(1) space?"
+    },
+    "a": {
+      "vi": "Cách đơn giản: duyệt và lưu các node đã gặp vào một Set; gặp lại node cũ là có chu trình. O(n) thời gian, O(n) bộ nhớ.\n\nFloyd (rùa và thỏ): hai con trỏ slow đi 1 bước, fast đi 2 bước.\n- Nếu không có chu trình, fast sẽ chạm null.\n- Nếu có, khi cả hai vào vòng, mỗi bước khoảng cách giữa chúng giảm 1, nên fast chắc chắn đuổi kịp slow.\nO(n) thời gian, O(1) bộ nhớ.\n\nTìm điểm bắt đầu chu trình: sau khi gặp nhau, đặt một con trỏ về head, rồi cho cả hai cùng đi 1 bước; chỗ chúng gặp lại chính là đầu chu trình. Lý do: khoảng cách từ head tới đầu vòng bằng khoảng cách từ điểm gặp tới đầu vòng (tính theo modulo độ dài vòng).\n\nEdge case: danh sách rỗng, một node tự trỏ về chính nó.",
+      "en": "Simple: walk the list and store visited nodes in a Set; seeing a node again means a cycle. O(n) time, O(n) space.\n\nFloyd (tortoise and hare): slow moves 1 step, fast moves 2.\n- With no cycle, fast reaches null.\n- With a cycle, once both are inside it the gap shrinks by 1 each step, so fast must catch slow.\nO(n) time, O(1) space.\n\nFinding where the cycle starts: after they meet, reset one pointer to head and move both 1 step at a time; where they meet again is the cycle start. Reason: the distance from head to the cycle start equals the distance from the meeting point to the cycle start (modulo the cycle length).\n\nEdge cases: empty list, a single node pointing to itself."
+    },
+    "code": "type ListNode = { val: number; next: ListNode | null };\n\nfunction hasCycle(head: ListNode | null): boolean {\n  let slow = head;\n  let fast = head;\n  while (fast && fast.next) {\n    slow = slow!.next;\n    fast = fast.next.next;\n    if (slow === fast) return true;\n  }\n  return false;\n}",
+    "tip": {
+      "vi": "Đưa ra cách dùng Set trước rồi mới tối ưu bộ nhớ bằng Floyd; giải thích được vì sao fast không thể \"nhảy qua\" slow là điểm cộng lớn.",
+      "en": "Offer the Set version first, then optimize space with Floyd; explaining why fast cannot \"skip over\" slow earns real points."
+    },
+    "followUps": [
+      {
+        "vi": "Tính độ dài chu trình thế nào?",
+        "en": "How do you compute the cycle length?"
+      },
+      {
+        "vi": "Dùng ý tưởng này để tìm số trùng lặp trong mảng 1..n?",
+        "en": "How can the same idea find the duplicate number in an array of 1..n?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/linked-list-cycle/"
+  },
+  {
+    "id": "dsa-linked-list-merge-sorted",
+    "level": "junior",
+    "topic": "Linked List",
+    "q": {
+      "vi": "Trộn hai linked list đã sắp xếp thành một list sắp xếp. Ví dụ 1 → 3 → 5 và 2 → 4 → 6 thành 1 → 2 → 3 → 4 → 5 → 6.",
+      "en": "Merge two sorted linked lists into one sorted list. Example: 1 → 3 → 5 and 2 → 4 → 6 become 1 → 2 → 3 → 4 → 5 → 6."
+    },
+    "a": {
+      "vi": "Ý tưởng giống bước merge trong merge sort: so sánh hai đầu list, lấy node nhỏ hơn nối vào kết quả, dịch con trỏ của list đó.\n\nDùng dummy node (node giả đứng đầu) để không phải xử lý riêng trường hợp head của kết quả. Biến tail luôn trỏ tới node cuối của kết quả.\n\nKhi một list hết, nối thẳng phần còn lại của list kia vào tail, không cần duyệt tiếp.\n\nĐộ phức tạp: O(m + n) thời gian, O(1) bộ nhớ vì ta chỉ nối lại các node có sẵn, không tạo node mới.\n\nDùng <= khi so sánh để giữ thứ tự ổn định (stable) với các giá trị bằng nhau.\n\nCách đệ quy cũng gọn nhưng tốn O(m + n) call stack.\n\nEdge case: một hoặc cả hai list rỗng, các giá trị trùng nhau.",
+      "en": "Same idea as the merge step of merge sort: compare the two heads, attach the smaller node to the result, advance that list.\n\nUse a dummy head node so you never special-case the head of the result. A tail pointer always points at the last node of the result.\n\nWhen one list runs out, attach the rest of the other list to tail directly; no need to keep looping.\n\nComplexity: O(m + n) time, O(1) space because we relink existing nodes instead of creating new ones.\n\nUsing <= in the comparison keeps the merge stable for equal values.\n\nA recursive version is short too, but costs O(m + n) call stack.\n\nEdge cases: one or both lists empty, duplicate values."
+    },
+    "code": "type ListNode = { val: number; next: ListNode | null };\n\nfunction mergeTwoLists(a: ListNode | null, b: ListNode | null): ListNode | null {\n  const dummy: ListNode = { val: 0, next: null };\n  let tail = dummy;\n  while (a && b) {\n    if (a.val <= b.val) {\n      tail.next = a;\n      tail = a;\n      a = a.next;\n    } else {\n      tail.next = b;\n      tail = b;\n      b = b.next;\n    }\n  }\n  tail.next = a ?? b;\n  return dummy.next;\n}",
+    "tip": {
+      "vi": "Nhắc đến kỹ thuật dummy node: nó giúp code linked list ngắn và ít bug hơn nhiều.",
+      "en": "Mention the dummy node technique; it makes linked list code shorter and far less buggy."
+    },
+    "followUps": [
+      {
+        "vi": "Trộn k list đã sắp xếp thì sao?",
+        "en": "What about merging k sorted lists?"
+      },
+      {
+        "vi": "Sắp xếp cả một linked list với O(n log n)?",
+        "en": "How do you sort a whole linked list in O(n log n)?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/merge-two-sorted-lists/"
+  },
+  {
+    "id": "dsa-backtracking-subsets",
+    "level": "junior",
+    "topic": "Recursion & Backtracking",
+    "q": {
+      "vi": "Sinh mọi tập con của một mảng các số khác nhau. Ví dụ [1, 2, 3] → [], [1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3].",
+      "en": "Generate all subsets of an array of distinct numbers. Example: [1, 2, 3] → [], [1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3]."
+    },
+    "a": {
+      "vi": "Có 2ⁿ tập con, nên không thể nhanh hơn O(n · 2ⁿ) (mỗi tập con copy tốn tới O(n)).\n\nBacktracking: giữ một mảng path là lựa chọn hiện tại. Hàm dfs(start):\n- Ghi nhận bản copy của path (mỗi trạng thái là một tập con hợp lệ).\n- Với mỗi i từ start trở đi: chọn nums[i] (push), đệ quy dfs(i + 1), rồi bỏ chọn (pop).\n\nBắt đầu từ i + 1 đảm bảo mỗi tập con chỉ sinh một lần, không có [2, 1] lẫn [1, 2].\n\nKhung chung của backtracking: chọn → đệ quy → hoàn tác. Nhớ push bản copy [...path], không push chính path vì nó còn bị sửa tiếp.\n\nCách khác: dùng bitmask từ 0 đến 2ⁿ − 1, bit i bật nghĩa là chọn nums[i]; hoặc lặp, mỗi số mới thì nhân đôi danh sách hiện có.\n\nBộ nhớ: O(n) cho độ sâu đệ quy, chưa tính output.",
+      "en": "There are 2ⁿ subsets, so nothing beats O(n · 2ⁿ) (copying each subset costs up to O(n)).\n\nBacktracking: keep an array path holding the current choice. dfs(start):\n- Record a copy of path (every state is a valid subset).\n- For each i from start onward: choose nums[i] (push), recurse dfs(i + 1), then un-choose (pop).\n\nStarting from i + 1 makes each subset appear once, never both [2, 1] and [1, 2].\n\nThe general backtracking shape: choose → recurse → undo. Push a copy [...path], not path itself, because path keeps changing.\n\nAlternatives: a bitmask from 0 to 2ⁿ − 1 where bit i means nums[i] is chosen, or iteratively doubling the current list for each new number.\n\nSpace: O(n) recursion depth, excluding the output."
+    },
+    "code": "function subsets(nums: number[]): number[][] {\n  const res: number[][] = [];\n  const path: number[] = [];\n  const dfs = (start: number): void => {\n    res.push([...path]);\n    for (let i = start; i < nums.length; i++) {\n      path.push(nums[i]);\n      dfs(i + 1);\n      path.pop();\n    }\n  };\n  dfs(0);\n  return res;\n}",
+    "tip": {
+      "vi": "Nói to khung \"chọn, đệ quy, hoàn tác\"; interviewer muốn thấy bạn có một mẫu dùng lại được cho mọi bài backtracking.",
+      "en": "Say the \"choose, recurse, undo\" template out loud; interviewers want a reusable pattern for all backtracking problems."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu mảng có phần tử trùng, làm sao tránh tập con trùng?",
+        "en": "If the array has duplicates, how do you avoid duplicate subsets?"
+      },
+      {
+        "vi": "Chỉ lấy các tập con có tổng bằng target (combination sum)?",
+        "en": "Only subsets that sum to a target (combination sum)?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/subsets/"
+  },
+  {
+    "id": "dsa-backtracking-permutations",
+    "level": "mid",
+    "topic": "Recursion & Backtracking",
+    "q": {
+      "vi": "Sinh mọi hoán vị của một mảng các số khác nhau. Ví dụ [1, 2, 3] → 6 hoán vị.",
+      "en": "Generate all permutations of an array of distinct numbers. Example: [1, 2, 3] → 6 permutations."
+    },
+    "a": {
+      "vi": "Có n! hoán vị, mỗi hoán vị dài n, nên độ phức tạp tối thiểu là O(n · n!).\n\nBacktracking với mảng used: tại mỗi vị trí trong path, thử mọi phần tử chưa dùng.\n- Nếu path đủ n phần tử: lưu bản copy.\n- Ngược lại, với mỗi i chưa used: đánh dấu, push, đệ quy, rồi pop và bỏ đánh dấu.\n\nKhác với subsets: ở đây thứ tự quan trọng nên mỗi tầng duyệt lại từ 0, dùng used để tránh lấy một phần tử hai lần, thay vì bắt đầu từ start.\n\nCách khác: hoán đổi tại chỗ (swap nums[start] với từng nums[i], đệ quy start + 1, rồi swap lại), không cần mảng used.\n\nCó phần tử trùng: sắp xếp trước, và bỏ qua nums[i] nếu nó bằng nums[i − 1] mà nums[i − 1] chưa được dùng ở tầng hiện tại.\n\nBộ nhớ: O(n) cho path, used và call stack, chưa tính output.",
+      "en": "There are n! permutations of length n, so the floor is O(n · n!).\n\nBacktracking with a used array: for each position in path, try every element not yet used.\n- If path has n elements: store a copy.\n- Otherwise, for each unused i: mark it, push, recurse, then pop and unmark.\n\nUnlike subsets, order matters, so every level scans from 0 and relies on used to avoid picking an element twice, instead of starting at start.\n\nAlternative: swap in place (swap nums[start] with each nums[i], recurse on start + 1, swap back), no used array needed.\n\nWith duplicates: sort first, and skip nums[i] when it equals nums[i − 1] and nums[i − 1] is not used at the current level.\n\nSpace: O(n) for path, used and the call stack, excluding the output."
+    },
+    "code": "function permute(nums: number[]): number[][] {\n  const res: number[][] = [];\n  const path: number[] = [];\n  const used = new Array<boolean>(nums.length).fill(false);\n  const dfs = (): void => {\n    if (path.length === nums.length) {\n      res.push([...path]);\n      return;\n    }\n    for (let i = 0; i < nums.length; i++) {\n      if (used[i]) continue;\n      used[i] = true;\n      path.push(nums[i]);\n      dfs();\n      path.pop();\n      used[i] = false;\n    }\n  };\n  dfs();\n  return res;\n}",
+    "tip": {
+      "vi": "So sánh trực tiếp với bài subsets: khác nhau ở chỗ bắt đầu vòng lặp từ đâu và vì sao.",
+      "en": "Contrast it with subsets: the difference is where the loop starts and why."
+    },
+    "followUps": [
+      {
+        "vi": "Xử lý mảng có phần tử trùng (permutations II)?",
+        "en": "How do you handle duplicates (permutations II)?"
+      },
+      {
+        "vi": "Tìm hoán vị kế tiếp theo thứ tự từ điển mà không sinh hết?",
+        "en": "How do you get the next lexicographic permutation without generating all of them?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/permutations/"
+  },
+  {
+    "id": "dsa-sorting-js-default-sort",
+    "level": "intern",
+    "topic": "Sorting",
+    "q": {
+      "vi": "[10, 9, 1, 100].sort() trong JavaScript trả về gì? Sắp xếp mảng số và mảng object đúng cách thế nào?",
+      "en": "What does [10, 9, 1, 100].sort() return in JavaScript? How do you sort numbers and objects correctly?"
+    },
+    "a": {
+      "vi": "Kết quả là [1, 10, 100, 9]. Khi không truyền comparator, sort đổi mọi phần tử sang chuỗi rồi so sánh theo thứ tự từ điển, nên \"100\" đứng trước \"9\".\n\nCách đúng: truyền comparator trả về số âm, 0 hoặc dương: (a, b) => a − b cho tăng dần, (a, b) => b − a cho giảm dần. Đừng trả về boolean như a > b, kết quả sẽ không ổn định giữa các engine.\n\nNhững điều nên biết:\n- sort sắp xếp tại chỗ và trả về chính mảng đó; muốn giữ mảng gốc thì dùng toSorted (ES2023) hoặc copy trước.\n- Từ ES2019, Array.prototype.sort bắt buộc stable; V8 dùng TimSort, O(n log n).\n- Sắp theo nhiều khóa: kết hợp bằng ||, ví dụ theo tuổi rồi theo tên.\n- So sánh chuỗi có dấu tiếng Việt nên dùng localeCompare hoặc Intl.Collator.",
+      "en": "The result is [1, 10, 100, 9]. Without a comparator, sort converts every element to a string and compares them lexicographically, so \"100\" comes before \"9\".\n\nThe fix: pass a comparator returning a negative number, 0 or a positive number: (a, b) => a − b for ascending, (a, b) => b − a for descending. Do not return a boolean like a > b; results become inconsistent across engines.\n\nWorth knowing:\n- sort works in place and returns the same array; use toSorted (ES2023) or copy first to keep the original.\n- Since ES2019, Array.prototype.sort must be stable; V8 uses TimSort, O(n log n).\n- Multi-key sorting: chain comparisons with ||, e.g. by age then by name.\n- For strings with accents (such as Vietnamese), use localeCompare or Intl.Collator."
+    },
+    "code": "const nums = [10, 9, 1, 100];\nnums.sort(); // [1, 10, 100, 9] - compared as strings\nnums.sort((a, b) => a - b); // [1, 9, 10, 100]\n\n// Multi-key: by age, then by name\nconst users = [\n  { name: \"Binh\", age: 30 },\n  { name: \"An\", age: 30 },\n  { name: \"Chi\", age: 25 },\n];\nusers.sort((a, b) => a.age - b.age || a.name.localeCompare(b.name));\n\n// Non-mutating copy (ES2023)\nconst desc = nums.toSorted((a, b) => b - a);",
+    "tip": {
+      "vi": "Nhắc thêm rằng sort làm thay đổi mảng gốc; bug này rất hay gặp khi sort state trong React.",
+      "en": "Also mention that sort mutates the original array; it is a classic bug when sorting React state."
+    },
+    "followUps": [
+      {
+        "vi": "Stable sort là gì và khi nào nó quan trọng?",
+        "en": "What is a stable sort and when does it matter?"
+      },
+      {
+        "vi": "Sắp xếp một mảng 10 triệu số nguyên 0..1000 nhanh nhất thế nào?",
+        "en": "What is the fastest way to sort 10 million integers in 0..1000?"
+      }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort"
+  },
+  {
+    "id": "dsa-sorting-quick-vs-merge",
+    "level": "junior",
+    "topic": "Sorting",
+    "q": {
+      "vi": "So sánh quick sort và merge sort: độ phức tạp, bộ nhớ, tính stable. Khi nào dùng cái nào? Hãy cài đặt merge sort.",
+      "en": "Compare quick sort and merge sort: complexity, memory, stability. When would you use each? Implement merge sort."
+    },
+    "a": {
+      "vi": "Merge sort: chia đôi, sắp xếp hai nửa, rồi trộn. Luôn O(n log n), cần O(n) bộ nhớ phụ, stable. Hợp với linked list (trộn không cần bộ nhớ phụ) và external sort khi dữ liệu không vừa RAM.\n\nQuick sort: chọn pivot, phân hoạch phần nhỏ hơn sang trái, lớn hơn sang phải, rồi đệ quy. Trung bình O(n log n), xấu nhất O(n²) khi pivot tệ (ví dụ mảng đã sắp xếp và luôn chọn phần tử đầu), khắc phục bằng pivot ngẫu nhiên hoặc median-of-three. Sắp tại chỗ, O(log n) stack, không stable, nhưng thực tế rất nhanh nhờ thân thiện cache.\n\nHeap sort: O(n log n) cả xấu nhất, O(1) bộ nhớ, không stable.\n\nStable nghĩa là các phần tử bằng nhau giữ nguyên thứ tự ban đầu, quan trọng khi sắp theo nhiều khóa.\n\nThư viện thật thường lai: TimSort (Python, Java cho object, V8), introsort (C++ std::sort). Khoá nguyên trong khoảng nhỏ thì counting/radix sort đạt O(n + k).",
+      "en": "Merge sort: split in half, sort both halves, merge. Always O(n log n), O(n) extra memory, stable. Great for linked lists (merging needs no extra memory) and external sorting when data does not fit in RAM.\n\nQuick sort: pick a pivot, partition smaller elements left and larger right, recurse. Average O(n log n), worst O(n²) with bad pivots (e.g. a sorted array with the first element as pivot), fixed by a random or median-of-three pivot. In place, O(log n) stack, not stable, but very fast in practice thanks to cache friendliness.\n\nHeap sort: O(n log n) even in the worst case, O(1) memory, not stable.\n\nStable means equal elements keep their original order, which matters for multi-key sorting.\n\nReal libraries are hybrids: TimSort (Python, Java for objects, V8), introsort (C++ std::sort). For integer keys in a small range, counting/radix sort reaches O(n + k)."
+    },
+    "code": "function mergeSort(a: number[]): number[] {\n  if (a.length <= 1) return a;\n  const mid = a.length >> 1;\n  const left = mergeSort(a.slice(0, mid));\n  const right = mergeSort(a.slice(mid));\n  const out: number[] = [];\n  let i = 0;\n  let j = 0;\n  while (i < left.length && j < right.length) {\n    // <= takes from the left on ties, which keeps the sort stable\n    out.push(left[i] <= right[j] ? left[i++] : right[j++]);\n  }\n  return out.concat(left.slice(i), right.slice(j));\n}",
+    "tip": {
+      "vi": "Đừng chỉ đọc độ phức tạp; nêu được trường hợp xấu nhất của quick sort và cách tránh mới là điểm cộng.",
+      "en": "Do not just recite complexities; naming quick sort's worst case and how to avoid it is what earns points."
+    },
+    "followUps": [
+      {
+        "vi": "Tìm phần tử lớn thứ k với ý tưởng của quick sort (quickselect)?",
+        "en": "How do you find the k-th largest element using quick sort's idea (quickselect)?"
+      },
+      {
+        "vi": "Sắp xếp file 100 GB với 4 GB RAM thế nào?",
+        "en": "How would you sort a 100 GB file with 4 GB of RAM?"
+      }
+    ]
+  },
+  {
+    "id": "dsa-binary-search-basic",
+    "level": "intern",
+    "topic": "Binary Search",
+    "q": {
+      "vi": "Tìm vị trí của target trong mảng đã sắp xếp tăng dần, trả về -1 nếu không có. Ví dụ [-1, 0, 3, 5, 9, 12], target = 9 → 4.",
+      "en": "Find the index of target in an ascending sorted array, or -1 if absent. Example: [-1, 0, 3, 5, 9, 12], target = 9 → 4."
+    },
+    "a": {
+      "vi": "Tìm tuyến tính mất O(n). Vì mảng đã sắp xếp, binary search loại được một nửa không gian tìm kiếm sau mỗi lần so sánh: O(log n) thời gian, O(1) bộ nhớ.\n\nGiữ khoảng đóng [lo, hi]:\n- mid = lo + ((hi − lo) >> 1)\n- a[mid] bằng target: trả về mid\n- a[mid] < target: target nằm bên phải, lo = mid + 1\n- ngược lại: hi = mid − 1\nVòng lặp chạy khi lo <= hi.\n\nNhững lỗi hay gặp: dùng lo < hi với khoảng đóng (bỏ sót phần tử cuối), gán lo = mid gây lặp vô hạn, tràn số khi tính (lo + hi) / 2 ở Java/C++.\n\nBiến thể quan trọng: lower bound (vị trí đầu tiên >= target) dùng khoảng nửa mở [lo, hi) với điều kiện lo < hi và hi = mid. Biến thể này cho phép tìm lần xuất hiện đầu/cuối và vị trí chèn.\n\nEdge case: mảng rỗng, một phần tử, target nhỏ hơn hoặc lớn hơn mọi phần tử.",
+      "en": "Linear search is O(n). Because the array is sorted, binary search discards half the search space with each comparison: O(log n) time, O(1) space.\n\nKeep a closed range [lo, hi]:\n- mid = lo + ((hi − lo) >> 1)\n- a[mid] equals target: return mid\n- a[mid] < target: target is to the right, lo = mid + 1\n- otherwise: hi = mid − 1\nLoop while lo <= hi.\n\nCommon bugs: using lo < hi with a closed range (misses the last element), assigning lo = mid (infinite loop), overflow from (lo + hi) / 2 in Java/C++.\n\nKey variant: lower bound (first index with a value >= target) uses a half-open range [lo, hi) with lo < hi and hi = mid. It gives the first/last occurrence and the insert position.\n\nEdge cases: empty array, one element, target smaller or larger than every element."
+    },
+    "code": "function binarySearch(a: number[], target: number): number {\n  let lo = 0;\n  let hi = a.length - 1;\n  while (lo <= hi) {\n    const mid = lo + ((hi - lo) >> 1);\n    if (a[mid] === target) return mid;\n    if (a[mid] < target) lo = mid + 1;\n    else hi = mid - 1;\n  }\n  return -1;\n}",
+    "tip": {
+      "vi": "Chọn một quy ước khoảng (đóng hoặc nửa mở) và nói rõ bất biến của nó, đó là cách tránh lỗi off-by-one.",
+      "en": "Pick one range convention (closed or half-open) and state its invariant; that is how you avoid off-by-one bugs."
+    },
+    "followUps": [
+      {
+        "vi": "Tìm vị trí xuất hiện đầu tiên và cuối cùng của target?",
+        "en": "How do you find the first and last occurrence of target?"
+      },
+      {
+        "vi": "Tìm trong mảng sắp xếp đã bị xoay (rotated)?",
+        "en": "How do you search a rotated sorted array?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/binary-search/"
+  },
+  {
+    "id": "dsa-binary-search-on-answer",
+    "level": "mid",
+    "topic": "Binary Search",
+    "q": {
+      "vi": "Có n đống chuối piles và h giờ. Mỗi giờ bạn chọn một đống và ăn tối đa k quả từ đống đó. Tìm k nhỏ nhất để ăn hết trong h giờ. Ví dụ piles = [3, 6, 7, 11], h = 8 → 4.",
+      "en": "There are n piles of bananas and h hours. Each hour you pick one pile and eat up to k bananas from it. Find the smallest k that finishes everything within h hours. Example: piles = [3, 6, 7, 11], h = 8 → 4."
+    },
+    "a": {
+      "vi": "Đây là binary search trên không gian đáp án, không phải trên mảng.\n\nNhận xét: với tốc độ k, số giờ cần là tổng ceil(p / k). Hàm này giảm dần khi k tăng, nên điều kiện \"ăn kịp với tốc độ k\" có dạng false...false true...true. Ta cần tìm giá trị true đầu tiên.\n\nKhoảng đáp án: k từ 1 đến max(piles) (ăn nhanh hơn đống lớn nhất là vô ích).\n\nBrute force thử từng k: O(max · n). Binary search: O(n · log max), với n là số đống.\n\nCài đặt: khoảng nửa mở kiểu lower bound. Nếu hoursNeeded(mid) <= h thì mid đạt yêu cầu, thu hi = mid; ngược lại lo = mid + 1.\n\nNhận diện dạng bài: đề hỏi \"giá trị nhỏ nhất/lớn nhất sao cho điều kiện thỏa\", và kiểm tra một giá trị cho trước thì dễ. Ví dụ khác: sức chứa tàu nhỏ nhất để giao hàng trong D ngày, chia mảng thành m phần có tổng lớn nhất nhỏ nhất.",
+      "en": "This is binary search over the answer space, not over an array.\n\nObservation: at speed k, the hours needed are the sum of ceil(p / k). That decreases as k grows, so the predicate \"can finish at speed k\" looks like false...false true...true. We want the first true.\n\nAnswer range: k from 1 to max(piles) (eating faster than the largest pile gains nothing).\n\nBrute force over every k: O(max · n). Binary search: O(n · log max), with n the number of piles.\n\nImplementation: half-open lower-bound style. If hoursNeeded(mid) <= h, mid works, so hi = mid; otherwise lo = mid + 1.\n\nHow to spot it: the problem asks for \"the minimum/maximum value such that a condition holds\", and checking one candidate is easy. Other examples: smallest ship capacity to deliver within D days, split an array into m parts minimizing the largest sum."
+    },
+    "code": "function minEatingSpeed(piles: number[], h: number): number {\n  const hoursNeeded = (k: number): number =>\n    piles.reduce((sum, p) => sum + Math.ceil(p / k), 0);\n  let lo = 1;\n  let hi = piles.reduce((m, p) => Math.max(m, p), 1);\n  while (lo < hi) {\n    const mid = lo + ((hi - lo) >> 1);\n    if (hoursNeeded(mid) <= h) hi = mid;\n    else lo = mid + 1;\n  }\n  return lo;\n}",
+    "tip": {
+      "vi": "Nói rõ vì sao điều kiện có tính đơn điệu; đó là lý do binary search áp dụng được.",
+      "en": "State explicitly why the predicate is monotonic; that is what justifies binary search."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu h nhỏ hơn số đống thì sao?",
+        "en": "What if h is smaller than the number of piles?"
+      },
+      {
+        "vi": "Áp dụng cho bài sức chứa tàu nhỏ nhất trong D ngày?",
+        "en": "How does it apply to the minimum ship capacity within D days?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/koko-eating-bananas/"
+  },
+  {
+    "id": "dsa-bit-manipulation-basics",
+    "level": "junior",
+    "topic": "Bit Manipulation",
+    "q": {
+      "vi": "Mọi số trong mảng xuất hiện đúng hai lần, trừ một số xuất hiện một lần. Tìm số đó với O(n) thời gian và O(1) bộ nhớ. Kể thêm vài thủ thuật bit hay dùng.",
+      "en": "Every number in the array appears exactly twice except one that appears once. Find it in O(n) time and O(1) space. Also list a few common bit tricks."
+    },
+    "a": {
+      "vi": "Hash map đếm số lần xuất hiện giải được trong O(n) nhưng tốn O(n) bộ nhớ.\n\nXOR có ba tính chất: x ^ x = 0, x ^ 0 = x, và giao hoán, kết hợp. XOR tất cả phần tử lại, các cặp triệt tiêu nhau, chỉ còn lại số xuất hiện một lần. O(n) thời gian, O(1) bộ nhớ.\n\nThủ thuật hay dùng:\n- x & 1: kiểm tra số lẻ\n- x & (x − 1): xóa bit 1 thấp nhất; dùng để kiểm tra lũy thừa của 2 và đếm số bit 1\n- x & −x: lấy riêng bit 1 thấp nhất\n- 1 << i, x | (1 << i), x & ~(1 << i): kiểm tra, bật, tắt bit thứ i\n- bitmask đại diện cho tập con của n phần tử (n nhỏ, khoảng ≤ 20)\n\nLưu ý với JavaScript: toán tử bit làm việc trên số nguyên 32-bit có dấu; số lớn hơn cần BigInt. Dùng >>> 0 để xem dưới dạng không dấu.",
+      "en": "A hash map of counts works in O(n) time but costs O(n) space.\n\nXOR has three properties: x ^ x = 0, x ^ 0 = x, and it is commutative and associative. XOR all elements together; the pairs cancel and only the single number remains. O(n) time, O(1) space.\n\nCommon tricks:\n- x & 1: odd check\n- x & (x − 1): clears the lowest set bit; used for power-of-two checks and counting set bits\n- x & −x: isolates the lowest set bit\n- 1 << i, x | (1 << i), x & ~(1 << i): test, set, clear bit i\n- a bitmask represents a subset of n items (small n, around ≤ 20)\n\nJavaScript caveat: bitwise operators work on 32-bit signed integers; larger values need BigInt. Use >>> 0 to read a value as unsigned."
+    },
+    "code": "function singleNumber(nums: number[]): number {\n  return nums.reduce((acc, x) => acc ^ x, 0);\n}\n\nconst isPowerOfTwo = (n: number): boolean => n > 0 && (n & (n - 1)) === 0;\n\nfunction countSetBits(n: number): number {\n  let count = 0;\n  while (n !== 0) {\n    n &= n - 1; // drop the lowest set bit\n    count++;\n  }\n  return count;\n}",
+    "tip": {
+      "vi": "Liệt kê các tính chất của XOR trước khi đưa ra lời giải, như vậy lời giải trở nên hiển nhiên chứ không giống mẹo học thuộc.",
+      "en": "List the XOR properties before giving the solution so it reads as reasoning, not a memorized trick."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu các số khác xuất hiện ba lần thay vì hai?",
+        "en": "What if the other numbers appear three times instead of twice?"
+      },
+      {
+        "vi": "Nếu có hai số xuất hiện một lần?",
+        "en": "What if two numbers appear only once?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/single-number/"
+  },
+  {
+    "id": "dsa-tree-traversals",
+    "level": "junior",
+    "topic": "Tree",
+    "q": {
+      "vi": "Trình bày các cách duyệt cây nhị phân: preorder, inorder, postorder, level order. Mỗi cách dùng khi nào?",
+      "en": "Explain binary tree traversals: preorder, inorder, postorder, level order. When is each used?"
+    },
+    "a": {
+      "vi": "DFS có ba thứ tự, khác nhau ở thời điểm xử lý node so với hai cây con:\n- Preorder (node, trái, phải): sao chép hoặc serialize cây, in cấu trúc thư mục.\n- Inorder (trái, node, phải): với BST cho ra dãy tăng dần, dùng để kiểm tra BST hoặc tìm phần tử nhỏ thứ k.\n- Postorder (trái, phải, node): khi kết quả của node phụ thuộc vào con, ví dụ tính chiều cao, xóa cây, tính kích thước thư mục.\n\nBFS / level order: dùng queue duyệt từng tầng; dùng cho in theo tầng, nhìn cây từ bên phải, tìm độ sâu nhỏ nhất.\n\nTất cả đều O(n) thời gian. Bộ nhớ: DFS O(h) với h là chiều cao (O(n) nếu cây lệch hẳn một bên), BFS O(w) với w là độ rộng lớn nhất.\n\nĐệ quy là cách viết tự nhiên; khi cây rất sâu thì chuyển sang dùng stack tường minh để tránh tràn call stack. Morris traversal đạt O(1) bộ nhớ bằng cách tạm sửa con trỏ.",
+      "en": "DFS has three orders, differing in when the node is processed relative to its subtrees:\n- Preorder (node, left, right): copying or serializing a tree, printing a folder structure.\n- Inorder (left, node, right): on a BST it yields sorted order; used to validate a BST or find the k-th smallest.\n- Postorder (left, right, node): when a node's result depends on its children, e.g. height, deleting a tree, folder sizes.\n\nBFS / level order: a queue visits level by level; used for printing by level, right side view, minimum depth.\n\nAll are O(n) time. Space: DFS O(h) where h is the height (O(n) for a skewed tree), BFS O(w) where w is the maximum width.\n\nRecursion is the natural way to write them; for very deep trees, switch to an explicit stack to avoid call stack overflow. Morris traversal gets O(1) space by temporarily rewiring pointers."
+    },
+    "code": "type TreeNode = { val: number; left: TreeNode | null; right: TreeNode | null };\n\nfunction inorder(root: TreeNode | null, out: number[] = []): number[] {\n  if (!root) return out;\n  inorder(root.left, out);\n  out.push(root.val);\n  inorder(root.right, out);\n  return out;\n}\n\nfunction levelOrder(root: TreeNode | null): number[][] {\n  const levels: number[][] = [];\n  let level = root ? [root] : [];\n  while (level.length > 0) {\n    levels.push(level.map((n) => n.val));\n    level = level.flatMap((n) => [n.left, n.right].filter((c): c is TreeNode => c !== null));\n  }\n  return levels;\n}",
+    "tip": {
+      "vi": "Gắn mỗi kiểu duyệt với một bài toán thực tế; interviewer muốn thấy bạn biết chọn chứ không chỉ biết định nghĩa.",
+      "en": "Tie each traversal to a real use case; interviewers want to see you can choose one, not just define it."
+    },
+    "followUps": [
+      {
+        "vi": "Viết inorder không dùng đệ quy?",
+        "en": "Write inorder without recursion?"
+      },
+      {
+        "vi": "Dựng lại cây từ preorder và inorder?",
+        "en": "Rebuild a tree from its preorder and inorder sequences?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/binary-tree-level-order-traversal/"
+  },
+  {
+    "id": "dsa-tree-balanced-height",
+    "level": "junior",
+    "topic": "Tree",
+    "q": {
+      "vi": "Kiểm tra cây nhị phân có cân bằng không: tại mọi node, chiều cao hai cây con chênh nhau không quá 1.",
+      "en": "Check whether a binary tree is height-balanced: at every node, the heights of the two subtrees differ by at most 1."
+    },
+    "a": {
+      "vi": "Cách ngây thơ: tại mỗi node gọi hàm height cho hai con rồi so sánh, sau đó đệ quy xuống. Chiều cao bị tính lại nhiều lần: O(n log n) với cây cân bằng, O(n²) với cây lệch.\n\nCách tối ưu: duyệt postorder một lần, mỗi lần gọi trả về chiều cao của cây con, hoặc −1 nếu cây con đó đã không cân bằng. Node hiện tại:\n- Lấy chiều cao trái; nếu là −1 thì trả về −1 ngay.\n- Lấy chiều cao phải; nếu là −1 hoặc chênh lệch > 1 thì trả về −1.\n- Ngược lại trả về max(trái, phải) + 1.\n\nMỗi node chỉ thăm một lần: O(n) thời gian, O(h) bộ nhớ cho call stack.\n\nMẫu \"trả về thông tin của cây con lên cha\" dùng lại cho nhiều bài: đường kính cây, tổng đường đi lớn nhất, đếm cây con thỏa điều kiện.\n\nEdge case: cây rỗng là cân bằng (chiều cao 0), cây chỉ có một nhánh dài.",
+      "en": "Naive: at each node call height on both children, compare, then recurse. Heights get recomputed repeatedly: O(n log n) on balanced trees, O(n²) on skewed ones.\n\nOptimized: one postorder pass where each call returns the subtree height, or −1 if that subtree is already unbalanced. At the current node:\n- Get the left height; if −1, return −1 immediately.\n- Get the right height; if −1 or the difference is > 1, return −1.\n- Otherwise return max(left, right) + 1.\n\nEach node is visited once: O(n) time, O(h) space for the call stack.\n\nThe \"return subtree info to the parent\" pattern recurs in many problems: tree diameter, maximum path sum, counting subtrees that satisfy a condition.\n\nEdge cases: an empty tree is balanced (height 0), a tree that is one long branch."
+    },
+    "code": "type TreeNode = { val: number; left: TreeNode | null; right: TreeNode | null };\n\nfunction isBalanced(root: TreeNode | null): boolean {\n  // Returns the height, or -1 if the subtree is unbalanced.\n  const height = (node: TreeNode | null): number => {\n    if (!node) return 0;\n    const l = height(node.left);\n    if (l === -1) return -1;\n    const r = height(node.right);\n    if (r === -1 || Math.abs(l - r) > 1) return -1;\n    return Math.max(l, r) + 1;\n  };\n  return height(root) !== -1;\n}",
+    "tip": {
+      "vi": "Nêu cách O(n²) trước rồi chỉ ra chỗ tính lặp; việc tự tìm ra điểm lãng phí được đánh giá cao.",
+      "en": "Present the O(n²) version and then point at the repeated work; spotting the waste yourself scores well."
+    },
+    "followUps": [
+      {
+        "vi": "Tính đường kính cây (đường đi dài nhất giữa hai node)?",
+        "en": "How do you compute the tree's diameter (longest path between two nodes)?"
+      },
+      {
+        "vi": "AVL tree và red-black tree giữ cân bằng thế nào?",
+        "en": "How do AVL and red-black trees stay balanced?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/balanced-binary-tree/"
+  },
+  {
+    "id": "dsa-tree-validate-bst",
+    "level": "mid",
+    "topic": "Tree",
+    "q": {
+      "vi": "Kiểm tra một cây nhị phân có phải binary search tree hợp lệ không (mọi node bên trái nhỏ hơn, mọi node bên phải lớn hơn, áp dụng cho toàn bộ cây con).",
+      "en": "Check whether a binary tree is a valid binary search tree (every node in the left subtree is smaller, every node in the right subtree is larger)."
+    },
+    "a": {
+      "vi": "Bẫy phổ biến: chỉ so sánh node với hai con trực tiếp. Ví dụ gốc 5, con phải 7, và 7 có con trái 3: mỗi cặp cha-con đều đúng nhưng 3 nằm bên phải của 5 nên cây không hợp lệ.\n\nCách 1, truyền khoảng giới hạn: mỗi node phải nằm trong (lo, hi). Đi sang trái thì cận trên thành giá trị node; đi sang phải thì cận dưới thành giá trị node. Bắt đầu với (−∞, +∞).\n\nCách 2, inorder: duyệt inorder của BST phải cho dãy tăng nghiêm ngặt, chỉ cần so sánh với phần tử liền trước.\n\nCả hai: O(n) thời gian, O(h) bộ nhớ.\n\nEdge case: giá trị trùng (hỏi lại đề có cho phép không; thường là không, nên dùng so sánh nghiêm ngặt), giá trị bằng giới hạn của kiểu số (trong Java dùng Long hoặc null thay vì Integer.MIN_VALUE), cây rỗng là hợp lệ.",
+      "en": "The common trap: only comparing a node with its direct children. Example: root 5, right child 7, and 7 has a left child 3. Every parent-child pair looks fine, but 3 sits in the right subtree of 5, so the tree is invalid.\n\nOption 1, pass bounds: every node must lie in (lo, hi). Going left, the upper bound becomes the node's value; going right, the lower bound becomes the node's value. Start with (−∞, +∞).\n\nOption 2, inorder: an inorder traversal of a BST must be strictly increasing, so compare each value with the previous one.\n\nBoth: O(n) time, O(h) space.\n\nEdge cases: duplicates (ask whether they are allowed; usually not, so compare strictly), values at the numeric type limits (in Java use Long or null instead of Integer.MIN_VALUE), an empty tree is valid."
+    },
+    "code": "type TreeNode = { val: number; left: TreeNode | null; right: TreeNode | null };\n\nfunction isValidBST(root: TreeNode | null): boolean {\n  const check = (node: TreeNode | null, lo: number, hi: number): boolean =>\n    !node ||\n    (node.val > lo &&\n      node.val < hi &&\n      check(node.left, lo, node.val) &&\n      check(node.right, node.val, hi));\n  return check(root, -Infinity, Infinity);\n}",
+    "tip": {
+      "vi": "Chủ động đưa ra phản ví dụ 5-7-3 trước khi code; nó cho thấy bạn hiểu định nghĩa BST chứ không học thuộc.",
+      "en": "Bring up the 5-7-3 counterexample before coding; it shows you understand the BST definition rather than memorizing it."
+    },
+    "followUps": [
+      {
+        "vi": "Tìm phần tử nhỏ thứ k trong BST?",
+        "en": "How do you find the k-th smallest element in a BST?"
+      },
+      {
+        "vi": "Hai node trong BST bị đổi chỗ cho nhau, sửa lại thế nào?",
+        "en": "Two nodes of a BST were swapped by mistake; how do you fix it?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/validate-binary-search-tree/"
+  },
+  {
+    "id": "dsa-tree-lowest-common-ancestor",
+    "level": "mid",
+    "topic": "Tree",
+    "q": {
+      "vi": "Tìm tổ tiên chung thấp nhất (LCA) của hai node p và q trong cây nhị phân (không nhất thiết là BST). Một node có thể là tổ tiên của chính nó.",
+      "en": "Find the lowest common ancestor (LCA) of two nodes p and q in a binary tree (not necessarily a BST). A node can be an ancestor of itself."
+    },
+    "a": {
+      "vi": "Cách trực quan: tìm đường đi từ gốc tới p và tới q, rồi lấy node chung cuối cùng. O(n) nhưng cần lưu hai đường đi.\n\nCách đệ quy gọn: hàm trả về \"node đáng chú ý\" tìm được trong cây con.\n- Nếu node là null, p hoặc q: trả về chính node đó.\n- Đệ quy hai bên. Nếu cả trái và phải đều khác null, nghĩa là p và q nằm ở hai phía, node hiện tại là LCA.\n- Nếu chỉ một bên khác null, đẩy kết quả bên đó lên trên.\n\nO(n) thời gian, O(h) bộ nhớ.\n\nGiả định quan trọng: cả p và q đều có trong cây. Nếu không chắc, cần đếm xem đã thực sự tìm thấy cả hai chưa.\n\nVới BST thì đơn giản hơn: đi từ gốc, nếu cả p và q nhỏ hơn node thì sang trái, cả hai lớn hơn thì sang phải, còn lại node hiện tại là LCA. O(h), không cần đệ quy.\n\nNếu node có con trỏ parent: bài toán thành tìm giao điểm của hai linked list.",
+      "en": "Intuitive: find the root-to-p and root-to-q paths and take the last common node. O(n), but you store two paths.\n\nCompact recursion: the function returns the \"interesting node\" found in a subtree.\n- If the node is null, p or q: return the node itself.\n- Recurse both sides. If both left and right are non-null, p and q are on different sides and the current node is the LCA.\n- If only one side is non-null, pass that result up.\n\nO(n) time, O(h) space.\n\nKey assumption: both p and q exist in the tree. If that is not guaranteed, count whether both were really found.\n\nFor a BST it is simpler: walk from the root; if both p and q are smaller go left, if both are larger go right, otherwise the current node is the LCA. O(h), no recursion needed.\n\nWith parent pointers: it becomes finding the intersection of two linked lists."
+    },
+    "code": "type TreeNode = { val: number; left: TreeNode | null; right: TreeNode | null };\n\nfunction lowestCommonAncestor(\n  root: TreeNode | null,\n  p: TreeNode,\n  q: TreeNode,\n): TreeNode | null {\n  if (!root || root === p || root === q) return root;\n  const left = lowestCommonAncestor(root.left, p, q);\n  const right = lowestCommonAncestor(root.right, p, q);\n  if (left && right) return root;\n  return left ?? right;\n}",
+    "tip": {
+      "vi": "Hỏi ngay cây có phải BST không và p, q có chắc tồn tại không; hai câu hỏi này đổi hẳn lời giải.",
+      "en": "Ask right away whether it is a BST and whether p and q are guaranteed to exist; both change the solution."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu p hoặc q có thể không có trong cây?",
+        "en": "What if p or q might not be in the tree?"
+      },
+      {
+        "vi": "Trả lời nhiều truy vấn LCA nhanh (binary lifting)?",
+        "en": "How do you answer many LCA queries fast (binary lifting)?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/"
+  },
+  {
+    "id": "dsa-heap-kth-largest",
+    "level": "mid",
+    "topic": "Heap",
+    "q": {
+      "vi": "Tìm phần tử lớn thứ k trong mảng chưa sắp xếp. Ví dụ [3, 2, 1, 5, 6, 4], k = 2 → 5. Heap giúp gì ở đây?",
+      "en": "Find the k-th largest element in an unsorted array. Example: [3, 2, 1, 5, 6, 4], k = 2 → 5. How does a heap help?"
+    },
+    "a": {
+      "vi": "Heap (priority queue) là cây nhị phân hoàn chỉnh lưu trong mảng: con của i nằm ở 2i + 1 và 2i + 2. Lấy min/max O(1), thêm và xóa O(log n), dựng heap từ mảng O(n).\n\nCác cách:\n- Sắp xếp rồi lấy phần tử thứ k: O(n log n).\n- Min-heap kích thước k: duyệt mảng, push từng số; khi heap vượt k phần tử thì pop phần tử nhỏ nhất. Cuối cùng đỉnh heap là đáp án. O(n log k) thời gian, O(k) bộ nhớ, và chạy được với dữ liệu dạng stream.\n- Quickselect: phân hoạch như quick sort nhưng chỉ đệ quy vào một phía. Trung bình O(n), xấu nhất O(n²), cần pivot ngẫu nhiên.\n\nVì sao min-heap cho bài \"lớn nhất\"? Heap giữ k số lớn nhất đã gặp, và số nhỏ nhất trong nhóm đó (ở đỉnh) chính là số lớn thứ k.\n\nJavaScript không có heap sẵn, nên cần tự cài đặt hoặc nói rõ là sẽ dùng thư viện.",
+      "en": "A heap (priority queue) is a complete binary tree stored in an array: the children of i are at 2i + 1 and 2i + 2. Peek min/max in O(1), push and pop in O(log n), heapify an array in O(n).\n\nApproaches:\n- Sort and take the k-th: O(n log n).\n- Min-heap of size k: push each number; when the heap exceeds k elements, pop the smallest. At the end the top is the answer. O(n log k) time, O(k) space, and it works on a stream.\n- Quickselect: partition like quick sort but recurse into one side only. Average O(n), worst O(n²), needs a random pivot.\n\nWhy a min-heap for \"largest\"? The heap keeps the k largest values seen so far, and the smallest of them (at the top) is the k-th largest.\n\nJavaScript has no built-in heap, so either implement one or say clearly that you would use a library."
+    },
+    "code": "class MinHeap {\n  private a: number[] = [];\n\n  get size(): number {\n    return this.a.length;\n  }\n\n  peek(): number | undefined {\n    return this.a[0];\n  }\n\n  push(x: number): void {\n    const a = this.a;\n    a.push(x);\n    let i = a.length - 1;\n    while (i > 0) {\n      const p = (i - 1) >> 1;\n      if (a[p] <= a[i]) break;\n      [a[p], a[i]] = [a[i], a[p]];\n      i = p;\n    }\n  }\n\n  pop(): number | undefined {\n    const a = this.a;\n    const top = a[0];\n    const last = a.pop();\n    if (a.length > 0 && last !== undefined) {\n      a[0] = last;\n      let i = 0;\n      for (;;) {\n        const l = 2 * i + 1;\n        const r = l + 1;\n        let m = i;\n        if (l < a.length && a[l] < a[m]) m = l;\n        if (r < a.length && a[r] < a[m]) m = r;\n        if (m === i) break;\n        [a[m], a[i]] = [a[i], a[m]];\n        i = m;\n      }\n    }\n    return top;\n  }\n}\n\nfunction findKthLargest(nums: number[], k: number): number {\n  const heap = new MinHeap();\n  for (const x of nums) {\n    heap.push(x);\n    if (heap.size > k) heap.pop();\n  }\n  return heap.peek()!;\n}",
+    "tip": {
+      "vi": "So sánh cả ba cách và nói khi nào chọn heap (k nhỏ, dữ liệu stream) và khi nào chọn quickselect (cần O(n) trung bình).",
+      "en": "Compare all three approaches and say when to pick the heap (small k, streaming data) versus quickselect (average O(n))."
+    },
+    "followUps": [
+      {
+        "vi": "Tìm k phần tử xuất hiện nhiều nhất (top-k frequent)?",
+        "en": "How do you find the k most frequent elements (top-k frequent)?"
+      },
+      {
+        "vi": "Duy trì median của một stream số?",
+        "en": "How do you maintain the median of a stream of numbers?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/kth-largest-element-in-an-array/"
+  },
+  {
+    "id": "dsa-heap-merge-k-sorted-lists",
+    "level": "senior",
+    "topic": "Heap",
+    "q": {
+      "vi": "Trộn k linked list đã sắp xếp thành một list sắp xếp. Tổng số node là N. Phân tích các cách và độ phức tạp.",
+      "en": "Merge k sorted linked lists into one sorted list. The total number of nodes is N. Analyze the approaches and their complexity."
+    },
+    "a": {
+      "vi": "Các cách, từ chậm đến nhanh:\n- Gom hết giá trị rồi sort: O(N log N), bỏ phí việc các list đã sắp xếp sẵn.\n- Trộn lần lượt list 1 với 2, kết quả với 3...: list kết quả dài dần nên tổng là O(N · k).\n- Min-heap chứa đầu của mỗi list: pop node nhỏ nhất, nối vào kết quả, push node kế tiếp của list đó. Heap luôn có tối đa k phần tử: O(N log k) thời gian, O(k) bộ nhớ.\n- Chia để trị: trộn từng cặp list, sau mỗi vòng số list giảm một nửa. Có log k vòng, mỗi vòng chạm vào N node: O(N log k), không cần cài heap.\n\nCode dưới dùng chia để trị vì JavaScript không có heap sẵn; trong Java/Python thì dùng PriorityQueue/heapq cho cách heap.\n\nCách heap thích hợp hơn khi dữ liệu đến dạng stream (ví dụ trộn log từ k server), vì nó xử lý từng phần tử ngay khi tới.\n\nEdge case: k = 0, có list rỗng, tất cả list rỗng.",
+      "en": "Approaches, slowest to fastest:\n- Collect all values and sort: O(N log N), wasting the fact that lists are already sorted.\n- Merge list 1 with 2, the result with 3, and so on: the result keeps growing, totaling O(N · k).\n- A min-heap of the k list heads: pop the smallest node, append it, push the next node from that list. The heap holds at most k items: O(N log k) time, O(k) space.\n- Divide and conquer: merge lists in pairs; each round halves the number of lists. There are log k rounds, each touching N nodes: O(N log k) with no heap needed.\n\nThe code uses divide and conquer because JavaScript has no built-in heap; in Java/Python use PriorityQueue/heapq for the heap version.\n\nThe heap version is a better fit for streaming input (for example merging logs from k servers), since it handles each element as it arrives.\n\nEdge cases: k = 0, some lists empty, all lists empty."
+    },
+    "code": "type ListNode = { val: number; next: ListNode | null };\n\nfunction mergeTwo(a: ListNode | null, b: ListNode | null): ListNode | null {\n  const dummy: ListNode = { val: 0, next: null };\n  let tail = dummy;\n  while (a && b) {\n    if (a.val <= b.val) {\n      tail.next = a;\n      tail = a;\n      a = a.next;\n    } else {\n      tail.next = b;\n      tail = b;\n      b = b.next;\n    }\n  }\n  tail.next = a ?? b;\n  return dummy.next;\n}\n\nfunction mergeKLists(lists: Array<ListNode | null>): ListNode | null {\n  if (lists.length === 0) return null;\n  let round = lists;\n  while (round.length > 1) {\n    const next: Array<ListNode | null> = [];\n    for (let i = 0; i < round.length; i += 2) {\n      next.push(mergeTwo(round[i], round[i + 1] ?? null));\n    }\n    round = next;\n  }\n  return round[0];\n}",
+    "tip": {
+      "vi": "Giải thích vì sao trộn lần lượt là O(N · k) còn chia để trị là O(N log k); phép phân tích này mới là điều interviewer muốn nghe.",
+      "en": "Explain why sequential merging is O(N · k) while divide and conquer is O(N log k); that analysis is what the interviewer wants."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu k list nằm trên k máy khác nhau và rất lớn?",
+        "en": "What if the k lists live on k different machines and are huge?"
+      },
+      {
+        "vi": "Tìm khoảng nhỏ nhất chứa ít nhất một số từ mỗi list?",
+        "en": "Find the smallest range containing at least one number from each list?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/merge-k-sorted-lists/"
+  },
+  {
+    "id": "dsa-trie-implement",
+    "level": "mid",
+    "topic": "Trie",
+    "q": {
+      "vi": "Cài đặt Trie (prefix tree) với insert(word), search(word) và startsWith(prefix). Trie dùng vào việc gì trong thực tế?",
+      "en": "Implement a Trie (prefix tree) with insert(word), search(word) and startsWith(prefix). Where are tries used in practice?"
+    },
+    "a": {
+      "vi": "Trie là cây mà mỗi cạnh là một ký tự; đường đi từ gốc tới một node là một prefix. Mỗi node có map children và cờ isWord đánh dấu có từ kết thúc tại đây.\n\n- insert: đi theo từng ký tự, tạo node khi chưa có, cuối cùng bật isWord.\n- search: đi theo từng ký tự; thiếu node thì false; tới cuối phải có isWord.\n- startsWith: giống search nhưng chỉ cần đi hết prefix.\n\nMỗi thao tác O(L) với L là độ dài từ, không phụ thuộc số từ đã lưu. Bộ nhớ O(tổng số ký tự) trong trường hợp xấu nhất.\n\nSo với hash set: hash set cũng tra từ O(L) nhưng không trả lời được câu hỏi prefix nếu không quét toàn bộ.\n\nỨng dụng: autocomplete, gợi ý tìm kiếm, kiểm tra chính tả, tìm nhiều từ trên bảng chữ (word search II), định tuyến IP theo longest prefix match.\n\nTối ưu: dùng mảng 26 phần tử thay vì Map nếu chỉ có a-z; nén các nhánh chỉ có một con (radix tree) để tiết kiệm bộ nhớ.",
+      "en": "A trie is a tree where each edge is a character; the path from the root to a node spells a prefix. Each node has a children map and an isWord flag marking that a word ends there.\n\n- insert: follow each character, creating nodes as needed, then set isWord.\n- search: follow each character; a missing node means false; at the end isWord must be set.\n- startsWith: like search, but only needs to walk the whole prefix.\n\nEach operation is O(L) where L is the word length, independent of how many words are stored. Memory is O(total characters) in the worst case.\n\nVersus a hash set: lookups are also O(L), but prefix questions require scanning everything.\n\nUses: autocomplete, search suggestions, spell checking, finding many words on a letter board (word search II), IP routing via longest prefix match.\n\nOptimizations: a 26-slot array instead of a Map when only a-z is allowed; compress single-child chains (radix tree) to save memory."
+    },
+    "code": "class TrieNode {\n  children = new Map<string, TrieNode>();\n  isWord = false;\n}\n\nclass Trie {\n  private root = new TrieNode();\n\n  insert(word: string): void {\n    let node = this.root;\n    for (const ch of word) {\n      let next = node.children.get(ch);\n      if (!next) {\n        next = new TrieNode();\n        node.children.set(ch, next);\n      }\n      node = next;\n    }\n    node.isWord = true;\n  }\n\n  search(word: string): boolean {\n    return this.find(word)?.isWord ?? false;\n  }\n\n  startsWith(prefix: string): boolean {\n    return this.find(prefix) !== null;\n  }\n\n  private find(s: string): TrieNode | null {\n    let node = this.root;\n    for (const ch of s) {\n      const next = node.children.get(ch);\n      if (!next) return null;\n      node = next;\n    }\n    return node;\n  }\n}",
+    "tip": {
+      "vi": "Tách hàm find dùng chung cho search và startsWith; code gọn cho thấy tư duy thiết kế tốt.",
+      "en": "Factor out a shared find helper for search and startsWith; tidy code signals good design sense."
+    },
+    "followUps": [
+      {
+        "vi": "Hỗ trợ tìm kiếm có ký tự đại diện \".\" thế nào?",
+        "en": "How would you support a \".\" wildcard in search?"
+      },
+      {
+        "vi": "Autocomplete trả về top 5 từ phổ biến nhất cho một prefix?",
+        "en": "How would autocomplete return the 5 most popular words for a prefix?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/implement-trie-prefix-tree/"
+  },
+  {
+    "id": "dsa-greedy-merge-intervals",
+    "level": "junior",
+    "topic": "Greedy",
+    "q": {
+      "vi": "Gộp các khoảng chồng lên nhau. Ví dụ [[1, 3], [2, 6], [8, 10], [15, 18]] → [[1, 6], [8, 10], [15, 18]].",
+      "en": "Merge overlapping intervals. Example: [[1, 3], [2, 6], [8, 10], [15, 18]] → [[1, 6], [8, 10], [15, 18]]."
+    },
+    "a": {
+      "vi": "Brute force so sánh mọi cặp và gộp lặp lại đến khi không đổi: O(n²) hoặc tệ hơn.\n\nGreedy sau khi sắp xếp theo điểm bắt đầu: sau khi sort, các khoảng có thể gộp với nhau sẽ nằm liền kề. Duyệt lần lượt:\n- Nếu khoảng hiện tại bắt đầu trước hoặc đúng lúc khoảng cuối trong kết quả kết thúc (start <= last.end): gộp bằng cách last.end = max(last.end, end).\n- Ngược lại: thêm khoảng mới vào kết quả.\n\nPhải dùng max khi gộp vì khoảng sau có thể nằm gọn trong khoảng trước, ví dụ [1, 10] và [2, 3].\n\nĐộ phức tạp: O(n log n) do sắp xếp, O(n) cho output.\n\nEdge case: mảng rỗng, chỉ một khoảng, hai khoảng chạm nhau như [1, 2] và [2, 3] (hỏi lại có tính là chồng không), input chưa sắp xếp.\n\nBài anh em: số phòng họp tối thiểu (sort điểm đầu và điểm cuối, hoặc dùng min-heap), xóa ít khoảng nhất để không còn chồng nhau (greedy theo điểm kết thúc).",
+      "en": "Brute force compares every pair and keeps merging until nothing changes: O(n²) or worse.\n\nGreedy after sorting by start: once sorted, intervals that can merge sit next to each other. Walk through them:\n- If the current interval starts at or before the end of the last merged one (start <= last.end): merge with last.end = max(last.end, end).\n- Otherwise: append it as a new interval.\n\nYou need max when merging because a later interval can sit entirely inside the previous one, e.g. [1, 10] and [2, 3].\n\nComplexity: O(n log n) for the sort, O(n) for the output.\n\nEdge cases: empty input, a single interval, touching intervals like [1, 2] and [2, 3] (ask whether they count as overlapping), unsorted input.\n\nSibling problems: minimum meeting rooms (sort starts and ends, or a min-heap), removing the fewest intervals to eliminate overlaps (greedy by end time)."
+    },
+    "code": "function merge(intervals: number[][]): number[][] {\n  const sorted = [...intervals].sort((a, b) => a[0] - b[0]);\n  const res: number[][] = [];\n  for (const [start, end] of sorted) {\n    const last = res[res.length - 1];\n    if (last && start <= last[1]) last[1] = Math.max(last[1], end);\n    else res.push([start, end]);\n  }\n  return res;\n}",
+    "tip": {
+      "vi": "Với bài greedy, hãy nói vì sao lựa chọn tham lam là đúng (sau khi sort, không khoảng nào phía sau có thể gộp với khoảng đã đóng).",
+      "en": "For greedy problems, say why the greedy choice is safe (after sorting, nothing later can merge with an interval already closed)."
+    },
+    "followUps": [
+      {
+        "vi": "Chèn một khoảng mới vào danh sách đã gộp và sắp xếp?",
+        "en": "How do you insert a new interval into an already merged, sorted list?"
+      },
+      {
+        "vi": "Cần tối thiểu bao nhiêu phòng họp cho các cuộc họp này?",
+        "en": "What is the minimum number of meeting rooms for these meetings?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/merge-intervals/"
+  },
+  {
+    "id": "dsa-bfs-dfs",
+    "level": "junior",
+    "topic": "Graph",
+    "q": {
+      "vi": "So sánh BFS và DFS. Khi nào dùng cái nào?",
+      "en": "Compare BFS and DFS. When do you use each?"
+    },
+    "a": {
+      "vi": "BFS duyệt theo từng lớp bằng queue; DFS đi sâu hết một nhánh rồi quay lui, dùng stack hoặc đệ quy. Cả hai O(V + E) với danh sách kề, và đều cần tập visited để không thăm lại node (đồ thị có chu trình).\n\nDùng BFS khi: tìm đường ngắn nhất trên đồ thị không trọng số, duyệt theo cấp (level order), tìm \"bạn của bạn\" gần nhất, lan truyền nhiều nguồn cùng lúc (multi-source BFS).\nDùng DFS khi: phát hiện chu trình, topological sort, đếm thành phần liên thông, backtracking (sinh tổ hợp, giải sudoku).\n\nLưu ý:\n- DFS đệ quy có thể tràn stack với đồ thị sâu; khi đó dùng stack tường minh.\n- BFS tốn bộ nhớ khi đồ thị rộng.\n- Trong JavaScript, queue.shift() là O(n); dùng con trỏ head chạy trên mảng để giữ BFS là O(V + E).\n- Đánh dấu visited ngay khi đưa vào queue, không phải lúc lấy ra, để tránh một node vào queue nhiều lần.",
+      "en": "BFS explores layer by layer with a queue; DFS goes deep down one branch then backtracks, using a stack or recursion. Both are O(V + E) with adjacency lists, and both need a visited set so nodes are not revisited (graphs can have cycles).\n\nUse BFS for: shortest path on unweighted graphs, level-order traversal, nearest \"friend of friend\", spreading from several sources at once (multi-source BFS).\nUse DFS for: cycle detection, topological sort, connected components, backtracking (combinations, sudoku).\n\nNotes:\n- Recursive DFS can overflow the stack on deep graphs; use an explicit stack then.\n- BFS uses lots of memory on wide graphs.\n- In JavaScript, queue.shift() is O(n); walk the array with a head index to keep BFS at O(V + E).\n- Mark a node visited when it is enqueued, not when it is dequeued, so it never enters the queue twice."
+    },
+    "code": "// Shortest number of edges from src to dst in an unweighted graph, or -1.\nfunction shortestPath(graph: Map<number, number[]>, src: number, dst: number): number {\n  const dist = new Map<number, number>([[src, 0]]);\n  const queue = [src];\n  for (let head = 0; head < queue.length; head++) {\n    const u = queue[head];\n    if (u === dst) return dist.get(u)!;\n    for (const v of graph.get(u) ?? []) {\n      if (!dist.has(v)) {\n        dist.set(v, dist.get(u)! + 1);\n        queue.push(v);\n      }\n    }\n  }\n  return -1;\n}",
+    "tip": {
+      "vi": "Giải thích vì sao BFS cho đường ngắn nhất: node được thăm theo thứ tự khoảng cách tăng dần.",
+      "en": "Explain why BFS gives shortest paths: nodes are visited in order of increasing distance."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu cạnh có trọng số thì BFS còn đúng không?",
+        "en": "Does BFS still work if edges have weights?"
+      },
+      {
+        "vi": "Phát hiện chu trình trong đồ thị có hướng bằng DFS thế nào?",
+        "en": "How do you detect a cycle in a directed graph with DFS?"
+      }
+    ]
+  },
+  {
+    "id": "dsa-graph-number-of-islands",
+    "level": "junior",
+    "topic": "Graph",
+    "q": {
+      "vi": "Cho lưới 2D gồm \"1\" (đất) và \"0\" (nước), đếm số hòn đảo (các ô đất nối nhau theo 4 hướng). Ví dụ [[\"1\",\"1\",\"0\"],[\"0\",\"1\",\"0\"],[\"0\",\"0\",\"1\"]] → 2.",
+      "en": "Given a 2D grid of \"1\" (land) and \"0\" (water), count the islands (land cells connected in 4 directions). Example: [[\"1\",\"1\",\"0\"],[\"0\",\"1\",\"0\"],[\"0\",\"0\",\"1\"]] → 2."
+    },
+    "a": {
+      "vi": "Xem lưới như một đồ thị ẩn: mỗi ô là một node, nối với tối đa 4 ô kề. Số đảo chính là số thành phần liên thông của các ô đất.\n\nThuật toán: duyệt từng ô; gặp ô \"1\" chưa thăm thì tăng bộ đếm và \"loang\" (flood fill) bằng DFS hoặc BFS để đánh dấu toàn bộ hòn đảo đó. Đánh dấu bằng cách đổi ô thành \"0\" (sửa input) hoặc dùng mảng visited riêng nếu không được sửa.\n\nMỗi ô được thăm tối đa một lần: O(R · C) thời gian. Bộ nhớ O(R · C) trong trường hợp xấu nhất cho stack/queue.\n\nDùng stack tường minh thay vì đệ quy: lưới 1000 × 1000 toàn đất sẽ làm đệ quy sâu một triệu tầng và tràn stack.\n\nCách khác: union-find, gộp các ô đất kề nhau, số tập còn lại là số đảo. Hữu ích khi đất được thêm dần (number of islands II).\n\nEdge case: lưới rỗng, toàn nước, toàn đất, đảo chạm biên.",
+      "en": "Treat the grid as an implicit graph: each cell is a node connected to up to 4 neighbours. The number of islands is the number of connected components of land cells.\n\nAlgorithm: scan every cell; on an unvisited \"1\", increment the counter and flood fill with DFS or BFS to mark the whole island. Mark cells by flipping them to \"0\" (mutating the input) or with a separate visited array if mutation is not allowed.\n\nEach cell is visited at most once: O(R · C) time. Space O(R · C) worst case for the stack/queue.\n\nUse an explicit stack rather than recursion: a 1000 × 1000 all-land grid would recurse a million levels deep and overflow.\n\nAlternative: union-find, joining adjacent land cells; the number of remaining sets is the answer. Useful when land is added over time (number of islands II).\n\nEdge cases: empty grid, all water, all land, islands touching the border."
+    },
+    "code": "function numIslands(grid: string[][]): number {\n  const rows = grid.length;\n  const cols = grid[0]?.length ?? 0;\n  const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];\n  let count = 0;\n  for (let r = 0; r < rows; r++) {\n    for (let c = 0; c < cols; c++) {\n      if (grid[r][c] !== \"1\") continue;\n      count++;\n      grid[r][c] = \"0\"; // mark visited by sinking the land\n      const stack: Array<[number, number]> = [[r, c]];\n      while (stack.length > 0) {\n        const [i, j] = stack.pop()!;\n        for (const [di, dj] of dirs) {\n          const ni = i + di;\n          const nj = j + dj;\n          if (ni >= 0 && ni < rows && nj >= 0 && nj < cols && grid[ni][nj] === \"1\") {\n            grid[ni][nj] = \"0\";\n            stack.push([ni, nj]);\n          }\n        }\n      }\n    }\n  }\n  return count;\n}",
+    "tip": {
+      "vi": "Hỏi trước có được sửa input không; câu hỏi nhỏ này cho thấy bạn để ý đến side effect.",
+      "en": "Ask whether you may modify the input; that small question shows you care about side effects."
+    },
+    "followUps": [
+      {
+        "vi": "Tính diện tích hòn đảo lớn nhất?",
+        "en": "How do you compute the area of the largest island?"
+      },
+      {
+        "vi": "Nếu đất được thêm dần từng ô và cần trả lời số đảo sau mỗi lần?",
+        "en": "What if land is added one cell at a time and you report the island count after each addition?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/number-of-islands/"
+  },
+  {
+    "id": "dsa-graph-topological-sort",
+    "level": "mid",
+    "topic": "Graph",
+    "q": {
+      "vi": "Có n môn học đánh số 0..n−1 và danh sách prerequisites, [a, b] nghĩa là phải học b trước a. Trả về một thứ tự học hợp lệ, hoặc [] nếu không thể. Ví dụ n = 4, [[1, 0], [2, 0], [3, 1], [3, 2]] → [0, 1, 2, 3].",
+      "en": "There are n courses 0..n−1 and a list of prerequisites, where [a, b] means b must be taken before a. Return a valid order, or [] if impossible. Example: n = 4, [[1, 0], [2, 0], [3, 1], [3, 2]] → [0, 1, 2, 3]."
+    },
+    "a": {
+      "vi": "Mô hình hóa thành đồ thị có hướng: cạnh b → a. Một thứ tự hợp lệ là topological sort, chỉ tồn tại khi đồ thị không có chu trình (DAG).\n\nThuật toán Kahn (BFS):\n- Tính indegree (số cạnh đi vào) của mỗi node.\n- Đưa mọi node có indegree 0 vào queue, đó là các môn không cần học trước gì.\n- Lấy từng node ra, thêm vào kết quả, giảm indegree các node kề; node nào về 0 thì đưa vào queue.\n- Nếu kết quả có ít hơn n node thì còn chu trình, trả về [].\n\nCách DFS: duyệt postorder, thêm node vào danh sách khi đã duyệt xong mọi node phía sau, rồi đảo ngược. Phát hiện chu trình bằng ba trạng thái: chưa thăm, đang thăm (trên stack), đã xong; gặp node \"đang thăm\" là có chu trình.\n\nĐộ phức tạp: O(V + E) thời gian và bộ nhớ.\n\nỨng dụng thực tế: thứ tự build các package, chạy migration, lập lịch task trong pipeline CI, giải quyết dependency.",
+      "en": "Model it as a directed graph with edges b → a. A valid order is a topological sort, which exists only if the graph has no cycle (a DAG).\n\nKahn's algorithm (BFS):\n- Compute every node's indegree (incoming edges).\n- Enqueue all nodes with indegree 0; those courses need nothing first.\n- Dequeue nodes one by one, append to the result, decrement their neighbours' indegree; enqueue any that drop to 0.\n- If the result has fewer than n nodes, a cycle remains, so return [].\n\nDFS alternative: postorder traversal, appending a node after everything reachable from it is done, then reverse. Detect cycles with three states: unvisited, visiting (on the stack), done; reaching a \"visiting\" node means a cycle.\n\nComplexity: O(V + E) time and space.\n\nReal uses: package build order, running migrations, scheduling CI pipeline tasks, dependency resolution."
+    },
+    "code": "function findOrder(n: number, prerequisites: number[][]): number[] {\n  const adj: number[][] = Array.from({ length: n }, () => []);\n  const indegree = new Array<number>(n).fill(0);\n  for (const [course, pre] of prerequisites) {\n    adj[pre].push(course);\n    indegree[course]++;\n  }\n  // order doubles as the BFS queue\n  const order: number[] = [];\n  for (let i = 0; i < n; i++) if (indegree[i] === 0) order.push(i);\n  for (let head = 0; head < order.length; head++) {\n    for (const next of adj[order[head]]) {\n      if (--indegree[next] === 0) order.push(next);\n    }\n  }\n  return order.length === n ? order : [];\n}",
+    "tip": {
+      "vi": "Nối bài toán với ví dụ thực tế như thứ tự build package; nó cho thấy bạn hiểu vì sao thuật toán này tồn tại.",
+      "en": "Connect it to a real example like package build order; it shows you know why the algorithm exists."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu cần thứ tự nhỏ nhất theo từ điển thì sao?",
+        "en": "What if you need the lexicographically smallest order?"
+      },
+      {
+        "vi": "Tính số học kỳ tối thiểu nếu mỗi kỳ học được nhiều môn?",
+        "en": "What is the minimum number of semesters if you can take many courses per semester?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/course-schedule-ii/"
+  },
+  {
+    "id": "dsa-graph-union-find",
+    "level": "mid",
+    "topic": "Graph",
+    "q": {
+      "vi": "Union-Find (Disjoint Set Union) là gì? Dùng nó để đếm số thành phần liên thông của đồ thị vô hướng n đỉnh. Ví dụ n = 5, edges = [[0, 1], [1, 2], [3, 4]] → 2.",
+      "en": "What is Union-Find (Disjoint Set Union)? Use it to count the connected components of an undirected graph with n nodes. Example: n = 5, edges = [[0, 1], [1, 2], [3, 4]] → 2."
+    },
+    "a": {
+      "vi": "Union-Find quản lý các tập rời nhau với hai thao tác:\n- find(x): trả về đại diện (gốc) của tập chứa x.\n- union(a, b): gộp hai tập chứa a và b.\n\nMỗi tập là một cây, parent[x] trỏ lên cha, gốc trỏ về chính nó. Hai tối ưu quan trọng:\n- Path compression: khi find, cho các node trên đường đi trỏ gần gốc hơn (hoặc thẳng vào gốc).\n- Union by size/rank: gắn cây nhỏ vào dưới cây lớn để cây không bị cao.\nKết hợp cả hai, mỗi thao tác gần như O(1) (chính xác là O(α(n)), hàm Ackermann ngược).\n\nĐếm thành phần: bắt đầu với n tập, mỗi lần union thành công (hai đỉnh khác tập) thì giảm bộ đếm. Tổng O(V + E · α(n)).\n\nSo với DFS/BFS: Union-Find tỏa sáng khi cạnh được thêm dần và cần hỏi liên thông liên tục, hoặc phát hiện cạnh tạo chu trình (redundant connection), hoặc thuật toán Kruskal tìm cây khung nhỏ nhất. Nhược điểm: không hỗ trợ xóa cạnh.",
+      "en": "Union-Find tracks disjoint sets with two operations:\n- find(x): returns the representative (root) of x's set.\n- union(a, b): merges the sets containing a and b.\n\nEach set is a tree where parent[x] points up and the root points to itself. Two key optimizations:\n- Path compression: during find, make nodes on the path point closer to (or directly at) the root.\n- Union by size/rank: attach the smaller tree under the larger so trees stay shallow.\nTogether each operation is nearly O(1) (precisely O(α(n)), the inverse Ackermann function).\n\nCounting components: start with n sets and decrement the count on every successful union (endpoints in different sets). Total O(V + E · α(n)).\n\nVersus DFS/BFS: Union-Find shines when edges arrive over time and connectivity is queried continuously, when detecting the edge that creates a cycle (redundant connection), and in Kruskal's minimum spanning tree. Downside: it cannot delete edges."
+    },
+    "code": "class UnionFind {\n  private parent: number[];\n  private size: number[];\n  count: number;\n\n  constructor(n: number) {\n    this.parent = Array.from({ length: n }, (_, i) => i);\n    this.size = new Array<number>(n).fill(1);\n    this.count = n;\n  }\n\n  find(x: number): number {\n    while (this.parent[x] !== x) {\n      this.parent[x] = this.parent[this.parent[x]]; // path halving\n      x = this.parent[x];\n    }\n    return x;\n  }\n\n  union(a: number, b: number): boolean {\n    let ra = this.find(a);\n    let rb = this.find(b);\n    if (ra === rb) return false;\n    if (this.size[ra] < this.size[rb]) [ra, rb] = [rb, ra];\n    this.parent[rb] = ra;\n    this.size[ra] += this.size[rb];\n    this.count--;\n    return true;\n  }\n}\n\nfunction countComponents(n: number, edges: number[][]): number {\n  const uf = new UnionFind(n);\n  for (const [a, b] of edges) uf.union(a, b);\n  return uf.count;\n}",
+    "tip": {
+      "vi": "Cho union trả về boolean; nhờ vậy cùng một class giải luôn bài tìm cạnh tạo chu trình.",
+      "en": "Have union return a boolean; the same class then also solves finding the edge that creates a cycle."
+    },
+    "followUps": [
+      {
+        "vi": "Tìm cạnh thừa tạo ra chu trình trong cây (redundant connection)?",
+        "en": "How do you find the extra edge that creates a cycle in a tree (redundant connection)?"
+      },
+      {
+        "vi": "Dùng Union-Find trong thuật toán Kruskal thế nào?",
+        "en": "How is Union-Find used in Kruskal's algorithm?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/redundant-connection/"
+  },
+  {
+    "id": "dsa-graph-dijkstra",
+    "level": "senior",
+    "topic": "Graph",
+    "q": {
+      "vi": "Tìm đường đi ngắn nhất từ một đỉnh nguồn tới mọi đỉnh trong đồ thị có hướng với trọng số không âm. Trình bày Dijkstra, độ phức tạp và giới hạn của nó.",
+      "en": "Find the shortest path from a source to every node in a directed graph with non-negative weights. Explain Dijkstra, its complexity and its limitations."
+    },
+    "a": {
+      "vi": "Ý tưởng: luôn \"chốt\" đỉnh chưa xử lý có khoảng cách tạm thời nhỏ nhất. Vì trọng số không âm, không đường nào đi vòng qua đỉnh khác mà ngắn hơn được, nên khoảng cách đó là cuối cùng.\n\nCài đặt với min-heap chứa cặp (khoảng cách, đỉnh):\n- dist[src] = 0, các đỉnh khác là ∞; push (0, src).\n- Pop cặp nhỏ nhất (d, u). Nếu d > dist[u] thì đây là bản ghi cũ, bỏ qua (lazy deletion thay cho decrease-key).\n- Với mỗi cạnh u → v trọng số w: nếu d + w < dist[v] thì cập nhật và push (dist[v], v).\n\nĐộ phức tạp: O((V + E) log V) với binary heap. Bản dùng mảng không heap là O(V²), tốt hơn với đồ thị rất dày.\n\nGiới hạn:\n- Sai khi có cạnh âm; khi đó dùng Bellman-Ford O(V · E), nó còn phát hiện được chu trình âm.\n- Đồ thị không trọng số: BFS là đủ. Trọng số chỉ 0 hoặc 1: dùng 0-1 BFS với deque.\n- Cần mọi cặp đỉnh: Floyd-Warshall O(V³).\n- Muốn đường đi thực tế: lưu prev[v] khi cập nhật rồi lần ngược.",
+      "en": "Idea: always \"settle\" the unprocessed node with the smallest tentative distance. With non-negative weights, no detour through another node can be shorter, so that distance is final.\n\nImplementation with a min-heap of (distance, node) pairs:\n- dist[src] = 0, everything else ∞; push (0, src).\n- Pop the smallest (d, u). If d > dist[u] it is a stale entry, skip it (lazy deletion instead of decrease-key).\n- For each edge u → v with weight w: if d + w < dist[v], update it and push (dist[v], v).\n\nComplexity: O((V + E) log V) with a binary heap. The array version without a heap is O(V²), better for very dense graphs.\n\nLimitations:\n- Wrong with negative edges; use Bellman-Ford O(V · E) instead, which also detects negative cycles.\n- Unweighted graphs: plain BFS is enough. Weights of only 0 or 1: 0-1 BFS with a deque.\n- All pairs: Floyd-Warshall O(V³).\n- To get the actual path: store prev[v] on each update and walk back."
+    },
+    "code": "type Item = [number, number]; // [distance, node]\n\nfunction dijkstra(n: number, edges: Array<[number, number, number]>, src: number): number[] {\n  const adj: Item[][] = Array.from({ length: n }, () => []);\n  for (const [u, v, w] of edges) adj[u].push([w, v]);\n  const dist = new Array<number>(n).fill(Infinity);\n  dist[src] = 0;\n  const heap: Item[] = [[0, src]];\n  while (heap.length > 0) {\n    const [d, u] = popMin(heap);\n    if (d > dist[u]) continue; // stale entry\n    for (const [w, v] of adj[u]) {\n      if (d + w < dist[v]) {\n        dist[v] = d + w;\n        pushMin(heap, [dist[v], v]);\n      }\n    }\n  }\n  return dist;\n}\n\nfunction pushMin(h: Item[], item: Item): void {\n  h.push(item);\n  let i = h.length - 1;\n  while (i > 0) {\n    const p = (i - 1) >> 1;\n    if (h[p][0] <= h[i][0]) break;\n    [h[p], h[i]] = [h[i], h[p]];\n    i = p;\n  }\n}\n\nfunction popMin(h: Item[]): Item {\n  const top = h[0];\n  const last = h.pop()!;\n  if (h.length > 0) {\n    h[0] = last;\n    let i = 0;\n    for (;;) {\n      const l = 2 * i + 1;\n      const r = l + 1;\n      let m = i;\n      if (l < h.length && h[l][0] < h[m][0]) m = l;\n      if (r < h.length && h[r][0] < h[m][0]) m = r;\n      if (m === i) break;\n      [h[m], h[i]] = [h[i], h[m]];\n      i = m;\n    }\n  }\n  return top;\n}",
+    "tip": {
+      "vi": "Tự nêu giới hạn cạnh âm và đưa ra Bellman-Ford trước khi bị hỏi; đó là dấu hiệu của ứng viên senior.",
+      "en": "Raise the negative-edge limitation and offer Bellman-Ford before being asked; that is a senior-level signal."
+    },
+    "followUps": [
+      {
+        "vi": "Tìm đường rẻ nhất với tối đa k điểm dừng?",
+        "en": "How do you find the cheapest path with at most k stops?"
+      },
+      {
+        "vi": "A* khác Dijkstra thế nào và khi nào dùng?",
+        "en": "How does A* differ from Dijkstra and when would you use it?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/network-delay-time/"
+  },
+  {
+    "id": "dsa-dp-climbing-stairs",
+    "level": "intern",
+    "topic": "Dynamic Programming",
+    "q": {
+      "vi": "Cầu thang có n bậc, mỗi lần bước 1 hoặc 2 bậc. Có bao nhiêu cách lên đến đỉnh? Ví dụ n = 3 → 3 (1+1+1, 1+2, 2+1). Dùng bài này để giải thích DP là gì.",
+      "en": "A staircase has n steps and you climb 1 or 2 at a time. How many ways reach the top? Example: n = 3 → 3 (1+1+1, 1+2, 2+1). Use it to explain what DP is."
+    },
+    "a": {
+      "vi": "DP áp dụng khi bài toán có hai tính chất: bài con chồng lấn (cùng một bài con được tính nhiều lần) và cấu trúc con tối ưu (đáp án lớn ghép từ đáp án nhỏ).\n\nĐịnh nghĩa trạng thái: f(i) = số cách đứng ở bậc i.\nChuyển trạng thái: bước cuối là 1 bậc (từ i − 1) hoặc 2 bậc (từ i − 2), nên f(i) = f(i − 1) + f(i − 2).\nCơ sở: f(0) = 1, f(1) = 1.\n\nĐệ quy thuần là O(2ⁿ) vì tính lại f(i) rất nhiều lần. Hai cách sửa:\n- Top-down (memoization): đệ quy + cache kết quả, O(n).\n- Bottom-up (tabulation): điền mảng từ nhỏ đến lớn, O(n).\nVì f(i) chỉ cần hai giá trị trước, giữ hai biến là đủ: O(n) thời gian, O(1) bộ nhớ.\n\nVới mọi bài DP, hãy trả lời theo đúng khung: trạng thái là gì, chuyển trạng thái thế nào, cơ sở là gì, thứ tự tính ra sao, đáp án nằm ở đâu.\n\nEdge case: n = 0 hoặc 1; n lớn thì kết quả tràn số (dùng BigInt hoặc lấy modulo).",
+      "en": "DP applies when a problem has overlapping subproblems (the same subproblem is solved many times) and optimal substructure (the big answer is built from smaller answers).\n\nState: f(i) = number of ways to stand on step i.\nTransition: the last move is 1 step (from i − 1) or 2 steps (from i − 2), so f(i) = f(i − 1) + f(i − 2).\nBase: f(0) = 1, f(1) = 1.\n\nPlain recursion is O(2ⁿ) because f(i) is recomputed over and over. Two fixes:\n- Top-down (memoization): recursion plus a cache, O(n).\n- Bottom-up (tabulation): fill a table from small to large, O(n).\nSince f(i) only needs the previous two values, two variables suffice: O(n) time, O(1) space.\n\nFor every DP problem, answer with the same frame: what is the state, what is the transition, what are the base cases, in which order to compute, and where the answer lives.\n\nEdge cases: n = 0 or 1; for large n the result overflows (use BigInt or a modulus)."
+    },
+    "code": "function climbStairs(n: number): number {\n  let prev = 1; // ways to reach step i - 2\n  let cur = 1; // ways to reach step i - 1\n  for (let i = 2; i <= n; i++) {\n    [prev, cur] = [cur, prev + cur];\n  }\n  return cur;\n}",
+    "tip": {
+      "vi": "Đi theo thứ tự đệ quy thuần → memoization → tabulation → tối ưu bộ nhớ; interviewer muốn thấy quá trình đó.",
+      "en": "Walk through plain recursion → memoization → tabulation → space optimization; interviewers want to see that progression."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu được bước 1, 2 hoặc 3 bậc, hoặc một tập bước tùy ý?",
+        "en": "What if you can take 1, 2 or 3 steps, or any given set of step sizes?"
+      },
+      {
+        "vi": "Mỗi bậc có chi phí, tìm cách lên tốn ít nhất?",
+        "en": "If each step has a cost, how do you find the cheapest way up?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/climbing-stairs/"
+  },
+  {
+    "id": "dsa-dp-coin-change",
+    "level": "mid",
+    "topic": "Dynamic Programming",
+    "q": {
+      "vi": "Cho các mệnh giá coins (số lượng không giới hạn) và số tiền amount, tìm số đồng xu ít nhất để tạo đúng amount, trả về −1 nếu không thể. Ví dụ coins = [1, 2, 5], amount = 11 → 3 (5 + 5 + 1).",
+      "en": "Given coin denominations (unlimited supply) and an amount, find the fewest coins that make exactly that amount, or −1 if impossible. Example: coins = [1, 2, 5], amount = 11 → 3 (5 + 5 + 1)."
+    },
+    "a": {
+      "vi": "Greedy (luôn lấy đồng lớn nhất) không đúng với mọi bộ mệnh giá. Phản ví dụ: coins = [1, 3, 4], amount = 6. Greedy lấy 4 + 1 + 1 = 3 đồng, trong khi tối ưu là 3 + 3 = 2 đồng.\n\nDP:\n- Trạng thái: dp[x] = số đồng ít nhất để tạo số tiền x.\n- Chuyển: dp[x] = min(dp[x − c] + 1) với mọi đồng c <= x. Ý nghĩa: thử từng đồng làm đồng cuối cùng.\n- Cơ sở: dp[0] = 0, các ô khác khởi tạo ∞ (chưa tạo được).\n- Đáp án: dp[amount], nếu vẫn là ∞ thì trả −1.\n\nĐộ phức tạp: O(amount · số mệnh giá) thời gian, O(amount) bộ nhớ.\n\nCũng có thể xem như BFS trên đồ thị các số tiền, mỗi cạnh là một đồng xu; số tầng BFS là số đồng.\n\nBiến thể \"đếm số cách tạo amount\": đổi min thành cộng, và đặt vòng lặp coin ở ngoài để không đếm trùng các hoán vị.\n\nEdge case: amount = 0 → 0, không đồng nào tạo được, mệnh giá lớn hơn amount.",
+      "en": "Greedy (always take the largest coin) fails for some coin systems. Counterexample: coins = [1, 3, 4], amount = 6. Greedy takes 4 + 1 + 1 = 3 coins, while the optimum is 3 + 3 = 2.\n\nDP:\n- State: dp[x] = fewest coins to make amount x.\n- Transition: dp[x] = min(dp[x − c] + 1) over every coin c <= x. Meaning: try each coin as the last one.\n- Base: dp[0] = 0, everything else starts at ∞ (not reachable yet).\n- Answer: dp[amount], or −1 if it is still ∞.\n\nComplexity: O(amount · number of coins) time, O(amount) space.\n\nIt can also be seen as BFS over amounts where each edge is a coin; the BFS depth is the number of coins.\n\nVariant \"count the ways to make amount\": replace min with a sum and put the coin loop outside so permutations are not counted twice.\n\nEdge cases: amount = 0 → 0, no coin combination works, coins larger than the amount."
+    },
+    "code": "function coinChange(coins: number[], amount: number): number {\n  const dp = new Array<number>(amount + 1).fill(Infinity);\n  dp[0] = 0;\n  for (let x = 1; x <= amount; x++) {\n    for (const c of coins) {\n      if (c <= x && dp[x - c] + 1 < dp[x]) dp[x] = dp[x - c] + 1;\n    }\n  }\n  return dp[amount] === Infinity ? -1 : dp[amount];\n}",
+    "tip": {
+      "vi": "Đưa phản ví dụ [1, 3, 4] cho greedy trước; chứng minh greedy sai là lý do chính đáng để chuyển sang DP.",
+      "en": "Give the [1, 3, 4] counterexample to greedy first; proving greedy wrong is the justification for DP."
+    },
+    "followUps": [
+      {
+        "vi": "Đếm số cách tạo amount (coin change II)?",
+        "en": "How do you count the number of ways to make the amount (coin change II)?"
+      },
+      {
+        "vi": "Trả về luôn danh sách đồng xu đã dùng?",
+        "en": "How do you also return which coins were used?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/coin-change/"
+  },
+  {
+    "id": "dsa-dp-longest-increasing-subsequence",
+    "level": "mid",
+    "topic": "Dynamic Programming",
+    "q": {
+      "vi": "Tìm độ dài dãy con tăng nghiêm ngặt dài nhất (không cần liên tiếp). Ví dụ [10, 9, 2, 5, 3, 7, 101, 18] → 4 (2, 3, 7, 101).",
+      "en": "Find the length of the longest strictly increasing subsequence (not necessarily contiguous). Example: [10, 9, 2, 5, 3, 7, 101, 18] → 4 (2, 3, 7, 101)."
+    },
+    "a": {
+      "vi": "DP O(n²):\n- Trạng thái: dp[i] = độ dài dãy tăng dài nhất kết thúc tại i.\n- Chuyển: dp[i] = 1 + max(dp[j]) với mọi j < i mà nums[j] < nums[i]; nếu không có j nào thì dp[i] = 1.\n- Đáp án: max của mọi dp[i], không phải dp[n − 1].\n\nTối ưu O(n log n) bằng patience sorting: giữ mảng tails, tails[k] là phần tử cuối nhỏ nhất có thể của một dãy tăng dài k + 1. Với mỗi x:\n- Binary search vị trí đầu tiên có tails[pos] >= x.\n- Gán tails[pos] = x (nếu pos bằng độ dài mảng thì là nối thêm).\nMảng tails luôn tăng nên binary search hợp lệ. Độ dài tails là đáp án.\n\nLưu ý: tails không phải là dãy con thật, chỉ độ dài của nó đúng. Muốn dựng lại dãy cần lưu thêm index và con trỏ cha.\n\nDùng >= (lower bound) cho dãy tăng nghiêm ngặt; dùng > nếu cho phép bằng nhau.\n\nEdge case: mảng rỗng → 0, mảng giảm dần → 1, các phần tử bằng nhau.",
+      "en": "O(n²) DP:\n- State: dp[i] = length of the longest increasing subsequence ending at i.\n- Transition: dp[i] = 1 + max(dp[j]) over all j < i with nums[j] < nums[i]; if there is none, dp[i] = 1.\n- Answer: the max over all dp[i], not dp[n − 1].\n\nO(n log n) with patience sorting: keep an array tails where tails[k] is the smallest possible last element of an increasing subsequence of length k + 1. For each x:\n- Binary search the first position with tails[pos] >= x.\n- Set tails[pos] = x (appending when pos equals the length).\ntails stays increasing, so binary search is valid. Its length is the answer.\n\nNote: tails is not an actual subsequence; only its length is right. Rebuilding the sequence requires storing indices and parent pointers.\n\nUse >= (lower bound) for strictly increasing; use > if equal values are allowed.\n\nEdge cases: empty array → 0, decreasing array → 1, equal elements."
+    },
+    "code": "function lengthOfLIS(nums: number[]): number {\n  // tails[k] = smallest tail of an increasing subsequence of length k + 1\n  const tails: number[] = [];\n  for (const x of nums) {\n    let lo = 0;\n    let hi = tails.length;\n    while (lo < hi) {\n      const mid = (lo + hi) >> 1;\n      if (tails[mid] < x) lo = mid + 1;\n      else hi = mid;\n    }\n    tails[lo] = x;\n  }\n  return tails.length;\n}",
+    "tip": {
+      "vi": "Trình bày bản O(n²) trước với trạng thái rõ ràng, rồi mới nâng lên O(n log n); đừng nhảy thẳng vào mẹo tails.",
+      "en": "Present the O(n²) version with a clear state first, then upgrade to O(n log n); do not jump straight to the tails trick."
+    },
+    "followUps": [
+      {
+        "vi": "Dựng lại chính dãy con đó, không chỉ độ dài?",
+        "en": "How do you reconstruct the subsequence itself, not just its length?"
+      },
+      {
+        "vi": "Bài xếp phong bì lồng nhau (Russian doll envelopes) liên quan thế nào?",
+        "en": "How does the Russian doll envelopes problem relate to this?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/longest-increasing-subsequence/"
+  },
+  {
+    "id": "dsa-dp-knapsack",
+    "level": "mid",
+    "topic": "Dynamic Programming",
+    "q": {
+      "vi": "Bài toán 0/1 knapsack: có n món đồ với weights và values, balo chứa tối đa capacity. Mỗi món lấy hoặc không. Tìm tổng giá trị lớn nhất. Ví dụ weights = [1, 3, 4], values = [15, 20, 30], capacity = 4 → 35.",
+      "en": "0/1 knapsack: n items with weights and values, a bag holding at most capacity. Each item is taken or not. Maximize total value. Example: weights = [1, 3, 4], values = [15, 20, 30], capacity = 4 → 35."
+    },
+    "a": {
+      "vi": "Brute force thử mọi tập con: O(2ⁿ). Greedy theo tỉ lệ giá trị/khối lượng chỉ đúng với fractional knapsack (được cắt nhỏ món đồ), không đúng với 0/1.\n\nDP 2 chiều:\n- Trạng thái: dp[i][w] = giá trị lớn nhất khi chỉ xét i món đầu với sức chứa w.\n- Chuyển: không lấy món i thì dp[i − 1][w]; lấy (nếu weights[i] <= w) thì dp[i − 1][w − weights[i]] + values[i]. Lấy max của hai.\n- Cơ sở: dp[0][w] = 0.\n- Đáp án: dp[n][capacity].\n\nTối ưu bộ nhớ: mỗi hàng chỉ phụ thuộc hàng trước, nên dùng mảng 1 chiều dp[w] và duyệt w từ lớn xuống nhỏ. Duyệt ngược đảm bảo dp[w − weight] vẫn là giá trị của hàng trước, tức mỗi món chỉ dùng một lần. Nếu duyệt xuôi, ta được unbounded knapsack (mỗi món dùng nhiều lần).\n\nĐộ phức tạp: O(n · capacity) thời gian, O(capacity) bộ nhớ. Đây là pseudo-polynomial: capacity rất lớn (ví dụ 10⁹) thì cách này không dùng được.\n\nBài cùng họ: partition equal subset sum, target sum, coin change.",
+      "en": "Brute force over all subsets: O(2ⁿ). Greedy by value/weight ratio only works for fractional knapsack (items can be split), not for 0/1.\n\n2D DP:\n- State: dp[i][w] = best value using only the first i items with capacity w.\n- Transition: skip item i gives dp[i − 1][w]; take it (if weights[i] <= w) gives dp[i − 1][w − weights[i]] + values[i]. Take the max.\n- Base: dp[0][w] = 0.\n- Answer: dp[n][capacity].\n\nSpace optimization: each row only depends on the previous one, so use a 1D array dp[w] and iterate w from high to low. Going downward guarantees dp[w − weight] still holds the previous row's value, i.e. each item is used at most once. Iterating upward gives unbounded knapsack (items reusable).\n\nComplexity: O(n · capacity) time, O(capacity) space. This is pseudo-polynomial: with a huge capacity (say 10⁹) the approach is not usable.\n\nSame family: partition equal subset sum, target sum, coin change."
+    },
+    "code": "function knapsack(weights: number[], values: number[], capacity: number): number {\n  const dp = new Array<number>(capacity + 1).fill(0); // dp[w] = best value with capacity w\n  for (let i = 0; i < weights.length; i++) {\n    // iterate downward so each item is used at most once\n    for (let w = capacity; w >= weights[i]; w--) {\n      dp[w] = Math.max(dp[w], dp[w - weights[i]] + values[i]);\n    }\n  }\n  return dp[capacity];\n}",
+    "tip": {
+      "vi": "Giải thích được vì sao duyệt w ngược chiều là điểm nhấn; rất nhiều ứng viên chỉ thuộc lòng mà không hiểu.",
+      "en": "Explaining why w goes downward is the highlight; many candidates memorize it without understanding."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao biết những món nào đã được chọn?",
+        "en": "How do you recover which items were chosen?"
+      },
+      {
+        "vi": "Chia mảng thành hai phần có tổng bằng nhau (partition equal subset sum)?",
+        "en": "How do you split an array into two equal-sum halves (partition equal subset sum)?"
+      }
+    ]
+  },
+  {
+    "id": "dsa-dp-edit-distance",
+    "level": "senior",
+    "topic": "Dynamic Programming",
+    "q": {
+      "vi": "Edit distance: số thao tác ít nhất (chèn, xóa, thay một ký tự) để biến chuỗi a thành chuỗi b. Ví dụ \"horse\" → \"ros\" là 3.",
+      "en": "Edit distance: the minimum number of operations (insert, delete, replace a character) to turn string a into string b. Example: \"horse\" → \"ros\" is 3."
+    },
+    "a": {
+      "vi": "DP trên hai chuỗi, dạng kinh điển của bài \"so khớp hai dãy\".\n\n- Trạng thái: dp[i][j] = khoảng cách giữa i ký tự đầu của a và j ký tự đầu của b.\n- Cơ sở: dp[i][0] = i (xóa hết), dp[0][j] = j (chèn hết).\n- Chuyển: nếu a[i − 1] === b[j − 1] thì dp[i][j] = dp[i − 1][j − 1] (không tốn gì). Ngược lại dp[i][j] = 1 + min của:\n  - dp[i − 1][j − 1]: thay a[i − 1] bằng b[j − 1]\n  - dp[i − 1][j]: xóa a[i − 1]\n  - dp[i][j − 1]: chèn b[j − 1]\n- Đáp án: dp[m][n].\n\nĐộ phức tạp: O(m · n) thời gian. Mỗi hàng chỉ cần hàng trước, nên bộ nhớ giảm còn O(n) (hoặc O(min(m, n)) nếu đổi vai hai chuỗi).\n\nMuốn biết chuỗi thao tác cụ thể: giữ bảng đầy đủ rồi lần ngược từ dp[m][n].\n\nỨng dụng: gợi ý sửa lỗi chính tả, diff văn bản, so khớp chuỗi DNA, fuzzy search. Bài cùng họ: longest common subsequence.\n\nEdge case: một chuỗi rỗng, hai chuỗi giống nhau → 0.",
+      "en": "DP over two strings, the classic shape of \"align two sequences\" problems.\n\n- State: dp[i][j] = distance between the first i characters of a and the first j characters of b.\n- Base: dp[i][0] = i (delete everything), dp[0][j] = j (insert everything).\n- Transition: if a[i − 1] === b[j − 1], dp[i][j] = dp[i − 1][j − 1] (free). Otherwise dp[i][j] = 1 + min of:\n  - dp[i − 1][j − 1]: replace a[i − 1] with b[j − 1]\n  - dp[i − 1][j]: delete a[i − 1]\n  - dp[i][j − 1]: insert b[j − 1]\n- Answer: dp[m][n].\n\nComplexity: O(m · n) time. Each row only needs the previous one, so space drops to O(n) (or O(min(m, n)) by swapping the strings).\n\nTo get the actual sequence of operations: keep the full table and backtrack from dp[m][n].\n\nUses: spell-check suggestions, text diff, DNA alignment, fuzzy search. Same family: longest common subsequence.\n\nEdge cases: one empty string, identical strings → 0."
+    },
+    "code": "function minDistance(a: string, b: string): number {\n  const m = a.length;\n  const n = b.length;\n  // prev[j] = distance between a[0..i-1) and b[0..j) for the previous row\n  let prev = Array.from({ length: n + 1 }, (_, j) => j);\n  for (let i = 1; i <= m; i++) {\n    const cur = [i];\n    for (let j = 1; j <= n; j++) {\n      cur[j] =\n        a[i - 1] === b[j - 1]\n          ? prev[j - 1]\n          : 1 + Math.min(prev[j - 1], prev[j], cur[j - 1]);\n    }\n    prev = cur;\n  }\n  return prev[n];\n}",
+    "tip": {
+      "vi": "Gắn từng ô trong công thức với đúng một thao tác (thay, xóa, chèn); vẽ một bảng nhỏ 3 × 3 giúp interviewer theo kịp.",
+      "en": "Map each cell in the recurrence to exactly one operation (replace, delete, insert); sketching a small 3 × 3 table helps the interviewer follow."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu mỗi thao tác có chi phí khác nhau?",
+        "en": "What if each operation has a different cost?"
+      },
+      {
+        "vi": "Chỉ cần kiểm tra khoảng cách có <= 1 không (one edit distance), làm O(n) thế nào?",
+        "en": "If you only need to check whether the distance is <= 1 (one edit distance), how do you do it in O(n)?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/edit-distance/"
+  },
+  {
+    "id": "dsa-design-lru-cache",
+    "level": "senior",
+    "topic": "Design",
+    "q": {
+      "vi": "Thiết kế LRU cache với dung lượng cố định: get(key) và put(key, value) đều O(1); khi đầy thì loại phần tử lâu nhất chưa được dùng.",
+      "en": "Design an LRU cache with fixed capacity: get(key) and put(key, value) both in O(1); when full, evict the least recently used entry."
+    },
+    "a": {
+      "vi": "Cần hai thứ: tra cứu theo key O(1) (hash map) và duy trì thứ tự dùng gần đây với thao tác di chuyển/xóa O(1) (doubly linked list).\n\nThiết kế kinh điển: hash map key → node trong doubly linked list. Đầu list là mới dùng nhất, cuối list là cũ nhất. Dùng hai node giả head/tail để khỏi xử lý trường hợp biên.\n- get: tìm node qua map, chuyển lên đầu list, trả giá trị.\n- put: có rồi thì cập nhật và chuyển lên đầu; chưa có thì thêm vào đầu; nếu vượt dung lượng thì xóa node cuối và xóa key khỏi map (vì vậy node phải lưu key).\n\nTrong JavaScript, Map giữ thứ tự chèn, nên có cách gọn: delete rồi set lại để đưa key về cuối (mới nhất); key đầu tiên của map.keys() là cũ nhất. Mọi thao tác O(1). Hãy hỏi interviewer có chấp nhận cách này không, vì nhiều người muốn thấy bạn tự viết linked list.\n\nCâu hỏi mở rộng ở mức senior: thread-safety (lock hoặc phân mảnh cache), TTL, LFU, và cache phân tán như Redis dùng LRU xấp xỉ bằng cách lấy mẫu.",
+      "en": "You need two things: O(1) lookup by key (a hash map) and a recency order with O(1) move/remove (a doubly linked list).\n\nClassic design: a hash map key → node in a doubly linked list. The head is the most recently used, the tail the least. Sentinel head/tail nodes remove edge cases.\n- get: find the node via the map, move it to the head, return the value.\n- put: if present, update and move to the head; otherwise insert at the head; if over capacity, remove the tail node and delete its key from the map (so nodes must store their key).\n\nIn JavaScript, Map preserves insertion order, giving a compact version: delete then set to move a key to the end (newest); the first key of map.keys() is the oldest. Every operation is O(1). Ask the interviewer whether this is acceptable, since many want to see the linked list written by hand.\n\nSenior-level extensions: thread safety (locks or a sharded cache), TTL, LFU, and distributed caches like Redis that approximate LRU by sampling."
+    },
+    "code": "class LRUCache<K, V> {\n  private map = new Map<K, V>();\n\n  constructor(private capacity: number) {}\n\n  get(key: K): V | undefined {\n    if (!this.map.has(key)) return undefined;\n    const value = this.map.get(key)!;\n    // re-insert to mark as most recently used\n    this.map.delete(key);\n    this.map.set(key, value);\n    return value;\n  }\n\n  put(key: K, value: V): void {\n    this.map.delete(key);\n    this.map.set(key, value);\n    if (this.map.size > this.capacity) {\n      // the first key in insertion order is the least recently used\n      this.map.delete(this.map.keys().next().value!);\n    }\n  }\n}",
+    "tip": {
+      "vi": "Trình bày thiết kế hash map + doubly linked list trước, rồi mới nói tới mẹo Map của JS; như vậy bạn chứng minh được cả hiểu biết lẫn sự thực dụng.",
+      "en": "Present the hash map + doubly linked list design first, then mention the JS Map shortcut; that proves both understanding and pragmatism."
+    },
+    "followUps": [
+      {
+        "vi": "Làm cache an toàn khi nhiều thread truy cập đồng thời?",
+        "en": "How do you make the cache safe under concurrent access?"
+      },
+      {
+        "vi": "Cài đặt LFU cache với O(1) thì khác gì?",
+        "en": "How does an O(1) LFU cache differ?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/lru-cache/"
+  }
+]

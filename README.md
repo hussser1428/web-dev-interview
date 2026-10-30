@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DevInterview – web
 
-## Getting Started
+App học & luyện phỏng vấn IT (Next.js 16, Tailwind 4). Hỗ trợ tiếng Việt và tiếng Anh.
+~300 câu hỏi song ngữ cho 9 mảng, lộ trình học, flashcards ôn lặp lại ngắt quãng, theo dõi tiến độ.
+Tiến độ lưu trong trình duyệt (localStorage), chưa cần đăng nhập.
 
-First, run the development server:
+## Chạy
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev          # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Phỏng vấn AI (Beta) cần thêm key: `cp .env.example .env.local` rồi điền `GEMINI_API_KEY` (miễn phí ở https://aistudio.google.com).
+Project Deep-dive (`/project`) dùng chung key đó để đọc repo GitHub công khai; thêm `GITHUB_TOKEN` (tuỳ chọn) nếu bị giới hạn 60 lượt gọi GitHub/giờ.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Kiểm tra
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run check:data   # kiểm tra src/data/questions/*.json (id, level, đủ vi/en…)
+npm test             # test logic lịch ôn / chuỗi ngày học (src/lib/srs.ts)
+npm run lint && npm run build
+```
 
-## Learn More
+## Cấu trúc
 
-To learn more about Next.js, take a look at the following resources:
+| Đường dẫn | Nội dung |
+|---|---|
+| `src/data/questions/<mảng>.json` | Câu hỏi của từng mảng. **Thứ tự trong file = thứ tự lộ trình học** |
+| `src/lib/catalog.ts` | Danh sách mảng, level, màu tag |
+| `src/lib/questions.ts` | Đọc câu hỏi, lộ trình theo chủ đề |
+| `src/lib/github.ts`, `src/lib/project.ts` | Project Deep-dive: đọc repo GitHub cho AI; schema kết quả phân tích |
+| `src/lib/srs.ts` | Lịch ôn (Khó 1 ngày, Vừa ×1.5, Dễ ×2.5), chuỗi ngày, hàng đợi flashcard |
+| `src/lib/progress.ts` | Lưu/đọc tiến độ trong localStorage |
+| `src/locales.ts`, `src/i18n.ts`, `src/dictionaries/*.json` | Đa ngôn ngữ |
+| `src/proxy.ts` | `/abc` → `/vi/abc` hoặc `/en/abc` theo cookie / ngôn ngữ trình duyệt |
+| `src/lib/ai.ts`, `src/app/api/interview/` | Phỏng vấn AI (Beta) |
+| `src/app/[lang]/` | Trang: tổng quan, ngân hàng câu hỏi, lộ trình, flashcards, phỏng vấn |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Thêm câu hỏi
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Thêm object vào `src/data/questions/<mảng>.json`, đặt đúng vị trí trong lộ trình, rồi chạy `npm run check:data`:
 
-## Deploy on Vercel
+```jsonc
+{
+  "id": "backend-ten-cau-hoi",          // bắt đầu bằng "<mảng>-", không trùng
+  "level": "junior",                    // intern | junior | mid | senior
+  "topic": "Database",                  // tên chủ đề (gom nhóm trong lộ trình)
+  "q": { "vi": "…", "en": "…" },
+  "a": { "vi": "…", "en": "…" },
+  "code": "…",                          // tuỳ chọn
+  "tip": { "vi": "…", "en": "…" },      // tuỳ chọn: mẹo ghi điểm
+  "followUps": [{ "vi": "…", "en": "…" }], // tuỳ chọn
+  "source": "https://…"                 // tuỳ chọn: link tham khảo
+}
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Thêm ngôn ngữ mới (vd: tiếng Nhật)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Thêm `"ja"` vào `locales` và `localeNames` trong `src/locales.ts`.
+2. Copy `src/dictionaries/en.json` → `ja.json`, dịch, đặt `meta.speechLang` = `"ja-JP"`.
+3. Thêm 1 dòng `ja: () => import("./dictionaries/ja.json")…` trong `src/i18n.ts`.
+4. Câu hỏi: thêm key `"ja"` vào `q` / `a` / `tip` / `followUps`. Câu chưa dịch tự hiện bản tiếng Anh.
+
+TypeScript báo lỗi nếu quên bước 2–3 hoặc thiếu key trong từ điển.

@@ -1,0 +1,798 @@
+[
+  {
+    "id": "system-design-interview-approach",
+    "level": "junior",
+    "topic": "Interview Approach",
+    "q": {
+      "vi": "Bạn tiếp cận một buổi phỏng vấn system design như thế nào?",
+      "en": "How do you approach a system design interview?"
+    },
+    "a": {
+      "vi": "Mình đi theo khung 6 bước và nói to suy nghĩ trong suốt quá trình:\n1. Làm rõ yêu cầu (~5 phút): functional (người dùng làm được gì) và non-functional (quy mô, latency, availability, consistency). Chốt phạm vi: phần nào làm, phần nào bỏ.\n2. Ước lượng nhanh: DAU, QPS đọc/ghi, dung lượng lưu trữ, băng thông — để biết cần một máy hay cả cụm.\n3. Thiết kế API: vài endpoint chính với input/output.\n4. Data model: các entity chính, chọn SQL hay NoSQL dựa trên kiểu truy vấn.\n5. High-level design: vẽ client, load balancer, service, cache, database, queue; đi qua một luồng request từ đầu đến cuối.\n6. Deep dive: chọn 1-2 điểm khó nhất (hotspot, consistency, bottleneck) để đào sâu, nêu rõ trade-off của từng lựa chọn.\nCuối cùng tóm tắt, chỉ ra điểm yếu còn lại và hướng mở rộng (monitoring, multi-region). Quan trọng nhất là chủ động dẫn dắt nhưng thường xuyên hỏi interviewer muốn đào sâu phần nào.",
+      "en": "I follow a 6-step framework and think out loud the whole time:\n1. Clarify requirements (~5 minutes): functional (what users can do) and non-functional (scale, latency, availability, consistency). Lock the scope: what is in, what is out.\n2. Quick estimates: DAU, read/write QPS, storage, bandwidth — to know whether this is one machine or a whole cluster.\n3. API design: a few key endpoints with inputs/outputs.\n4. Data model: the main entities; choose SQL or NoSQL based on the access patterns.\n5. High-level design: draw client, load balancer, services, cache, database, queue; walk one request through end to end.\n6. Deep dive: pick the 1-2 hardest parts (hotspots, consistency, bottlenecks), go deep, and state the trade-off of every choice.\nFinally, summarize, point out remaining weaknesses and how to evolve (monitoring, multi-region). Most importantly, drive the conversation yourself but keep checking which part the interviewer wants to go deeper on."
+    },
+    "tip": {
+      "vi": "Đừng nhảy vào vẽ ngay; dành vài phút đầu hỏi yêu cầu cho thấy bạn tư duy như một kỹ sư làm sản phẩm thật.",
+      "en": "Don't jump straight into drawing; spending the first minutes on requirements shows you think like an engineer who ships real products."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu interviewer không đưa con số quy mô, bạn làm gì?",
+        "en": "What do you do if the interviewer gives you no scale numbers?"
+      },
+      {
+        "vi": "Bạn phân bổ thời gian trong 45 phút như thế nào?",
+        "en": "How do you split your time across a 45-minute session?"
+      }
+    ],
+    "source": "https://github.com/donnemartin/system-design-primer"
+  },
+  {
+    "id": "system-design-back-of-envelope",
+    "level": "mid",
+    "topic": "Interview Approach",
+    "q": {
+      "vi": "Hãy ước lượng nhanh (back-of-the-envelope) cho một mạng xã hội kiểu Twitter có 100 triệu DAU.",
+      "en": "Do a back-of-the-envelope estimate for a Twitter-like social network with 100 million DAU."
+    },
+    "a": {
+      "vi": "Nói rõ giả định rồi làm tròn để tính nhẩm:\n- Giả định: mỗi user đăng trung bình 0,5 bài/ngày và xem 50 bài/ngày. Một ngày ≈ 86.400 giây ≈ 10^5 giây.\n- QPS ghi: 100M × 0,5 / 10^5 = 500 QPS; peak gấp 2-3 lần ≈ 1.500 QPS.\n- QPS đọc: 100M × 50 / 10^5 = 50.000 QPS; peak 100-150K → bắt buộc phải cache mạnh.\n- Lưu trữ text: 50 triệu bài/ngày × ~1 KB = 50 GB/ngày ≈ 18 TB/năm, chưa nhân 3 cho replication.\n- Media: nếu 10% bài có ảnh 500 KB → 5 triệu × 0,5 MB = 2,5 TB/ngày → cần object storage + CDN.\n- Băng thông đọc text: 50K QPS × 1 KB ≈ 50 MB/s.\nCon số nên thuộc: đọc RAM ~100 ns, đọc SSD ngẫu nhiên ~100 µs, round trip trong cùng data center ~0,5 ms; một Redis node ~100K ops/s; một app server xử lý vài nghìn request đơn giản/giây.\nKết luận rút ra: ghi không lớn, đọc rất lớn, media chiếm gần hết dung lượng. Mục tiêu là ra quyết định thiết kế (cần cache? cần shard?), không phải tính chính xác.",
+      "en": "State assumptions, then round numbers so you can do mental math:\n- Assumptions: each user posts 0.5 posts/day on average and views 50 posts/day. One day ≈ 86,400 seconds ≈ 10^5 seconds.\n- Write QPS: 100M × 0.5 / 10^5 = 500 QPS; peak 2-3x ≈ 1,500 QPS.\n- Read QPS: 100M × 50 / 10^5 = 50,000 QPS; peak 100-150K → heavy caching is mandatory.\n- Text storage: 50M posts/day × ~1 KB = 50 GB/day ≈ 18 TB/year, before multiplying by 3 for replication.\n- Media: if 10% of posts have a 500 KB image → 5M × 0.5 MB = 2.5 TB/day → object storage + CDN needed.\n- Read bandwidth for text: 50K QPS × 1 KB ≈ 50 MB/s.\nNumbers worth memorizing: RAM read ~100 ns, random SSD read ~100 µs, round trip within a data center ~0.5 ms; one Redis node ~100K ops/s; one app server handles a few thousand simple requests/s.\nConclusion: writes are small, reads are huge, media dominates storage. The goal is to drive design decisions (do we need a cache? sharding?), not to be precise."
+    },
+    "tip": {
+      "vi": "Viết giả định lên bảng và làm tròn theo lũy thừa của 10; interviewer chấm cách suy luận, không chấm chữ số thập phân.",
+      "en": "Write your assumptions on the board and round to powers of 10; the interviewer grades the reasoning, not the decimals."
+    },
+    "followUps": [
+      {
+        "vi": "Cần bao nhiêu server Redis để cache feed của user hoạt động trong 24 giờ?",
+        "en": "How many Redis servers would you need to cache feeds for users active in the last 24 hours?"
+      },
+      {
+        "vi": "Con số nào trong ước lượng này ảnh hưởng nhiều nhất đến kiến trúc?",
+        "en": "Which number in this estimate influences the architecture the most?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-scaling-stateless",
+    "level": "junior",
+    "topic": "Scalability",
+    "q": {
+      "vi": "Vertical scaling và horizontal scaling khác nhau thế nào? Vì sao nên thiết kế service stateless?",
+      "en": "What is the difference between vertical and horizontal scaling? Why should services be stateless?"
+    },
+    "a": {
+      "vi": "- Vertical scaling (scale up): nâng cấp máy với CPU/RAM/disk mạnh hơn. Đơn giản, không phải sửa code; nhưng có trần phần cứng, giá tăng nhanh hơn hiệu năng, vẫn là single point of failure và nâng cấp thường cần downtime.\n- Horizontal scaling (scale out): thêm nhiều máy phía sau load balancer. Gần như không có trần, chịu lỗi tốt hơn; đổi lại phức tạp hơn: phân phối tải, đồng bộ dữ liệu, deploy và giám sát nhiều node.\nStateless nghĩa là server không giữ trạng thái giữa các request trong bộ nhớ hay ổ đĩa local. Trạng thái được đẩy ra ngoài: session vào Redis hoặc dùng token (JWT), file vào object storage (S3), dữ liệu vào database.\nLợi ích: request nào đến máy nào cũng xử lý được → load balancer phân tải tự do, autoscaling thêm/bớt máy dễ dàng, máy chết không mất dữ liệu, rolling deploy đơn giản.\nThực tế: tầng app scale ngang vì đã stateless; phần stateful (database) mới khó scale — thường bắt đầu bằng vertical, sau đó dùng read replica, cache rồi mới đến sharding.",
+      "en": "- Vertical scaling (scale up): upgrade the machine with more CPU/RAM/disk. Simple, no code changes; but there is a hardware ceiling, cost grows faster than performance, it is still a single point of failure, and upgrades often need downtime.\n- Horizontal scaling (scale out): add more machines behind a load balancer. Practically no ceiling and better fault tolerance; in exchange it is more complex: load distribution, data synchronization, deploying and monitoring many nodes.\nStateless means the server keeps no state between requests in local memory or disk. State is pushed outside: sessions into Redis or tokens (JWT), files into object storage (S3), data into the database.\nBenefits: any machine can handle any request → the load balancer distributes freely, autoscaling adds/removes machines easily, a dead machine loses no data, rolling deploys are simple.\nIn practice: the app tier scales horizontally because it is stateless; the stateful part (the database) is the hard one — usually start vertical, then add read replicas and caching, and only then sharding."
+    },
+    "tip": {
+      "vi": "Nói được 'đẩy state ra ngoài thì đi đâu' (Redis, S3, DB) sẽ thuyết phục hơn chỉ định nghĩa stateless.",
+      "en": "Saying exactly where the state goes (Redis, S3, DB) is more convincing than just defining stateless."
+    },
+    "followUps": [
+      {
+        "vi": "Sticky session là gì và vì sao nên tránh?",
+        "en": "What are sticky sessions and why should you avoid them?"
+      },
+      {
+        "vi": "Khi nào vertical scaling vẫn là lựa chọn hợp lý?",
+        "en": "When is vertical scaling still the right choice?"
+      }
+    ],
+    "source": "https://github.com/donnemartin/system-design-primer"
+  },
+  {
+    "id": "system-design-load-balancing",
+    "level": "junior",
+    "topic": "Scalability",
+    "q": {
+      "vi": "Load balancer hoạt động thế nào? So sánh L4 với L7 và các thuật toán phân tải.",
+      "en": "How does a load balancer work? Compare L4 vs L7 and the common balancing algorithms."
+    },
+    "a": {
+      "vi": "Load balancer đứng trước cụm server để phân phối request, health check để loại máy lỗi, che IP của backend và thường làm luôn TLS termination.\n- L4 (transport): định tuyến theo IP/port của TCP/UDP, không đọc nội dung nên rất nhanh (vd AWS NLB).\n- L7 (application): đọc HTTP (path, header, cookie) nên route được /api sang service A, /static sang service B, làm canary release, rewrite; tốn CPU hơn (Nginx, Envoy, AWS ALB).\nThuật toán:\n- Round robin: đơn giản, hợp khi các máy giống nhau.\n- Weighted round robin: máy cấu hình khác nhau.\n- Least connections: request dài hoặc kết nối lâu như WebSocket.\n- IP hash / consistent hashing: cần một client luôn về cùng máy (cache locality).\nHealth check gồm active (gọi /health định kỳ) và passive (đếm lỗi thật). Khi deploy cần connection draining để không cắt ngang request.\nBản thân load balancer cũng có thể là single point of failure → chạy cặp active-passive với virtual IP hoặc dùng LB managed của cloud. Ở tầng toàn cầu, dùng GeoDNS hoặc anycast để đưa user về region gần nhất.",
+      "en": "A load balancer sits in front of a server cluster to distribute requests, run health checks to remove bad machines, hide backend IPs, and often handle TLS termination too.\n- L4 (transport): routes by TCP/UDP IP/port without reading content, so it is very fast (e.g. AWS NLB).\n- L7 (application): reads HTTP (path, headers, cookies), so it can route /api to service A and /static to service B, do canary releases and rewrites; costs more CPU (Nginx, Envoy, AWS ALB).\nAlgorithms:\n- Round robin: simple, fits identical machines.\n- Weighted round robin: machines with different capacity.\n- Least connections: long requests or long-lived connections like WebSocket.\n- IP hash / consistent hashing: when a client should always hit the same machine (cache locality).\nHealth checks are active (calling /health periodically) and passive (counting real errors). Deploys need connection draining so in-flight requests are not cut off.\nThe load balancer itself can be a single point of failure → run an active-passive pair with a virtual IP or use a cloud-managed LB. At the global level, use GeoDNS or anycast to send users to the nearest region."
+    },
+    "tip": {
+      "vi": "Nhắc đến việc chính load balancer cũng cần HA cho thấy bạn nghĩ đến mọi điểm lỗi.",
+      "en": "Mentioning that the load balancer itself needs HA shows you look for every point of failure."
+    },
+    "followUps": [
+      {
+        "vi": "Load balancer biết một server đã chết bằng cách nào?",
+        "en": "How does the load balancer know a server is dead?"
+      },
+      {
+        "vi": "Cân bằng tải cho kết nối WebSocket có gì khác HTTP thường?",
+        "en": "How is load balancing WebSocket connections different from plain HTTP?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-caching-strategies",
+    "level": "mid",
+    "topic": "Caching",
+    "q": {
+      "vi": "Trình bày các tầng cache và các chiến lược cache (cache-aside, write-through, write-back). Bạn xử lý cache invalidation thế nào?",
+      "en": "Describe the caching layers and strategies (cache-aside, write-through, write-back). How do you handle cache invalidation?"
+    },
+    "a": {
+      "vi": "Các tầng: browser/HTTP cache → CDN → reverse proxy → cache in-process (bộ nhớ của app) → distributed cache (Redis/Memcached) → buffer cache của database.\nChiến lược:\n- Cache-aside (lazy loading): app đọc cache, miss thì đọc DB rồi set vào cache. Phổ biến nhất, chỉ cache thứ thực sự được dùng; lần đọc đầu chậm.\n- Write-through: ghi cache và DB cùng lúc; cache luôn mới nhưng ghi chậm hơn và cache cả dữ liệu ít ai đọc.\n- Write-back (write-behind): ghi vào cache trước, flush xuống DB bất đồng bộ; ghi rất nhanh nhưng có thể mất dữ liệu nếu cache sập.\nInvalidation: TTL làm lưới an toàn; khi update thì ghi DB trước rồi xoá key (xoá thay vì set để giảm race ghi đè giá trị cũ). Hệ thống lớn có thể dùng CDC (đọc binlog bằng Debezium) để xoá cache.\nVấn đề kinh điển:\n- Cache stampede: nhiều request cùng miss một key → lock/single-flight, làm mới trước khi hết hạn.\n- Hot key: nhân bản key, thêm local cache.\n- Cache penetration: truy vấn key không tồn tại → cache giá trị rỗng, dùng Bloom filter.\n- Eviction: LRU/LFU, đặt giới hạn bộ nhớ.",
+      "en": "Layers: browser/HTTP cache → CDN → reverse proxy → in-process cache (app memory) → distributed cache (Redis/Memcached) → the database's buffer cache.\nStrategies:\n- Cache-aside (lazy loading): the app reads the cache; on a miss it reads the DB and sets the cache. Most common, only caches what is actually used; the first read is slow.\n- Write-through: write the cache and the DB together; the cache is always fresh but writes are slower and rarely-read data gets cached too.\n- Write-back (write-behind): write to the cache first and flush to the DB asynchronously; very fast writes but data can be lost if the cache crashes.\nInvalidation: TTL is the safety net; on update, write the DB first and then delete the key (delete instead of set to reduce races that write back stale values). Large systems can use CDC (reading the binlog with Debezium) to evict cache entries.\nClassic problems:\n- Cache stampede: many requests miss the same key at once → lock/single-flight, refresh before expiry.\n- Hot key: replicate the key, add a local cache.\n- Cache penetration: lookups for keys that don't exist → cache empty results, use a Bloom filter.\n- Eviction: LRU/LFU with a memory limit."
+    },
+    "code": "def get_user(user_id):\n    key = f\"user:{user_id}\"\n    cached = redis.get(key)\n    if cached:\n        return cached\n    user = db.find_user(user_id)\n    redis.set(key, user, ex=300)  # TTL 5 min\n    return user\n\ndef update_user(user_id, data):\n    db.update_user(user_id, data)\n    redis.delete(f\"user:{user_id}\")",
+    "tip": {
+      "vi": "Luôn kèm câu 'cache có thể stale bao lâu thì nghiệp vụ chấp nhận được' — đó là câu hỏi quyết định TTL và chiến lược.",
+      "en": "Always ask 'how stale can the data be for this business case' — that question decides the TTL and the strategy."
+    },
+    "followUps": [
+      {
+        "vi": "Vì sao xoá cache sau khi ghi DB vẫn có thể gây dữ liệu cũ? Khắc phục thế nào?",
+        "en": "Why can deleting the cache after a DB write still leave stale data? How do you fix it?"
+      },
+      {
+        "vi": "Khi nào nên dùng local cache thay vì Redis?",
+        "en": "When would you use a local in-process cache instead of Redis?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-cdn",
+    "level": "junior",
+    "topic": "Caching",
+    "q": {
+      "vi": "CDN là gì, hoạt động thế nào và khi nào nên dùng?",
+      "en": "What is a CDN, how does it work, and when should you use one?"
+    },
+    "a": {
+      "vi": "CDN là mạng lưới edge server đặt ở nhiều nơi trên thế giới, cache nội dung gần người dùng.\nLuồng: DNS hoặc anycast đưa user tới edge gần nhất → edge có sẵn thì trả ngay (cache hit), không có thì lấy từ origin, lưu lại theo Cache-Control/TTL rồi trả cho user.\nLợi ích: giảm latency (vd user ở Hà Nội không phải gọi về origin ở Mỹ), giảm tải và chi phí băng thông cho origin, hấp thụ DDoS, TLS ở edge.\nDùng cho: static assets (JS, CSS, ảnh, font), segment video, file tải về, và cả API response công khai cache được.\nPull vs push:\n- Pull CDN: edge tự lấy từ origin khi miss — đơn giản, phổ biến nhất.\n- Push CDN: chủ động upload nội dung lên CDN — hợp với file lớn, ít thay đổi.\nInvalidation: đặt tên file có hash (app.3f9a1c.js) để cache rất lâu và đổi tên mỗi lần deploy — tốt hơn nhiều so với purge thủ công.\nNội dung riêng tư dùng signed URL/cookie có hạn. Cẩn thận: không cache response có thông tin cá nhân, cấu hình Vary header đúng để không trả nhầm nội dung giữa các user.",
+      "en": "A CDN is a network of edge servers spread around the world that caches content close to users.\nFlow: DNS or anycast routes the user to the nearest edge → if the edge has the content it returns it right away (cache hit); otherwise it fetches from the origin, stores it according to Cache-Control/TTL, and returns it.\nBenefits: lower latency (e.g. a user in Hanoi doesn't have to call an origin in the US), less load and bandwidth cost on the origin, DDoS absorption, TLS at the edge.\nUse it for: static assets (JS, CSS, images, fonts), video segments, downloads, and even public API responses that are cacheable.\nPull vs push:\n- Pull CDN: the edge fetches from the origin on a miss — simple and most common.\n- Push CDN: you upload content to the CDN proactively — fits large files that rarely change.\nInvalidation: put a hash in file names (app.3f9a1c.js) so they can be cached for a very long time and get a new name on each deploy — much better than manual purging.\nPrivate content uses expiring signed URLs/cookies. Be careful: never cache responses containing personal data, and set the Vary header correctly so users don't get each other's content."
+    },
+    "tip": {
+      "vi": "Nhắc đến kỹ thuật đặt hash vào tên file cho thấy bạn đã thực sự vận hành CDN chứ không chỉ học định nghĩa.",
+      "en": "Mentioning hashed file names shows you have actually operated a CDN rather than just learned the definition."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao phục vụ ảnh riêng tư của user qua CDN?",
+        "en": "How do you serve users' private images through a CDN?"
+      },
+      {
+        "vi": "Khi CDN bị sự cố, hệ thống của bạn sẽ ra sao?",
+        "en": "What happens to your system if the CDN has an outage?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-db-replication",
+    "level": "mid",
+    "topic": "Databases",
+    "q": {
+      "vi": "Database replication: leader-follower, multi-leader và leaderless khác nhau thế nào? Replication lag gây ra vấn đề gì?",
+      "en": "Database replication: how do leader-follower, multi-leader and leaderless differ? What problems does replication lag cause?"
+    },
+    "a": {
+      "vi": "Replication nhằm tăng khả năng đọc, chịu lỗi và đặt dữ liệu gần user.\n- Leader-follower (primary-replica): mọi ghi vào leader, replica nhận log để cập nhật và phục vụ đọc. Phổ biến nhất (MySQL, PostgreSQL). Khi leader chết thì promote một replica; phải cẩn thận split-brain (hai node cùng nghĩ mình là leader).\n- Multi-leader: nhiều node nhận ghi (vd mỗi region một leader); ghi nhanh tại chỗ nhưng phải giải quyết xung đột (last-write-wins, CRDT, logic merge riêng).\n- Leaderless (kiểu Dynamo, Cassandra): client ghi/đọc tới nhiều node theo quorum; chọn W + R > N để lần đọc chạm ít nhất một node có bản ghi mới nhất.\nSync hay async: sync an toàn nhưng chậm và một replica chậm có thể chặn cả hệ thống; async nhanh nhưng có thể mất dữ liệu nếu leader chết trước khi kịp replicate; semi-sync là dung hoà.\nReplication lag: user vừa sửa profile, đọc từ replica lại thấy dữ liệu cũ. Cách xử lý:\n- Read-your-writes: đọc từ leader với dữ liệu của chính user hoặc trong vài giây sau khi ghi.\n- Monotonic reads: gắn một user với một replica để không thấy dữ liệu \"lùi thời gian\".\n- Giám sát lag và loại replica quá chậm khỏi pool đọc.",
+      "en": "Replication aims to scale reads, tolerate failures, and put data close to users.\n- Leader-follower (primary-replica): all writes go to the leader; replicas consume its log and serve reads. Most common (MySQL, PostgreSQL). When the leader dies, promote a replica; watch out for split-brain (two nodes both believing they are the leader).\n- Multi-leader: several nodes accept writes (e.g. one leader per region); fast local writes but conflicts must be resolved (last-write-wins, CRDTs, custom merge logic).\n- Leaderless (Dynamo-style, Cassandra): clients write/read to several nodes using quorums; choose W + R > N so a read touches at least one node with the latest write.\nSync or async: sync is safe but slow, and one slow replica can block the system; async is fast but can lose data if the leader dies before replicating; semi-sync is the compromise.\nReplication lag: a user updates their profile, then reads from a replica and sees old data. Remedies:\n- Read-your-writes: read from the leader for the user's own data or for a few seconds after a write.\n- Monotonic reads: pin a user to one replica so they never see data \"go back in time\".\n- Monitor lag and remove replicas that fall too far behind from the read pool."
+    },
+    "tip": {
+      "vi": "Đưa ví dụ cụ thể về lỗi do replication lag (sửa profile xong không thấy thay đổi) giúp câu trả lời rất thực tế.",
+      "en": "A concrete replication-lag bug (editing a profile and not seeing the change) makes the answer feel real."
+    },
+    "followUps": [
+      {
+        "vi": "Failover tự động có thể làm mất dữ liệu như thế nào?",
+        "en": "How can automatic failover lose data?"
+      },
+      {
+        "vi": "Với N = 3, bạn chọn W và R thế nào cho hệ thống ghi nhiều?",
+        "en": "With N = 3, how would you choose W and R for a write-heavy system?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-sharding",
+    "level": "mid",
+    "topic": "Databases",
+    "q": {
+      "vi": "Khi nào cần sharding database? Chọn shard key thế nào và sharding kéo theo những vấn đề gì?",
+      "en": "When do you need to shard a database? How do you pick a shard key, and what problems come with sharding?"
+    },
+    "a": {
+      "vi": "Chỉ shard khi một máy không còn chứa nổi dữ liệu hoặc không gánh nổi lượng ghi, sau khi đã thử: tối ưu index/query, cache, read replica, nâng cấp máy, tách database theo chức năng.\nCách chia:\n- Range-based: chia theo khoảng giá trị; range query tốt nhưng dễ hotspot (chia theo thời gian thì mọi ghi dồn vào shard mới nhất).\n- Hash-based: hash(key) để phân tán đều; nhưng range query phải hỏi tất cả shard.\n- Directory-based: bảng tra key → shard; linh hoạt nhưng thêm một thành phần cần HA.\nChọn shard key: cardinality cao, phân bố đều, và khớp với truy vấn chính — vd user_id cho mạng xã hội để mọi dữ liệu của một user nằm cùng shard.\nVấn đề đi kèm:\n- Query/join chéo shard: denormalize, hoặc scatter-gather rồi gộp kết quả.\n- Transaction chéo shard: tránh bằng cách thiết kế lại, hoặc dùng saga.\n- Hot key (tài khoản celebrity): tách riêng hoặc thêm salt vào key.\n- Resharding: tạo nhiều shard logic map lên ít máy vật lý, hoặc dùng consistent hashing, để chuyển dữ liệu dễ hơn.\n- Cần ID duy nhất toàn cục.\nCó thể nhắc giải pháp có sẵn: Vitess, Citus, hoặc database phân tán như CockroachDB, DynamoDB.",
+      "en": "Only shard when one machine can no longer hold the data or absorb the write load, after trying: index/query tuning, caching, read replicas, a bigger machine, and splitting databases by function.\nPartitioning schemes:\n- Range-based: split by value ranges; good for range queries but prone to hotspots (partitioning by time sends every write to the newest shard).\n- Hash-based: hash(key) spreads data evenly; but range queries must hit every shard.\n- Directory-based: a lookup table key → shard; flexible but adds a component that must be highly available.\nChoosing a shard key: high cardinality, even distribution, and aligned with the main queries — e.g. user_id for a social network so all of a user's data lives on one shard.\nProblems that come with it:\n- Cross-shard queries/joins: denormalize, or scatter-gather and merge results.\n- Cross-shard transactions: avoid them through redesign, or use sagas.\n- Hot keys (celebrity accounts): isolate them or add a salt to the key.\n- Resharding: create many logical shards mapped onto fewer physical machines, or use consistent hashing, so data moves more easily.\n- You need globally unique IDs.\nYou can mention off-the-shelf options: Vitess, Citus, or distributed databases like CockroachDB and DynamoDB."
+    },
+    "tip": {
+      "vi": "Mở đầu bằng 'sharding là phương án cuối cùng' và liệt kê những gì nên thử trước sẽ ghi điểm về sự chín chắn.",
+      "en": "Opening with 'sharding is a last resort' and listing what to try first scores points for maturity."
+    },
+    "followUps": [
+      {
+        "vi": "Với một app thương mại điện tử, bạn shard bảng orders theo key nào?",
+        "en": "For an e-commerce app, which key would you shard the orders table by?"
+      },
+      {
+        "vi": "Làm sao chuyển từ 4 shard lên 8 shard mà không downtime?",
+        "en": "How do you go from 4 shards to 8 without downtime?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-consistent-hashing",
+    "level": "senior",
+    "topic": "Databases",
+    "q": {
+      "vi": "Consistent hashing là gì? Vì sao cần virtual node?",
+      "en": "What is consistent hashing? Why are virtual nodes needed?"
+    },
+    "a": {
+      "vi": "Vấn đề: dùng hash(key) % N thì khi N thay đổi (thêm hoặc bớt node), gần như mọi key đổi chỗ → cache miss hàng loạt hoặc phải di chuyển gần hết dữ liệu.\nConsistent hashing: đặt cả node và key lên một vòng hash (vd 0 đến 2^32 - 1). Mỗi key thuộc về node đầu tiên gặp khi đi theo chiều kim đồng hồ. Thêm hoặc bớt một node chỉ ảnh hưởng đoạn giữa nó và node liền trước → trung bình chỉ khoảng K/N key phải di chuyển (K là số key).\nVirtual node: mỗi node vật lý được đặt ở nhiều điểm trên vòng (vd 100-200 điểm). Tác dụng:\n- Phân bố tải đều hơn, tránh một node \"trúng\" đoạn vòng quá dài.\n- Khi một node chết, tải của nó chia đều cho nhiều node thay vì dồn hết vào node kế bên.\n- Máy mạnh hơn nhận nhiều virtual node hơn (trọng số).\nCài đặt: lưu các điểm trong mảng đã sắp xếp hoặc cây, tra bằng binary search O(log n). Replication: lưu key trên N node vật lý khác nhau tiếp theo trên vòng.\nĐược dùng trong Cassandra, DynamoDB, client Memcached (ketama), một số load balancer. Các biến thể đáng biết: rendezvous hashing, jump consistent hash.",
+      "en": "The problem: with hash(key) % N, when N changes (adding or removing a node), almost every key moves → massive cache misses or moving nearly all the data.\nConsistent hashing: place both nodes and keys on a hash ring (e.g. 0 to 2^32 - 1). Each key belongs to the first node found going clockwise. Adding or removing a node only affects the arc between it and the previous node → on average only about K/N keys move (K is the number of keys).\nVirtual nodes: each physical node is placed at many points on the ring (e.g. 100-200 points). Effects:\n- More even load, avoiding one node \"owning\" an overly long arc.\n- When a node dies, its load spreads across many nodes instead of all landing on its neighbor.\n- Stronger machines get more virtual nodes (weighting).\nImplementation: keep the points in a sorted array or tree and look up with binary search, O(log n). Replication: store a key on the next N distinct physical nodes on the ring.\nUsed in Cassandra, DynamoDB, Memcached clients (ketama), and some load balancers. Variants worth knowing: rendezvous hashing, jump consistent hash."
+    },
+    "code": "import bisect, hashlib\n\nclass Ring:\n    def __init__(self, nodes, vnodes=100):\n        self.points = sorted((self._h(f\"{n}#{i}\"), n) for n in nodes for i in range(vnodes))\n        self.keys = [p for p, _ in self.points]\n\n    def _h(self, s):\n        return int(hashlib.md5(s.encode()).hexdigest(), 16)\n\n    def node_for(self, key):\n        i = bisect.bisect(self.keys, self._h(key)) % len(self.keys)\n        return self.points[i][1]",
+    "tip": {
+      "vi": "Vẽ vòng hash và minh hoạ việc thêm một node chỉ lấy một đoạn nhỏ — hình vẽ thuyết phục hơn mọi định nghĩa.",
+      "en": "Draw the ring and show that adding a node only takes over a small arc — the picture beats any definition."
+    },
+    "followUps": [
+      {
+        "vi": "Consistent hashing xử lý replication như thế nào?",
+        "en": "How does consistent hashing handle replication?"
+      },
+      {
+        "vi": "Hot key có được giải quyết bởi consistent hashing không?",
+        "en": "Does consistent hashing solve hot keys?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-cap-theorem",
+    "level": "senior",
+    "topic": "Distributed Systems",
+    "q": {
+      "vi": "Giải thích định lý CAP và PACELC. Hệ thống của bạn chọn CP hay AP, vì sao?",
+      "en": "Explain the CAP theorem and PACELC. Would your system be CP or AP, and why?"
+    },
+    "a": {
+      "vi": "CAP: khi mạng bị phân mảnh (Partition — điều chắc chắn xảy ra ở hệ phân tán), hệ thống phải chọn giữa Consistency (mọi node trả về dữ liệu mới nhất, theo nghĩa linearizable) và Availability (mọi request đến node còn sống đều được trả lời). Vì partition là không tránh được, lựa chọn thực tế là CP hay AP.\n- CP: từ chối hoặc chặn request để không trả dữ liệu sai. Vd: số dư tài khoản, tồn kho, khoá phân tán (ZooKeeper, etcd).\n- AP: vẫn trả lời, chấp nhận dữ liệu cũ tạm thời rồi đồng bộ sau (eventual consistency). Vd: số like, giỏ hàng, feed (Cassandra, DynamoDB ở chế độ mặc định).\nPACELC bổ sung: nếu có Partition thì chọn A hoặc C; Else (khi mạng bình thường) vẫn phải đánh đổi giữa Latency và Consistency — đồng bộ sang nhiều replica thì chậm hơn. Vd DynamoDB/Cassandra là PA/EL, còn Spanner thiên về PC/EC.\nCâu trả lời tốt: không gán nhãn cho cả hệ thống mà chọn theo từng loại dữ liệu — trong một app thương mại điện tử, thanh toán và tồn kho cần CP, còn danh mục sản phẩm, review, gợi ý có thể AP.",
+      "en": "CAP: when the network partitions (inevitable in distributed systems), a system must choose between Consistency (every node returns the latest data, in the linearizable sense) and Availability (every request to a live node gets a response). Since partitions can't be avoided, the real choice is CP or AP.\n- CP: reject or block requests rather than return wrong data. E.g. account balances, inventory, distributed locks (ZooKeeper, etcd).\n- AP: keep answering, accept temporarily stale data and reconcile later (eventual consistency). E.g. like counts, carts, feeds (Cassandra, DynamoDB in default mode).\nPACELC adds: if there is a Partition, choose A or C; Else (normal operation) you still trade Latency against Consistency — synchronously updating many replicas is slower. E.g. DynamoDB/Cassandra are PA/EL, while Spanner leans PC/EC.\nA strong answer doesn't label the whole system but chooses per kind of data — in an e-commerce app, payments and inventory need CP, while the product catalog, reviews and recommendations can be AP."
+    },
+    "tip": {
+      "vi": "Chọn CP/AP theo từng loại dữ liệu thay vì cả hệ thống là điểm phân biệt câu trả lời senior.",
+      "en": "Choosing CP/AP per kind of data instead of for the whole system is what marks a senior answer."
+    },
+    "followUps": [
+      {
+        "vi": "Vì sao không thể chọn 'CA' cho một hệ phân tán?",
+        "en": "Why can't a distributed system just choose 'CA'?"
+      },
+      {
+        "vi": "Cassandra có thể cấu hình gần với CP không? Bằng cách nào?",
+        "en": "Can Cassandra be configured to behave closer to CP? How?"
+      }
+    ],
+    "source": "https://github.com/donnemartin/system-design-primer"
+  },
+  {
+    "id": "system-design-consistency-models",
+    "level": "senior",
+    "topic": "Distributed Systems",
+    "q": {
+      "vi": "So sánh các mô hình consistency: strong (linearizable), sequential, causal, read-your-writes và eventual.",
+      "en": "Compare consistency models: strong (linearizable), sequential, causal, read-your-writes and eventual."
+    },
+    "a": {
+      "vi": "Từ mạnh đến yếu:\n- Linearizability (strong): mọi thao tác như xảy ra tức thời trên một bản sao duy nhất; ghi thành công thì mọi lần đọc sau đó đều thấy. Cần consensus (Raft/Paxos) hoặc một leader duy nhất; latency cao hơn và mất availability khi partition. Dùng cho khoá, leader election, số dư.\n- Sequential: mọi node thấy cùng một thứ tự thao tác, nhưng thứ tự đó không nhất thiết khớp thời gian thực.\n- Causal: các thao tác có quan hệ nhân quả (comment trả lời một bài viết) luôn được thấy đúng thứ tự; thao tác độc lập có thể thấy khác thứ tự ở các node. Đây là mô hình mạnh nhất vẫn giữ được availability khi partition.\n- Session guarantees: read-your-writes, monotonic reads, monotonic writes — đủ cho trải nghiệm người dùng trong phần lớn ứng dụng.\n- Eventual: nếu không có ghi mới thì cuối cùng các bản sao hội tụ; rẻ, nhanh, sẵn sàng cao, nhưng cần cơ chế giải quyết xung đột (LWW, vector clock, CRDT).\nNguyên tắc chọn: dùng mô hình yếu nhất mà nghiệp vụ vẫn chấp nhận được, và có thể chỉnh theo từng truy vấn (Cassandra cho chọn ONE, QUORUM, ALL).\nLưu ý: isolation level của transaction (read committed, serializable) là khái niệm khác, dù hay bị nhầm với consistency model.",
+      "en": "From strongest to weakest:\n- Linearizability (strong): every operation appears to happen instantly on a single copy; once a write succeeds, every later read sees it. Requires consensus (Raft/Paxos) or a single leader; higher latency and lost availability during partitions. Used for locks, leader election, balances.\n- Sequential: all nodes see the same order of operations, but that order doesn't have to match real time.\n- Causal: causally related operations (a comment replying to a post) are always seen in the right order; independent operations may appear in different orders on different nodes. It is the strongest model that stays available during partitions.\n- Session guarantees: read-your-writes, monotonic reads, monotonic writes — enough for user experience in most applications.\n- Eventual: if writes stop, replicas eventually converge; cheap, fast, highly available, but needs conflict resolution (LWW, vector clocks, CRDTs).\nRule for choosing: use the weakest model the business can tolerate, and tune it per query where possible (Cassandra lets you choose ONE, QUORUM, ALL).\nNote: transaction isolation levels (read committed, serializable) are a different concept, even though they are often confused with consistency models."
+    },
+    "tip": {
+      "vi": "Gắn mỗi mô hình với một ví dụ nghiệp vụ cụ thể; định nghĩa suông rất dễ bị hỏi vặn.",
+      "en": "Tie each model to a concrete business example; bare definitions invite tough follow-ups."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao đảm bảo read-your-writes khi đọc từ replica?",
+        "en": "How do you guarantee read-your-writes when reading from replicas?"
+      },
+      {
+        "vi": "CRDT là gì và dùng khi nào?",
+        "en": "What is a CRDT and when would you use one?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-distributed-ids",
+    "level": "mid",
+    "topic": "Distributed Systems",
+    "q": {
+      "vi": "Làm sao sinh ID duy nhất trong hệ thống phân tán?",
+      "en": "How do you generate unique IDs in a distributed system?"
+    },
+    "a": {
+      "vi": "Yêu cầu thường gặp: duy nhất, sắp xếp được theo thời gian, vừa 64-bit để index gọn, sinh nhanh và không phụ thuộc một điểm duy nhất.\nCác cách:\n- Auto-increment của database: đơn giản nhưng là điểm nghẽn/SPOF; có thể dùng nhiều DB với bước nhảy (một máy sinh số lẻ, một máy sinh số chẵn) nhưng khó mở rộng.\n- UUID v4: 128-bit, sinh cục bộ, không cần phối hợp; nhưng dài và ngẫu nhiên nên làm index B-tree phân mảnh. UUID v7 đặt timestamp ở đầu nên sắp xếp được theo thời gian.\n- Snowflake (Twitter): 64-bit gồm 1 bit dấu + 41 bit timestamp mili giây (~69 năm) + 10 bit machine ID + 12 bit sequence (4.096 ID mỗi ms mỗi máy). Sinh cục bộ, sắp theo thời gian. Phải cấp machine ID duy nhất (qua ZooKeeper hoặc config) và xử lý đồng hồ chạy lùi (chờ hoặc từ chối sinh).\n- Cấp dải ID: một service cấp từng block (vd 1.000 ID) cho mỗi app server, app dùng dần trong bộ nhớ.\nLưu ý bảo mật: ID tuần tự dễ đoán và lộ thông tin kinh doanh (số đơn hàng mỗi ngày) → ID lộ ra ngoài nên khó đoán, và luôn kiểm tra quyền truy cập.",
+      "en": "Typical requirements: unique, sortable by time, fits in 64 bits for compact indexes, fast to generate, and no single point of dependency.\nOptions:\n- Database auto-increment: simple but a bottleneck/SPOF; you can use several DBs with a step (one generates odd numbers, another even) but it scales poorly.\n- UUID v4: 128-bit, generated locally with no coordination; but long and random, which fragments B-tree indexes. UUID v7 puts a timestamp first, so it sorts by time.\n- Snowflake (Twitter): 64 bits = 1 sign bit + 41-bit millisecond timestamp (~69 years) + 10-bit machine ID + 12-bit sequence (4,096 IDs per ms per machine). Generated locally, time-ordered. You must assign unique machine IDs (via ZooKeeper or config) and handle clocks moving backwards (wait or refuse to generate).\n- ID range allocation: a service hands out blocks (e.g. 1,000 IDs) to each app server, which uses them from memory.\nSecurity note: sequential IDs are guessable and leak business information (orders per day) → externally exposed IDs should be hard to guess, and authorization must always be checked."
+    },
+    "code": "Snowflake 64-bit layout:\n| 1 sign | 41 timestamp (ms since custom epoch) | 10 machine id | 12 sequence |\n\nid = ((now_ms - EPOCH) << 22) | (machine_id << 12) | sequence",
+    "tip": {
+      "vi": "Nêu được vấn đề đồng hồ chạy lùi của Snowflake cho thấy bạn hiểu sâu chứ không chỉ thuộc sơ đồ bit.",
+      "en": "Raising Snowflake's clock-moving-backwards problem shows depth beyond memorizing the bit layout."
+    },
+    "followUps": [
+      {
+        "vi": "Vì sao UUID v4 làm chậm insert vào bảng MySQL/PostgreSQL lớn?",
+        "en": "Why does UUID v4 slow down inserts into large MySQL/PostgreSQL tables?"
+      },
+      {
+        "vi": "Làm sao cấp machine ID cho các container tự động scale?",
+        "en": "How do you assign machine IDs to containers that autoscale?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-message-queues",
+    "level": "mid",
+    "topic": "Async Processing",
+    "q": {
+      "vi": "Khi nào nên dùng message queue? So sánh queue truyền thống (RabbitMQ, SQS) với log (Kafka).",
+      "en": "When should you use a message queue? Compare traditional queues (RabbitMQ, SQS) with logs (Kafka)."
+    },
+    "a": {
+      "vi": "Dùng queue để: tách rời producer và consumer, xử lý bất đồng bộ việc chậm (gửi email, resize ảnh), làm bộ đệm hấp thụ spike (load leveling), fan-out sự kiện cho nhiều service, và retry khi lỗi.\n- Message queue (RabbitMQ, SQS): consumer ack thì message bị xoá; phân việc cho một pool worker; hỗ trợ routing, delay, priority. Hợp làm task queue.\n- Log/stream (Kafka, Pulsar): message được lưu theo thời gian retention, chia partition; nhiều consumer group đọc độc lập theo offset và có thể replay. Thứ tự chỉ được đảm bảo trong một partition. Hợp cho event streaming, analytics, CDC.\nNhững điểm cần nêu:\n- Delivery semantics: at-least-once là mặc định thực tế → consumer phải idempotent.\n- Dead-letter queue cho message lỗi nhiều lần, retry có backoff.\n- Thứ tự: chọn partition key phù hợp (vd order_id) để sự kiện của cùng một đơn hàng theo đúng thứ tự.\n- Theo dõi consumer lag và có backpressure.\n- Outbox pattern để ghi DB và publish sự kiện nhất quán, tránh \"ghi DB xong nhưng publish thất bại\".\nTrade-off: hệ thống trở thành eventual consistency và khó debug hơn → cần correlation ID và distributed tracing.",
+      "en": "Use a queue to: decouple producers from consumers, process slow work asynchronously (sending email, resizing images), buffer traffic spikes (load leveling), fan out events to many services, and retry on failure.\n- Message queue (RabbitMQ, SQS): a message is deleted once the consumer acks it; work is spread across a worker pool; supports routing, delays, priorities. Fits a task queue.\n- Log/stream (Kafka, Pulsar): messages are retained for a retention period and split into partitions; many consumer groups read independently by offset and can replay. Ordering is guaranteed only within a partition. Fits event streaming, analytics, CDC.\nPoints to raise:\n- Delivery semantics: at-least-once is the practical default → consumers must be idempotent.\n- A dead-letter queue for messages that keep failing, retries with backoff.\n- Ordering: pick the right partition key (e.g. order_id) so events for the same order stay in order.\n- Monitor consumer lag and apply backpressure.\n- The outbox pattern to write to the DB and publish events consistently, avoiding \"DB write succeeded but publish failed\".\nTrade-off: the system becomes eventually consistent and harder to debug → you need correlation IDs and distributed tracing."
+    },
+    "tip": {
+      "vi": "Ngay khi nhắc đến queue, hãy tự nói luôn 'consumer phải idempotent' — interviewer gần như chắc chắn sẽ hỏi điều này.",
+      "en": "As soon as you mention a queue, say 'consumers must be idempotent' yourself — the interviewer will almost certainly ask."
+    },
+    "followUps": [
+      {
+        "vi": "Outbox pattern hoạt động thế nào?",
+        "en": "How does the outbox pattern work?"
+      },
+      {
+        "vi": "Consumer lag tăng liên tục thì bạn xử lý ra sao?",
+        "en": "Consumer lag keeps growing — what do you do?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-idempotency",
+    "level": "senior",
+    "topic": "Async Processing",
+    "q": {
+      "vi": "Idempotency là gì? Làm sao đạt được 'exactly-once' khi xử lý thanh toán hoặc message?",
+      "en": "What is idempotency? How do you achieve 'exactly-once' when processing payments or messages?"
+    },
+    "a": {
+      "vi": "Thao tác idempotent là thực hiện nhiều lần cho kết quả như thực hiện một lần. Nó cần thiết vì mạng không tin cậy: client timeout rồi retry, queue giao lại message (at-least-once).\nExactly-once delivery qua mạng nói chung là không đảm bảo được; điều ta làm là at-least-once delivery + xử lý idempotent = hiệu ứng exactly-once.\nCác kỹ thuật:\n- Idempotency key: client sinh key (UUID) cho mỗi thao tác và gửi kèm header (như Stripe). Server lưu key + kết quả trong bảng có unique constraint; request trùng trả lại kết quả cũ thay vì xử lý lại. Key có TTL, và phải xử lý trường hợp request đầu vẫn đang chạy (trả 409 hoặc chờ). Nên lưu hash của body để phát hiện cùng key nhưng nội dung khác.\n- Unique constraint nghiệp vụ: vd mỗi order_id chỉ có một payment thành công.\n- Consumer: lưu message_id đã xử lý trong cùng transaction với thay đổi dữ liệu (inbox table).\n- Ghi có điều kiện: UPDATE ... WHERE version = ? (optimistic locking), hoặc set trạng thái thay vì cộng dồn.\nKafka có idempotent producer và transaction cho exactly-once trong phạm vi Kafka, nhưng side effect ra bên ngoài (gọi API ngân hàng, gửi email) vẫn cần idempotency ở tầng ứng dụng.",
+      "en": "An idempotent operation gives the same result whether it runs once or many times. It is needed because networks are unreliable: clients time out and retry, queues redeliver messages (at-least-once).\nExactly-once delivery over a network generally can't be guaranteed; what we build is at-least-once delivery + idempotent processing = an exactly-once effect.\nTechniques:\n- Idempotency key: the client generates a key (UUID) per operation and sends it in a header (as Stripe does). The server stores key + result in a table with a unique constraint; a duplicate request gets the stored result instead of being reprocessed. Keys have a TTL, and you must handle the first request still being in progress (return 409 or wait). Store a hash of the body to detect the same key with different content.\n- Business unique constraints: e.g. each order_id can have only one successful payment.\n- Consumers: record processed message_ids in the same transaction as the data change (inbox table).\n- Conditional writes: UPDATE ... WHERE version = ? (optimistic locking), or set a state instead of incrementing.\nKafka has idempotent producers and transactions for exactly-once within Kafka, but external side effects (calling a bank API, sending email) still need idempotency at the application level."
+    },
+    "code": "POST /payments\nIdempotency-Key: 7f3c2a9e-...\n\nCREATE TABLE idempotency_keys (\n  key          TEXT PRIMARY KEY,\n  request_hash TEXT NOT NULL,\n  status       TEXT NOT NULL,      -- in_progress | done\n  response     JSONB,\n  created_at   TIMESTAMPTZ DEFAULT now()\n);",
+    "tip": {
+      "vi": "Nói thẳng 'exactly-once delivery là ảo tưởng, ta làm exactly-once effect' là câu chốt interviewer muốn nghe.",
+      "en": "Saying plainly 'exactly-once delivery is an illusion; we build an exactly-once effect' is the line interviewers want to hear."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu server crash sau khi trừ tiền nhưng trước khi lưu kết quả idempotency thì sao?",
+        "en": "What if the server crashes after charging but before saving the idempotency result?"
+      },
+      {
+        "vi": "Idempotency key nên do client hay server sinh?",
+        "en": "Should the idempotency key be generated by the client or the server?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-search-indexing",
+    "level": "mid",
+    "topic": "Search",
+    "q": {
+      "vi": "Thiết kế tính năng tìm kiếm full-text (vd tìm sản phẩm). Inverted index hoạt động thế nào?",
+      "en": "Design full-text search (e.g. product search). How does an inverted index work?"
+    },
+    "a": {
+      "vi": "Không dùng LIKE '%abc%' trên database vì không tận dụng được index và không có xếp hạng.\nInverted index: văn bản được phân tích (tokenize, lowercase, stemming; tiếng Việt cần analyzer phù hợp và xử lý bỏ dấu để \"dien thoai\" vẫn ra \"điện thoại\"), rồi lưu map term → danh sách document chứa term đó (posting list). Truy vấn = tra posting list của từng term, giao/hợp lại, rồi xếp hạng bằng BM25 kết hợp tín hiệu nghiệp vụ (bán chạy, rating).\nKiến trúc:\n- Database chính là source of truth; dữ liệu đồng bộ sang Elasticsearch/OpenSearch qua CDC hoặc queue (near real-time, chấp nhận trễ vài giây).\n- Index chia shard + replica; truy vấn scatter-gather tới các shard rồi gộp top-K.\nTính năng thường có:\n- Autocomplete: edge n-gram hoặc trie, cache các prefix phổ biến.\n- Sửa lỗi chính tả: fuzzy query.\n- Filter/facet: giá, thương hiệu, danh mục.\n- Phân trang sâu dùng search_after thay vì offset lớn.\nHiện nay có thể kết hợp tìm kiếm ngữ nghĩa bằng vector embedding (hybrid search) cho truy vấn ngôn ngữ tự nhiên.\nVận hành: reindex không downtime bằng alias, theo dõi latency p99 và tỉ lệ truy vấn không có kết quả.",
+      "en": "Don't use LIKE '%abc%' on the database because it can't use an index and has no ranking.\nInverted index: text is analyzed (tokenize, lowercase, stemming; Vietnamese needs a suitable analyzer plus accent folding so \"dien thoai\" still matches \"điện thoại\"), then a map term → list of documents containing the term (posting list) is stored. A query looks up each term's posting list, intersects/unions them, then ranks with BM25 combined with business signals (best sellers, ratings).\nArchitecture:\n- The main database is the source of truth; data syncs to Elasticsearch/OpenSearch via CDC or a queue (near real-time, a few seconds of lag accepted).\n- The index is split into shards + replicas; queries scatter-gather to the shards and merge the top-K.\nCommon features:\n- Autocomplete: edge n-grams or a trie, caching popular prefixes.\n- Spelling correction: fuzzy queries.\n- Filters/facets: price, brand, category.\n- Deep pagination uses search_after instead of large offsets.\nToday you can also add semantic search with vector embeddings (hybrid search) for natural-language queries.\nOperations: zero-downtime reindexing via aliases, monitoring p99 latency and the zero-result query rate."
+    },
+    "tip": {
+      "vi": "Nhắc đến xử lý tiếng Việt không dấu là điểm cộng lớn khi phỏng vấn cho sản phẩm tại Việt Nam.",
+      "en": "Mentioning accent-insensitive Vietnamese search is a big plus when interviewing for products in Vietnam."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao để kết quả tìm kiếm cập nhật ngay khi giá sản phẩm thay đổi?",
+        "en": "How do you make search results reflect a price change right away?"
+      },
+      {
+        "vi": "Thiết kế autocomplete trả kết quả dưới 50 ms thế nào?",
+        "en": "How would you design autocomplete that responds in under 50 ms?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-rate-limiting-algorithms",
+    "level": "mid",
+    "topic": "Reliability",
+    "q": {
+      "vi": "So sánh các thuật toán rate limiting: fixed window, sliding window, token bucket, leaky bucket.",
+      "en": "Compare rate limiting algorithms: fixed window, sliding window, token bucket, leaky bucket."
+    },
+    "a": {
+      "vi": "- Fixed window counter: đếm request trong cửa sổ cố định (vd mỗi phút). Đơn giản, tốn ít bộ nhớ; nhưng ở biên cửa sổ có thể lọt burst gấp đôi (cuối phút này + đầu phút sau).\n- Sliding window log: lưu timestamp từng request (vd Redis sorted set) và đếm trong 60 giây gần nhất. Chính xác nhưng tốn bộ nhớ khi lưu lượng lớn.\n- Sliding window counter: ước lượng = số request cửa sổ hiện tại + số request cửa sổ trước × tỉ lệ phần còn chồng lấn. Gọn, đủ chính xác, dùng nhiều trong thực tế.\n- Token bucket: bucket chứa tối đa B token, được nạp r token/giây; mỗi request lấy 1 token, hết token thì từ chối. Cho phép burst có kiểm soát, chỉ cần lưu (số token, thời điểm nạp cuối). Phổ biến nhất.\n- Leaky bucket: request vào hàng đợi và được xử lý ra với tốc độ cố định → làm mượt lưu lượng, hợp để bảo vệ downstream chỉ chịu được tải đều.\nKhi từ chối: trả HTTP 429 kèm Retry-After và header cho biết limit/remaining.\nCách chọn: cần cho phép burst ngắn → token bucket; cần đầu ra đều → leaky bucket; cần đơn giản và chấp nhận sai số ở biên → fixed window.",
+      "en": "- Fixed window counter: count requests in a fixed window (e.g. per minute). Simple and memory-light; but at the window edge a double burst can slip through (end of one minute + start of the next).\n- Sliding window log: store each request's timestamp (e.g. a Redis sorted set) and count those in the last 60 seconds. Accurate but memory-hungry under heavy traffic.\n- Sliding window counter: estimate = requests in the current window + requests in the previous window × the overlapping fraction. Compact, accurate enough, widely used in practice.\n- Token bucket: a bucket holds at most B tokens and is refilled at r tokens/second; each request takes 1 token and is rejected when none are left. Allows controlled bursts and only stores (token count, last refill time). The most popular choice.\n- Leaky bucket: requests enter a queue and are drained at a fixed rate → smooths traffic, good for protecting a downstream that can only handle steady load.\nWhen rejecting: return HTTP 429 with Retry-After and headers showing limit/remaining.\nHow to choose: need to allow short bursts → token bucket; need a steady output → leaky bucket; want simplicity and accept edge inaccuracy → fixed window."
+    },
+    "code": "def allow(bucket, now, rate, capacity):\n    # refill tokens based on elapsed time\n    bucket.tokens = min(capacity, bucket.tokens + (now - bucket.last) * rate)\n    bucket.last = now\n    if bucket.tokens >= 1:\n        bucket.tokens -= 1\n        return True\n    return False  # -> HTTP 429",
+    "tip": {
+      "vi": "Vẽ ví dụ burst ở biên của fixed window để chứng minh vì sao cần sliding window — rất dễ ghi điểm.",
+      "en": "Sketch the burst at a fixed window's edge to show why sliding windows exist — an easy way to score."
+    },
+    "followUps": [
+      {
+        "vi": "Token bucket với capacity 10 và rate 1/giây cho phép tối đa bao nhiêu request trong 10 giây đầu?",
+        "en": "With capacity 10 and rate 1/second, how many requests can a token bucket allow in the first 10 seconds?"
+      },
+      {
+        "vi": "Rate limit theo IP có vấn đề gì với người dùng sau NAT của nhà mạng?",
+        "en": "What is the problem with per-IP rate limiting for users behind carrier NAT?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-observability",
+    "level": "mid",
+    "topic": "Reliability",
+    "q": {
+      "vi": "Bạn thiết kế observability (logging, metrics, tracing) cho hệ thống microservices thế nào?",
+      "en": "How would you design observability (logging, metrics, tracing) for a microservices system?"
+    },
+    "a": {
+      "vi": "Ba trụ cột:\n- Metrics: số liệu tổng hợp theo thời gian (Prometheus + Grafana). Với service theo dõi RED (Rate, Errors, Duration); với tài nguyên theo dõi USE (Utilization, Saturation, Errors). Dùng percentile p95/p99 thay vì trung bình.\n- Logs: log có cấu trúc (JSON), luôn kèm trace_id/request_id, level hợp lý, không log dữ liệu nhạy cảm (mật khẩu, số thẻ, token). Gom tập trung (ELK, Loki).\n- Distributed tracing: theo dấu một request qua nhiều service (OpenTelemetry → Jaeger/Tempo) để thấy chặng nào chậm. Thường dùng sampling để giảm chi phí, nhưng giữ lại trace của request lỗi.\nAlerting:\n- Định nghĩa SLI/SLO (vd 99,9% request thành công và dưới 300 ms).\n- Cảnh báo theo triệu chứng người dùng thấy và theo tốc độ đốt error budget, thay vì cảnh báo mọi lần CPU tăng → tránh alert fatigue.\n- Mỗi alert có runbook và người trực rõ ràng.\nBổ sung: dashboard theo luồng nghiệp vụ (số đơn hàng/phút, tỉ lệ thanh toán thành công), synthetic monitoring, health check. Chú ý cardinality của label metrics — đừng gắn user_id làm label.",
+      "en": "Three pillars:\n- Metrics: aggregated numbers over time (Prometheus + Grafana). For services track RED (Rate, Errors, Duration); for resources track USE (Utilization, Saturation, Errors). Use p95/p99 percentiles instead of averages.\n- Logs: structured logs (JSON), always with trace_id/request_id, sensible levels, never logging sensitive data (passwords, card numbers, tokens). Centralize them (ELK, Loki).\n- Distributed tracing: follow one request across services (OpenTelemetry → Jaeger/Tempo) to see which hop is slow. Usually sampled to control cost, while keeping traces of failed requests.\nAlerting:\n- Define SLIs/SLOs (e.g. 99.9% of requests succeed and finish under 300 ms).\n- Alert on user-visible symptoms and on error-budget burn rate, instead of every CPU spike → avoid alert fatigue.\n- Every alert has a runbook and a clear on-call owner.\nExtras: dashboards per business flow (orders per minute, payment success rate), synthetic monitoring, health checks. Watch metric label cardinality — never use user_id as a label."
+    },
+    "tip": {
+      "vi": "Kể một sự cố thật mà tracing hoặc metrics giúp bạn tìm ra nguyên nhân sẽ thuyết phục hơn liệt kê công cụ.",
+      "en": "A real incident where tracing or metrics helped you find the cause beats listing tools."
+    },
+    "followUps": [
+      {
+        "vi": "Sự khác nhau giữa SLI, SLO và SLA là gì?",
+        "en": "What is the difference between an SLI, an SLO and an SLA?"
+      },
+      {
+        "vi": "Làm sao giảm chi phí lưu log khi hệ thống ghi hàng TB mỗi ngày?",
+        "en": "How do you cut log storage costs when the system writes terabytes per day?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-url-shortener",
+    "level": "mid",
+    "topic": "Classic Designs",
+    "q": {
+      "vi": "Thiết kế dịch vụ rút gọn link (như bit.ly).",
+      "en": "Design a URL shortener (like bit.ly)."
+    },
+    "a": {
+      "vi": "1. Làm rõ yêu cầu: tạo link ngắn, redirect; có hạn sử dụng, custom alias, thống kê không? Quy mô: vd 100 triệu link mới/tháng (~40 ghi/giây), tỉ lệ đọc:ghi ~100:1 (~4.000 đọc/giây).\n2. API: POST /links {url} → {code}; GET /{code} → 301/302.\n3. Sinh mã: base62 của một ID duy nhất (bộ đếm phân tán hoặc dải ID cấp sẵn) — 7 ký tự base62 cho ~3.500 tỉ mã, ngắn và không trùng. Hash (MD5) rồi cắt ngắn thì phải xử lý va chạm. Nếu không muốn mã dễ đoán, xáo trộn ID trước khi encode.\n4. Lưu trữ: key-value (code → url, owner, expire_at), dễ shard theo code. Mỗi bản ghi ~500 byte → ~600 GB cho 100 triệu link/tháng trong 1 năm.\n5. Đọc nhiều → cache (Redis) + CDN; 301 giúp trình duyệt tự cache nhưng mất thống kê, 302 thì ngược lại.\n6. Thống kê: ghi sự kiện click vào queue (Kafka) rồi xử lý bất đồng bộ, không làm chậm redirect.\n7. Chống lạm dụng: rate limit, kiểm tra link độc hại, không cho rút gọn chính domain của mình.",
+      "en": "1. Clarify: create short links, redirect; expiry, custom aliases, analytics? Scale: e.g. 100M new links/month (~40 writes/s), read:write ~100:1 (~4,000 reads/s).\n2. API: POST /links {url} → {code}; GET /{code} → 301/302.\n3. Code generation: base62 of a unique ID (distributed counter or pre-allocated ID ranges) — 7 base62 characters give ~3.5 trillion codes, short and collision-free. Hash (MD5) + truncate requires collision handling. If codes shouldn't be guessable, shuffle the ID before encoding.\n4. Storage: key-value (code → url, owner, expire_at), easy to shard by code. ~500 bytes per record → ~600 GB for one year at 100M links/month.\n5. Read-heavy → cache (Redis) + CDN; 301 lets browsers cache but loses analytics, 302 the opposite.\n6. Analytics: push click events to a queue (Kafka) and process asynchronously so redirects stay fast.\n7. Abuse: rate limiting, malicious link checks, refusing to shorten our own domain."
+    },
+    "code": "POST /api/links   {\"url\": \"https://example.com/very/long\", \"expireAt\": null}\n  -> 201 {\"code\": \"aZ3kP9q\", \"short\": \"https://sho.rt/aZ3kP9q\"}\nGET  /aZ3kP9q  -> 302 Location: https://example.com/very/long\n\nlinks(code PK, long_url, owner_id, created_at, expire_at)",
+    "tip": {
+      "vi": "Tự giải thích lựa chọn 301 hay 302 và ảnh hưởng tới thống kê — chi tiết nhỏ nhưng interviewer rất hay hỏi.",
+      "en": "Explain 301 vs 302 and its impact on analytics yourself — a small detail interviewers love to ask about."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu hai người rút gọn cùng một URL, có trả về cùng mã không?",
+        "en": "If two people shorten the same URL, do they get the same code?"
+      },
+      {
+        "vi": "Bộ đếm phân tán bị chết thì hệ thống sinh mã thế nào?",
+        "en": "How do you keep generating codes if the distributed counter goes down?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-rate-limiter",
+    "level": "mid",
+    "topic": "Classic Designs",
+    "q": {
+      "vi": "Thiết kế một rate limiter phân tán cho API gateway (vd 100 request/phút mỗi user).",
+      "en": "Design a distributed rate limiter for an API gateway (e.g. 100 requests/minute per user)."
+    },
+    "a": {
+      "vi": "1. Yêu cầu: giới hạn theo user/API key/IP, nhiều rule (theo endpoint, gói dịch vụ), thêm latency chỉ vài ms, chính xác vừa đủ, và hệ thống vẫn chạy khi limiter gặp sự cố.\n2. Vị trí: ở API gateway hoặc middleware, trước các service. Không tin vào giới hạn phía client.\n3. Thuật toán: token bucket hoặc sliding window counter.\n4. Trạng thái: Redis cluster dùng chung cho mọi gateway instance, key = rule:user_id. Đọc-tính-ghi phải atomic → dùng Lua script (hoặc INCR + EXPIRE cho fixed window). Redis cluster tự shard theo key.\n5. Rule: lưu ở config service; gateway cache và reload định kỳ, không phải đọc mỗi request.\n6. Response: 429 + Retry-After, header X-RateLimit-Limit / Remaining để client tự điều chỉnh.\n7. Tối ưu: đếm cục bộ ở từng gateway rồi đồng bộ theo lô lên Redis để giảm round trip (chấp nhận sai số nhỏ); multi-region thì đặt limit riêng mỗi region hoặc đồng bộ bất đồng bộ.\n8. Khi Redis lỗi: fail-open (cho qua, ưu tiên availability) cho API thông thường; fail-closed cho API nhạy cảm như đăng nhập, gửi OTP.\nGiám sát số request bị chặn để chỉnh rule và phát hiện tấn công.",
+      "en": "1. Requirements: limit by user/API key/IP, multiple rules (per endpoint, per plan), only a few ms of added latency, accurate enough, and the system keeps working if the limiter fails.\n2. Placement: in the API gateway or middleware, before the services. Never trust client-side limits.\n3. Algorithm: token bucket or sliding window counter.\n4. State: a Redis cluster shared by all gateway instances, key = rule:user_id. Read-compute-write must be atomic → use a Lua script (or INCR + EXPIRE for a fixed window). Redis cluster shards by key.\n5. Rules: stored in a config service; gateways cache and reload them periodically instead of reading per request.\n6. Response: 429 + Retry-After, plus X-RateLimit-Limit / Remaining headers so clients can adapt.\n7. Optimizations: count locally in each gateway and sync to Redis in batches to cut round trips (accepting small errors); for multi-region, set per-region limits or sync asynchronously.\n8. When Redis fails: fail-open (let traffic through, favor availability) for normal APIs; fail-closed for sensitive APIs like login and sending OTPs.\nMonitor blocked requests to tune rules and detect attacks."
+    },
+    "code": "-- Fixed window in Redis (atomic via Lua)\n-- KEYS[1] = rl:{user_id}:{minute}, ARGV[1] = limit\nlocal c = redis.call('INCR', KEYS[1])\nif c == 1 then redis.call('EXPIRE', KEYS[1], 60) end\nreturn c <= tonumber(ARGV[1]) and 1 or 0",
+    "tip": {
+      "vi": "Chủ động nêu chiến lược fail-open hay fail-closed khi Redis chết — đây là chỗ phân biệt người đã vận hành hệ thống thật.",
+      "en": "Bring up fail-open vs fail-closed when Redis dies — it separates people who have run real systems."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao rate limit chính xác trên nhiều region mà không thêm latency?",
+        "en": "How do you rate limit accurately across regions without adding latency?"
+      },
+      {
+        "vi": "Vì sao không dùng GET rồi SET riêng lẻ trong Redis?",
+        "en": "Why not use separate GET and SET calls in Redis?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-news-feed",
+    "level": "senior",
+    "topic": "Classic Designs",
+    "q": {
+      "vi": "Thiết kế news feed (như Facebook/Twitter).",
+      "en": "Design a news feed (like Facebook/Twitter)."
+    },
+    "a": {
+      "vi": "1. Yêu cầu: đăng bài, follow, xem feed bài của người mình follow (theo thời gian hoặc ranking); feed tải dưới ~200 ms; đọc nhiều hơn ghi rất nhiều.\n2. API: POST /posts, GET /feed?cursor=...&limit=20.\n3. Data: posts (post_id, author_id, content, created_at), follows (follower_id, followee_id); ảnh/video ở object storage + CDN.\n4. Sinh feed:\n- Fan-out on write (push): khi đăng bài, worker đẩy post_id vào feed cache (Redis list) của từng follower. Đọc cực nhanh, nhưng tài khoản có hàng triệu follower thì ghi rất tốn và chậm.\n- Fan-out on read (pull): khi mở feed mới gom bài từ những người đang follow rồi merge. Ghi rẻ, đọc chậm.\n- Hybrid: push cho user thường; bài của celebrity không fan-out mà được merge lúc đọc. Không push cho user lâu không hoạt động.\n5. Feed cache chỉ giữ vài trăm post_id mới nhất; nội dung bài và thông tin user được hydrate từ cache riêng.\n6. Phân trang bằng cursor (post_id/timestamp), không dùng offset.\n7. Ranking: service riêng chấm điểm ứng viên theo tương tác, độ mới, quan hệ; có thể dùng model ML.\n8. Fan-out chạy bất đồng bộ qua Kafka; like/comment count dùng counter riêng và chấp nhận eventual consistency.",
+      "en": "1. Requirements: post, follow, view a feed of posts from people you follow (chronological or ranked); feed loads in under ~200 ms; reads vastly outnumber writes.\n2. API: POST /posts, GET /feed?cursor=...&limit=20.\n3. Data: posts (post_id, author_id, content, created_at), follows (follower_id, followee_id); images/videos in object storage + CDN.\n4. Feed generation:\n- Fan-out on write (push): when a post is created, workers push the post_id into each follower's feed cache (a Redis list). Reads are very fast, but accounts with millions of followers make writes expensive and slow.\n- Fan-out on read (pull): gather posts from followees when the feed is opened and merge them. Cheap writes, slow reads.\n- Hybrid: push for normal users; celebrity posts are not fanned out but merged at read time. Skip pushing to long-inactive users.\n5. The feed cache keeps only a few hundred of the newest post_ids; post content and user info are hydrated from separate caches.\n6. Paginate with a cursor (post_id/timestamp), not offsets.\n7. Ranking: a separate service scores candidates by engagement, recency, relationship; can use an ML model.\n8. Fan-out runs asynchronously via Kafka; like/comment counts use separate counters with eventual consistency."
+    },
+    "tip": {
+      "vi": "Giải thích bài toán celebrity và mô hình hybrid là phần interviewer chờ đợi nhất trong câu này.",
+      "en": "Explaining the celebrity problem and the hybrid model is what interviewers wait for in this question."
+    },
+    "followUps": [
+      {
+        "vi": "Khi user unfollow một người, feed cache được cập nhật thế nào?",
+        "en": "When a user unfollows someone, how is the feed cache updated?"
+      },
+      {
+        "vi": "Làm sao chèn quảng cáo hoặc bài gợi ý vào feed?",
+        "en": "How would you insert ads or suggested posts into the feed?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-chat-app",
+    "level": "senior",
+    "topic": "Classic Designs",
+    "q": {
+      "vi": "Thiết kế ứng dụng chat (như Messenger/Zalo) hỗ trợ chat 1-1 và nhóm.",
+      "en": "Design a chat application (like Messenger/Zalo) with 1-1 and group chat."
+    },
+    "a": {
+      "vi": "1. Yêu cầu: chat 1-1 và nhóm, real-time, trạng thái online, đã gửi/đã xem, lịch sử, đồng bộ nhiều thiết bị, thông báo khi offline.\n2. Kết nối: client giữ WebSocket tới chat gateway (stateful). Mapping user → gateway server lưu trong Redis để định tuyến tin nhắn.\n3. Luồng gửi: A gửi tin → gateway → chat service gán message_id (tăng dần trong conversation, vd Snowflake), ghi DB, ack cho A (\"đã gửi\") → tra gateway đang giữ kết nối của B → đẩy tới B. B offline → notification service gửi push qua APNs/FCM.\n4. Lưu trữ: tin nhắn ghi rất nhiều và đọc theo conversation + thời gian → wide-column store (Cassandra/ScyllaDB), partition key = conversation_id, sắp theo message_id. Thông tin user/nhóm dùng SQL.\n5. Nhóm: nhóm nhỏ fan-out tới từng thành viên; nhóm rất lớn thì fan-out qua queue hoặc để client kéo về.\n6. Đa thiết bị: mỗi thiết bị nhớ message_id cuối đã nhận; khi kết nối lại thì kéo phần còn thiếu.\n7. Presence: heartbeat, lưu với TTL trong Redis; chỉ đẩy thay đổi cho bạn bè đang online để tránh bão sự kiện.\n8. Tin cậy: client gửi kèm client_msg_id để server khử trùng khi retry; nếu yêu cầu bảo mật cao thì mã hoá đầu cuối (Signal protocol).",
+      "en": "1. Requirements: 1-1 and group chat, real-time, online status, sent/seen receipts, history, multi-device sync, notifications when offline.\n2. Connections: clients hold a WebSocket to a chat gateway (stateful). The user → gateway server mapping lives in Redis for routing messages.\n3. Send flow: A sends a message → gateway → chat service assigns a message_id (increasing within the conversation, e.g. Snowflake), writes it to the DB, acks A (\"sent\") → looks up the gateway holding B's connection → pushes to B. If B is offline → the notification service sends a push via APNs/FCM.\n4. Storage: messages are write-heavy and read by conversation + time → a wide-column store (Cassandra/ScyllaDB), partition key = conversation_id, sorted by message_id. User/group info lives in SQL.\n5. Groups: small groups fan out to each member; very large groups fan out via a queue or let clients pull.\n6. Multi-device: each device remembers the last message_id it received; on reconnect it pulls what it missed.\n7. Presence: heartbeats stored with a TTL in Redis; only push changes to friends who are online to avoid event storms.\n8. Reliability: clients send a client_msg_id so the server can deduplicate retries; for high security needs, end-to-end encryption (Signal protocol)."
+    },
+    "tip": {
+      "vi": "Vẽ rõ luồng khi người nhận offline và khi kết nối lại — đó là nơi lộ ra hiểu biết thật về hệ thống real-time.",
+      "en": "Draw the flow for an offline recipient and for reconnection — that is where real understanding of real-time systems shows."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao đảm bảo thứ tự tin nhắn trong nhóm khi nhiều người gửi cùng lúc?",
+        "en": "How do you keep message order in a group when many people send at once?"
+      },
+      {
+        "vi": "Một gateway server chết thì hàng chục nghìn kết nối xử lý ra sao?",
+        "en": "What happens to tens of thousands of connections when a gateway server dies?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-notification-system",
+    "level": "mid",
+    "topic": "Classic Designs",
+    "q": {
+      "vi": "Thiết kế hệ thống thông báo (push, SMS, email) dùng chung cho nhiều service.",
+      "en": "Design a notification system (push, SMS, email) shared by many services."
+    },
+    "a": {
+      "vi": "1. Yêu cầu: nhiều kênh (push iOS/Android qua APNs/FCM, SMS, email, in-app; ở Việt Nam thường có thêm Zalo ZNS và SMS brandname), gửi ngay hoặc hẹn giờ, template, tôn trọng cài đặt của user (opt-out, giờ yên tĩnh), không gửi trùng, có thống kê.\n2. API: POST /notifications {user_id, template_id, params, channels, priority, idempotency_key}.\n3. Luồng: service gọi API → validate, kiểm tra preference và rate limit theo user → render template → đẩy vào queue theo kênh và theo độ ưu tiên (OTP tách riêng khỏi marketing) → worker của từng kênh gọi provider bên thứ ba.\n4. Dữ liệu: user preferences, device tokens (một user nhiều thiết bị; xoá token khi provider báo không hợp lệ), notification log với trạng thái queued/sent/delivered/failed.\n5. Tin cậy: retry với exponential backoff, dead-letter queue, idempotency key để không gửi hai lần, failover provider (SMS provider A lỗi thì chuyển sang B).\n6. Scale: worker stateless, scale theo độ dài queue; chiến dịch gửi hàng triệu user thì chia lô và giới hạn tốc độ theo quota của provider.\n7. Theo dõi: tỉ lệ gửi thành công, mở, click; cảnh báo khi tỉ lệ lỗi của provider tăng.",
+      "en": "1. Requirements: multiple channels (iOS/Android push via APNs/FCM, SMS, email, in-app; in Vietnam often also Zalo ZNS and brandname SMS), immediate or scheduled sends, templates, respecting user settings (opt-out, quiet hours), no duplicates, analytics.\n2. API: POST /notifications {user_id, template_id, params, channels, priority, idempotency_key}.\n3. Flow: a service calls the API → validate, check preferences and per-user rate limits → render the template → enqueue per channel and per priority (OTPs separated from marketing) → each channel's workers call the third-party provider.\n4. Data: user preferences, device tokens (one user, many devices; delete tokens the provider reports as invalid), a notification log with queued/sent/delivered/failed status.\n5. Reliability: retries with exponential backoff, a dead-letter queue, idempotency keys to avoid double sends, provider failover (if SMS provider A fails, switch to B).\n6. Scale: stateless workers scaled by queue length; campaigns to millions of users are batched and throttled to provider quotas.\n7. Monitoring: delivery, open and click rates; alerts when a provider's error rate rises."
+    },
+    "tip": {
+      "vi": "Tách queue OTP khỏi queue marketing là một chi tiết nhỏ cho thấy bạn hiểu ưu tiên nghiệp vụ.",
+      "en": "Separating the OTP queue from the marketing queue is a small detail that shows you understand business priorities."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao không gửi thông báo marketing lúc 2 giờ sáng theo giờ địa phương của user?",
+        "en": "How do you avoid sending marketing notifications at 2 a.m. in the user's local time?"
+      },
+      {
+        "vi": "Đảm bảo thông báo in-app hiển thị đúng số chưa đọc trên nhiều thiết bị thế nào?",
+        "en": "How do you keep the in-app unread count correct across devices?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-file-storage",
+    "level": "senior",
+    "topic": "Classic Designs",
+    "q": {
+      "vi": "Thiết kế dịch vụ lưu trữ và đồng bộ file (như Dropbox/Google Drive).",
+      "en": "Design a file storage and sync service (like Dropbox/Google Drive)."
+    },
+    "a": {
+      "vi": "1. Yêu cầu: upload/download, đồng bộ nhiều thiết bị, chia sẻ, lịch sử phiên bản; file tới vài GB; độ bền dữ liệu cực cao.\n2. Tách hai phần: metadata (file, folder, version, danh sách chunk, quyền) trong SQL vì cần transaction; nội dung file trong object storage (S3) — bền và rẻ.\n3. Chunking: client chia file thành block ~4 MB và tính hash từng block. Chỉ upload block thay đổi (delta sync) và block chưa tồn tại trên server (deduplication theo hash) → tiết kiệm băng thông rất nhiều.\n4. Upload: client xin pre-signed URL rồi upload thẳng lên object storage, không đi qua app server; hỗ trợ resume khi rớt mạng (multipart upload). Upload xong thì commit version mới vào metadata.\n5. Đồng bộ: mỗi thay đổi metadata được ghi vào change log theo thứ tự; thiết bị khác nhận tín hiệu qua long polling/WebSocket, rồi kéo các thay đổi kể từ cursor của mình và tải các block mới.\n6. Xung đột: hai thiết bị cùng sửa khi offline → không tự merge mà tạo bản \"conflicted copy\" để user tự chọn.\n7. Download qua pre-signed URL/CDN; link chia sẻ có quyền và thời hạn.\n8. Khác: mã hoá at-rest và in-transit, chuyển version cũ sang cold storage, quota cho từng user.",
+      "en": "1. Requirements: upload/download, multi-device sync, sharing, version history; files up to several GB; extremely high durability.\n2. Split into two parts: metadata (files, folders, versions, chunk lists, permissions) in SQL because it needs transactions; file content in object storage (S3) — durable and cheap.\n3. Chunking: the client splits files into ~4 MB blocks and hashes each block. Only changed blocks are uploaded (delta sync) and only blocks the server doesn't already have (hash-based deduplication) → huge bandwidth savings.\n4. Upload: the client requests pre-signed URLs and uploads directly to object storage, bypassing app servers; supports resuming after network drops (multipart upload). After uploading, it commits a new version to the metadata.\n5. Sync: every metadata change is appended to an ordered change log; other devices get a signal via long polling/WebSocket, then pull changes since their cursor and download the new blocks.\n6. Conflicts: two devices editing offline → no automatic merge; create a \"conflicted copy\" and let the user decide.\n7. Downloads via pre-signed URLs/CDN; share links carry permissions and expiry.\n8. Other: encryption at rest and in transit, moving old versions to cold storage, per-user quotas."
+    },
+    "tip": {
+      "vi": "Nhấn mạnh việc tách metadata khỏi nội dung và chunking + dedup — đó là hai ý cốt lõi của bài này.",
+      "en": "Emphasize separating metadata from content and chunking + dedup — those are the two core ideas here."
+    },
+    "followUps": [
+      {
+        "vi": "Deduplication theo hash giữa các user có rủi ro bảo mật gì?",
+        "en": "What security risks come with hash-based dedup across users?"
+      },
+      {
+        "vi": "Làm sao một thiết bị offline 2 tuần đồng bộ lại hiệu quả?",
+        "en": "How does a device that was offline for 2 weeks resync efficiently?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-video-streaming",
+    "level": "senior",
+    "topic": "Classic Designs",
+    "q": {
+      "vi": "Thiết kế nền tảng video streaming (như YouTube/Netflix).",
+      "en": "Design a video streaming platform (like YouTube/Netflix)."
+    },
+    "a": {
+      "vi": "1. Yêu cầu: upload video, xem mượt trên nhiều thiết bị và nhiều mức băng thông, lượt xem cực lớn; lượng xem lớn hơn lượng upload rất nhiều.\n2. Upload: pre-signed URL, resumable upload thẳng lên object storage; ghi metadata với trạng thái \"processing\".\n3. Xử lý: sự kiện upload vào queue → pipeline transcoding dạng DAG: cắt video thành đoạn để transcode song song, encode nhiều độ phân giải/bitrate (240p đến 4K) và codec (H.264, VP9/AV1), tạo thumbnail, kiểm duyệt nội dung. Worker scale theo độ dài queue.\n4. Adaptive bitrate streaming: đóng gói HLS/DASH — video thành các segment vài giây kèm manifest; player tự chuyển chất lượng theo băng thông thực tế.\n5. Phân phối: segment là file tĩnh → CDN gánh gần như toàn bộ lưu lượng. Video hot được đẩy sẵn ra edge; video ít xem (long tail) phục vụ từ origin hoặc cache vùng. Netflix còn đặt cache server ngay trong mạng của ISP.\n6. Các service riêng: metadata, view count (gom sự kiện qua stream và cộng theo lô, không update DB mỗi lượt xem), comment, recommendation.\n7. Bảo vệ nội dung: DRM, signed URL có hạn.\nChi phí lớn nhất là storage và băng thông → chọn codec hiệu quả và chỉ transcode các phiên bản thực sự cần.",
+      "en": "1. Requirements: upload videos, smooth playback across devices and bandwidths, huge viewership; views vastly outnumber uploads.\n2. Upload: pre-signed URLs, resumable uploads straight to object storage; write metadata with status \"processing\".\n3. Processing: the upload event goes to a queue → a DAG-style transcoding pipeline: split the video into chunks to transcode in parallel, encode multiple resolutions/bitrates (240p to 4K) and codecs (H.264, VP9/AV1), generate thumbnails, run content moderation. Workers scale with queue length.\n4. Adaptive bitrate streaming: package as HLS/DASH — the video becomes segments of a few seconds plus a manifest; the player switches quality based on actual bandwidth.\n5. Delivery: segments are static files → the CDN carries almost all traffic. Hot videos are pre-pushed to the edge; rarely watched (long-tail) videos are served from origin or regional caches. Netflix even places cache servers inside ISPs' networks.\n6. Separate services: metadata, view counts (aggregate events via a stream and add in batches, never updating the DB per view), comments, recommendations.\n7. Content protection: DRM, expiring signed URLs.\nThe biggest costs are storage and bandwidth → choose efficient codecs and only transcode the versions that are really needed."
+    },
+    "tip": {
+      "vi": "Giải thích adaptive bitrate (HLS/DASH) và vai trò của CDN rõ ràng là đủ để vượt qua phần lớn interviewer.",
+      "en": "Clearly explaining adaptive bitrate (HLS/DASH) and the CDN's role is enough to satisfy most interviewers."
+    },
+    "followUps": [
+      {
+        "vi": "Livestream khác video on-demand ở những điểm nào?",
+        "en": "How does livestreaming differ from video on demand?"
+      },
+      {
+        "vi": "Đếm lượt xem chính xác và chống gian lận lượt xem thế nào?",
+        "en": "How do you count views accurately and prevent view fraud?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-ride-hailing",
+    "level": "senior",
+    "topic": "Classic Designs",
+    "q": {
+      "vi": "Thiết kế hệ thống gọi xe (như Grab/Uber): theo dõi vị trí tài xế và ghép chuyến.",
+      "en": "Design a ride-hailing system (like Grab/Uber): driver location tracking and matching."
+    },
+    "a": {
+      "vi": "1. Yêu cầu: tài xế gửi vị trí liên tục, khách đặt xe, tìm được tài xế phù hợp trong vài giây, theo dõi chuyến, tính giá. Ước lượng: 1 triệu tài xế online, gửi vị trí mỗi 4 giây → ~250.000 lượt ghi/giây.\n2. Location service: chỉ cần vị trí mới nhất → giữ trong bộ nhớ (Redis GEO hoặc in-memory grid), không ghi vào database chính mỗi lần; lịch sử di chuyển ghi bất đồng bộ qua Kafka.\n3. Index không gian: geohash, quadtree hoặc H3 (lưới lục giác của Uber). Tìm tài xế = tra ô hiện tại và các ô lân cận, lọc theo trạng thái rảnh và loại xe.\n4. Matching: lấy danh sách ứng viên, xếp hạng theo ETA thực tế trên bản đồ đường (không phải khoảng cách đường chim bay), gửi lời mời cho từng tài xế hoặc từng nhóm nhỏ kèm timeout. Phải đảm bảo một tài xế không nhận hai chuyến: compare-and-set hoặc khoá trạng thái tài xế.\n5. Trip service: state machine (requested → accepted → arrived → in_progress → completed), lưu SQL vì cần nhất quán và liên quan thanh toán.\n6. Kết nối: WebSocket/MQTT để đẩy vị trí tài xế cho khách theo thời gian thực.\n7. Scale: shard theo vùng địa lý (thành phố); surge pricing tính theo cung/cầu của từng ô.",
+      "en": "1. Requirements: drivers send locations continuously, riders request rides, a suitable driver is found within seconds, trips are tracked, fares calculated. Estimate: 1M online drivers sending a location every 4 seconds → ~250,000 writes/second.\n2. Location service: only the latest position matters → keep it in memory (Redis GEO or an in-memory grid), not written to the main database each time; movement history is written asynchronously via Kafka.\n3. Spatial index: geohash, quadtree or H3 (Uber's hexagonal grid). Finding drivers = look up the current cell and neighboring cells, filter by availability and vehicle type.\n4. Matching: fetch candidates, rank by real road ETA (not straight-line distance), send offers to one driver or a small batch at a time with a timeout. Make sure a driver can't accept two trips: compare-and-set or lock the driver's status.\n5. Trip service: a state machine (requested → accepted → arrived → in_progress → completed), stored in SQL because it needs consistency and ties into payments.\n6. Connections: WebSocket/MQTT to push the driver's position to the rider in real time.\n7. Scale: shard by geography (city); surge pricing computed from supply/demand per cell."
+    },
+    "tip": {
+      "vi": "Tính ra con số ~250K ghi/giây rồi lập luận vì sao không ghi vào DB là cách mở bài rất thuyết phục.",
+      "en": "Deriving ~250K writes/second and arguing why it must not hit the DB is a very convincing opener."
+    },
+    "followUps": [
+      {
+        "vi": "Geohash có vấn đề gì ở ranh giới giữa các ô?",
+        "en": "What problem does geohash have at cell boundaries?"
+      },
+      {
+        "vi": "Nếu location service ở một thành phố bị sập thì sao?",
+        "en": "What happens if the location service for one city goes down?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-flash-sale",
+    "level": "senior",
+    "topic": "Classic Designs",
+    "q": {
+      "vi": "Thiết kế checkout cho flash sale: 1.000 sản phẩm giá sốc, 1 triệu người cùng vào lúc 12 giờ.",
+      "en": "Design checkout for a flash sale: 1,000 discounted items, 1 million users arriving at exactly noon."
+    },
+    "a": {
+      "vi": "1. Yêu cầu: không bán vượt số lượng (oversell), hệ thống không sập, công bằng, chặn bot; tải dồn vào vài giây.\n2. Chặn bớt từ vòng ngoài: trang sản phẩm tĩnh qua CDN, nút mua chỉ mở đúng giờ theo đồng hồ server, captcha, rate limit theo user/IP/thiết bị, mỗi user mua tối đa 1 sản phẩm.\n3. Waiting room: chỉ cho một lượng người nhất định vào luồng checkout, còn lại xếp hàng ảo — bảo vệ backend.\n4. Trừ tồn kho: không để cả triệu request đập vào database. Nạp tồn kho vào Redis, trừ atomic bằng Lua script (kiểm tra còn hàng và user chưa mua) → thành công thì tạo reservation có hạn (vd 10 phút) và đẩy vào queue.\n5. Tạo đơn bất đồng bộ: worker đọc queue, tạo order trong DB với unique (user_id, sale_id) và UPDATE stock = stock - 1 WHERE stock > 0 làm chốt chặn cuối.\n6. Thanh toán: hết hạn mà chưa trả tiền thì hoàn lại tồn kho; callback từ cổng thanh toán phải idempotent.\n7. Cô lập flash sale khỏi hệ thống chính (deploy và tài nguyên riêng) để sự cố không lan; load test và scale sẵn trước giờ G.\nTrade-off: Redis và DB có thể lệch tạm thời → cần job đối soát định kỳ.",
+      "en": "1. Requirements: never oversell, the system must not go down, fairness, bot blocking; load concentrated in a few seconds.\n2. Filter at the outer layers: a static product page via CDN, a buy button that opens exactly on time per the server clock, captcha, rate limits per user/IP/device, max 1 item per user.\n3. Waiting room: only let a set number of users into checkout, queue the rest virtually — protecting the backend.\n4. Stock decrement: never let a million requests hit the database. Load stock into Redis and decrement atomically with a Lua script (check stock left and that the user hasn't bought) → on success, create an expiring reservation (e.g. 10 minutes) and enqueue it.\n5. Asynchronous order creation: workers consume the queue and create orders in the DB with a unique (user_id, sale_id) and UPDATE stock = stock - 1 WHERE stock > 0 as the final safeguard.\n6. Payment: if not paid before expiry, return the stock; payment gateway callbacks must be idempotent.\n7. Isolate the flash sale from the main system (separate deploys and resources) so failures don't spread; load test and pre-scale before the start time.\nTrade-off: Redis and the DB can diverge temporarily → a periodic reconciliation job is needed."
+    },
+    "code": "-- KEYS[1] = stock:{sale42}, KEYS[2] = buyers:{sale42}, ARGV[1] = user_id\nif redis.call('SISMEMBER', KEYS[2], ARGV[1]) == 1 then return -1 end  -- already bought\nif tonumber(redis.call('GET', KEYS[1])) <= 0 then return 0 end        -- sold out\nredis.call('DECR', KEYS[1])\nredis.call('SADD', KEYS[2], ARGV[1])\nreturn 1                                                               -- reserved",
+    "tip": {
+      "vi": "Trình bày theo kiểu 'phễu' — chặn càng nhiều request càng sớm, đến DB chỉ còn đúng số đơn thật — là cách kể dễ hiểu nhất.",
+      "en": "Present it as a funnel — reject as many requests as early as possible so only real orders reach the DB — the clearest way to tell it."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu Redis chết giữa flash sale thì làm sao không oversell?",
+        "en": "If Redis dies mid-sale, how do you avoid overselling?"
+      },
+      {
+        "vi": "Làm sao chống bot mua sạch hàng trong mili giây đầu tiên?",
+        "en": "How do you stop bots from buying everything in the first milliseconds?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-web-crawler",
+    "level": "mid",
+    "topic": "Classic Designs",
+    "q": {
+      "vi": "Thiết kế web crawler cho một công cụ tìm kiếm.",
+      "en": "Design a web crawler for a search engine."
+    },
+    "a": {
+      "vi": "1. Yêu cầu: crawl vd 1 tỉ trang/tháng (~400 trang/giây), tôn trọng robots.txt, \"lịch sự\" với từng website, không crawl trùng, dễ mở rộng.\n2. Luồng: seed URLs → URL frontier → fetcher tải HTML → parser → trích link → lọc và chuẩn hoá URL → khử trùng → quay lại frontier. Nội dung lưu ở object storage, metadata vào database.\n3. URL frontier hai tầng: hàng đợi theo độ ưu tiên (độ quan trọng, mức thay đổi của trang) và hàng đợi theo host để mỗi domain chỉ có một kết nối tại một thời điểm, có delay giữa các request (politeness).\n4. Khử trùng: URL đã thấy → Bloom filter hoặc tập hash phân tán; nội dung trùng → checksum, nội dung gần trùng → SimHash.\n5. DNS: cache DNS vì resolver dễ thành nút cổ chai.\n6. Phân tán: chia URL cho worker theo hash(host) để politeness và cache robots.txt nằm cùng một chỗ.\n7. Bẫy: spider trap (URL sinh vô hạn như trang lịch) → giới hạn độ sâu, độ dài URL, số trang mỗi domain. Trang render bằng JavaScript cần headless browser — tốn kém, chỉ dùng có chọn lọc.\n8. Recrawl: tần suất theo mức độ thay đổi của trang; dùng ETag/If-Modified-Since để tiết kiệm băng thông.",
+      "en": "1. Requirements: crawl e.g. 1 billion pages/month (~400 pages/second), respect robots.txt, be \"polite\" to each website, avoid duplicate crawling, scale easily.\n2. Flow: seed URLs → URL frontier → fetchers download HTML → parser → extract links → filter and normalize URLs → dedupe → back into the frontier. Content goes to object storage, metadata to a database.\n3. Two-level URL frontier: priority queues (page importance, change rate) and per-host queues so each domain has only one connection at a time, with a delay between requests (politeness).\n4. Dedup: seen URLs → Bloom filter or a distributed hash set; duplicate content → checksums, near-duplicate content → SimHash.\n5. DNS: cache DNS because the resolver easily becomes a bottleneck.\n6. Distribution: assign URLs to workers by hash(host) so politeness state and the robots.txt cache live in one place.\n7. Traps: spider traps (infinitely generated URLs like calendar pages) → limit depth, URL length, and pages per domain. JavaScript-rendered pages need a headless browser — expensive, use selectively.\n8. Recrawl: frequency based on how often a page changes; use ETag/If-Modified-Since to save bandwidth."
+    },
+    "tip": {
+      "vi": "Politeness (hàng đợi theo host) là chi tiết phân biệt crawler thật với vòng lặp tải trang đơn giản — đừng quên nhắc.",
+      "en": "Politeness (per-host queues) is what separates a real crawler from a simple download loop — don't forget it."
+    },
+    "followUps": [
+      {
+        "vi": "Bloom filter có thể báo sai theo chiều nào và ảnh hưởng gì tới crawler?",
+        "en": "In which direction can a Bloom filter be wrong, and how does that affect the crawler?"
+      },
+      {
+        "vi": "Làm sao ưu tiên crawl trang tin tức mới trước?",
+        "en": "How do you prioritize crawling fresh news pages first?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-distributed-cache",
+    "level": "senior",
+    "topic": "Classic Designs",
+    "q": {
+      "vi": "Thiết kế một distributed cache (như Redis Cluster/Memcached).",
+      "en": "Design a distributed cache (like Redis Cluster/Memcached)."
+    },
+    "a": {
+      "vi": "1. Yêu cầu: get/set/delete có TTL, latency dưới 1 ms, scale tới hàng TB RAM, chịu được lỗi node.\n2. Một node: hash table trong RAM + eviction LRU (hash map kết hợp danh sách liên kết đôi để mọi thao tác O(1)), hoặc LFU / LRU xấp xỉ như Redis. TTL: xoá lười khi đọc + quét ngẫu nhiên định kỳ.\n3. Phân tán dữ liệu: consistent hashing với virtual node, hoặc số hash slot cố định (Redis Cluster có 16.384 slot, thêm node thì di chuyển slot).\n4. Định tuyến: client-side (client giữ bản đồ phân bố), qua proxy (Twemproxy, Envoy), hoặc server trả redirect (MOVED trong Redis Cluster).\n5. Replication: mỗi shard có primary + replica (async); primary chết → failover tự động qua gossip hoặc Sentinel. Chấp nhận mất vài lượt ghi cuối vì đây là cache.\n6. Vấn đề vận hành: hot key (local cache ở client, nhân bản key), big key, thundering herd khi một node chết (miss dồn về DB → request coalescing, warm-up), phân mảnh bộ nhớ.\n7. Nhất quán với DB: cache không phải source of truth; dùng TTL + xoá key khi dữ liệu thay đổi.",
+      "en": "1. Requirements: get/set/delete with TTL, sub-millisecond latency, scale to terabytes of RAM, tolerate node failures.\n2. A single node: an in-memory hash table + LRU eviction (a hash map combined with a doubly linked list so every operation is O(1)), or LFU / approximated LRU like Redis. TTL: lazy deletion on read + periodic random sampling.\n3. Data distribution: consistent hashing with virtual nodes, or a fixed number of hash slots (Redis Cluster has 16,384 slots; adding a node moves slots).\n4. Routing: client-side (the client holds the distribution map), via a proxy (Twemproxy, Envoy), or server-side redirects (MOVED in Redis Cluster).\n5. Replication: each shard has a primary + replica (async); if the primary dies → automatic failover via gossip or Sentinel. Losing the last few writes is acceptable because it is a cache.\n6. Operational issues: hot keys (client-side local cache, key replication), big keys, a thundering herd when a node dies (misses pile onto the DB → request coalescing, warm-up), memory fragmentation.\n7. Consistency with the DB: the cache is not the source of truth; use TTLs + delete keys when data changes."
+    },
+    "code": "from collections import OrderedDict\n\nclass LRUCache:\n    def __init__(self, capacity):\n        self.capacity, self.data = capacity, OrderedDict()\n\n    def get(self, key):\n        if key not in self.data:\n            return None\n        self.data.move_to_end(key)\n        return self.data[key]\n\n    def put(self, key, value):\n        self.data[key] = value\n        self.data.move_to_end(key)\n        if len(self.data) > self.capacity:\n            self.data.popitem(last=False)  # evict least recently used",
+    "tip": {
+      "vi": "Chia câu trả lời thành 'một node' rồi 'nhiều node' giúp interviewer theo dõi dễ và cho thấy tư duy có cấu trúc.",
+      "en": "Splitting the answer into 'one node' then 'many nodes' makes it easy to follow and shows structured thinking."
+    },
+    "followUps": [
+      {
+        "vi": "Thêm một node mới vào cluster đang chạy thì dữ liệu được di chuyển ra sao?",
+        "en": "How is data moved when a new node joins a running cluster?"
+      },
+      {
+        "vi": "Vì sao Redis dùng LRU xấp xỉ thay vì LRU chính xác?",
+        "en": "Why does Redis use approximated LRU instead of exact LRU?"
+      }
+    ]
+  },
+  {
+    "id": "system-design-leaderboard-top-k",
+    "level": "mid",
+    "topic": "Classic Designs",
+    "q": {
+      "vi": "Thiết kế leaderboard real-time cho game và hệ thống top-K (vd top 100 hashtag đang hot).",
+      "en": "Design a real-time game leaderboard and a top-K system (e.g. the top 100 trending hashtags)."
+    },
+    "a": {
+      "vi": "Leaderboard:\n1. Redis sorted set: ZINCRBY khi cộng điểm, ZREVRANGE 0 99 lấy top 100, ZREVRANK lấy thứ hạng của một user — đều O(log n).\n2. Hàng chục triệu người chơi vẫn vừa một sorted set; lớn hơn thì shard theo khu vực hoặc theo khoảng điểm, top toàn cục = gộp top của từng shard.\n3. Database là source of truth cho điểm; Redis có thể dựng lại từ DB. Bảng xếp hạng tuần/tháng dùng key riêng có TTL.\n4. Đồng điểm: mã hoá score = điểm × hệ số + (hằng số − timestamp) để ai đạt trước xếp trên.\nTop-K trên luồng sự kiện khổng lồ (hashtag, video được xem):\n5. Không thể đếm chính xác mọi key trong bộ nhớ → dùng Count-Min Sketch để ước lượng tần suất + min-heap kích thước K, hoặc thuật toán Space-Saving.\n6. Kiến trúc: sự kiện vào Kafka → stream processor (Flink) đếm theo cửa sổ thời gian (vd 5 phút) trên từng partition → mỗi partition ra top-K cục bộ → tầng merge ra top-K toàn cục → lưu vào cache để phục vụ đọc.\n7. Nếu cần số chính xác (vd tính thưởng), chạy thêm batch job (Spark) để đối soát — kết hợp kết quả real-time gần đúng và batch chính xác.",
+      "en": "Leaderboard:\n1. Redis sorted set: ZINCRBY to add points, ZREVRANGE 0 99 for the top 100, ZREVRANK for a user's rank — all O(log n).\n2. Tens of millions of players still fit in one sorted set; beyond that, shard by region or score range, and the global top = merge each shard's top.\n3. The database is the source of truth for scores; Redis can be rebuilt from it. Weekly/monthly boards use separate keys with TTLs.\n4. Ties: encode score = points × factor + (constant − timestamp) so whoever reached it first ranks higher.\nTop-K over a huge event stream (hashtags, video views):\n5. You can't count every key exactly in memory → use a Count-Min Sketch to estimate frequencies + a min-heap of size K, or the Space-Saving algorithm.\n6. Architecture: events into Kafka → a stream processor (Flink) counts per time window (e.g. 5 minutes) on each partition → each partition emits a local top-K → a merge layer produces the global top-K → stored in a cache to serve reads.\n7. If exact numbers are needed (e.g. for rewards), add a batch job (Spark) to reconcile — combining approximate real-time results with exact batch results."
+    },
+    "code": "ZINCRBY lb:season5 50 \"user:42\"        # add 50 points\nZREVRANGE lb:season5 0 99 WITHSCORES   # top 100\nZREVRANK lb:season5 \"user:42\"          # 0-based rank of user 42",
+    "tip": {
+      "vi": "Tách rõ hai bài toán — leaderboard chính xác với số user hữu hạn và top-K gần đúng trên stream vô hạn — sẽ gây ấn tượng.",
+      "en": "Clearly separating the two problems — an exact leaderboard over finite users vs approximate top-K over an unbounded stream — impresses."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao hiển thị 'hạng của bạn và 5 người xung quanh'?",
+        "en": "How do you show 'your rank and the 5 players around you'?"
+      },
+      {
+        "vi": "Gộp top-K cục bộ thành top-K toàn cục có thể sai ở đâu?",
+        "en": "Where can merging local top-K lists into a global top-K go wrong?"
+      }
+    ]
+  }
+]

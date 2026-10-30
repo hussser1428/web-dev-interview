@@ -1,0 +1,1009 @@
+[
+  {
+    "id": "devops-linux-file-permissions",
+    "level": "intern",
+    "topic": "Linux",
+    "q": {
+      "vi": "Giải thích quyền file trong Linux (rwx, 755, 644). chmod và chown dùng để làm gì?",
+      "en": "Explain Linux file permissions (rwx, 755, 644). What are chmod and chown for?"
+    },
+    "a": {
+      "vi": "Mỗi file có owner, group và 3 bộ quyền read/write/execute cho owner, group và others.\n\n- Dạng số: r=4, w=2, x=1. 755 = owner rwx, group và others r-x (thường dùng cho thư mục, script). 644 = owner rw, còn lại chỉ đọc (file cấu hình, file tĩnh).\n- Với thư mục: r là liệt kê file, w là tạo/xoá file bên trong, x là được đi vào (cd) thư mục.\n- chmod đổi quyền (chmod 640 app.conf, chmod +x run.sh); chown đổi owner/group (chown app:app /var/lib/app).\n- Bit đặc biệt: setuid (chạy với quyền owner của file, ví dụ passwd), sticky bit trên /tmp (chỉ owner được xoá file của mình).\n- umask quyết định quyền mặc định khi tạo file.\n\nLỗi hay gặp: chmod 777 cho nhanh. Đó là lỗ hổng bảo mật; nên cấp đúng owner và quyền tối thiểu.",
+      "en": "Every file has an owner, a group, and three permission sets (read/write/execute) for owner, group and others.\n\n- Numeric form: r=4, w=2, x=1. 755 = owner rwx, group and others r-x (typical for directories and scripts). 644 = owner rw, everyone else read-only (config and static files).\n- On directories: r lists entries, w creates/deletes files inside, x lets you enter (cd) the directory.\n- chmod changes permissions (chmod 640 app.conf, chmod +x run.sh); chown changes owner/group (chown app:app /var/lib/app).\n- Special bits: setuid (runs with the file owner's privileges, e.g. passwd), sticky bit on /tmp (only the owner can delete their files).\n- umask sets the default permissions for newly created files.\n\nCommon mistake: chmod 777 to make it work. That is a security hole; set the right owner and the minimum permissions instead."
+    },
+    "code": "$ ls -l deploy.sh\n-rwxr-x--- 1 app devops 512 Oct 1 deploy.sh\n# owner=rwx(7) group=r-x(5) others=---(0) => 750\n$ chmod 750 deploy.sh\n$ chown app:devops deploy.sh",
+    "tip": {
+      "vi": "Nhắc ý nghĩa của bit x trên thư mục và nói rõ vì sao không dùng 777 sẽ cho thấy bạn hiểu chứ không học thuộc.",
+      "en": "Mentioning what x means on a directory and why 777 is wrong shows understanding rather than memorization."
+    },
+    "followUps": [
+      {
+        "vi": "Một process chạy bằng user www-data không đọc được file dù quyền là 644, nguyên nhân có thể là gì?",
+        "en": "A process running as www-data cannot read a file with mode 644. What could be the cause?"
+      },
+      {
+        "vi": "setuid nguy hiểm ở điểm nào?",
+        "en": "Why is setuid considered dangerous?"
+      }
+    ]
+  },
+  {
+    "id": "devops-linux-process-signals",
+    "level": "junior",
+    "topic": "Linux",
+    "q": {
+      "vi": "Signal trong Linux là gì? SIGTERM khác SIGKILL thế nào và điều này ảnh hưởng gì tới container?",
+      "en": "What are Linux signals? How does SIGTERM differ from SIGKILL, and why does it matter for containers?"
+    },
+    "a": {
+      "vi": "Signal là thông báo bất đồng bộ kernel gửi tới process để yêu cầu nó làm gì đó, ví dụ dừng, reload hay tạm ngưng.\n\n- SIGTERM (15): yêu cầu dừng lịch sự; process có thể bắt signal này để đóng kết nối, flush dữ liệu rồi thoát. Đây là mặc định của kill, docker stop, Kubernetes khi xoá Pod.\n- SIGKILL (9): kernel giết ngay, process không bắt hay bỏ qua được, nên không kịp dọn dẹp.\n- SIGINT (2) là Ctrl+C; SIGHUP thường dùng để reload config (nginx -s reload).\n\nVới container: process chạy là PID 1, mà PID 1 không có hành vi mặc định cho SIGTERM, nên nếu app không tự xử lý thì nó bị phớt lờ và sau thời gian grace (10s với docker, 30s mặc định trên Kubernetes) sẽ bị SIGKILL. Cách xử lý: dùng exec form trong CMD để app nhận signal trực tiếp, xử lý SIGTERM trong code, hoặc dùng init nhỏ như tini (docker run --init).",
+      "en": "A signal is an asynchronous notification the kernel delivers to a process, asking it to stop, reload, pause and so on.\n\n- SIGTERM (15): a polite stop request; the process can catch it to close connections, flush data and exit. It is the default for kill, docker stop, and Kubernetes when deleting a Pod.\n- SIGKILL (9): the kernel kills the process immediately; it cannot be caught or ignored, so no cleanup happens.\n- SIGINT (2) is Ctrl+C; SIGHUP is commonly used to reload config (nginx -s reload).\n\nFor containers: your app runs as PID 1, and PID 1 has no default action for SIGTERM, so if the app does not handle it the signal is ignored and after the grace period (10s for docker, 30s by default in Kubernetes) it gets SIGKILL. Fixes: use the exec form of CMD so the app receives signals directly, handle SIGTERM in code, or use a tiny init like tini (docker run --init)."
+    },
+    "code": "# shell form: /bin/sh is PID 1 and may not forward SIGTERM\nCMD node server.js\n# exec form: node is PID 1 and receives SIGTERM\nCMD [\"node\", \"server.js\"]",
+    "tip": {
+      "vi": "Điểm cộng lớn là liên hệ được signal với graceful shutdown và vấn đề PID 1 trong container.",
+      "en": "You score big by linking signals to graceful shutdown and the PID 1 problem in containers."
+    },
+    "followUps": [
+      {
+        "vi": "Zombie process là gì và làm sao dọn nó?",
+        "en": "What is a zombie process and how do you get rid of it?"
+      },
+      {
+        "vi": "Làm sao biết một process đang bỏ qua signal nào?",
+        "en": "How can you check which signals a process is ignoring or catching?"
+      }
+    ],
+    "source": "https://man7.org/linux/man-pages/man7/signal.7.html"
+  },
+  {
+    "id": "devops-linux-systemd-service",
+    "level": "junior",
+    "topic": "Linux",
+    "q": {
+      "vi": "Làm sao chạy một ứng dụng như một service với systemd và xem log của nó?",
+      "en": "How do you run an application as a service with systemd and read its logs?"
+    },
+    "a": {
+      "vi": "Tạo một unit file mô tả cách chạy app, rồi để systemd quản lý vòng đời: khởi động cùng máy, tự restart khi crash và gom log vào journal.\n\n- Đặt file ở /etc/systemd/system/myapp.service với các phần [Unit], [Service], [Install].\n- Trong [Service]: ExecStart, User (không chạy bằng root), WorkingDirectory, Environment hoặc EnvironmentFile, Restart=on-failure, LimitNOFILE nếu cần nhiều file descriptor.\n- Lệnh: systemctl daemon-reload sau khi sửa file, systemctl enable --now myapp để bật và chạy, systemctl status myapp để xem trạng thái.\n- Log: journalctl -u myapp -f để theo dõi, thêm --since '1 hour ago' để lọc.\n\nLỗi hay gặp: quên daemon-reload, dùng Type sai (app tự fork mà để Type=simple), hoặc app ghi log ra file riêng nên journal trống.",
+      "en": "You write a unit file describing how to run the app, then let systemd own its lifecycle: start on boot, restart on crash, and collect logs in the journal.\n\n- Put the file at /etc/systemd/system/myapp.service with [Unit], [Service] and [Install] sections.\n- In [Service]: ExecStart, User (do not run as root), WorkingDirectory, Environment or EnvironmentFile, Restart=on-failure, LimitNOFILE if you need many file descriptors.\n- Commands: systemctl daemon-reload after editing, systemctl enable --now myapp to enable and start, systemctl status myapp to check state.\n- Logs: journalctl -u myapp -f to follow, add --since '1 hour ago' to filter.\n\nCommon mistakes: forgetting daemon-reload, the wrong Type (an app that forks itself with Type=simple), or the app logging to its own file so the journal is empty."
+    },
+    "code": "[Unit]\nDescription=My API\nAfter=network-online.target\nWants=network-online.target\n\n[Service]\nUser=app\nWorkingDirectory=/opt/myapp\nEnvironmentFile=/etc/myapp/env\nExecStart=/opt/myapp/bin/server\nRestart=on-failure\nRestartSec=5\n\n[Install]\nWantedBy=multi-user.target",
+    "tip": {
+      "vi": "Kể ra Restart=on-failure, User không phải root và journalctl -u cho thấy bạn đã thực sự vận hành service.",
+      "en": "Mentioning Restart=on-failure, a non-root User and journalctl -u shows you have actually operated services."
+    },
+    "followUps": [
+      {
+        "vi": "enable khác start thế nào?",
+        "en": "What is the difference between enable and start?"
+      },
+      {
+        "vi": "Service cứ restart liên tục, bạn điều tra ra sao?",
+        "en": "A service keeps restarting in a loop. How do you investigate?"
+      }
+    ]
+  },
+  {
+    "id": "devops-linux-debug-slow-server",
+    "level": "junior",
+    "topic": "Linux",
+    "q": {
+      "vi": "Một server Linux bỗng chạy chậm. Bạn sẽ dùng những lệnh nào để tìm nguyên nhân?",
+      "en": "A Linux server suddenly becomes slow. Which commands do you use to find the cause?"
+    },
+    "a": {
+      "vi": "Tôi đi theo thứ tự có hệ thống: kiểm tra CPU, memory, disk, network, rồi tới log, thay vì đoán mò.\n\n- uptime: xem load average so với số core.\n- top/htop: process nào ăn CPU hoặc RAM; để ý %wa (chờ I/O) và %st (bị hypervisor lấy CPU).\n- free -m và vmstat 1: còn RAM không, có swap in/out không.\n- df -h và df -i: đầy disk hoặc hết inode đều làm app lỗi lạ.\n- iostat -x 1: disk có bị bão hoà (%util cao, await lớn).\n- ss -s, ss -tanp: số kết nối, nhiều TIME_WAIT hay CLOSE_WAIT.\n- dmesg -T, journalctl: OOM killer, lỗi disk, lỗi kernel.\n\nNgoài ra hỏi ngay: có gì vừa thay đổi (deploy, cron job, traffic tăng)? Thường đó là manh mối nhanh nhất. Đây chính là tinh thần USE method: Utilization, Saturation, Errors cho từng tài nguyên.",
+      "en": "I go through it systematically: CPU, memory, disk, network, then logs, instead of guessing.\n\n- uptime: compare load average with the number of cores.\n- top/htop: which process eats CPU or RAM; watch %wa (waiting on I/O) and %st (CPU stolen by the hypervisor).\n- free -m and vmstat 1: is RAM left, is there swap in/out.\n- df -h and df -i: a full disk or running out of inodes both cause weird app errors.\n- iostat -x 1: is the disk saturated (high %util, large await).\n- ss -s, ss -tanp: connection counts, lots of TIME_WAIT or CLOSE_WAIT.\n- dmesg -T, journalctl: OOM killer, disk errors, kernel errors.\n\nI also ask right away: what changed recently (a deploy, a cron job, a traffic spike)? That is often the fastest clue. This is the spirit of the USE method: Utilization, Saturation, Errors for every resource."
+    },
+    "tip": {
+      "vi": "Trình bày theo một khung có thứ tự (như USE method) gây ấn tượng hơn liệt kê lệnh rời rạc.",
+      "en": "Presenting an ordered framework (like the USE method) impresses more than listing random commands."
+    },
+    "followUps": [
+      {
+        "vi": "Load average cao nhưng CPU gần như rảnh nghĩa là gì?",
+        "en": "What does a high load average with an almost idle CPU mean?"
+      },
+      {
+        "vi": "df báo disk đầy nhưng du không thấy file lớn, vì sao?",
+        "en": "df says the disk is full but du finds no large files. Why?"
+      }
+    ]
+  },
+  {
+    "id": "devops-linux-file-descriptors",
+    "level": "mid",
+    "topic": "Linux",
+    "q": {
+      "vi": "File descriptor là gì? Bạn xử lý lỗi 'Too many open files' như thế nào?",
+      "en": "What is a file descriptor? How do you handle a 'Too many open files' error?"
+    },
+    "a": {
+      "vi": "File descriptor là số nguyên mà kernel cấp cho process để tham chiếu tới một tài nguyên đang mở: file, socket, pipe. 0, 1, 2 là stdin, stdout, stderr.\n\nLỗi 'Too many open files' (EMFILE) nghĩa là process chạm giới hạn số FD. Cách xử lý:\n- Xem đang mở bao nhiêu: ls /proc/PID/fd | wc -l, lsof -p PID; xem giới hạn: cat /proc/PID/limits.\n- Phân biệt hai nguyên nhân: giới hạn quá thấp so với tải thật (mặc định soft limit thường là 1024) hay app bị leak, số FD tăng mãi không giảm.\n- Nếu là leak: tìm loại FD tăng (lsof), nhiều socket CLOSE_WAIT thường là app không đóng kết nối; sửa code, dùng connection pool.\n- Nếu thiếu thật: tăng LimitNOFILE trong systemd unit, /etc/security/limits.conf cho login session, hoặc ulimit trong container runtime.\n\nChỉ tăng limit mà không kiểm tra leak thì lỗi chỉ đến chậm hơn.",
+      "en": "A file descriptor is an integer the kernel gives a process to refer to an open resource: a file, socket or pipe. 0, 1, 2 are stdin, stdout, stderr.\n\n'Too many open files' (EMFILE) means the process hit its FD limit. How I handle it:\n- See how many are open: ls /proc/PID/fd | wc -l, lsof -p PID; see the limit: cat /proc/PID/limits.\n- Separate two causes: the limit is too low for real load (the default soft limit is often 1024), or the app leaks and the FD count keeps growing.\n- If it is a leak: find which FD type grows (lsof); many CLOSE_WAIT sockets usually mean the app never closes connections; fix the code, use a connection pool.\n- If it is real demand: raise LimitNOFILE in the systemd unit, /etc/security/limits.conf for login sessions, or the ulimit in the container runtime.\n\nRaising the limit without checking for a leak only delays the error."
+    },
+    "tip": {
+      "vi": "Nói rõ phải phân biệt leak và limit thấp trước khi sửa là điều interviewer muốn nghe.",
+      "en": "Interviewers want to hear that you distinguish a leak from a low limit before fixing anything."
+    },
+    "followUps": [
+      {
+        "vi": "Vì sao sửa limits.conf mà service chạy bằng systemd vẫn không nhận?",
+        "en": "Why does editing limits.conf not affect a service started by systemd?"
+      },
+      {
+        "vi": "Xoá một file log lớn đang được process mở thì chuyện gì xảy ra với dung lượng disk?",
+        "en": "What happens to disk space if you delete a large log file that a process still has open?"
+      }
+    ]
+  },
+  {
+    "id": "devops-net-tcp-vs-udp",
+    "level": "intern",
+    "topic": "Networking",
+    "q": {
+      "vi": "TCP khác UDP thế nào? Khi nào dùng UDP?",
+      "en": "How is TCP different from UDP? When would you use UDP?"
+    },
+    "a": {
+      "vi": "TCP là giao thức có kết nối, đảm bảo dữ liệu đến đủ và đúng thứ tự; UDP gửi từng datagram độc lập, không bảo đảm gì nhưng nhanh và nhẹ.\n\n- TCP: bắt tay 3 bước (SYN, SYN-ACK, ACK) để mở kết nối, có ACK và gửi lại gói mất, flow control và congestion control. Đổi lại có độ trễ thêm và overhead. Dùng cho HTTP/1.1, HTTP/2, SSH, database.\n- UDP: không bắt tay, không gửi lại, có thể mất hoặc đảo thứ tự gói. Hợp khi độ trễ quan trọng hơn sự hoàn hảo hoặc app tự xử lý tin cậy: DNS, streaming video, game, VoIP, metrics kiểu StatsD.\n- QUIC (nền tảng của HTTP/3) chạy trên UDP nhưng tự làm phần tin cậy và mã hoá ở tầng ứng dụng, tránh head-of-line blocking của TCP.\n\nVề vận hành: firewall và load balancer phải mở đúng giao thức; quên mở UDP 53 hay UDP 443 là lỗi kinh điển.",
+      "en": "TCP is connection-oriented and guarantees complete, in-order delivery; UDP sends independent datagrams with no guarantees, but it is fast and lightweight.\n\n- TCP: a 3-way handshake (SYN, SYN-ACK, ACK) opens the connection, with ACKs and retransmission of lost packets, flow control and congestion control. The cost is extra latency and overhead. Used for HTTP/1.1, HTTP/2, SSH, databases.\n- UDP: no handshake, no retransmission, packets can be lost or reordered. Good when latency matters more than perfection or the app handles reliability itself: DNS, video streaming, games, VoIP, StatsD-style metrics.\n- QUIC (the base of HTTP/3) runs over UDP but implements reliability and encryption itself, avoiding TCP head-of-line blocking.\n\nOperationally: firewalls and load balancers must allow the right protocol; forgetting to open UDP 53 or UDP 443 is a classic mistake."
+    },
+    "tip": {
+      "vi": "Nhắc tới QUIC/HTTP3 chạy trên UDP cho thấy kiến thức của bạn cập nhật.",
+      "en": "Mentioning that QUIC/HTTP3 runs over UDP shows your knowledge is current."
+    },
+    "followUps": [
+      {
+        "vi": "Trạng thái TIME_WAIT là gì và vì sao có nhiều?",
+        "en": "What is the TIME_WAIT state and why might you see lots of it?"
+      },
+      {
+        "vi": "DNS dùng UDP, vậy khi nào DNS chuyển sang TCP?",
+        "en": "DNS uses UDP, so when does it switch to TCP?"
+      }
+    ]
+  },
+  {
+    "id": "devops-net-dns-resolution",
+    "level": "junior",
+    "topic": "Networking",
+    "q": {
+      "vi": "DNS phân giải một tên miền như thế nào? Các loại record nào hay dùng?",
+      "en": "How does DNS resolve a domain name? Which record types are commonly used?"
+    },
+    "a": {
+      "vi": "DNS chuyển tên miền thành địa chỉ IP qua một chuỗi truy vấn có cache ở nhiều tầng.\n\n- Máy client hỏi stub resolver của OS (xem /etc/hosts, cache, rồi /etc/resolv.conf) gửi tới recursive resolver (của ISP, 8.8.8.8, 1.1.1.1 hoặc VPC resolver).\n- Nếu chưa có trong cache, recursive resolver hỏi root server, được chỉ tới TLD server (.com), rồi tới authoritative server của domain và nhận câu trả lời.\n- Mỗi kết quả được cache theo TTL.\n\nRecord hay dùng: A (IPv4), AAAA (IPv6), CNAME (alias sang tên khác, không đặt ở apex domain), MX (mail), TXT (SPF, xác thực domain), NS (name server), SRV.\n\nKinh nghiệm vận hành: hạ TTL trước khi migrate IP; nhớ có negative caching; lỗi 'it's always DNS' rất thật. Dùng dig +trace example.com để debug từng bước. Trong Kubernetes, CoreDNS và tuỳ chọn ndots có thể gây nhiều truy vấn thừa.",
+      "en": "DNS turns a domain name into an IP address through a chain of queries with caching at several layers.\n\n- The client asks the OS stub resolver (checks /etc/hosts, its cache, then /etc/resolv.conf), which forwards to a recursive resolver (the ISP's, 8.8.8.8, 1.1.1.1 or the VPC resolver).\n- On a cache miss, the recursive resolver asks a root server, is referred to the TLD server (.com), then to the domain's authoritative server, which gives the answer.\n- Every result is cached according to its TTL.\n\nCommon records: A (IPv4), AAAA (IPv6), CNAME (alias to another name, not allowed at the zone apex), MX (mail), TXT (SPF, domain verification), NS (name servers), SRV.\n\nOperational experience: lower the TTL before migrating an IP; remember negative caching exists; 'it's always DNS' is very real. Use dig +trace example.com to debug step by step. In Kubernetes, CoreDNS and the ndots option can cause many extra lookups."
+    },
+    "code": "$ dig +short api.example.com\n$ dig +trace example.com\n$ dig example.com MX\n$ cat /etc/resolv.conf",
+    "tip": {
+      "vi": "Kể chuyện hạ TTL trước khi đổi IP cho thấy bạn đã làm migration thật.",
+      "en": "Telling how you lower the TTL before changing an IP shows you have done real migrations."
+    },
+    "followUps": [
+      {
+        "vi": "Vì sao không đặt CNAME ở apex domain và các nhà cung cấp giải quyết việc đó ra sao?",
+        "en": "Why can't you put a CNAME at the zone apex, and how do providers work around it?"
+      },
+      {
+        "vi": "Chuyện gì xảy ra từ lúc gõ URL vào trình duyệt đến khi trang hiện ra?",
+        "en": "What happens from typing a URL in the browser until the page appears?"
+      }
+    ]
+  },
+  {
+    "id": "devops-net-l4-vs-l7-load-balancer",
+    "level": "junior",
+    "topic": "Networking",
+    "q": {
+      "vi": "Load balancer L4 khác L7 thế nào? Reverse proxy là gì?",
+      "en": "What is the difference between an L4 and an L7 load balancer? What is a reverse proxy?"
+    },
+    "a": {
+      "vi": "L4 cân bằng tải dựa trên IP và port (TCP/UDP) mà không đọc nội dung; L7 hiểu giao thức ứng dụng như HTTP nên định tuyến được theo host, path, header.\n\n- L4 (ví dụ AWS NLB, IPVS): rất nhanh, overhead thấp, hỗ trợ mọi giao thức TCP/UDP, giữ IP nguồn dễ hơn. Nhưng không làm được routing theo URL hay retry theo HTTP status.\n- L7 (ví dụ AWS ALB, Nginx, Envoy, HAProxy mode http): TLS termination, routing /api tới service A, /static tới B, sửa header, rate limit, sticky session bằng cookie, health check theo HTTP. Đổi lại tốn CPU hơn và phải terminate TLS.\n\nReverse proxy là server đứng trước các backend, nhận request thay cho chúng: ẩn backend, terminate TLS, cache, nén, cân bằng tải. Ngược với forward proxy là đứng phía client để đi ra ngoài.\n\nCân nhắc chung: chọn thuật toán (round robin, least connections), health check, và timeout phù hợp.",
+      "en": "L4 balances on IP and port (TCP/UDP) without reading the payload; L7 understands the application protocol such as HTTP, so it can route by host, path and headers.\n\n- L4 (e.g. AWS NLB, IPVS): very fast, low overhead, works for any TCP/UDP protocol, easier to preserve the source IP. But no URL-based routing or retries based on HTTP status.\n- L7 (e.g. AWS ALB, Nginx, Envoy, HAProxy in http mode): TLS termination, routing /api to service A and /static to B, header rewriting, rate limiting, cookie-based sticky sessions, HTTP health checks. The cost is more CPU and having to terminate TLS.\n\nA reverse proxy is a server in front of backends that accepts requests on their behalf: hides the backends, terminates TLS, caches, compresses, load balances. The opposite is a forward proxy, which sits on the client side for outbound traffic.\n\nCommon considerations: the algorithm (round robin, least connections), health checks and sensible timeouts."
+    },
+    "tip": {
+      "vi": "Cho ví dụ cụ thể khi nào chọn L4 (gRPC thuần TCP, database, game) và khi nào chọn L7 sẽ ghi điểm.",
+      "en": "Giving concrete cases for L4 (raw TCP, databases, games) versus L7 earns points."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao backend biết IP thật của client khi đứng sau load balancer?",
+        "en": "How does the backend learn the real client IP behind a load balancer?"
+      },
+      {
+        "vi": "Sticky session có nhược điểm gì?",
+        "en": "What are the downsides of sticky sessions?"
+      }
+    ]
+  },
+  {
+    "id": "devops-net-tls-handshake",
+    "level": "mid",
+    "topic": "Networking",
+    "q": {
+      "vi": "TLS handshake diễn ra thế nào? Nên terminate TLS ở đâu?",
+      "en": "How does a TLS handshake work? Where should you terminate TLS?"
+    },
+    "a": {
+      "vi": "TLS handshake giúp client và server thống nhất khoá phiên và xác thực server qua certificate, trước khi gửi dữ liệu đã mã hoá.\n\nVới TLS 1.3 (chuẩn hiện nay):\n- Client gửi ClientHello kèm cipher hỗ trợ, key share và SNI (tên miền muốn truy cập).\n- Server trả ServerHello với key share của mình, certificate và chữ ký; hai bên tính ra cùng khoá phiên (ECDHE), nên có forward secrecy.\n- Client kiểm tra chuỗi certificate tới CA tin cậy, tên miền, hạn dùng. Chỉ mất 1 RTT; TLS 1.2 mất 2 RTT.\n\nTerminate ở đâu: thường ở load balancer hoặc ingress để quản lý certificate tập trung và cho phép routing L7. Nếu yêu cầu bảo mật cao hoặc zero-trust, mã hoá lại tới backend hoặc dùng mTLS giữa service (service mesh).\n\nSự cố hay gặp: certificate hết hạn (tự động hoá bằng ACME/cert-manager), thiếu intermediate certificate, sai SNI.",
+      "en": "The TLS handshake lets client and server agree on session keys and authenticates the server via its certificate before any encrypted data flows.\n\nWith TLS 1.3 (today's standard):\n- The client sends ClientHello with supported ciphers, a key share and SNI (the hostname it wants).\n- The server replies with ServerHello, its key share, its certificate and a signature; both sides derive the same session key (ECDHE), giving forward secrecy.\n- The client validates the certificate chain to a trusted CA, the hostname and the expiry. It takes only 1 RTT; TLS 1.2 needs 2 RTTs.\n\nWhere to terminate: usually at the load balancer or ingress, to manage certificates centrally and allow L7 routing. For stricter security or zero-trust, re-encrypt to the backend or use mTLS between services (a service mesh).\n\nCommon incidents: expired certificates (automate with ACME/cert-manager), a missing intermediate certificate, wrong SNI."
+    },
+    "code": "$ openssl s_client -connect api.example.com:443 -servername api.example.com </dev/null\n$ echo | openssl s_client -connect api.example.com:443 2>/dev/null | openssl x509 -noout -dates",
+    "tip": {
+      "vi": "Nhắc tới certificate hết hạn là nguyên nhân sự cố phổ biến và cách tự động gia hạn sẽ được đánh giá cao.",
+      "en": "Calling out expired certificates as a common outage cause and how you automate renewal is valued."
+    },
+    "followUps": [
+      {
+        "vi": "mTLS khác TLS thường ở điểm nào?",
+        "en": "How does mTLS differ from regular TLS?"
+      },
+      {
+        "vi": "0-RTT trong TLS 1.3 có rủi ro gì?",
+        "en": "What is the risk of 0-RTT in TLS 1.3?"
+      }
+    ]
+  },
+  {
+    "id": "devops-git-merge-vs-rebase",
+    "level": "intern",
+    "topic": "Git",
+    "q": {
+      "vi": "git merge khác git rebase thế nào? Khi nào không nên rebase?",
+      "en": "What is the difference between git merge and git rebase? When should you not rebase?"
+    },
+    "a": {
+      "vi": "Cả hai đều đưa thay đổi từ nhánh này sang nhánh khác; merge giữ nguyên lịch sử và tạo merge commit, rebase viết lại commit của bạn lên đầu nhánh đích để lịch sử thẳng.\n\n- Merge: an toàn, không đổi commit hash cũ, thấy rõ nhánh đã gộp lúc nào. Nhược điểm: lịch sử có nhiều merge commit, khó đọc.\n- Rebase: lịch sử tuyến tính, dễ đọc và dễ git bisect. Nhưng tạo commit mới với hash mới.\n- Squash merge: gộp cả nhánh thành một commit khi merge PR, phổ biến trên GitHub/GitLab.\n\nQuy tắc vàng: không rebase nhánh đã push và người khác đang dùng (như main), vì sẽ phải force push và làm lệch lịch sử của đồng đội. Rebase nhánh feature cá nhân để cập nhật main thì ổn; nếu phải force push thì dùng --force-with-lease.\n\nKhi conflict: sửa file, git add, rồi git rebase --continue hoặc --abort để quay lại.",
+      "en": "Both bring changes from one branch into another; merge keeps history as is and adds a merge commit, rebase replays your commits on top of the target branch for a linear history.\n\n- Merge: safe, does not change existing commit hashes, shows clearly when a branch was integrated. Downside: lots of merge commits make history noisy.\n- Rebase: linear history, easier to read and to git bisect. But it creates new commits with new hashes.\n- Squash merge: collapses the whole branch into one commit when merging a PR, common on GitHub/GitLab.\n\nGolden rule: do not rebase a branch that is pushed and used by others (like main), because it needs a force push and breaks teammates' history. Rebasing your own feature branch onto main is fine; if you must force push, use --force-with-lease.\n\nOn conflicts: fix the files, git add, then git rebase --continue, or --abort to go back."
+    },
+    "code": "git switch feature/login\ngit fetch origin\ngit rebase origin/main\n# resolve conflicts, then\ngit add . && git rebase --continue\ngit push --force-with-lease",
+    "tip": {
+      "vi": "Nêu quy tắc vàng và --force-with-lease cho thấy bạn làm việc nhóm cẩn thận.",
+      "en": "Stating the golden rule and --force-with-lease shows you are careful in a team setting."
+    },
+    "followUps": [
+      {
+        "vi": "Lỡ commit nhầm lên main và đã push, bạn sửa thế nào?",
+        "en": "You accidentally committed to main and pushed. How do you fix it?"
+      },
+      {
+        "vi": "git reflog dùng để làm gì?",
+        "en": "What is git reflog used for?"
+      }
+    ],
+    "source": "https://git-scm.com/docs/git-rebase"
+  },
+  {
+    "id": "devops-git-branching-strategy",
+    "level": "junior",
+    "topic": "Git",
+    "q": {
+      "vi": "So sánh GitFlow và trunk-based development. Team bạn nên chọn chiến lược nào?",
+      "en": "Compare GitFlow and trunk-based development. Which branching strategy should a team choose?"
+    },
+    "a": {
+      "vi": "GitFlow dùng nhiều nhánh sống lâu (develop, release, hotfix) hợp với phát hành theo đợt; trunk-based cho mọi người merge nhánh nhỏ vào main thường xuyên, hợp với CI/CD và deploy liên tục.\n\n- GitFlow: kiểm soát release rõ ràng, hợp phần mềm đóng gói hoặc nhiều phiên bản song song. Nhược điểm: nhánh sống lâu dẫn tới merge conflict lớn, tích hợp muộn, chậm feedback.\n- Trunk-based: nhánh feature chỉ sống vài giờ đến một hai ngày, main luôn ở trạng thái deploy được. Tính năng chưa xong được ẩn bằng feature flag thay vì giữ trong nhánh. Cần CI mạnh, test tự động tốt và code review nhanh.\n- GitHub flow là dạng đơn giản: nhánh ngắn, PR, merge vào main, deploy.\n\nVới web service hiện đại tôi chọn trunk-based kèm branch protection (bắt buộc CI xanh và review). Nghiên cứu DORA cũng cho thấy trunk-based gắn liền với team hiệu suất cao.",
+      "en": "GitFlow uses several long-lived branches (develop, release, hotfix) and suits batch releases; trunk-based has everyone merge small branches into main frequently, which suits CI/CD and continuous deployment.\n\n- GitFlow: explicit release control, good for packaged software or several versions supported in parallel. Downsides: long-lived branches lead to big merge conflicts, late integration and slow feedback.\n- Trunk-based: feature branches live hours to a day or two, and main is always deployable. Unfinished features are hidden behind feature flags instead of being kept in a branch. It needs strong CI, good automated tests and fast code review.\n- GitHub flow is a simple variant: short branch, PR, merge to main, deploy.\n\nFor a modern web service I pick trunk-based with branch protection (CI must pass and a review is required). DORA research also links trunk-based development with high-performing teams."
+    },
+    "tip": {
+      "vi": "Đừng nói chiến lược nào luôn đúng; hãy gắn lựa chọn với cách team release và độ trưởng thành của test.",
+      "en": "Do not claim one strategy is always right; tie the choice to how the team releases and how mature its tests are."
+    },
+    "followUps": [
+      {
+        "vi": "Feature flag có rủi ro và chi phí gì?",
+        "en": "What risks and costs do feature flags bring?"
+      },
+      {
+        "vi": "Bạn cấu hình branch protection cho main như thế nào?",
+        "en": "How would you configure branch protection for main?"
+      }
+    ]
+  },
+  {
+    "id": "devops-docker-image-vs-container",
+    "level": "intern",
+    "topic": "Docker",
+    "q": {
+      "vi": "Docker image khác container thế nào? Layer trong image là gì?",
+      "en": "What is the difference between a Docker image and a container? What are image layers?"
+    },
+    "a": {
+      "vi": "Image là template chỉ đọc chứa filesystem và metadata để chạy ứng dụng; container là một instance đang chạy của image, có thêm một lớp ghi được riêng.\n\n- Mỗi lệnh trong Dockerfile như RUN, COPY, ADD tạo ra một layer. Image là chồng các layer chỉ đọc, được ghép lại bằng union filesystem (overlay2).\n- Layer được cache và chia sẻ: nhiều image cùng base thì chỉ lưu và tải base một lần; build lại chỉ chạy từ layer đầu tiên bị thay đổi.\n- Container thêm một writable layer ở trên cùng. Dữ liệu ghi vào đó mất khi xoá container, nên dữ liệu cần giữ phải dùng volume.\n- Một image có thể chạy nhiều container cùng lúc.\n- Tag (myapp:1.4.2) có thể bị gán lại; digest (sha256:...) thì bất biến, nên production nên pin theo digest hoặc tag không bao giờ ghi đè.\n\nLưu ý: xoá file ở layer sau không làm image nhỏ đi, vì file vẫn nằm ở layer trước.",
+      "en": "An image is a read-only template containing a filesystem and metadata to run an app; a container is a running instance of an image with its own extra writable layer.\n\n- Each Dockerfile instruction like RUN, COPY, ADD creates a layer. An image is a stack of read-only layers combined with a union filesystem (overlay2).\n- Layers are cached and shared: images with the same base store and pull that base only once; a rebuild only reruns from the first changed layer.\n- A container adds a writable layer on top. Data written there is lost when the container is removed, so data you need to keep must go in a volume.\n- One image can run many containers at once.\n- A tag (myapp:1.4.2) can be reassigned; a digest (sha256:...) is immutable, so production should pin by digest or by tags that are never overwritten.\n\nNote: deleting a file in a later layer does not shrink the image, because the file still exists in the earlier layer."
+    },
+    "code": "$ docker image history myapp:1.4.2\n$ docker run -d --name web1 myapp:1.4.2\n$ docker run -d --name web2 myapp:1.4.2   # same image, second container\n$ docker inspect --format '{{.RepoDigests}}' myapp:1.4.2",
+    "tip": {
+      "vi": "Giải thích vì sao xoá file ở layer sau không giảm dung lượng là cách nhanh để cho thấy bạn hiểu layer.",
+      "en": "Explaining why deleting a file in a later layer does not reduce size quickly proves you understand layers."
+    },
+    "followUps": [
+      {
+        "vi": "Volume khác bind mount thế nào?",
+        "en": "How is a volume different from a bind mount?"
+      },
+      {
+        "vi": "Vì sao không nên dùng tag latest khi deploy?",
+        "en": "Why should you avoid the latest tag in deployments?"
+      }
+    ]
+  },
+  {
+    "id": "devops-docker-vs-vm",
+    "level": "junior",
+    "topic": "Docker",
+    "q": {
+      "vi": "Container (Docker) khác máy ảo (VM) như thế nào?",
+      "en": "How is a container (Docker) different from a virtual machine?"
+    },
+    "a": {
+      "vi": "VM ảo hoá phần cứng: mỗi VM có hệ điều hành riêng chạy trên hypervisor → nặng (GB), khởi động chậm, cô lập mạnh.\n\nContainer ảo hoá ở mức hệ điều hành: các container dùng chung kernel của host, được cô lập bằng namespaces (PID, network, mount, user...) và giới hạn tài nguyên bằng cgroups → nhẹ (MB), khởi động trong vài giây, đóng gói ứng dụng cùng dependencies nên chạy giống nhau ở mọi môi trường.\n\nĐánh đổi:\n- Container cô lập yếu hơn VM vì chung kernel; một lỗ hổng kernel có thể ảnh hưởng mọi container trên host. Vì vậy trên cloud thường chạy container bên trong VM.\n- Container Linux cần kernel Linux; Docker Desktop trên macOS/Windows thực chất chạy một VM nhỏ.\n- Khi cần cô lập mạnh mà vẫn nhẹ có các lựa chọn như gVisor hoặc microVM (Firecracker, Kata Containers).",
+      "en": "A VM virtualizes hardware: each VM runs its own OS on a hypervisor → heavy (GBs), slow to boot, strong isolation.\n\nA container virtualizes at the OS level: containers share the host kernel, are isolated with namespaces (PID, network, mount, user...) and limited with cgroups → light (MBs), starts in seconds, packages the app with its dependencies so it runs the same everywhere.\n\nTrade-offs:\n- Containers isolate less than VMs because they share the kernel; one kernel vulnerability can affect every container on the host. That is why on the cloud containers usually run inside VMs.\n- Linux containers need a Linux kernel; Docker Desktop on macOS/Windows actually runs a small VM.\n- When you need strong isolation but still lightweight, there are options like gVisor or microVMs (Firecracker, Kata Containers)."
+    },
+    "tip": {
+      "vi": "Nhắc đúng hai từ khoá namespaces và cgroups là điều interviewer chờ đợi.",
+      "en": "Naming namespaces and cgroups precisely is exactly what the interviewer is waiting for."
+    },
+    "followUps": [
+      {
+        "vi": "Chạy container bằng root có nguy hiểm không? Rootless container là gì?",
+        "en": "Is running a container as root dangerous? What are rootless containers?"
+      },
+      {
+        "vi": "cgroups giới hạn những tài nguyên nào?",
+        "en": "Which resources can cgroups limit?"
+      }
+    ]
+  },
+  {
+    "id": "devops-docker-optimize-dockerfile",
+    "level": "mid",
+    "topic": "Docker",
+    "q": {
+      "vi": "Bạn tối ưu một Dockerfile như thế nào về kích thước, tốc độ build và bảo mật? Multi-stage build giúp gì?",
+      "en": "How do you optimize a Dockerfile for size, build speed and security? How does a multi-stage build help?"
+    },
+    "a": {
+      "vi": "Mục tiêu là image nhỏ, build nhanh nhờ cache và chỉ chứa đúng thứ cần để chạy.\n\n- Multi-stage build: stage đầu có compiler, dev dependencies để build; stage cuối chỉ copy artifact sang base nhỏ (distroless, alpine, slim). Image giảm từ cả GB xuống vài chục MB, ít CVE hơn.\n- Thứ tự layer cho cache: copy file lock (package-lock.json, go.sum) và cài dependencies trước, copy source sau, để sửa code không phải cài lại thư viện.\n- .dockerignore để không gửi .git, node_modules, file secret vào build context.\n- Gộp RUN và dọn cache của package manager trong cùng một layer.\n- Bảo mật: chạy bằng USER không phải root, pin phiên bản base image (tốt nhất theo digest), không đưa secret vào ARG/ENV hay COPY; dùng BuildKit --mount=type=secret khi build cần token.\n- Dùng exec form cho CMD/ENTRYPOINT để nhận signal đúng.\n\nĐánh đổi: alpine dùng musl có thể gây khác biệt với glibc; distroless không có shell nên debug khó hơn (dùng kubectl debug).",
+      "en": "The goal is a small image, fast builds through caching, and only what is needed at runtime.\n\n- Multi-stage build: the first stage has the compiler and dev dependencies to build; the final stage only copies the artifact onto a small base (distroless, alpine, slim). The image shrinks from GBs to tens of MBs with fewer CVEs.\n- Layer order for caching: copy lock files (package-lock.json, go.sum) and install dependencies first, copy source later, so code changes do not reinstall libraries.\n- .dockerignore so .git, node_modules and secret files are not sent into the build context.\n- Combine RUN steps and clean the package manager cache in the same layer.\n- Security: run as a non-root USER, pin the base image version (ideally by digest), never put secrets in ARG/ENV or COPY; use BuildKit --mount=type=secret when the build needs a token.\n- Use the exec form for CMD/ENTRYPOINT so signals are delivered correctly.\n\nTrade-offs: alpine uses musl, which can behave differently from glibc; distroless has no shell, so debugging is harder (use kubectl debug)."
+    },
+    "code": "# syntax=docker/dockerfile:1\nFROM golang:1.25 AS build\nWORKDIR /src\nCOPY go.mod go.sum ./\nRUN go mod download\nCOPY . .\nRUN CGO_ENABLED=0 go build -o /out/app ./cmd/app\n\nFROM gcr.io/distroless/static-debian12:nonroot\nCOPY --from=build /out/app /app\nUSER nonroot\nENTRYPOINT [\"/app\"]",
+    "tip": {
+      "vi": "Nói được vì sao copy file lock trước source giúp cache, kèm con số trước/sau khi tối ưu, sẽ rất thuyết phục.",
+      "en": "Explaining why copying lock files before source helps caching, plus before/after numbers, is very convincing."
+    },
+    "followUps": [
+      {
+        "vi": "Lỡ COPY file .env vào image rồi xoá ở bước sau thì secret còn không?",
+        "en": "If you COPY a .env file and delete it in a later step, is the secret still in the image?"
+      },
+      {
+        "vi": "Làm sao debug một container distroless không có shell?",
+        "en": "How do you debug a distroless container with no shell?"
+      }
+    ],
+    "source": "https://docs.docker.com/build/building/multi-stage/"
+  },
+  {
+    "id": "devops-k8s-pod-deployment",
+    "level": "junior",
+    "topic": "Kubernetes",
+    "q": {
+      "vi": "Pod, ReplicaSet và Deployment trong Kubernetes là gì và liên quan với nhau thế nào?",
+      "en": "What are a Pod, a ReplicaSet and a Deployment in Kubernetes, and how are they related?"
+    },
+    "a": {
+      "vi": "Pod là đơn vị nhỏ nhất Kubernetes chạy; Deployment khai báo trạng thái mong muốn và quản lý ReplicaSet, còn ReplicaSet đảm bảo luôn có đúng số Pod.\n\n- Pod: một hoặc vài container dùng chung network namespace (cùng IP, gọi nhau qua localhost) và volume. Pod là thứ tạm thời: chết là mất, IP đổi, không tự sống lại nếu tạo trần.\n- ReplicaSet: giữ số replica, Pod chết thì tạo Pod mới theo template.\n- Deployment: lớp trên ReplicaSet, cho rolling update và rollback. Mỗi lần đổi template, Deployment tạo ReplicaSet mới và chuyển dần Pod sang.\n\nCơ chế chung là reconciliation loop: controller liên tục so sánh trạng thái thực với spec và sửa chênh lệch.\n\nCác workload khác: StatefulSet cho ứng dụng cần định danh và storage ổn định (database), DaemonSet chạy một Pod trên mỗi node (agent log, monitoring), Job/CronJob cho tác vụ chạy xong rồi dừng.",
+      "en": "A Pod is the smallest unit Kubernetes runs; a Deployment declares the desired state and manages ReplicaSets, and a ReplicaSet keeps the right number of Pods running.\n\n- Pod: one or a few containers sharing a network namespace (same IP, talk via localhost) and volumes. Pods are ephemeral: when one dies it is gone, its IP changes, and a bare Pod is not recreated.\n- ReplicaSet: maintains the replica count and creates new Pods from the template when Pods die.\n- Deployment: sits above ReplicaSets and provides rolling updates and rollback. Every template change creates a new ReplicaSet and gradually shifts Pods to it.\n\nThe common mechanism is the reconciliation loop: controllers constantly compare actual state with the spec and fix the difference.\n\nOther workloads: StatefulSet for apps needing stable identity and storage (databases), DaemonSet for one Pod per node (log and monitoring agents), Job/CronJob for tasks that run to completion."
+    },
+    "code": "apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: api\nspec:\n  replicas: 3\n  selector:\n    matchLabels: { app: api }\n  template:\n    metadata:\n      labels: { app: api }\n    spec:\n      containers:\n        - name: api\n          image: registry.example.com/api:1.4.2\n          ports:\n            - containerPort: 8080",
+    "tip": {
+      "vi": "Nói được khái niệm reconciliation loop và desired state sẽ cho thấy bạn hiểu triết lý của Kubernetes.",
+      "en": "Explaining the reconciliation loop and desired state shows you understand how Kubernetes thinks."
+    },
+    "followUps": [
+      {
+        "vi": "Khi nào nên đặt hai container trong cùng một Pod (sidecar)?",
+        "en": "When should two containers share one Pod (the sidecar pattern)?"
+      },
+      {
+        "vi": "Pod bị CrashLoopBackOff, bạn debug thế nào?",
+        "en": "A Pod is in CrashLoopBackOff. How do you debug it?"
+      }
+    ],
+    "source": "https://kubernetes.io/docs/concepts/workloads/pods/"
+  },
+  {
+    "id": "devops-k8s-service-ingress",
+    "level": "junior",
+    "topic": "Kubernetes",
+    "q": {
+      "vi": "Service trong Kubernetes để làm gì? Phân biệt ClusterIP, NodePort, LoadBalancer và Ingress.",
+      "en": "What is a Kubernetes Service for? Explain ClusterIP, NodePort, LoadBalancer and Ingress."
+    },
+    "a": {
+      "vi": "Vì IP của Pod luôn thay đổi, Service cung cấp một địa chỉ ổn định (virtual IP và tên DNS) và cân bằng tải tới các Pod được chọn theo label.\n\n- ClusterIP (mặc định): chỉ truy cập trong cluster, ví dụ api.default.svc.cluster.local. Dùng cho giao tiếp nội bộ giữa các service.\n- NodePort: mở một port (mặc định dải 30000-32767) trên mọi node; ít dùng trực tiếp ở production.\n- LoadBalancer: yêu cầu cloud tạo load balancer bên ngoài trỏ vào Service. Đơn giản nhưng mỗi Service một LB thì tốn tiền.\n- Headless (clusterIP: None): trả về IP từng Pod, dùng với StatefulSet.\n\nIngress là luật routing HTTP/HTTPS (theo host, path, TLS) để nhiều service dùng chung một entry point; nó cần một Ingress controller chạy trong cluster mới hoạt động. Hiện nay Gateway API là hướng mới được khuyến nghị, linh hoạt hơn và tách vai trò rõ hơn; Ingress API đã ngừng phát triển tính năng mới.",
+      "en": "Because Pod IPs keep changing, a Service provides a stable address (a virtual IP and a DNS name) and load balances across the Pods selected by labels.\n\n- ClusterIP (default): reachable only inside the cluster, e.g. api.default.svc.cluster.local. Used for internal service-to-service traffic.\n- NodePort: opens a port (default range 30000-32767) on every node; rarely used directly in production.\n- LoadBalancer: asks the cloud to provision an external load balancer pointing at the Service. Simple, but one LB per Service gets expensive.\n- Headless (clusterIP: None): returns individual Pod IPs, used with StatefulSets.\n\nIngress is a set of HTTP/HTTPS routing rules (by host, path, TLS) so many services share one entry point; it only works when an Ingress controller runs in the cluster. Today the Gateway API is the recommended newer direction, more flexible and with clearer role separation; the Ingress API is frozen and no longer gets new features."
+    },
+    "tip": {
+      "vi": "Nhắc Service chọn Pod bằng label selector và Ingress cần controller, kèm Gateway API, là đủ ghi điểm.",
+      "en": "Saying a Service selects Pods by label, that Ingress needs a controller, and mentioning the Gateway API scores well."
+    },
+    "followUps": [
+      {
+        "vi": "Service không route được traffic tới Pod, bạn kiểm tra những gì?",
+        "en": "A Service does not route traffic to its Pods. What do you check?"
+      },
+      {
+        "vi": "kube-proxy làm nhiệm vụ gì?",
+        "en": "What does kube-proxy do?"
+      }
+    ],
+    "source": "https://kubernetes.io/docs/concepts/services-networking/service/"
+  },
+  {
+    "id": "devops-k8s-configmap-secret",
+    "level": "junior",
+    "topic": "Kubernetes",
+    "q": {
+      "vi": "ConfigMap và Secret khác nhau thế nào? Secret của Kubernetes có thật sự an toàn không?",
+      "en": "How do ConfigMaps and Secrets differ? Are Kubernetes Secrets actually secure?"
+    },
+    "a": {
+      "vi": "Cả hai tách cấu hình ra khỏi image và đưa vào Pod qua biến môi trường hoặc file mount; ConfigMap cho cấu hình thường, Secret cho dữ liệu nhạy cảm như mật khẩu, token, certificate.\n\nSecret mặc định không an toàn như tên gọi: dữ liệu chỉ được base64 encode, không phải mã hoá, và nằm trong etcd. Để an toàn hơn:\n- Bật encryption at rest cho etcd, tốt nhất dùng KMS provider của cloud.\n- Giới hạn RBAC: rất ít người và service account được get/list Secret.\n- Không commit Secret YAML vào Git; dùng External Secrets Operator đồng bộ từ Vault/AWS Secrets Manager, Sealed Secrets hoặc Secrets Store CSI Driver.\n- Ưu tiên mount dạng file hơn env, vì env dễ lộ qua log, crash dump.\n\nLưu ý: env lấy từ ConfigMap/Secret không tự cập nhật khi giá trị đổi, phải restart Pod; file mount thì được cập nhật sau một khoảng trễ (trừ khi dùng subPath).",
+      "en": "Both keep configuration out of the image and inject it into Pods as environment variables or mounted files; ConfigMaps hold regular config, Secrets hold sensitive data like passwords, tokens and certificates.\n\nBy default Secrets are not as safe as the name suggests: the data is only base64 encoded, not encrypted, and stored in etcd. To make them safer:\n- Enable encryption at rest for etcd, ideally through the cloud KMS provider.\n- Restrict RBAC: very few people and service accounts can get/list Secrets.\n- Never commit Secret YAML to Git; use External Secrets Operator to sync from Vault/AWS Secrets Manager, Sealed Secrets, or the Secrets Store CSI Driver.\n- Prefer file mounts over env vars, since env vars leak more easily through logs and crash dumps.\n\nNote: env vars from a ConfigMap/Secret do not update when the value changes, you must restart the Pod; mounted files do update after a delay (unless you use subPath)."
+    },
+    "tip": {
+      "vi": "Câu then chốt cần nói: base64 không phải mã hoá.",
+      "en": "The key sentence to say: base64 is not encryption."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao tự động rolling restart Pod khi ConfigMap thay đổi?",
+        "en": "How can you automatically roll Pods when a ConfigMap changes?"
+      },
+      {
+        "vi": "Bạn quản lý Secret trong quy trình GitOps thế nào?",
+        "en": "How do you manage Secrets in a GitOps workflow?"
+      }
+    ],
+    "source": "https://kubernetes.io/docs/concepts/configuration/secret/"
+  },
+  {
+    "id": "devops-k8s-probes",
+    "level": "junior",
+    "topic": "Kubernetes",
+    "q": {
+      "vi": "Liveness, readiness và startup probe khác nhau thế nào? Cấu hình sai gây ra hậu quả gì?",
+      "en": "How do liveness, readiness and startup probes differ? What goes wrong when they are misconfigured?"
+    },
+    "a": {
+      "vi": "Ba probe trả lời ba câu hỏi khác nhau: container còn sống không, đã sẵn sàng nhận traffic chưa, và đã khởi động xong chưa.\n\n- Liveness: fail thì kubelet restart container. Dùng để thoát khỏi trạng thái treo (deadlock).\n- Readiness: fail thì Pod bị gỡ khỏi endpoint của Service, không nhận traffic nhưng không bị restart. Dùng khi đang khởi động, đang warm cache hoặc tạm quá tải.\n- Startup: cho app khởi động chậm thời gian; trong lúc startup probe chưa pass thì liveness và readiness chưa chạy.\n\nLỗi hay gặp:\n- Liveness kiểm tra cả database: DB chậm một chút là mọi Pod bị restart cùng lúc, biến sự cố nhỏ thành sập toàn bộ. Liveness chỉ nên kiểm tra chính process.\n- Không có readiness: Pod nhận traffic khi chưa sẵn sàng, gây lỗi 5xx lúc deploy.\n- Timeout và failureThreshold quá chặt nên app bị restart khi GC pause hoặc tải cao.",
+      "en": "The three probes answer three different questions: is the container alive, is it ready for traffic, and has it finished starting.\n\n- Liveness: on failure the kubelet restarts the container. Used to escape a stuck state (deadlock).\n- Readiness: on failure the Pod is removed from the Service endpoints, so it gets no traffic but is not restarted. Used while starting, warming caches or temporarily overloaded.\n- Startup: gives slow-starting apps time; until the startup probe passes, liveness and readiness do not run.\n\nCommon mistakes:\n- A liveness check that also checks the database: the DB slows down a little and every Pod restarts at once, turning a small issue into a full outage. Liveness should only check the process itself.\n- No readiness probe: Pods receive traffic before they are ready, causing 5xx errors during deploys.\n- Timeouts and failureThreshold too tight, so the app restarts during GC pauses or high load."
+    },
+    "code": "startupProbe:\n  httpGet: { path: /healthz, port: 8080 }\n  failureThreshold: 30\n  periodSeconds: 2\nlivenessProbe:\n  httpGet: { path: /healthz, port: 8080 }\n  periodSeconds: 10\n  timeoutSeconds: 2\nreadinessProbe:\n  httpGet: { path: /ready, port: 8080 }\n  periodSeconds: 5",
+    "tip": {
+      "vi": "Kể ví dụ liveness phụ thuộc DB gây restart dây chuyền là điểm phân biệt người từng vận hành thật.",
+      "en": "The example of a DB-dependent liveness probe causing cascading restarts separates people who have run production."
+    },
+    "followUps": [
+      {
+        "vi": "Endpoint /ready nên kiểm tra những gì?",
+        "en": "What should a /ready endpoint check?"
+      },
+      {
+        "vi": "Probe kiểu exec, httpGet, tcpSocket và grpc khác nhau thế nào?",
+        "en": "How do exec, httpGet, tcpSocket and grpc probes differ?"
+      }
+    ],
+    "source": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/"
+  },
+  {
+    "id": "devops-k8s-requests-limits",
+    "level": "mid",
+    "topic": "Kubernetes",
+    "q": {
+      "vi": "Resource requests và limits hoạt động thế nào? Vì sao Pod bị OOMKilled hoặc bị CPU throttling?",
+      "en": "How do resource requests and limits work? Why do Pods get OOMKilled or CPU throttled?"
+    },
+    "a": {
+      "vi": "Requests là lượng tài nguyên được đảm bảo và dùng để scheduler xếp Pod lên node; limits là trần mà container không được vượt.\n\n- Scheduler chỉ đặt Pod lên node còn đủ requests chưa cấp phát, không nhìn mức dùng thực tế.\n- CPU là tài nguyên nén được: vượt limit thì bị throttle (chậm đi), không bị giết. Throttle làm tăng latency rất khó nhận ra.\n- Memory không nén được: vượt limit thì kernel giết process, Pod báo OOMKilled (exit code 137). Node thiếu memory thì kubelet còn evict Pod.\n- QoS class: Guaranteed (requests = limits), Burstable, BestEffort (không khai báo gì, bị evict trước).\n\nThực tế tôi làm: đặt requests theo mức dùng đo được (p90-p95 từ Prometheus/VPA recommendation), memory limit bằng hoặc hơi cao hơn request, và nhiều team bỏ CPU limit để tránh throttling không cần thiết, chỉ giữ CPU request. Với JVM/Node.js phải chỉnh heap theo memory limit của container.",
+      "en": "Requests are the guaranteed amount of resources and what the scheduler uses to place Pods; limits are the ceiling a container may not exceed.\n\n- The scheduler only places a Pod on a node with enough unallocated requests; it does not look at actual usage.\n- CPU is compressible: exceeding the limit causes throttling (slowdown), not a kill. Throttling raises latency in ways that are hard to spot.\n- Memory is not compressible: exceeding the limit makes the kernel kill the process and the Pod shows OOMKilled (exit code 137). When a node runs low on memory, the kubelet also evicts Pods.\n- QoS classes: Guaranteed (requests = limits), Burstable, BestEffort (nothing set, evicted first).\n\nWhat I do in practice: set requests from measured usage (p90-p95 from Prometheus or VPA recommendations), set the memory limit equal to or slightly above the request, and many teams drop CPU limits to avoid needless throttling, keeping only CPU requests. For JVM/Node.js, tune the heap to the container memory limit."
+    },
+    "code": "resources:\n  requests:\n    cpu: 250m\n    memory: 512Mi\n  limits:\n    memory: 512Mi",
+    "tip": {
+      "vi": "Phân biệt rõ CPU bị throttle còn memory bị kill, và kể cách bạn đo để đặt con số, là câu trả lời cấp mid.",
+      "en": "Clearly separating CPU throttling from memory kills, and explaining how you measure to set numbers, is a mid-level answer."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao phát hiện container đang bị CPU throttling?",
+        "en": "How do you detect that a container is being CPU throttled?"
+      },
+      {
+        "vi": "LimitRange và ResourceQuota dùng để làm gì?",
+        "en": "What are LimitRange and ResourceQuota for?"
+      }
+    ],
+    "source": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/"
+  },
+  {
+    "id": "devops-k8s-hpa",
+    "level": "mid",
+    "topic": "Kubernetes",
+    "q": {
+      "vi": "Horizontal Pod Autoscaler (HPA) hoạt động thế nào? Khi nào nó scale không như mong muốn?",
+      "en": "How does the Horizontal Pod Autoscaler (HPA) work? When does it scale in unexpected ways?"
+    },
+    "a": {
+      "vi": "HPA định kỳ đọc metric (mặc định khoảng 15 giây) và điều chỉnh số replica của Deployment để metric về gần giá trị mục tiêu.\n\n- Công thức cơ bản: desiredReplicas = ceil(currentReplicas x currentMetric / targetMetric), giới hạn trong minReplicas và maxReplicas.\n- Metric CPU/memory lấy từ metrics-server và tính theo phần trăm của requests, nên không đặt requests thì HPA theo CPU không chạy được.\n- autoscaling/v2 hỗ trợ custom metric (request per second, độ dài queue) qua Prometheus Adapter hoặc KEDA, thường phản ánh tải tốt hơn CPU.\n- Có stabilization window: scale down mặc định chờ 5 phút để tránh dao động; có thể chỉnh qua behavior.\n\nKhi nào scale sai: requests đặt sai nên phần trăm vô nghĩa; app khởi động chậm nên Pod mới chưa kịp đỡ tải; bottleneck nằm ở database nên thêm Pod chỉ làm DB tệ hơn; cluster hết chỗ mà không có Cluster Autoscaler hoặc Karpenter thì Pod mới bị Pending. Không nên dùng HPA và VPA cùng trên một metric CPU/memory.",
+      "en": "The HPA periodically reads metrics (about every 15 seconds by default) and adjusts a Deployment's replica count to bring the metric close to its target.\n\n- Basic formula: desiredReplicas = ceil(currentReplicas x currentMetric / targetMetric), bounded by minReplicas and maxReplicas.\n- CPU/memory metrics come from metrics-server and are computed as a percentage of requests, so without requests a CPU-based HPA cannot work.\n- autoscaling/v2 supports custom metrics (requests per second, queue length) via Prometheus Adapter or KEDA, which often reflect load better than CPU.\n- There is a stabilization window: scale-down waits 5 minutes by default to avoid flapping; tunable via behavior.\n\nWhen it scales badly: wrong requests make the percentage meaningless; slow startup means new Pods cannot absorb load in time; the bottleneck is the database, so more Pods make it worse; the cluster is full and without Cluster Autoscaler or Karpenter new Pods stay Pending. Do not use HPA and VPA together on the same CPU/memory metric."
+    },
+    "code": "apiVersion: autoscaling/v2\nkind: HorizontalPodAutoscaler\nmetadata:\n  name: api\nspec:\n  scaleTargetRef:\n    apiVersion: apps/v1\n    kind: Deployment\n    name: api\n  minReplicas: 3\n  maxReplicas: 20\n  metrics:\n    - type: Resource\n      resource:\n        name: cpu\n        target:\n          type: Utilization\n          averageUtilization: 70",
+    "tip": {
+      "vi": "Nhắc rằng HPA tính phần trăm dựa trên requests và cần node autoscaler đi kèm cho thấy bạn nhìn cả hệ thống.",
+      "en": "Noting that HPA percentages are based on requests and that you need a node autoscaler too shows system-level thinking."
+    },
+    "followUps": [
+      {
+        "vi": "Scale theo độ dài queue thay vì CPU thì làm thế nào?",
+        "en": "How would you scale on queue length instead of CPU?"
+      },
+      {
+        "vi": "Cluster Autoscaler và Karpenter khác nhau ra sao?",
+        "en": "How do Cluster Autoscaler and Karpenter differ?"
+      }
+    ],
+    "source": "https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/"
+  },
+  {
+    "id": "devops-k8s-rolling-update",
+    "level": "mid",
+    "topic": "Kubernetes",
+    "q": {
+      "vi": "Rolling update trong Kubernetes hoạt động thế nào? Làm sao để không bị downtime?",
+      "en": "How does a rolling update work in Kubernetes? How do you avoid downtime?"
+    },
+    "a": {
+      "vi": "Deployment thay dần Pod cũ bằng Pod mới theo maxSurge (được tạo dư bao nhiêu Pod) và maxUnavailable (được thiếu bao nhiêu Pod), mặc định đều là 25%.\n\nĐể không downtime:\n- readinessProbe: chỉ nhận traffic khi Pod thật sự sẵn sàng, Pod cũ chỉ bị gỡ khi Pod mới đã ready.\n- Graceful shutdown: xử lý SIGTERM, ngừng nhận request mới, xử lý xong request đang chạy; thêm preStop hook (sleep vài giây) để load balancer kịp gỡ Pod khỏi endpoint; terminationGracePeriodSeconds đủ dài.\n- maxUnavailable: 0 nếu cần giữ đủ capacity.\n- PodDisruptionBudget để node drain hay upgrade cluster không giết quá nhiều Pod cùng lúc.\n- Thay đổi DB phải tương thích ngược (expand/contract) vì 2 phiên bản chạy song song.\n- Theo dõi: kubectl rollout status; rollback bằng kubectl rollout undo. Đặt progressDeadlineSeconds để phát hiện rollout bị kẹt.",
+      "en": "A Deployment gradually replaces old Pods with new ones, governed by maxSurge (extra Pods allowed) and maxUnavailable (Pods allowed missing), both 25% by default.\n\nTo avoid downtime:\n- readinessProbe: only send traffic when the Pod is truly ready; old Pods are removed only after new ones are ready.\n- Graceful shutdown: handle SIGTERM, stop accepting new requests, finish in-flight ones; add a preStop hook (sleep a few seconds) so the load balancer has time to drop the Pod from its endpoints; a long enough terminationGracePeriodSeconds.\n- maxUnavailable: 0 if you must keep full capacity.\n- A PodDisruptionBudget so node drains or cluster upgrades do not kill too many Pods at once.\n- DB changes must be backward compatible (expand/contract) since two versions run at once.\n- Monitoring: kubectl rollout status; roll back with kubectl rollout undo. Set progressDeadlineSeconds to detect a stuck rollout."
+    },
+    "code": "strategy:\n  type: RollingUpdate\n  rollingUpdate:\n    maxSurge: 1\n    maxUnavailable: 0\n# in the pod template\nlifecycle:\n  preStop:\n    exec:\n      command: [\"sleep\", \"5\"]\nterminationGracePeriodSeconds: 30",
+    "tip": {
+      "vi": "Giải thích vì sao cần preStop sleep (race giữa việc gỡ endpoint và SIGTERM) là chi tiết ít người nói được.",
+      "en": "Explaining why a preStop sleep is needed (the race between endpoint removal and SIGTERM) is a detail few candidates know."
+    },
+    "followUps": [
+      {
+        "vi": "Migration database theo kiểu expand/contract diễn ra thế nào?",
+        "en": "How does an expand/contract database migration work?"
+      },
+      {
+        "vi": "Khi nào nên dùng strategy Recreate?",
+        "en": "When would you use the Recreate strategy?"
+      }
+    ],
+    "source": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/"
+  },
+  {
+    "id": "devops-cicd-pipeline-design",
+    "level": "junior",
+    "topic": "CI/CD",
+    "q": {
+      "vi": "Mô tả một CI/CD pipeline tốt. Bạn đánh version artifact như thế nào?",
+      "en": "Describe a good CI/CD pipeline. How do you version artifacts?"
+    },
+    "a": {
+      "vi": "Pipeline tốt cho feedback nhanh, build artifact một lần rồi promote đúng artifact đó qua các môi trường.\n\nCác bước thường có:\n- Trên mỗi PR: lint, unit test, build, quét bảo mật (SAST, dependency, secret scan). Mục tiêu dưới khoảng 10 phút.\n- Khi merge vào main: build image, gắn version, quét image, push lên registry.\n- Deploy staging tự động, chạy integration/smoke test, rồi deploy production (tự động là continuous deployment, có bước duyệt là continuous delivery).\n\nVersion artifact:\n- Build once, deploy many: không build lại cho từng môi trường, khác biệt môi trường nằm ở config.\n- Tag bất biến: git SHA (api:3f9c2ab) và/hoặc semver (api:1.4.2) khi release; không deploy bằng latest.\n- Lưu metadata: commit, thời điểm build, SBOM, để truy ngược được.\n\nThêm: cache dependency để build nhanh, chạy job song song, pipeline định nghĩa bằng code trong repo, credential cho CI dùng OIDC thay vì key sống lâu.",
+      "en": "A good pipeline gives fast feedback, builds the artifact once, and promotes that exact artifact through environments.\n\nTypical stages:\n- On every PR: lint, unit tests, build, security scans (SAST, dependencies, secret scanning). Aim for under about 10 minutes.\n- On merge to main: build the image, version it, scan it, push to the registry.\n- Deploy to staging automatically, run integration/smoke tests, then deploy to production (automatic is continuous deployment, with an approval step it is continuous delivery).\n\nArtifact versioning:\n- Build once, deploy many: do not rebuild per environment; environment differences live in config.\n- Immutable tags: the git SHA (api:3f9c2ab) and/or semver (api:1.4.2) on release; never deploy latest.\n- Keep metadata: commit, build time, SBOM, so you can trace back.\n\nAlso: cache dependencies for speed, run jobs in parallel, define the pipeline as code in the repo, and give CI credentials via OIDC instead of long-lived keys."
+    },
+    "code": "# GitHub Actions excerpt\non:\n  push:\n    branches: [main]\njobs:\n  build:\n    runs-on: ubuntu-latest\n    permissions:\n      contents: read\n      id-token: write\n    steps:\n      - uses: actions/checkout@v5\n      - run: make test\n      - run: docker build -t registry.example.com/api:${{ github.sha }} .\n      - run: docker push registry.example.com/api:${{ github.sha }}",
+    "tip": {
+      "vi": "Câu 'build once, deploy many' cùng tag bất biến theo git SHA là hai ý interviewer chờ nghe.",
+      "en": "'Build once, deploy many' plus immutable tags by git SHA are the two points interviewers wait for."
+    },
+    "followUps": [
+      {
+        "vi": "Pipeline chạy 40 phút, bạn tăng tốc thế nào?",
+        "en": "Your pipeline takes 40 minutes. How do you speed it up?"
+      },
+      {
+        "vi": "Xử lý test flaky trong CI ra sao?",
+        "en": "How do you deal with flaky tests in CI?"
+      }
+    ]
+  },
+  {
+    "id": "devops-cicd-blue-green-canary",
+    "level": "mid",
+    "topic": "CI/CD",
+    "q": {
+      "vi": "So sánh rolling update, blue-green và canary deployment. Khi nào chọn cách nào?",
+      "en": "Compare rolling, blue-green and canary deployments. When do you choose each?"
+    },
+    "a": {
+      "vi": "Cả ba đều giảm rủi ro khi release nhưng khác nhau ở cách chuyển traffic và tốc độ rollback.\n\n- Rolling: thay dần instance. Không tốn thêm hạ tầng, là mặc định của Kubernetes. Nhưng rollback cũng phải roll lại từ từ và hai version cùng phục vụ trong lúc chuyển.\n- Blue-green: dựng đầy đủ môi trường mới (green) cạnh môi trường cũ (blue), test xong thì chuyển toàn bộ traffic ở load balancer hoặc DNS. Rollback gần như tức thì bằng cách chuyển lại. Đổi lại tốn gấp đôi tài nguyên trong lúc deploy, và database dùng chung vẫn phải tương thích cả hai version.\n- Canary: chuyển một phần nhỏ traffic (1%, 5%, 25%...) sang version mới, so sánh error rate và latency với version cũ, ổn thì tăng dần. Phát hiện lỗi với ít người dùng bị ảnh hưởng nhất. Cần observability tốt và công cụ như Argo Rollouts, Flagger hoặc service mesh để tự động phân tích và rollback.\n\nChọn: service ít rủi ro thì rolling; cần rollback tức thì hoặc release theo đợt thì blue-green; service traffic lớn, quan trọng thì canary.",
+      "en": "All three reduce release risk but differ in how traffic shifts and how fast you can roll back.\n\n- Rolling: replaces instances gradually. No extra infrastructure, the Kubernetes default. But rollback is also gradual, and two versions serve traffic during the transition.\n- Blue-green: stand up a full new environment (green) next to the old one (blue), test it, then switch all traffic at the load balancer or DNS. Rollback is nearly instant by switching back. The cost is double resources during the deploy, and a shared database still has to work with both versions.\n- Canary: send a small share of traffic (1%, 5%, 25%...) to the new version, compare error rate and latency with the old one, and increase if healthy. You find bugs while affecting the fewest users. It needs good observability and tools like Argo Rollouts, Flagger or a service mesh to analyze and roll back automatically.\n\nChoice: low-risk services use rolling; when you need instant rollback or batch releases use blue-green; high-traffic, critical services use canary."
+    },
+    "tip": {
+      "vi": "Nhấn mạnh canary chỉ có giá trị khi có metric để tự động quyết định tiến hay lùi.",
+      "en": "Stress that a canary is only valuable when metrics automatically decide whether to proceed or roll back."
+    },
+    "followUps": [
+      {
+        "vi": "Feature flag khác canary deployment ở điểm nào?",
+        "en": "How do feature flags differ from canary deployments?"
+      },
+      {
+        "vi": "Làm canary cho một service có thay đổi schema database thế nào?",
+        "en": "How do you canary a service that changes the database schema?"
+      }
+    ]
+  },
+  {
+    "id": "devops-iac-terraform-state",
+    "level": "mid",
+    "topic": "Infrastructure as Code",
+    "q": {
+      "vi": "Terraform state là gì? Bạn quản lý state cho một team như thế nào?",
+      "en": "What is Terraform state? How do you manage state for a team?"
+    },
+    "a": {
+      "vi": "State là file Terraform dùng để ánh xạ resource trong code với resource thật trên cloud (ID, thuộc tính), nhờ đó plan biết cần tạo, sửa hay xoá gì.\n\nVới team:\n- Dùng remote backend (S3, GCS, Azure Blob, Terraform Cloud/HCP) thay vì file local, bật versioning để khôi phục khi state hỏng.\n- Bật state locking để hai người không apply cùng lúc. Với S3, từ Terraform 1.10 có native locking (use_lockfile), không còn bắt buộc DynamoDB.\n- State chứa dữ liệu nhạy cảm (mật khẩu DB, key) ở dạng plain text: mã hoá bucket, giới hạn quyền đọc, không commit vào Git.\n- Chia state theo môi trường và theo thành phần (network, database, app) để giảm blast radius và plan nhanh hơn.\n- Không sửa state bằng tay; dùng terraform state mv/rm, hoặc khối moved và import trong code để refactor có review.\n- Chạy plan/apply trong CI để có lịch sử và review, hạn chế apply từ laptop.\n\nOpenTofu, bản fork mã nguồn mở của Terraform, quản lý state theo cách tương tự và hỗ trợ mã hoá state.",
+      "en": "State is the file Terraform uses to map resources in code to real cloud resources (IDs, attributes), so plan knows what to create, change or delete.\n\nFor a team:\n- Use a remote backend (S3, GCS, Azure Blob, Terraform Cloud/HCP) instead of a local file, with versioning to recover a corrupted state.\n- Enable state locking so two people cannot apply at once. For S3, Terraform 1.10+ has native locking (use_lockfile), so DynamoDB is no longer required.\n- State holds sensitive data (DB passwords, keys) in plain text: encrypt the bucket, restrict read access, never commit it to Git.\n- Split state per environment and per component (network, database, app) to reduce blast radius and speed up plans.\n- Never edit state by hand; use terraform state mv/rm, or moved and import blocks in code so refactors are reviewed.\n- Run plan/apply in CI for history and review, and avoid applying from laptops.\n\nOpenTofu, the open-source fork of Terraform, manages state the same way and also supports state encryption."
+    },
+    "code": "terraform {\n  backend \"s3\" {\n    bucket       = \"acme-tfstate\"\n    key          = \"prod/network/terraform.tfstate\"\n    region       = \"ap-southeast-1\"\n    encrypt      = true\n    use_lockfile = true\n  }\n}",
+    "tip": {
+      "vi": "Nhắc state chứa secret dạng plain text và cần locking sẽ cho thấy bạn đã dùng Terraform trong team thật.",
+      "en": "Pointing out that state holds plain-text secrets and needs locking shows you have used Terraform in a real team."
+    },
+    "followUps": [
+      {
+        "vi": "State bị lock mãi do một lần apply bị ngắt giữa chừng, bạn xử lý ra sao?",
+        "en": "State stays locked after an interrupted apply. What do you do?"
+      },
+      {
+        "vi": "Làm sao đưa một resource tạo bằng tay vào Terraform quản lý?",
+        "en": "How do you bring a manually created resource under Terraform management?"
+      }
+    ],
+    "source": "https://developer.hashicorp.com/terraform/language/state"
+  },
+  {
+    "id": "devops-iac-terraform-modules-drift",
+    "level": "senior",
+    "topic": "Infrastructure as Code",
+    "q": {
+      "vi": "Bạn tổ chức Terraform module cho nhiều team và nhiều môi trường thế nào? Phát hiện và xử lý drift ra sao?",
+      "en": "How do you structure Terraform modules for many teams and environments? How do you detect and handle drift?"
+    },
+    "a": {
+      "vi": "Tôi xây module nhỏ, có version, mỗi module gói một khái niệm rõ ràng, và coi drift là tín hiệu quy trình có lỗ hổng chứ không chỉ là việc cần sửa.\n\nModule:\n- Module nền tảng (vpc, eks-cluster, rds) do platform team giữ, đặt trong repo hoặc registry riêng và gắn version semver; các team gọi với version pin cụ thể.\n- Input ít và có giá trị mặc định an toàn (mã hoá bật sẵn, không public), có validation; tránh module bọc quá nhiều tầng hoặc quá nhiều tham số.\n- Môi trường khác nhau bằng biến và thư mục/state riêng, cùng code module; hạn chế dùng workspaces cho các môi trường khác biệt lớn.\n- Có test (terraform test, policy as code với OPA/Sentinel/Checkov) trong CI.\n\nDrift:\n- Phát hiện: chạy terraform plan -refresh-only hoặc plan theo lịch trong CI, báo khi có thay đổi.\n- Xử lý: nếu thay đổi tay là đúng thì đưa vào code; nếu sai thì apply để đưa về như code.\n- Phòng: chỉ CI được quyền ghi, người dùng chỉ đọc trên console, break-glass có audit.",
+      "en": "I build small, versioned modules, each wrapping one clear concept, and I treat drift as a signal of a process gap, not just something to fix.\n\nModules:\n- Foundation modules (vpc, eks-cluster, rds) are owned by the platform team, kept in a separate repo or registry with semver versions; teams consume them with pinned versions.\n- Few inputs with safe defaults (encryption on, nothing public), with validation; avoid deeply nested wrappers or modules with dozens of parameters.\n- Environments differ through variables and separate directories/state, using the same module code; avoid workspaces for environments that differ a lot.\n- Tests in CI (terraform test, policy as code with OPA/Sentinel/Checkov).\n\nDrift:\n- Detect: run terraform plan -refresh-only or a scheduled plan in CI and alert on changes.\n- Handle: if the manual change was right, codify it; if it was wrong, apply to restore what the code says.\n- Prevent: only CI has write access, humans are read-only in the console, break-glass access is audited."
+    },
+    "tip": {
+      "vi": "Ở cấp senior, hãy nói về ownership, versioning và quyền truy cập, không chỉ cú pháp Terraform.",
+      "en": "At senior level, talk about ownership, versioning and access control, not just Terraform syntax."
+    },
+    "followUps": [
+      {
+        "vi": "Nâng version một module dùng bởi 30 team mà không làm vỡ ai thì làm thế nào?",
+        "en": "How do you upgrade a module used by 30 teams without breaking anyone?"
+      },
+      {
+        "vi": "Monorepo hay nhiều repo cho hạ tầng, bạn chọn gì?",
+        "en": "Monorepo or many repos for infrastructure code: which do you choose?"
+      }
+    ],
+    "source": "https://developer.hashicorp.com/terraform/language/modules"
+  },
+  {
+    "id": "devops-cloud-iam-least-privilege",
+    "level": "junior",
+    "topic": "Cloud",
+    "q": {
+      "vi": "IAM là gì? Bạn áp dụng nguyên tắc least privilege trên cloud thế nào?",
+      "en": "What is IAM? How do you apply least privilege in the cloud?"
+    },
+    "a": {
+      "vi": "IAM quản lý ai (identity) được làm gì (action) trên tài nguyên nào; least privilege nghĩa là mỗi identity chỉ có đúng quyền cần cho việc của nó, không hơn.\n\nKhái niệm (lấy AWS làm ví dụ): user, group, role và policy. Policy liệt kê Action, Resource, Condition; explicit Deny luôn thắng Allow.\n\nÁp dụng:\n- Ưu tiên role với credential tạm thời thay vì access key sống lâu. CI/CD dùng OIDC federation (GitHub Actions assume role), workload trên EKS dùng IRSA hoặc EKS Pod Identity, EC2 dùng instance profile.\n- Người dùng đăng nhập qua SSO, bắt buộc MFA, không dùng root account hằng ngày.\n- Policy giới hạn theo resource cụ thể (một bucket, một prefix), tránh dấu * cho cả action lẫn resource.\n- Bắt đầu hẹp rồi mở dần; dùng công cụ như IAM Access Analyzer và last accessed để gỡ quyền thừa.\n- Tách account theo môi trường, dùng guardrail cấp tổ chức (SCP).\n\nCác cloud khác có khái niệm tương đương: GCP IAM với service account, Azure RBAC với managed identity.",
+      "en": "IAM controls who (identity) can do what (action) on which resources; least privilege means each identity gets exactly the permissions its job needs, nothing more.\n\nConcepts (using AWS as the example): users, groups, roles and policies. A policy lists Action, Resource and Condition; an explicit Deny always beats an Allow.\n\nApplying it:\n- Prefer roles with temporary credentials over long-lived access keys. CI/CD uses OIDC federation (GitHub Actions assumes a role), EKS workloads use IRSA or EKS Pod Identity, EC2 uses instance profiles.\n- Humans sign in through SSO with MFA required, and nobody uses the root account day to day.\n- Scope policies to specific resources (one bucket, one prefix) and avoid * for both actions and resources.\n- Start narrow and widen as needed; use tools like IAM Access Analyzer and last-accessed data to remove unused permissions.\n- Separate accounts per environment and use organization-level guardrails (SCPs).\n\nOther clouds have equivalents: GCP IAM with service accounts, Azure RBAC with managed identities."
+    },
+    "code": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [{\n    \"Effect\": \"Allow\",\n    \"Action\": [\"s3:GetObject\", \"s3:PutObject\"],\n    \"Resource\": \"arn:aws:s3:::acme-uploads/user-avatars/*\"\n  }]\n}",
+    "tip": {
+      "vi": "Nói 'không dùng access key sống lâu, dùng OIDC và role' là dấu hiệu bạn theo thực hành hiện đại.",
+      "en": "Saying 'no long-lived access keys, use OIDC and roles' signals you follow modern practice."
+    },
+    "followUps": [
+      {
+        "vi": "Phát hiện access key bị lộ trên GitHub, bạn làm gì trong 15 phút đầu?",
+        "en": "You find an access key leaked on GitHub. What do you do in the first 15 minutes?"
+      },
+      {
+        "vi": "Authentication khác authorization thế nào?",
+        "en": "How does authentication differ from authorization?"
+      }
+    ],
+    "source": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
+  },
+  {
+    "id": "devops-cloud-vpc-subnets",
+    "level": "mid",
+    "topic": "Cloud",
+    "q": {
+      "vi": "Thiết kế VPC cho một ứng dụng web: public subnet, private subnet, NAT gateway và security group đóng vai trò gì?",
+      "en": "Design a VPC for a web application: what roles do public subnets, private subnets, NAT gateways and security groups play?"
+    },
+    "a": {
+      "vi": "VPC là mạng riêng ảo trên cloud; tôi đặt thứ cần nhận traffic từ internet ở public subnet và mọi thứ còn lại ở private subnet, trải trên ít nhất hai hoặc ba AZ.\n\n- Chọn CIDR đủ lớn và không trùng với mạng on-prem hay VPC khác (ví dụ 10.20.0.0/16) để sau này peering hoặc VPN không bị xung đột.\n- Public subnet: route 0.0.0.0/0 ra Internet Gateway; chỉ chứa load balancer, NAT gateway, có thể bastion.\n- Private subnet: app server, database; không có IP public. Cần ra internet (gọi API, tải package) thì đi qua NAT gateway. NAT dịch IP private thành IP public để đi ra, nhưng không cho kết nối từ ngoài vào.\n- Security group: firewall stateful gắn vào từng resource, chỉ có allow; ví dụ DB chỉ nhận port 5432 từ security group của app. NACL là lớp stateless ở mức subnet, dùng bổ sung.\n- Dùng VPC endpoint cho S3, ECR... để traffic không qua NAT, vừa an toàn vừa giảm chi phí NAT vốn khá đắt.\n\nĐánh đổi: mỗi AZ một NAT gateway để chịu lỗi AZ nhưng tốn tiền hơn.",
+      "en": "A VPC is a private virtual network in the cloud; I put what must receive internet traffic in public subnets and everything else in private subnets, across at least two or three AZs.\n\n- Pick a CIDR large enough and not overlapping on-prem or other VPCs (e.g. 10.20.0.0/16), so peering or VPN does not conflict later.\n- Public subnets: route 0.0.0.0/0 to an Internet Gateway; they only hold load balancers, NAT gateways, maybe a bastion.\n- Private subnets: app servers, databases, no public IPs. For outbound internet (calling APIs, pulling packages) they go through a NAT gateway. NAT translates private IPs to a public IP for outbound traffic but does not allow connections in from outside.\n- Security groups: stateful firewalls attached to each resource, allow rules only; e.g. the DB accepts port 5432 only from the app's security group. NACLs are a stateless subnet-level layer, used as a complement.\n- Use VPC endpoints for S3, ECR and so on so traffic skips the NAT, which is both safer and cuts the fairly expensive NAT cost.\n\nTrade-off: one NAT gateway per AZ survives an AZ failure but costs more."
+    },
+    "tip": {
+      "vi": "Nhắc tới chi phí NAT gateway và VPC endpoint cho thấy bạn nghĩ cả về tiền, không chỉ kỹ thuật.",
+      "en": "Mentioning NAT gateway cost and VPC endpoints shows you think about money, not just technology."
+    },
+    "followUps": [
+      {
+        "vi": "Security group khác NACL thế nào?",
+        "en": "How do security groups differ from NACLs?"
+      },
+      {
+        "vi": "Kết nối hai VPC với nhau có những cách nào?",
+        "en": "What are the ways to connect two VPCs?"
+      }
+    ],
+    "source": "https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html"
+  },
+  {
+    "id": "devops-cloud-cost-control",
+    "level": "senior",
+    "topic": "Cloud",
+    "q": {
+      "vi": "Hoá đơn cloud tăng 40% trong một quý. Bạn điều tra và kiểm soát chi phí như thế nào?",
+      "en": "The cloud bill grew 40% in one quarter. How do you investigate and control costs?"
+    },
+    "a": {
+      "vi": "Trước hết phải nhìn thấy tiền đi đâu, sau đó mới tối ưu theo thứ tự tác động lớn nhất, và cuối cùng biến kiểm soát chi phí thành thói quen của các team.\n\nĐiều tra:\n- Dùng Cost Explorer hoặc billing export, phân tích theo service, account, tag; tìm dòng tăng mạnh nhất.\n- Bắt buộc tag (team, service, env) qua policy để quy được chi phí cho chủ sở hữu.\n- Thủ phạm hay gặp: data transfer/egress và NAT gateway, log và metric lưu quá nhiều, snapshot và volume bị bỏ quên, môi trường dev chạy 24/7, instance quá cỡ.\n\nTối ưu:\n- Rightsizing dựa trên số liệu sử dụng, autoscaling, tắt môi trường non-prod ngoài giờ.\n- Spot/preemptible cho workload chịu được gián đoạn; Savings Plans hoặc Reserved cho phần tải nền ổn định.\n- Lifecycle policy cho object storage, giảm retention log, dùng VPC endpoint.\n- Trên Kubernetes, sửa requests bị đặt quá cao vì đó là thứ bạn trả tiền.\n\nDuy trì: budget và cảnh báo bất thường, báo cáo chi phí theo team (showback), đưa chi phí vào review thiết kế. Đó là tinh thần FinOps.",
+      "en": "First make it visible where the money goes, then optimize in order of biggest impact, and finally make cost control a habit for every team.\n\nInvestigate:\n- Use Cost Explorer or the billing export, break down by service, account and tag; find the line items that grew most.\n- Enforce tags (team, service, env) through policy so costs map to owners.\n- Usual suspects: data transfer/egress and NAT gateways, too much log and metric retention, forgotten snapshots and volumes, dev environments running 24/7, oversized instances.\n\nOptimize:\n- Rightsizing based on usage data, autoscaling, shutting down non-prod outside working hours.\n- Spot/preemptible for interruption-tolerant workloads; Savings Plans or Reserved capacity for the steady baseline.\n- Lifecycle policies for object storage, shorter log retention, VPC endpoints.\n- On Kubernetes, fix inflated requests because that is what you pay for.\n\nSustain: budgets and anomaly alerts, per-team cost reports (showback), and cost as part of design reviews. That is the FinOps mindset."
+    },
+    "tip": {
+      "vi": "Đưa ra quy trình nhìn thấy, tối ưu, duy trì, kèm một ví dụ tiết kiệm có con số, sẽ rất thuyết phục ở cấp senior.",
+      "en": "A see, optimize, sustain process with one concrete savings example with numbers is very convincing at senior level."
+    },
+    "followUps": [
+      {
+        "vi": "Khi nào Spot instance không phù hợp?",
+        "en": "When are Spot instances a bad fit?"
+      },
+      {
+        "vi": "Làm sao để các team tự chịu trách nhiệm chi phí của mình?",
+        "en": "How do you make teams accountable for their own costs?"
+      }
+    ]
+  },
+  {
+    "id": "devops-obs-metrics-logs-traces",
+    "level": "intern",
+    "topic": "Observability",
+    "q": {
+      "vi": "Metrics, logs và traces khác nhau thế nào? Khi nào dùng loại nào?",
+      "en": "How do metrics, logs and traces differ? When do you use each?"
+    },
+    "a": {
+      "vi": "Đây là ba tín hiệu chính của observability: metrics cho biết có vấn đề, traces cho biết vấn đề ở đâu, logs cho biết chi tiết chuyện gì đã xảy ra.\n\n- Metrics: con số đo theo thời gian (request/giây, tỉ lệ lỗi, latency p99, CPU). Rẻ để lưu, dễ vẽ dashboard và đặt cảnh báo. Không chứa chi tiết từng request.\n- Logs: bản ghi sự kiện có thời gian, nên viết dạng structured (JSON) có level, request_id. Chi tiết nhất nhưng tốn chi phí lưu trữ và tìm kiếm nhất.\n- Traces: theo dấu một request đi qua nhiều service, mỗi bước là một span có thời lượng. Rất hữu ích trong microservices để tìm service gây chậm.\n\nKết nối ba loại bằng trace_id: từ cảnh báo trên metric, mở trace của request chậm, rồi xem log có cùng trace_id.\n\nHiện nay OpenTelemetry là chuẩn mở phổ biến để thu thập cả ba loại, tránh khoá chặt vào một nhà cung cấp.",
+      "en": "These are the three main observability signals: metrics tell you something is wrong, traces tell you where, logs tell you the details of what happened.\n\n- Metrics: numbers measured over time (requests/second, error rate, p99 latency, CPU). Cheap to store, easy to graph and alert on. No per-request details.\n- Logs: timestamped event records, ideally structured (JSON) with level and request_id. The most detailed, but the most expensive to store and search.\n- Traces: follow one request across many services, each step a span with a duration. Very useful in microservices for finding which service is slow.\n\nLink the three with a trace_id: from a metric alert, open the trace of a slow request, then view the logs with the same trace_id.\n\nToday OpenTelemetry is the widely used open standard to collect all three, avoiding lock-in to one vendor."
+    },
+    "tip": {
+      "vi": "Câu tóm tắt 'metrics cho biết có vấn đề, traces cho biết ở đâu, logs cho biết vì sao' rất dễ ghi điểm.",
+      "en": "The summary 'metrics say something is wrong, traces say where, logs say why' scores easily."
+    },
+    "followUps": [
+      {
+        "vi": "Vì sao nên dùng structured logging?",
+        "en": "Why use structured logging?"
+      },
+      {
+        "vi": "Sampling trong tracing là gì và đánh đổi ra sao?",
+        "en": "What is sampling in tracing and what are the trade-offs?"
+      }
+    ]
+  },
+  {
+    "id": "devops-obs-prometheus",
+    "level": "mid",
+    "topic": "Observability",
+    "q": {
+      "vi": "Prometheus hoạt động thế nào? Các loại metric và vấn đề cardinality là gì?",
+      "en": "How does Prometheus work? What are the metric types and the cardinality problem?"
+    },
+    "a": {
+      "vi": "Prometheus là hệ thống metrics dạng pull: định kỳ scrape endpoint /metrics của các target, lưu vào time-series database cục bộ và cho truy vấn bằng PromQL.\n\n- Target được tìm qua service discovery (Kubernetes, EC2, file); job ngắn hạn có thể đẩy qua Pushgateway nhưng nên hạn chế.\n- Alert rule được đánh giá trong Prometheus, gửi sang Alertmanager để gom nhóm, chặn trùng, định tuyến tới Slack/PagerDuty. Grafana dùng để vẽ dashboard.\n- Loại metric: counter (chỉ tăng, như tổng request, luôn dùng với rate()), gauge (lên xuống, như memory đang dùng), histogram (bucket để tính percentile như p99 latency, gộp được giữa nhiều instance), summary (percentile tính sẵn ở client, không gộp được).\n- Cardinality: mỗi tổ hợp label là một time series riêng. Đưa user_id, request_id hay URL đầy đủ vào label sẽ tạo hàng triệu series, làm Prometheus hết RAM. Label chỉ nên có giá trị hữu hạn.\n\nPrometheus đơn lẻ không thiết kế để lưu lâu dài hay HA; dùng Thanos, Mimir hoặc dịch vụ managed để mở rộng.",
+      "en": "Prometheus is a pull-based metrics system: it periodically scrapes targets' /metrics endpoints, stores samples in a local time-series database, and lets you query with PromQL.\n\n- Targets are found via service discovery (Kubernetes, EC2, files); short-lived jobs can push through the Pushgateway, but use it sparingly.\n- Alert rules are evaluated in Prometheus and sent to Alertmanager, which groups, deduplicates and routes them to Slack/PagerDuty. Grafana is used for dashboards.\n- Metric types: counter (only goes up, like total requests, always used with rate()), gauge (goes up and down, like memory in use), histogram (buckets to compute percentiles like p99 latency, aggregatable across instances), summary (percentiles precomputed on the client, not aggregatable).\n- Cardinality: every label combination is a separate time series. Putting user_id, request_id or full URLs in labels creates millions of series and exhausts Prometheus memory. Labels should only have bounded values.\n\nA single Prometheus is not designed for long-term storage or HA; use Thanos, Mimir or a managed service to scale."
+    },
+    "code": "# error ratio over 5 minutes\nsum(rate(http_requests_total{job=\"api\",code=~\"5..\"}[5m]))\n  / sum(rate(http_requests_total{job=\"api\"}[5m]))\n\n# p99 latency from a histogram\nhistogram_quantile(0.99, sum by (le) (rate(http_request_duration_seconds_bucket{job=\"api\"}[5m])))",
+    "tip": {
+      "vi": "Giải thích vì sao counter phải đi với rate() và cảnh báo về label cardinality là hai điểm cộng lớn.",
+      "en": "Explaining why counters need rate() and warning about label cardinality are two big plus points."
+    },
+    "followUps": [
+      {
+        "vi": "Vì sao không nên lấy trung bình các giá trị p99 của nhiều instance?",
+        "en": "Why shouldn't you average p99 values across instances?"
+      },
+      {
+        "vi": "Pull model có ưu nhược điểm gì so với push?",
+        "en": "What are the pros and cons of a pull model versus push?"
+      }
+    ],
+    "source": "https://prometheus.io/docs/concepts/metric_types/"
+  },
+  {
+    "id": "devops-obs-alerting",
+    "level": "mid",
+    "topic": "Observability",
+    "q": {
+      "vi": "Thế nào là một cảnh báo (alert) tốt? Bạn giảm alert fatigue ra sao?",
+      "en": "What makes a good alert? How do you reduce alert fatigue?"
+    },
+    "a": {
+      "vi": "Cảnh báo tốt là cảnh báo cần con người hành động ngay, phản ánh ảnh hưởng tới người dùng, và có hướng dẫn xử lý; mọi thứ khác nên là dashboard hoặc ticket.\n\n- Cảnh báo theo triệu chứng thay vì nguyên nhân: tỉ lệ lỗi tăng, latency vượt SLO, thay vì CPU 80%. CPU cao mà người dùng không bị ảnh hưởng thì không cần đánh thức ai lúc 3 giờ sáng.\n- Phân mức: page (cần xử lý ngay) và ticket (xử lý trong giờ làm việc).\n- Dùng điều kiện for (ví dụ kéo dài 5 phút) để tránh nhiễu do spike ngắn; với SLO, dùng burn-rate alert nhiều cửa sổ thời gian.\n- Mỗi alert có owner, runbook link, dashboard liên quan và mô tả ảnh hưởng.\n- Alertmanager gom nhóm và inhibit: cluster mất kết nối thì không bắn 200 alert con.\n\nGiảm alert fatigue: review định kỳ mọi alert đã bắn, xoá hoặc chỉnh alert không dẫn tới hành động, theo dõi số page mỗi ca trực. Alert nào bị ack rồi bỏ qua nhiều lần là alert hỏng.",
+      "en": "A good alert requires a human to act now, reflects user impact, and comes with handling instructions; everything else should be a dashboard or a ticket.\n\n- Alert on symptoms, not causes: error rate up, latency above SLO, rather than CPU at 80%. High CPU with no user impact does not justify waking someone at 3 a.m.\n- Severity levels: page (act now) and ticket (handle during working hours).\n- Use a for duration (e.g. sustained for 5 minutes) to avoid noise from short spikes; for SLOs, use multi-window burn-rate alerts.\n- Every alert has an owner, a runbook link, a related dashboard and an impact description.\n- Alertmanager grouping and inhibition: when a cluster loses connectivity you do not fire 200 child alerts.\n\nTo reduce alert fatigue: regularly review every alert that fired, delete or tune those that led to no action, and track the number of pages per on-call shift. An alert that is acked and ignored repeatedly is a broken alert."
+    },
+    "code": "- alert: ApiHighErrorRate\n  expr: |\n    sum(rate(http_requests_total{job=\"api\",code=~\"5..\"}[5m]))\n      / sum(rate(http_requests_total{job=\"api\"}[5m])) > 0.02\n  for: 5m\n  labels:\n    severity: page\n  annotations:\n    summary: API 5xx ratio above 2% for 5m\n    runbook_url: https://wiki.example.com/runbooks/api-errors",
+    "tip": {
+      "vi": "Câu 'mỗi page phải dẫn tới một hành động' là nguyên tắc interviewer SRE thích nghe.",
+      "en": "The principle 'every page must lead to an action' is what SRE interviewers love to hear."
+    },
+    "followUps": [
+      {
+        "vi": "Burn-rate alert là gì?",
+        "en": "What is a burn-rate alert?"
+      },
+      {
+        "vi": "Làm sao biết hệ thống monitoring của chính bạn còn sống?",
+        "en": "How do you know your monitoring system itself is still alive?"
+      }
+    ]
+  },
+  {
+    "id": "devops-sre-sli-slo-error-budget",
+    "level": "mid",
+    "topic": "SRE",
+    "q": {
+      "vi": "Phân biệt SLI, SLO, SLA. Error budget là gì và dùng nó để làm gì?",
+      "en": "Explain SLI, SLO and SLA. What is an error budget and what is it used for?"
+    },
+    "a": {
+      "vi": "SLI là thứ đo được, SLO là mục tiêu nội bộ cho chỉ số đó, SLA là cam kết với khách hàng kèm hậu quả (bồi thường) nếu vi phạm.\n\n- SLI: thường là tỉ lệ sự kiện tốt trên tổng, ví dụ phần trăm request trả về không lỗi 5xx và nhanh hơn 300 ms, đo càng gần người dùng càng tốt (ở load balancer).\n- SLO: ví dụ 99.9% request thành công trong 30 ngày. Không đặt 100% vì không thực tế và cực đắt.\n- SLA: lỏng hơn SLO (ví dụ 99.5%) để có khoảng đệm trước khi phải bồi thường.\n\nError budget = 100% - SLO. Với 99.9% trong 30 ngày, budget khoảng 43 phút downtime tương đương. Nó biến độ tin cậy thành con số chung giữa dev và ops:\n- Còn budget: được release nhanh, thử nghiệm.\n- Hết budget: ưu tiên công việc reliability, tạm dừng release rủi ro, theo chính sách đã thống nhất từ trước.\n\nLỗi hay gặp: đặt SLO cho mọi thứ, chọn SLI không phản ánh trải nghiệm người dùng, hoặc có SLO mà không ai hành động khi hết budget.",
+      "en": "An SLI is what you measure, an SLO is the internal target for it, and an SLA is a customer commitment with consequences (credits) if broken.\n\n- SLI: usually the ratio of good events to total, e.g. the percentage of requests that are not 5xx and faster than 300 ms, measured as close to the user as possible (at the load balancer).\n- SLO: e.g. 99.9% of requests succeed over 30 days. Never 100%, which is unrealistic and extremely expensive.\n- SLA: looser than the SLO (e.g. 99.5%) to leave a buffer before credits are owed.\n\nError budget = 100% - SLO. For 99.9% over 30 days, the budget is about 43 minutes of equivalent downtime. It turns reliability into a number shared by dev and ops:\n- Budget left: ship fast, experiment.\n- Budget exhausted: prioritize reliability work and pause risky releases, following a policy agreed in advance.\n\nCommon mistakes: SLOs for everything, SLIs that do not reflect user experience, or SLOs nobody acts on when the budget runs out."
+    },
+    "tip": {
+      "vi": "Tính nhanh được 99.9% tương đương khoảng 43 phút mỗi tháng và nói về chính sách khi hết budget sẽ rất ấn tượng.",
+      "en": "Quickly computing that 99.9% is about 43 minutes a month and describing the policy when the budget runs out is impressive."
+    },
+    "followUps": [
+      {
+        "vi": "Bạn chọn SLI cho một batch job hoặc pipeline dữ liệu thế nào?",
+        "en": "How do you choose SLIs for a batch job or data pipeline?"
+      },
+      {
+        "vi": "Service của bạn phụ thuộc một service có SLO 99.5%, SLO của bạn đặt được bao nhiêu?",
+        "en": "Your service depends on one with a 99.5% SLO. What SLO can you realistically set?"
+      }
+    ],
+    "source": "https://sre.google/sre-book/service-level-objectives/"
+  },
+  {
+    "id": "devops-sre-incident-postmortem",
+    "level": "senior",
+    "topic": "SRE",
+    "q": {
+      "vi": "Bạn điều phối một sự cố production lớn thế nào? Một postmortem tốt gồm những gì?",
+      "en": "How do you run a major production incident? What makes a good postmortem?"
+    },
+    "a": {
+      "vi": "Trong sự cố, ưu tiên số một là giảm ảnh hưởng tới người dùng, tìm nguyên nhân gốc để sau; sau sự cố, postmortem blameless biến nó thành cải tiến hệ thống.\n\nĐiều phối:\n- Xác định severity và mở kênh sự cố riêng, chỉ định rõ vai trò: incident commander (điều phối, ra quyết định), người xử lý kỹ thuật, người lo truyền thông (status page, stakeholder).\n- Mitigate trước: rollback bản deploy gần nhất, tắt feature flag, chuyển traffic, scale thêm. Hỏi 'gần đây có gì thay đổi?'.\n- Ghi timeline ngay trong kênh, cập nhật định kỳ cho stakeholder, kể cả khi chưa có tin mới.\n- Tuyên bố kết thúc khi metric ổn định, không phải khi đoán đã sửa xong.\n\nPostmortem:\n- Tóm tắt, ảnh hưởng (bao lâu, bao nhiêu người dùng, error budget tiêu hao), timeline, nguyên nhân gốc và các yếu tố góp phần, điều gì làm tốt, điều gì may mắn.\n- Blameless: tập trung vào hệ thống và quy trình đã cho phép lỗi xảy ra, không đổ lỗi cá nhân, để mọi người dám nói thật.\n- Action item cụ thể, có owner và deadline, được theo dõi tới khi xong; chia sẻ rộng để cả tổ chức học.",
+      "en": "During an incident the top priority is reducing user impact, with root cause later; afterwards a blameless postmortem turns it into system improvements.\n\nRunning it:\n- Set the severity and open a dedicated incident channel, assigning clear roles: incident commander (coordinates, decides), technical responders, a communications lead (status page, stakeholders).\n- Mitigate first: roll back the latest deploy, turn off a feature flag, shift traffic, scale out. Ask 'what changed recently?'.\n- Keep a timeline in the channel and update stakeholders on a fixed cadence, even with no news.\n- Declare it resolved when metrics are stable, not when you guess it is fixed.\n\nPostmortem:\n- Summary, impact (duration, users affected, error budget burned), timeline, root cause and contributing factors, what went well, where we got lucky.\n- Blameless: focus on the systems and processes that allowed the failure, not on individuals, so people feel safe telling the truth.\n- Concrete action items with owners and deadlines, tracked to completion, and shared widely so the whole organization learns."
+    },
+    "tip": {
+      "vi": "Kể một sự cố thật bạn từng xử lý theo đúng khung này (mitigate, giao tiếp, postmortem, action item) là cách ghi điểm mạnh nhất.",
+      "en": "Telling a real incident you handled using this frame (mitigate, communicate, postmortem, action items) is the strongest way to score."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao đảm bảo action item sau postmortem thực sự được làm?",
+        "en": "How do you make sure postmortem action items actually get done?"
+      },
+      {
+        "vi": "Bạn tổ chức lịch on-call bền vững cho team thế nào?",
+        "en": "How do you set up a sustainable on-call rotation?"
+      }
+    ],
+    "source": "https://sre.google/sre-book/postmortem-culture/"
+  },
+  {
+    "id": "devops-security-secret-management",
+    "level": "mid",
+    "topic": "Security",
+    "q": {
+      "vi": "Bạn quản lý secret (mật khẩu DB, API key) trong hệ thống thế nào? Nếu một secret bị lộ thì làm gì?",
+      "en": "How do you manage secrets (DB passwords, API keys) in a system? What do you do if one leaks?"
+    },
+    "a": {
+      "vi": "Secret phải nằm ở một nơi tập trung, được mã hoá, có kiểm soát truy cập và audit, được cấp cho ứng dụng lúc chạy, và có thể xoay vòng mà không cần sửa code.\n\n- Không để secret trong Git, Docker image, biến CI hiển thị trong log hay file cấu hình plain text.\n- Dùng secret manager: HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, Azure Key Vault. Ứng dụng lấy secret bằng identity của chính nó (IAM role, Kubernetes service account), không cần thêm một secret để lấy secret.\n- Ưu tiên credential ngắn hạn hoặc động: Vault tạo user DB riêng có TTL, OIDC cho CI thay vì key cố định.\n- Rotation tự động định kỳ; ứng dụng phải chịu được việc secret đổi (reload, hỗ trợ hai key song song khi chuyển).\n- Quét secret trong repo và pipeline bằng gitleaks, GitHub secret scanning, chặn ngay ở pre-commit.\n\nKhi bị lộ: revoke hoặc rotate ngay lập tức là bước đầu tiên, xoá khỏi lịch sử Git là chưa đủ. Sau đó kiểm tra audit log xem secret đã bị dùng chưa, đánh giá phạm vi ảnh hưởng và làm postmortem.",
+      "en": "Secrets should live in one central, encrypted place with access control and auditing, be delivered to apps at runtime, and be rotatable without code changes.\n\n- Never keep secrets in Git, Docker images, CI variables printed in logs, or plain-text config files.\n- Use a secret manager: HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, Azure Key Vault. The app fetches secrets using its own identity (IAM role, Kubernetes service account), so it does not need another secret to get the secret.\n- Prefer short-lived or dynamic credentials: Vault creates a per-app DB user with a TTL, OIDC for CI instead of static keys.\n- Automate regular rotation; the app must tolerate changes (reload, accept two keys in parallel during the switch).\n- Scan repos and pipelines with gitleaks or GitHub secret scanning, blocking at pre-commit.\n\nWhen one leaks: revoking or rotating immediately is step one; removing it from Git history is not enough. Then check audit logs for use of the secret, assess the blast radius and write a postmortem."
+    },
+    "tip": {
+      "vi": "Nói rõ 'rotate trước, dọn lịch sử Git sau' cho thấy bạn có phản xạ bảo mật đúng.",
+      "en": "Stating 'rotate first, clean Git history later' shows the right security reflex."
+    },
+    "followUps": [
+      {
+        "vi": "Vấn đề 'secret zero' là gì và giải quyết ra sao?",
+        "en": "What is the 'secret zero' problem and how do you solve it?"
+      },
+      {
+        "vi": "Truyền secret qua biến môi trường có rủi ro gì?",
+        "en": "What are the risks of passing secrets through environment variables?"
+      }
+    ]
+  },
+  {
+    "id": "devops-security-supply-chain",
+    "level": "senior",
+    "topic": "Security",
+    "q": {
+      "vi": "Bạn bảo vệ software supply chain và container image thế nào, từ lúc build tới lúc chạy trên cluster?",
+      "en": "How do you secure the software supply chain and container images, from build to running in the cluster?"
+    },
+    "a": {
+      "vi": "Mục tiêu là chỉ chạy những image biết rõ nguồn gốc, đã quét và đã ký, đồng thời giảm bề mặt tấn công ở mọi bước.\n\nBuild:\n- Base image tối thiểu (distroless, slim), pin theo digest, cập nhật thường xuyên bằng Renovate/Dependabot.\n- Quét dependency và image bằng Trivy hoặc Grype trong CI; fail build với CVE critical/high có bản vá.\n- Tạo SBOM và provenance (theo SLSA), ký image bằng cosign (Sigstore), build trên runner tạm thời với quyền tối thiểu.\n\nRegistry và deploy:\n- Registry riêng, quét lại định kỳ vì CVE mới xuất hiện sau khi build.\n- Admission policy (Kyverno, OPA Gatekeeper, hoặc ValidatingAdmissionPolicy có sẵn) chỉ cho chạy image đã ký từ registry tin cậy, cấm privileged, bắt buộc non-root, read-only root filesystem; áp Pod Security Standards mức restricted.\n\nRuntime: NetworkPolicy, RBAC hẹp, phát hiện hành vi bất thường bằng Falco.\n\nThực tế khó nhất là nhiễu CVE: ưu tiên theo mức độ, có bản vá hay không và có thực sự bị khai thác được không, thay vì đòi về 0 CVE.",
+      "en": "The goal is to only run images with known provenance that are scanned and signed, while shrinking the attack surface at every step.\n\nBuild:\n- Minimal base images (distroless, slim), pinned by digest, kept updated with Renovate/Dependabot.\n- Scan dependencies and images with Trivy or Grype in CI; fail the build on critical/high CVEs that have a fix.\n- Generate an SBOM and provenance (following SLSA), sign images with cosign (Sigstore), build on ephemeral runners with minimal permissions.\n\nRegistry and deploy:\n- A private registry that rescans regularly, since new CVEs appear after the build.\n- Admission policies (Kyverno, OPA Gatekeeper, or the built-in ValidatingAdmissionPolicy) only allow signed images from trusted registries, forbid privileged Pods, require non-root and a read-only root filesystem; enforce the restricted Pod Security Standard.\n\nRuntime: NetworkPolicies, narrow RBAC, anomaly detection with Falco.\n\nIn practice the hardest part is CVE noise: prioritize by severity, fix availability and real exploitability instead of demanding zero CVEs."
+    },
+    "tip": {
+      "vi": "Trình bày theo luồng build, registry, admission, runtime và nói thật về cách xử lý nhiễu CVE là câu trả lời cấp senior.",
+      "en": "Walking through build, registry, admission, runtime and being honest about handling CVE noise is a senior-level answer."
+    },
+    "followUps": [
+      {
+        "vi": "SBOM giúp gì khi có lỗ hổng lớn như Log4Shell?",
+        "en": "How does an SBOM help during a major vulnerability like Log4Shell?"
+      },
+      {
+        "vi": "Làm sao bảo vệ chính CI runner khỏi bị chiếm quyền?",
+        "en": "How do you protect the CI runners themselves from compromise?"
+      }
+    ]
+  },
+  {
+    "id": "devops-dr-backup-rpo-rto",
+    "level": "senior",
+    "topic": "Backup & Disaster Recovery",
+    "q": {
+      "vi": "RPO và RTO là gì? Bạn thiết kế chiến lược backup và disaster recovery thế nào?",
+      "en": "What are RPO and RTO? How do you design a backup and disaster recovery strategy?"
+    },
+    "a": {
+      "vi": "RPO là lượng dữ liệu tối đa chấp nhận mất (tính theo thời gian), RTO là thời gian tối đa để khôi phục dịch vụ; hai con số này do business quyết định và quyết định luôn chi phí giải pháp.\n\nBackup:\n- Quy tắc 3-2-1: 3 bản, 2 loại lưu trữ, 1 bản ở nơi khác (region hoặc account khác).\n- Database: snapshot kèm point-in-time recovery (WAL/binlog) để RPO tính bằng phút.\n- Backup bất biến (object lock, vault lock) và nằm ở account tách biệt để chống ransomware hoặc lỡ tay xoá.\n- Backup cả cấu hình: IaC, manifest Kubernetes (Velero), secret.\n\nChiến lược DR, từ rẻ tới đắt:\n- Backup và restore: RTO tính bằng giờ.\n- Pilot light: dữ liệu được replicate, hạ tầng tối thiểu sẵn sàng.\n- Warm standby: bản thu nhỏ đang chạy, scale lên khi cần.\n- Active-active nhiều region: RTO gần 0 nhưng phức tạp nhất (đồng bộ dữ liệu, conflict).\n\nĐiều quan trọng nhất: backup chưa từng restore thử thì coi như không có. Phải diễn tập restore và DR định kỳ, có runbook, đo RTO thực tế.",
+      "en": "RPO is the maximum acceptable data loss (measured in time), RTO is the maximum time to restore service; the business sets both numbers, and they also determine what the solution costs.\n\nBackups:\n- The 3-2-1 rule: 3 copies, 2 storage types, 1 copy elsewhere (another region or account).\n- Databases: snapshots plus point-in-time recovery (WAL/binlog) so RPO is measured in minutes.\n- Immutable backups (object lock, vault lock) in a separate account to defend against ransomware or accidental deletion.\n- Back up configuration too: IaC, Kubernetes manifests (Velero), secrets.\n\nDR strategies, cheapest to most expensive:\n- Backup and restore: RTO in hours.\n- Pilot light: data replicated, minimal infrastructure ready.\n- Warm standby: a scaled-down copy running, scaled up when needed.\n- Multi-region active-active: RTO near zero but the most complex (data sync, conflicts).\n\nThe most important point: a backup you have never test-restored does not count. Run restore and DR drills regularly, keep runbooks, and measure the real RTO."
+    },
+    "tip": {
+      "vi": "Bắt đầu bằng việc hỏi lại RPO/RTO mà business cần trước khi chọn giải pháp, và nhấn mạnh diễn tập restore.",
+      "en": "Start by asking what RPO/RTO the business needs before choosing a solution, and stress restore drills."
+    },
+    "followUps": [
+      {
+        "vi": "Replication có thay thế được backup không?",
+        "en": "Can replication replace backups?"
+      },
+      {
+        "vi": "Bạn tổ chức một buổi diễn tập DR như thế nào?",
+        "en": "How would you run a DR drill?"
+      }
+    ]
+  }
+]

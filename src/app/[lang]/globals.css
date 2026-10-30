@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0b0f17;
+  --color-panel: #121826;
+  --color-panel2: #182033;
+  --color-line: #232c40;
+  --color-muted: #8a93a8;
+  --color-brand: #7c5cff;
+  --color-brand2: #22d3ee;
+  --font-sans: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  --font-mono: Consolas, "SF Mono", Menlo, monospace;
+}
+
+body {
+  background: var(--color-bg);
+  color: #e6e9f2;
+}
+
+@utility page {
+  @apply mx-auto flex w-full max-w-7xl flex-col gap-5 px-7 py-6;
+}
+@utility card {
+  @apply rounded-2xl border border-line bg-panel p-5;
+}
+@utility btn {
+  @apply inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:brightness-110 disabled:cursor-default disabled:opacity-50;
+}
+@utility btn-ghost {
+  @apply inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-line px-4 py-2 text-sm font-semibold hover:bg-panel2 disabled:cursor-default disabled:opacity-50;
+}
+@utility tag {
+  @apply inline-block whitespace-nowrap rounded-full border border-line bg-panel2 px-2.5 py-0.5 text-xs text-muted;
+}
+@utility field {
+  @apply rounded-lg border border-line bg-panel px-3 py-2 text-sm outline-none focus:border-brand;
+}

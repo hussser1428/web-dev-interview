@@ -1,0 +1,592 @@
+[
+  {
+    "id": "data-sql-joins",
+    "level": "intern",
+    "topic": "SQL",
+    "q": {
+      "vi": "Phân biệt INNER JOIN, LEFT JOIN, RIGHT JOIN và FULL OUTER JOIN. Có những bẫy nào khi join?",
+      "en": "Explain INNER, LEFT, RIGHT and FULL OUTER JOIN. What are the common join pitfalls?"
+    },
+    "a": {
+      "vi": "JOIN ghép dòng của hai bảng theo điều kiện; các loại khác nhau ở chỗ giữ lại dòng không khớp hay không.\n- INNER JOIN: chỉ giữ cặp dòng khớp ở cả hai bên.\n- LEFT JOIN: giữ mọi dòng bảng trái, phía phải không khớp thì là NULL. RIGHT JOIN ngược lại, thực tế ít dùng vì có thể đảo thứ tự bảng.\n- FULL OUTER JOIN: giữ tất cả dòng của cả hai bên, hay dùng để đối soát hai nguồn dữ liệu.\n- CROSS JOIN: tích Descartes, mọi tổ hợp.\n\nBẫy hay gặp:\n- LEFT JOIN rồi lọc cột bảng phải trong WHERE sẽ loại dòng NULL, biến thành INNER JOIN. Điều kiện của bảng phải nên đặt trong ON.\n- Join trên key không unique làm nhân bản dòng (fan-out), SUM bị đội lên. Kiểm tra số dòng trước và sau join.\n- NULL không bằng NULL, nên dòng có key NULL không bao giờ khớp.\n- Anti-join (tìm khách chưa từng mua): LEFT JOIN ... WHERE right.id IS NULL hoặc NOT EXISTS; cẩn thận NOT IN khi subquery có NULL sẽ trả về rỗng.",
+      "en": "A JOIN combines rows from two tables on a condition; the types differ in whether unmatched rows are kept.\n- INNER JOIN: keeps only row pairs that match on both sides.\n- LEFT JOIN: keeps every row from the left table, with NULLs where the right side has no match. RIGHT JOIN is the mirror image and is rarely used since you can swap the tables.\n- FULL OUTER JOIN: keeps all rows from both sides, often used to reconcile two data sources.\n- CROSS JOIN: the Cartesian product, every combination.\n\nCommon pitfalls:\n- A LEFT JOIN followed by filtering a right-table column in WHERE drops the NULL rows and turns it into an INNER JOIN. Put right-table conditions in ON.\n- Joining on a non-unique key duplicates rows (fan-out) and inflates SUMs. Check row counts before and after the join.\n- NULL does not equal NULL, so rows with a NULL key never match.\n- Anti-join (customers who never ordered): LEFT JOIN ... WHERE right.id IS NULL or NOT EXISTS; beware NOT IN, which returns nothing if the subquery contains a NULL."
+    },
+    "code": "-- customers with no orders in 2025\nSELECT c.id, c.name\nFROM customers c\nLEFT JOIN orders o\n  ON o.customer_id = c.id\n AND o.order_date >= DATE '2025-01-01'   -- filter in ON, not WHERE\nWHERE o.id IS NULL;",
+    "tip": {
+      "vi": "Chủ động nhắc bẫy LEFT JOIN + WHERE và fan-out; đây là hai lỗi phổ biến nhất trong báo cáo sai số liệu.",
+      "en": "Proactively mention the LEFT JOIN + WHERE trap and fan-out; they are the two most common causes of wrong report numbers."
+    },
+    "followUps": [
+      { "vi": "Self join dùng khi nào? Cho ví dụ.", "en": "When would you use a self join? Give an example." },
+      { "vi": "EXISTS và IN khác nhau thế nào về kết quả và hiệu năng?", "en": "How do EXISTS and IN differ in results and performance?" }
+    ]
+  },
+  {
+    "id": "data-sql-group-by-having",
+    "level": "intern",
+    "topic": "SQL",
+    "q": {
+      "vi": "WHERE và HAVING khác nhau thế nào? Thứ tự thực thi logic của một câu SELECT là gì?",
+      "en": "How do WHERE and HAVING differ? What is the logical execution order of a SELECT statement?"
+    },
+    "a": {
+      "vi": "WHERE lọc từng dòng trước khi gom nhóm, còn HAVING lọc các nhóm sau khi đã GROUP BY và tính hàm tổng hợp.\n\nThứ tự logic (không phải thứ tự viết):\n- FROM và JOIN → WHERE → GROUP BY → HAVING → SELECT (kể cả window function) → DISTINCT → ORDER BY → LIMIT.\n\nHệ quả thực tế:\n- Không dùng được SUM() hay COUNT() trong WHERE, vì lúc đó chưa có nhóm.\n- Ở nhiều database, alias đặt trong SELECT không dùng được trong WHERE, vì SELECT chạy sau; nhưng dùng được trong ORDER BY.\n- Điều kiện không liên quan tới hàm tổng hợp nên đặt ở WHERE để lọc sớm, giảm dữ liệu phải gom nhóm.\n- Mọi cột trong SELECT phải nằm trong GROUP BY hoặc nằm trong hàm tổng hợp.\n\nLưu ý thêm: COUNT(*) đếm mọi dòng, COUNT(col) bỏ qua NULL, COUNT(DISTINCT col) đếm giá trị khác nhau.",
+      "en": "WHERE filters individual rows before grouping, while HAVING filters groups after GROUP BY and aggregation.\n\nLogical order (not the written order):\n- FROM and JOIN → WHERE → GROUP BY → HAVING → SELECT (including window functions) → DISTINCT → ORDER BY → LIMIT.\n\nPractical consequences:\n- You cannot use SUM() or COUNT() in WHERE, because groups do not exist yet.\n- In many databases, an alias defined in SELECT cannot be used in WHERE, because SELECT runs later; it can be used in ORDER BY.\n- Conditions not involving aggregates belong in WHERE to filter early and reduce the data to group.\n- Every column in SELECT must be in GROUP BY or inside an aggregate function.\n\nAlso: COUNT(*) counts all rows, COUNT(col) skips NULLs, COUNT(DISTINCT col) counts distinct values."
+    },
+    "code": "-- customers with more than 5 paid orders in 2025\nSELECT customer_id, COUNT(*) AS orders, SUM(amount) AS revenue\nFROM orders\nWHERE status = 'paid' AND order_date >= DATE '2025-01-01'\nGROUP BY customer_id\nHAVING COUNT(*) > 5\nORDER BY revenue DESC;",
+    "tip": {
+      "vi": "Đọc thuộc thứ tự thực thi logic và dùng nó để giải thích vì sao alias không dùng được trong WHERE.",
+      "en": "Know the logical execution order by heart and use it to explain why aliases do not work in WHERE."
+    },
+    "followUps": [
+      { "vi": "COUNT(*) và COUNT(column) khác nhau khi nào?", "en": "When do COUNT(*) and COUNT(column) give different results?" },
+      { "vi": "Tính tỉ lệ đơn bị huỷ của mỗi khách hàng bằng một query thế nào?", "en": "How would you compute each customer's cancellation rate in one query?" }
+    ]
+  },
+  {
+    "id": "data-sql-duplicates",
+    "level": "junior",
+    "topic": "SQL",
+    "q": {
+      "vi": "Làm sao tìm và xoá dòng trùng lặp trong một bảng, chỉ giữ lại bản mới nhất?",
+      "en": "How do you find and delete duplicate rows in a table, keeping only the latest one?"
+    },
+    "a": {
+      "vi": "Trước hết phải định nghĩa 'trùng' theo business key (ví dụ cùng email), sau đó dùng ROW_NUMBER để đánh số trong mỗi nhóm và giữ dòng số 1.\n\nTìm trùng: GROUP BY business key với HAVING COUNT(*) > 1 để xem quy mô vấn đề.\n\nXoá trùng: ROW_NUMBER() OVER (PARTITION BY email ORDER BY updated_at DESC), dòng có rn > 1 là bản thừa. Cần một tiêu chí ORDER BY tất định; nếu updated_at bằng nhau thì thêm id để kết quả không ngẫu nhiên.\n\nTrong data warehouse, thay vì DELETE thường tạo lại bảng sạch (CREATE TABLE AS SELECT ... WHERE rn = 1) hoặc dùng QUALIFY ở Snowflake, BigQuery, Databricks cho gọn.\n\nQuan trọng hơn là xử lý gốc rễ: vì sao có trùng (retry ở ingestion, join fan-out, thiếu unique constraint)? Thêm constraint, dùng MERGE/upsert idempotent, và viết test unique cho key trong pipeline để không tái diễn.",
+      "en": "First define 'duplicate' by a business key (e.g. same email), then use ROW_NUMBER to number rows within each group and keep row 1.\n\nFinding duplicates: GROUP BY the business key with HAVING COUNT(*) > 1 to see the scale of the problem.\n\nDeleting duplicates: ROW_NUMBER() OVER (PARTITION BY email ORDER BY updated_at DESC); rows with rn > 1 are the extras. You need a deterministic ORDER BY; if updated_at ties, add id so the result is not random.\n\nIn a data warehouse, instead of DELETE you usually rebuild a clean table (CREATE TABLE AS SELECT ... WHERE rn = 1) or use QUALIFY in Snowflake, BigQuery or Databricks for brevity.\n\nMore important is fixing the root cause: why are there duplicates (ingestion retries, join fan-out, missing unique constraint)? Add a constraint, use idempotent MERGE/upsert, and add a uniqueness test on the key in the pipeline so it does not recur."
+    },
+    "code": "WITH ranked AS (\n  SELECT id,\n         ROW_NUMBER() OVER (PARTITION BY email ORDER BY updated_at DESC, id DESC) AS rn\n  FROM users\n)\nDELETE FROM users\nWHERE id IN (SELECT id FROM ranked WHERE rn > 1);",
+    "tip": {
+      "vi": "Hỏi lại 'trùng theo cột nào, giữ bản nào' trước khi viết query, và kết thúc bằng cách phòng ngừa từ gốc.",
+      "en": "Ask 'duplicate by which columns, keep which row' before writing the query, and finish with root-cause prevention."
+    },
+    "followUps": [
+      { "vi": "Nếu bảng có 2 tỉ dòng, bạn xoá trùng thế nào để không khoá bảng quá lâu?", "en": "With 2 billion rows, how would you dedupe without locking the table for too long?" },
+      { "vi": "QUALIFY là gì?", "en": "What is QUALIFY?" }
+    ]
+  },
+  {
+    "id": "data-sql-cte",
+    "level": "junior",
+    "topic": "SQL",
+    "q": {
+      "vi": "CTE (WITH) là gì? So sánh với subquery và temp table. Recursive CTE dùng khi nào?",
+      "en": "What is a CTE (WITH clause)? Compare it with subqueries and temp tables. When do you use a recursive CTE?"
+    },
+    "a": {
+      "vi": "CTE là một subquery được đặt tên ở đầu câu lệnh, chỉ tồn tại trong phạm vi câu query đó; mục đích chính là làm query dễ đọc theo từng bước.\n- So với subquery lồng nhau: logic tương đương nhưng CTE đọc từ trên xuống như pipeline, đặt tên rõ ràng, và tham chiếu lại được nhiều lần trong cùng query.\n- Hiệu năng: tuỳ engine. PostgreSQL từ bản 12 mặc định inline CTE không đệ quy như subquery (có thể ép bằng MATERIALIZED); một số warehouse có thể tính lại CTE mỗi lần được tham chiếu. Đừng mặc định CTE nhanh hơn.\n- Temp table: lưu kết quả thật, dùng lại qua nhiều câu lệnh trong session, có thể thêm index hoặc thống kê; hợp khi kết quả trung gian lớn và dùng nhiều lần.\n\nRecursive CTE gồm phần anchor và phần đệ quy nối bằng UNION ALL, dùng cho dữ liệu dạng cây hoặc đồ thị: sơ đồ tổ chức, danh mục cha con, chuỗi giới thiệu, hoặc sinh dãy ngày. Luôn có điều kiện dừng để tránh lặp vô hạn khi dữ liệu có vòng.",
+      "en": "A CTE is a named subquery at the top of a statement that exists only for that query; its main purpose is making the query readable step by step.\n- Versus nested subqueries: logically equivalent, but a CTE reads top-down like a pipeline, has clear names, and can be referenced multiple times in the same query.\n- Performance: engine-dependent. Since version 12, PostgreSQL inlines non-recursive CTEs like subqueries by default (you can force MATERIALIZED); some warehouses may recompute a CTE each time it is referenced. Do not assume CTEs are faster.\n- Temp table: physically stores results, reusable across statements in a session, can have indexes or statistics; good when an intermediate result is large and reused.\n\nA recursive CTE has an anchor part and a recursive part joined with UNION ALL, used for tree or graph data: org charts, parent-child categories, referral chains, or generating date series. Always include a stop condition to avoid infinite loops when data has cycles."
+    },
+    "code": "-- all reports under manager 42\nWITH RECURSIVE team AS (\n  SELECT id, name, manager_id, 1 AS depth FROM employees WHERE manager_id = 42\n  UNION ALL\n  SELECT e.id, e.name, e.manager_id, t.depth + 1\n  FROM employees e JOIN team t ON e.manager_id = t.id\n  WHERE t.depth < 10\n)\nSELECT * FROM team;",
+    "tip": {
+      "vi": "Nói rõ 'CTE là để dễ đọc, hiệu năng tuỳ engine' sẽ thuyết phục hơn khẳng định CTE luôn nhanh hay luôn chậm.",
+      "en": "Saying 'CTEs are for readability, performance depends on the engine' beats claiming they are always faster or slower."
+    },
+    "followUps": [
+      { "vi": "Dùng recursive CTE để sinh mọi ngày trong tháng thế nào?", "en": "How would you generate every date in a month with a recursive CTE?" },
+      { "vi": "View và materialized view khác nhau thế nào?", "en": "How do views and materialized views differ?" }
+    ],
+    "source": "https://www.postgresql.org/docs/current/queries-with.html"
+  },
+  {
+    "id": "data-sql-window",
+    "level": "mid",
+    "topic": "SQL",
+    "q": {
+      "vi": "Window function trong SQL là gì? Viết query lấy 3 đơn hàng giá trị cao nhất của mỗi khách hàng.",
+      "en": "What is a SQL window function? Write a query for each customer's top 3 orders by value."
+    },
+    "a": {
+      "vi": "Window function tính toán trên một \"cửa sổ\" các dòng liên quan (PARTITION BY) nhưng không gộp dòng như GROUP BY: mỗi dòng vẫn giữ nguyên và có thêm cột kết quả.\n\nCấu trúc: hàm OVER (PARTITION BY ... ORDER BY ... frame). Hay dùng:\n- Xếp hạng: ROW_NUMBER, RANK, DENSE_RANK.\n- So với dòng trước/sau: LAG, LEAD (tăng trưởng so với tháng trước).\n- Tổng hợp luỹ kế hoặc trượt: SUM() OVER (ORDER BY day), AVG trên 7 ngày với ROWS BETWEEN 6 PRECEDING AND CURRENT ROW.\n\nLưu ý:\n- ROW_NUMBER không bao giờ trùng hạng; muốn giữ các đơn bằng giá trị thì dùng RANK (nhảy hạng: 1, 1, 3) hoặc DENSE_RANK (1, 1, 2).\n- Không lọc trực tiếp window function trong WHERE vì nó tính sau WHERE; phải bọc subquery/CTE hoặc dùng QUALIFY nếu engine hỗ trợ.\n- Khi có ORDER BY mà không ghi frame, frame mặc định là RANGE từ đầu tới dòng hiện tại, dễ cho kết quả bất ngờ khi có giá trị trùng; ghi rõ ROWS khi cần.",
+      "en": "A window function computes over a \"window\" of related rows (PARTITION BY) without collapsing them like GROUP BY: every row stays, with an extra result column.\n\nShape: function OVER (PARTITION BY ... ORDER BY ... frame). Common ones:\n- Ranking: ROW_NUMBER, RANK, DENSE_RANK.\n- Comparing with previous/next rows: LAG, LEAD (month-over-month growth).\n- Running or moving aggregates: SUM() OVER (ORDER BY day), a 7-day AVG with ROWS BETWEEN 6 PRECEDING AND CURRENT ROW.\n\nNotes:\n- ROW_NUMBER never ties; to keep orders with equal values use RANK (skips: 1, 1, 3) or DENSE_RANK (1, 1, 2).\n- You cannot filter a window function directly in WHERE because it is computed after WHERE; wrap it in a subquery/CTE or use QUALIFY where supported.\n- With ORDER BY and no explicit frame, the default frame is RANGE from the start to the current row, which can surprise you with tied values; specify ROWS when needed."
+    },
+    "code": "SELECT *\nFROM (\n  SELECT o.*,\n         ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY amount DESC) AS rn\n  FROM orders o\n) t\nWHERE rn <= 3;",
+    "tip": {
+      "vi": "Tự hỏi lại người phỏng vấn 'nếu hai đơn bằng giá trị thì sao?' rồi chọn ROW_NUMBER hay RANK cho phù hợp.",
+      "en": "Ask the interviewer 'what if two orders tie?' and then choose ROW_NUMBER or RANK accordingly."
+    },
+    "followUps": [
+      { "vi": "Tính doanh thu luỹ kế theo ngày và trung bình trượt 7 ngày thế nào?", "en": "How do you compute cumulative daily revenue and a 7-day moving average?" },
+      { "vi": "Tìm người dùng đăng nhập 3 ngày liên tiếp bằng window function thế nào?", "en": "How would you find users who logged in 3 consecutive days using window functions?" }
+    ],
+    "source": "https://www.postgresql.org/docs/current/tutorial-window.html"
+  },
+  {
+    "id": "data-sql-optimization",
+    "level": "mid",
+    "topic": "SQL",
+    "q": {
+      "vi": "Một query chạy rất chậm. Bạn phân tích và tối ưu nó thế nào?",
+      "en": "A query is very slow. How do you analyze and optimize it?"
+    },
+    "a": {
+      "vi": "Tôi bắt đầu bằng execution plan để biết thời gian thực sự tiêu tốn ở đâu, rồi mới sửa đúng chỗ đó.\n\nPhân tích:\n- EXPLAIN ANALYZE (PostgreSQL, MySQL) hoặc query profile trong Snowflake, BigQuery, Databricks: tìm full scan, join tốn kém, ước lượng số dòng sai lệch, spill ra đĩa, lượng dữ liệu bị quét.\n\nCách tối ưu phổ biến:\n- OLTP: thêm index cho cột lọc và join, composite index theo đúng thứ tự cột; viết điều kiện sargable (tránh bọc hàm quanh cột có index như DATE(created_at) = ..., dùng khoảng thời gian thay thế).\n- Warehouse dạng cột: chỉ SELECT cột cần, lọc theo cột partition/cluster để được pruning.\n- Lọc và gom nhóm sớm trước khi join để giảm số dòng; tránh dùng DISTINCT để che lỗi fan-out.\n- Thay subquery tương quan bằng join hoặc window function.\n- Cập nhật statistics để optimizer chọn plan đúng; xử lý data skew ở key join.\n- Với dashboard chạy lặp lại: materialized view hoặc bảng tổng hợp sẵn.\n\nĐo lại sau mỗi thay đổi; index cũng có giá (ghi chậm hơn, tốn dung lượng).",
+      "en": "I start with the execution plan to see where time is actually spent, and only then fix that specific spot.\n\nAnalysis:\n- EXPLAIN ANALYZE (PostgreSQL, MySQL) or the query profile in Snowflake, BigQuery, Databricks: look for full scans, expensive joins, badly wrong row estimates, spills to disk, and bytes scanned.\n\nCommon optimizations:\n- OLTP: index filter and join columns, composite indexes in the right column order; write sargable predicates (avoid wrapping indexed columns in functions like DATE(created_at) = ..., use a time range instead).\n- Columnar warehouses: SELECT only needed columns, filter on partition/cluster columns to get pruning.\n- Filter and aggregate early before joining to cut row counts; do not use DISTINCT to hide fan-out bugs.\n- Replace correlated subqueries with joins or window functions.\n- Refresh statistics so the optimizer picks the right plan; handle data skew on join keys.\n- For dashboards that run repeatedly: materialized views or pre-aggregated tables.\n\nMeasure again after each change; indexes have a cost too (slower writes, more storage)."
+    },
+    "code": "-- not sargable: index on created_at can't be used\nWHERE DATE(created_at) = '2025-06-01'\n-- sargable\nWHERE created_at >= '2025-06-01' AND created_at < '2025-06-02'",
+    "tip": {
+      "vi": "Câu đầu tiên nên là 'tôi xem execution plan', không phải 'tôi thêm index'; đó là khác biệt giữa đo và đoán.",
+      "en": "Your first sentence should be 'I look at the execution plan', not 'I add an index'; that is the difference between measuring and guessing."
+    },
+    "followUps": [
+      { "vi": "Composite index (a, b) có dùng được cho điều kiện chỉ trên b không?", "en": "Can a composite index on (a, b) be used for a filter on b alone?" },
+      { "vi": "Trên BigQuery, bạn giảm chi phí query thế nào?", "en": "How do you reduce query cost on BigQuery?" }
+    ],
+    "source": "https://www.postgresql.org/docs/current/using-explain.html"
+  },
+  {
+    "id": "data-pandas-basics",
+    "level": "junior",
+    "topic": "Python & pandas",
+    "q": {
+      "vi": "Làm việc với pandas thế nào cho hiệu quả? Vì sao nên tránh apply và vòng lặp từng dòng?",
+      "en": "How do you work efficiently with pandas? Why avoid apply and row-by-row loops?"
+    },
+    "a": {
+      "vi": "pandas nhanh khi bạn dùng thao tác vectorized chạy trên cả cột bằng code C/NumPy; iterrows hay apply theo dòng chạy bằng Python từng dòng một, có thể chậm hơn hàng chục đến hàng trăm lần.\n\nThói quen tốt:\n- Vectorize: df['total'] = df['price'] * df['qty']; điều kiện dùng np.where hoặc .loc với mask thay vì if trong vòng lặp.\n- groupby().agg() với named aggregation cho báo cáo; merge thay cho lookup thủ công, thêm validate='many_to_one' để bắt fan-out.\n- Kiểu dữ liệu đúng: category cho cột ít giá trị, parse ngày khi đọc, cân nhắc dtype backend pyarrow (pandas 2.x) để tiết kiệm bộ nhớ.\n- Dùng .loc rõ ràng khi gán để tránh SettingWithCopyWarning; Copy-on-Write là hành vi mặc định từ pandas 3.0.\n- Kiểm tra dữ liệu: df.info(), isna().sum(), duplicated().\n\nGiới hạn: pandas chạy trong RAM trên một máy. Dữ liệu lớn hơn bộ nhớ thì đọc theo chunk, chỉ đọc cột cần từ Parquet, hoặc chuyển sang Polars, DuckDB, hay Spark.",
+      "en": "pandas is fast when you use vectorized operations that run over whole columns in C/NumPy; iterrows or row-wise apply run Python per row and can be tens to hundreds of times slower.\n\nGood habits:\n- Vectorize: df['total'] = df['price'] * df['qty']; for conditions use np.where or .loc with a mask instead of an if inside a loop.\n- groupby().agg() with named aggregation for reports; merge instead of manual lookups, adding validate='many_to_one' to catch fan-out.\n- Correct dtypes: category for low-cardinality columns, parse dates on read, consider the pyarrow dtype backend (pandas 2.x) to save memory.\n- Use explicit .loc when assigning to avoid SettingWithCopyWarning; Copy-on-Write is the default behavior from pandas 3.0.\n- Inspect data: df.info(), isna().sum(), duplicated().\n\nLimits: pandas runs in RAM on one machine. For data larger than memory, read in chunks, read only needed columns from Parquet, or move to Polars, DuckDB or Spark."
+    },
+    "code": "import pandas as pd\n\ndf = pd.read_parquet('orders.parquet', columns=['customer_id', 'amount', 'status'])\nreport = (\n    df[df['status'] == 'paid']\n      .groupby('customer_id')\n      .agg(orders=('amount', 'size'), revenue=('amount', 'sum'))\n      .sort_values('revenue', ascending=False)\n)",
+    "tip": {
+      "vi": "Nêu ngưỡng khi nào bạn bỏ pandas để dùng DuckDB/Polars/Spark cho thấy bạn biết chọn công cụ theo quy mô.",
+      "en": "Stating when you would leave pandas for DuckDB/Polars/Spark shows you pick tools by scale."
+    },
+    "followUps": [
+      { "vi": "merge, join và concat khác nhau thế nào?", "en": "How do merge, join and concat differ?" },
+      { "vi": "Xử lý giá trị thiếu (NaN) thế nào cho đúng với từng loại cột?", "en": "How do you handle missing values (NaN) correctly for different column types?" }
+    ],
+    "source": "https://pandas.pydata.org/docs/user_guide/groupby.html"
+  },
+  {
+    "id": "data-oltp-vs-olap",
+    "level": "intern",
+    "topic": "Data Modeling",
+    "q": {
+      "vi": "OLTP và OLAP khác nhau thế nào? Vì sao không nên chạy báo cáo nặng trực tiếp trên database production?",
+      "en": "How do OLTP and OLAP differ? Why shouldn't you run heavy reports directly on the production database?"
+    },
+    "a": {
+      "vi": "OLTP phục vụ giao dịch hằng ngày của ứng dụng (nhiều thao tác nhỏ, đọc ghi vài dòng), còn OLAP phục vụ phân tích (ít truy vấn nhưng quét và tổng hợp hàng triệu, hàng tỉ dòng).\n- OLTP: PostgreSQL, MySQL. Lưu theo dòng (row-oriented), schema chuẩn hoá để tránh dư thừa, ưu tiên độ trễ thấp và tính nhất quán (ACID).\n- OLAP: BigQuery, Snowflake, Redshift, ClickHouse. Lưu theo cột (columnar), nén tốt, chỉ đọc cột cần; schema thường phi chuẩn hoá (star schema) để query đơn giản và nhanh.\n\nKhông nên chạy báo cáo nặng trên DB production vì:\n- Query quét lớn chiếm CPU, I/O, lock, làm chậm người dùng thật.\n- Database dạng dòng vốn không tối ưu cho tổng hợp.\n- Dữ liệu cần kết hợp từ nhiều nguồn và lưu lịch sử.\n\nGiải pháp: read replica cho nhu cầu nhỏ; còn lại đưa dữ liệu sang warehouse bằng ETL/ELT hoặc CDC (Change Data Capture, ví dụ Debezium).",
+      "en": "OLTP serves the application's day-to-day transactions (many small operations reading or writing a few rows), while OLAP serves analytics (fewer queries that scan and aggregate millions or billions of rows).\n- OLTP: PostgreSQL, MySQL. Row-oriented storage, normalized schemas to avoid redundancy, prioritizing low latency and consistency (ACID).\n- OLAP: BigQuery, Snowflake, Redshift, ClickHouse. Columnar storage, good compression, reads only the needed columns; schemas are usually denormalized (star schema) for simple, fast queries.\n\nDon't run heavy reports on the production DB because:\n- Large scans consume CPU, I/O and locks, slowing down real users.\n- Row-oriented databases are not optimized for aggregation.\n- Analytics needs data combined from many sources and kept with history.\n\nSolution: a read replica for small needs; otherwise move data to a warehouse via ETL/ELT or CDC (Change Data Capture, e.g. Debezium)."
+    },
+    "tip": {
+      "vi": "Gắn khác biệt với cách lưu trữ (dòng và cột) thay vì chỉ liệt kê tên sản phẩm.",
+      "en": "Tie the difference to the storage layout (row vs column) rather than just listing product names."
+    },
+    "followUps": [
+      { "vi": "Vì sao lưu theo cột lại nén tốt hơn?", "en": "Why does columnar storage compress better?" },
+      { "vi": "CDC hoạt động thế nào?", "en": "How does CDC work?" }
+    ]
+  },
+  {
+    "id": "data-star-schema",
+    "level": "junior",
+    "topic": "Data Modeling",
+    "q": {
+      "vi": "Fact table và dimension table là gì? Star schema khác snowflake schema thế nào?",
+      "en": "What are fact and dimension tables? How does a star schema differ from a snowflake schema?"
+    },
+    "a": {
+      "vi": "Trong dimensional modeling, fact table lưu các sự kiện đo lường được, còn dimension table lưu ngữ cảnh mô tả để lọc và nhóm các sự kiện đó.\n- Fact: mỗi dòng là một sự kiện ở một grain xác định (ví dụ một dòng sản phẩm trong một đơn hàng), chứa measure (số lượng, doanh thu) và foreign key tới dimension. Thường rất dài.\n- Dimension: khách hàng, sản phẩm, ngày, cửa hàng, với nhiều thuộc tính mô tả. Thường dùng surrogate key thay vì ID của hệ thống nguồn.\n\nStar schema: fact ở giữa, mỗi dimension là một bảng phi chuẩn hoá nối trực tiếp với fact. Join ít, query dễ viết, BI tool thích.\nSnowflake schema: dimension được chuẩn hoá thành nhiều bảng (sản phẩm → danh mục → ngành hàng). Bớt dư thừa nhưng thêm join và phức tạp hơn.\n\nTrên warehouse dạng cột hiện nay lưu trữ rẻ, nên star schema là lựa chọn mặc định. Bước quan trọng nhất là chốt grain của fact trước; trộn nhiều grain trong một bảng là lỗi kinh điển gây đếm sai.",
+      "en": "In dimensional modeling, fact tables store measurable events, while dimension tables store the descriptive context used to filter and group those events.\n- Fact: each row is an event at a defined grain (e.g. one product line in one order), holding measures (quantity, revenue) and foreign keys to dimensions. Usually very long.\n- Dimension: customer, product, date, store, with many descriptive attributes. Usually keyed by a surrogate key rather than the source system ID.\n\nStar schema: the fact in the middle, each dimension a denormalized table joined directly to the fact. Few joins, easy queries, BI tools love it.\nSnowflake schema: dimensions are normalized into several tables (product → category → department). Less redundancy but more joins and complexity.\n\nOn modern columnar warehouses storage is cheap, so the star schema is the default choice. The most important step is fixing the fact's grain first; mixing grains in one table is a classic mistake that causes wrong counts."
+    },
+    "tip": {
+      "vi": "Nhắc 'chốt grain trước' là dấu hiệu bạn đã thật sự mô hình hoá dữ liệu, không chỉ học định nghĩa.",
+      "en": "Saying 'declare the grain first' signals you have actually modeled data, not just memorized definitions."
+    },
+    "followUps": [
+      { "vi": "Conformed dimension là gì, vì sao quan trọng?", "en": "What is a conformed dimension and why does it matter?" },
+      { "vi": "Khi nào dùng bảng 'one big table' thay vì star schema?", "en": "When would you use 'one big table' instead of a star schema?" }
+    ]
+  },
+  {
+    "id": "data-scd",
+    "level": "mid",
+    "topic": "Data Modeling",
+    "q": {
+      "vi": "Slowly Changing Dimension (SCD) là gì? So sánh Type 1, Type 2 và Type 3, và cách triển khai Type 2.",
+      "en": "What is a Slowly Changing Dimension (SCD)? Compare Types 1, 2 and 3, and how you implement Type 2."
+    },
+    "a": {
+      "vi": "SCD là cách xử lý khi thuộc tính của dimension thay đổi theo thời gian (khách chuyển thành phố, sản phẩm đổi danh mục) mà vẫn cho báo cáo đúng với lịch sử.\n- Type 1: ghi đè giá trị cũ. Đơn giản, nhưng mất lịch sử; báo cáo quá khứ sẽ hiện giá trị mới. Hợp cho sửa lỗi chính tả.\n- Type 2: thêm dòng mới cho mỗi phiên bản, có valid_from, valid_to, is_current và surrogate key riêng. Giữ trọn lịch sử, phổ biến nhất.\n- Type 3: thêm cột previous_value, chỉ giữ một bước lịch sử.\n\nTriển khai Type 2: so sánh bản ghi nguồn với bản hiện tại (theo hash các cột theo dõi), nếu khác thì đóng dòng cũ (valid_to = thời điểm đổi, is_current = false) và chèn dòng mới. Dùng MERGE trong warehouse hoặc dbt snapshots.\n\nFact phải trỏ tới surrogate key của phiên bản đúng tại thời điểm sự kiện; join theo natural key cộng điều kiện ngày khi cần. Cẩn thận: dimension Type 2 phình to nếu theo dõi cột thay đổi liên tục.",
+      "en": "SCD is how you handle dimension attributes changing over time (a customer moves city, a product changes category) while keeping reports historically correct.\n- Type 1: overwrite the old value. Simple, but history is lost; past reports show the new value. Good for typo fixes.\n- Type 2: add a new row per version with valid_from, valid_to, is_current and its own surrogate key. Full history, the most common.\n- Type 3: add a previous_value column, keeping only one step of history.\n\nImplementing Type 2: compare source records with the current version (via a hash of tracked columns); if different, close the old row (valid_to = change time, is_current = false) and insert a new row. Use MERGE in the warehouse or dbt snapshots.\n\nFacts must point to the surrogate key of the version valid at event time; join by natural key plus a date condition when needed. Be careful: a Type 2 dimension balloons if you track columns that change constantly."
+    },
+    "code": "-- point-in-time join to an SCD2 dimension\nSELECT f.order_id, d.city\nFROM fact_orders f\nJOIN dim_customer d\n  ON d.customer_id = f.customer_id\n AND f.order_ts >= d.valid_from\n AND f.order_ts <  COALESCE(d.valid_to, TIMESTAMP '9999-12-31');",
+    "tip": {
+      "vi": "Cho ví dụ cụ thể: doanh thu theo thành phố năm ngoái sẽ sai nếu dùng Type 1 khi khách đã chuyển nhà.",
+      "en": "Give a concrete example: last year's revenue by city is wrong with Type 1 once customers have moved."
+    },
+    "followUps": [
+      { "vi": "Xử lý dữ liệu đến muộn (late-arriving dimension) thế nào?", "en": "How do you handle late-arriving dimension records?" },
+      { "vi": "dbt snapshot hoạt động thế nào?", "en": "How do dbt snapshots work?" }
+    ]
+  },
+  {
+    "id": "data-warehouse-lake-lakehouse",
+    "level": "junior",
+    "topic": "Data Architecture",
+    "q": {
+      "vi": "Data warehouse, data lake và lakehouse khác nhau thế nào?",
+      "en": "How do a data warehouse, a data lake and a lakehouse differ?"
+    },
+    "a": {
+      "vi": "Khác nhau ở cách lưu, mức độ cấu trúc và ai quản lý schema.\n- Data warehouse (Snowflake, BigQuery, Redshift): dữ liệu có cấu trúc, schema định nghĩa khi ghi (schema-on-write), SQL mạnh, ACID, hiệu năng và quản trị tốt; nhưng chi phí cao hơn và kém linh hoạt với dữ liệu thô hoặc phi cấu trúc.\n- Data lake (S3, GCS, ADLS): lưu mọi loại file thô với chi phí thấp, schema áp khi đọc (schema-on-read), hợp cho ML và lưu trữ lâu dài; nhưng thiếu transaction, khó cập nhật hay xoá từng dòng, dễ thành 'data swamp' nếu không quản lý.\n- Lakehouse: dùng open table format (Delta Lake, Apache Iceberg, Apache Hudi) trên file Parquet ở object storage để có ACID, schema evolution, time travel, upsert/delete, và nhiều engine (Spark, Trino, Snowflake, DuckDB) cùng đọc một bản dữ liệu.\n\nXu hướng 2025-2026: Iceberg trở thành chuẩn mở được hầu hết warehouse hỗ trợ, ranh giới giữa warehouse và lakehouse mờ dần. Lựa chọn phụ thuộc vào quy mô, đội ngũ và nhu cầu tránh bị khoá vào một nhà cung cấp.",
+      "en": "They differ in how data is stored, how structured it is, and who manages the schema.\n- Data warehouse (Snowflake, BigQuery, Redshift): structured data, schema defined on write (schema-on-write), strong SQL, ACID, good performance and governance; but higher cost and less flexible for raw or unstructured data.\n- Data lake (S3, GCS, ADLS): stores any raw files cheaply, schema applied on read (schema-on-read), good for ML and long-term storage; but lacks transactions, makes row-level updates or deletes hard, and becomes a 'data swamp' without governance.\n- Lakehouse: uses an open table format (Delta Lake, Apache Iceberg, Apache Hudi) on Parquet files in object storage to get ACID, schema evolution, time travel, upserts/deletes, and lets many engines (Spark, Trino, Snowflake, DuckDB) read one copy of the data.\n\nTrend for 2025-2026: Iceberg has become an open standard supported by most warehouses, and the line between warehouse and lakehouse is blurring. The choice depends on scale, team and the need to avoid vendor lock-in."
+    },
+    "tip": {
+      "vi": "Giải thích lakehouse bằng 'table format thêm metadata và transaction log lên trên file Parquet' cho thấy bạn hiểu cơ chế, không chỉ buzzword.",
+      "en": "Explaining a lakehouse as 'a table format adding metadata and a transaction log on top of Parquet files' shows you understand the mechanism, not just the buzzword."
+    },
+    "followUps": [
+      { "vi": "Time travel trong Delta/Iceberg hoạt động thế nào?", "en": "How does time travel work in Delta/Iceberg?" },
+      { "vi": "Kiến trúc medallion (bronze, silver, gold) là gì?", "en": "What is the medallion architecture (bronze, silver, gold)?" }
+    ]
+  },
+  {
+    "id": "data-etl-vs-elt",
+    "level": "intern",
+    "topic": "Data Pipelines",
+    "q": {
+      "vi": "ETL và ELT khác nhau thế nào? Vì sao ELT phổ biến hiện nay?",
+      "en": "How do ETL and ELT differ? Why is ELT popular today?"
+    },
+    "a": {
+      "vi": "Khác biệt là bước transform diễn ra ở đâu: ETL biến đổi dữ liệu trước khi nạp vào đích, còn ELT nạp dữ liệu thô vào warehouse trước rồi biến đổi ngay trong đó bằng SQL.\n- ETL: transform trên một server hoặc engine riêng (Informatica, Spark job), chỉ dữ liệu sạch vào warehouse. Phù hợp khi đích có tài nguyên hạn chế, hoặc phải che hay loại bỏ dữ liệu nhạy cảm trước khi nạp.\n- ELT: extract và load bằng công cụ như Fivetran, Airbyte, rồi transform bằng dbt hoặc SQL trong Snowflake, BigQuery, Databricks.\n\nELT phổ biến vì:\n- Compute của warehouse cloud mạnh và co giãn, lưu trữ rẻ.\n- Giữ lại dữ liệu thô nên khi logic đổi có thể chạy lại transform mà không cần extract lại.\n- Transform viết bằng SQL, version trong git, có test; analyst cũng tham gia được.\n\nĐánh đổi của ELT: dữ liệu thô (có thể chứa PII) nằm trong warehouse nên cần phân quyền chặt, và chi phí compute có thể tăng nếu transform viết kém.",
+      "en": "The difference is where the transform happens: ETL transforms data before loading it into the destination, while ELT loads raw data into the warehouse first and transforms it there with SQL.\n- ETL: transforms on a separate server or engine (Informatica, Spark jobs), so only clean data reaches the warehouse. Fits when the destination has limited resources, or sensitive data must be masked or dropped before loading.\n- ELT: extract and load with tools like Fivetran or Airbyte, then transform with dbt or SQL inside Snowflake, BigQuery, Databricks.\n\nELT is popular because:\n- Cloud warehouse compute is powerful and elastic, and storage is cheap.\n- Raw data is kept, so when logic changes you can rerun transforms without re-extracting.\n- Transforms are SQL, versioned in git, tested; analysts can contribute too.\n\nELT trade-offs: raw data (possibly containing PII) lands in the warehouse and needs strict access control, and compute costs can grow if transforms are poorly written."
+    },
+    "tip": {
+      "vi": "Nhắc tới lợi ích 'chạy lại transform từ dữ liệu thô' là lý do thực tế nhất khiến team chọn ELT.",
+      "en": "Mentioning the benefit of 'rerunning transforms from raw data' is the most practical reason teams choose ELT."
+    },
+    "followUps": [
+      { "vi": "dbt giải quyết vấn đề gì?", "en": "What problem does dbt solve?" },
+      { "vi": "Bạn xử lý PII trong pipeline ELT thế nào?", "en": "How do you handle PII in an ELT pipeline?" }
+    ]
+  },
+  {
+    "id": "data-batch-vs-streaming",
+    "level": "mid",
+    "topic": "Data Pipelines",
+    "q": {
+      "vi": "Batch và streaming processing khác nhau thế nào? Event time, processing time và watermark là gì?",
+      "en": "How do batch and streaming processing differ? What are event time, processing time and watermarks?"
+    },
+    "a": {
+      "vi": "Batch xử lý một khối dữ liệu đã có theo lịch (mỗi giờ, mỗi ngày); streaming xử lý liên tục từng sự kiện khi nó đến, độ trễ tính bằng giây.\n- Batch (Spark, dbt, SQL theo lịch): đơn giản, rẻ, dễ chạy lại và backfill; đủ cho đa số báo cáo.\n- Streaming (Flink, Spark Structured Streaming, Kafka Streams): cần khi độ trễ có giá trị kinh doanh thật như phát hiện gian lận, giá động, cảnh báo; nhưng phức tạp hơn nhiều về state, lỗi và vận hành.\n\nKhái niệm thời gian:\n- Event time: lúc sự kiện thực sự xảy ra trên thiết bị. Processing time: lúc hệ thống nhận được. Hai cái lệch nhau do mạng chậm, thiết bị offline.\n- Tổng hợp theo cửa sổ (tumbling, sliding, session) nên dựa trên event time để kết quả đúng.\n- Watermark là ngưỡng 'tôi cho rằng đã nhận đủ dữ liệu đến thời điểm T'; dữ liệu đến sau watermark là late data, bị bỏ hoặc xử lý riêng.\n\nLời khuyên: bắt đầu với batch hoặc micro-batch, chỉ chuyển sang streaming khi yêu cầu độ trễ thật sự đòi hỏi.",
+      "en": "Batch processes an existing chunk of data on a schedule (hourly, daily); streaming processes each event continuously as it arrives, with latency measured in seconds.\n- Batch (Spark, dbt, scheduled SQL): simple, cheap, easy to rerun and backfill; enough for most reporting.\n- Streaming (Flink, Spark Structured Streaming, Kafka Streams): needed when latency has real business value, like fraud detection, dynamic pricing, alerting; but much more complex in state, failure handling and operations.\n\nTime concepts:\n- Event time: when the event actually happened on the device. Processing time: when the system received it. They diverge because of slow networks and offline devices.\n- Windowed aggregations (tumbling, sliding, session) should use event time for correct results.\n- A watermark is the threshold 'I believe I have received all data up to time T'; data arriving after the watermark is late data, dropped or handled separately.\n\nAdvice: start with batch or micro-batch, and move to streaming only when latency requirements truly demand it."
+    },
+    "tip": {
+      "vi": "Hỏi lại 'độ trễ bao nhiêu thì chấp nhận được' trước khi đề xuất streaming; nhiều bài toán 15 phút batch là đủ.",
+      "en": "Ask 'what latency is acceptable' before proposing streaming; many problems are fine with 15-minute batches."
+    },
+    "followUps": [
+      { "vi": "Exactly-once trong streaming đạt được bằng cách nào?", "en": "How is exactly-once achieved in streaming?" },
+      { "vi": "Kiến trúc Lambda và Kappa khác nhau thế nào?", "en": "How do the Lambda and Kappa architectures differ?" }
+    ]
+  },
+  {
+    "id": "data-parquet-avro",
+    "level": "junior",
+    "topic": "File Formats & Partitioning",
+    "q": {
+      "vi": "So sánh CSV, JSON, Parquet và Avro. Vì sao Parquet là định dạng mặc định cho analytics?",
+      "en": "Compare CSV, JSON, Parquet and Avro. Why is Parquet the default format for analytics?"
+    },
+    "a": {
+      "vi": "Điểm khác biệt chính là lưu theo dòng hay theo cột, và schema có đi kèm file không.\n- CSV, JSON: dạng text, dễ đọc, phổ biến để trao đổi; nhưng to, chậm, không có kiểu dữ liệu rõ ràng (CSV) và dễ lỗi khi có dấu phẩy, xuống dòng.\n- Avro: nhị phân, lưu theo dòng, schema nằm trong file, hỗ trợ schema evolution tốt. Hợp cho ghi từng bản ghi và streaming, thường dùng với Kafka và Schema Registry.\n- Parquet: nhị phân, lưu theo cột. File chia thành row group, mỗi cột là column chunk có encoding (dictionary, RLE) và thống kê min/max.\n\nParquet mặc định cho analytics vì:\n- Chỉ đọc cột cần (column pruning), query thường chỉ dùng vài trong hàng trăm cột.\n- Nén rất tốt vì các giá trị cùng cột giống nhau.\n- Predicate pushdown: dựa vào min/max để bỏ qua cả row group không thoả điều kiện.\n- Hầu hết engine đều đọc được, và là nền của Delta Lake, Iceberg.\n\nĐiểm yếu: không hợp cho ghi từng dòng hay cập nhật; file quá nhỏ làm mất lợi thế.",
+      "en": "The key differences are row versus column layout, and whether the schema travels with the file.\n- CSV, JSON: text, human-readable, common for exchange; but large, slow, without reliable types (CSV) and fragile with commas and newlines.\n- Avro: binary, row-oriented, schema embedded in the file, good schema evolution support. Suits record-by-record writes and streaming, often used with Kafka and Schema Registry.\n- Parquet: binary, columnar. Files are split into row groups, each column stored as a column chunk with encodings (dictionary, RLE) and min/max statistics.\n\nParquet is the analytics default because:\n- It reads only needed columns (column pruning), and queries usually touch a few of hundreds of columns.\n- It compresses very well because values in a column are similar.\n- Predicate pushdown: min/max stats let readers skip whole row groups that cannot match.\n- Almost every engine reads it, and it underpins Delta Lake and Iceberg.\n\nWeaknesses: not suited to row-by-row writes or updates; files that are too small lose its advantages."
+    },
+    "tip": {
+      "vi": "Giải thích predicate pushdown bằng min/max của row group sẽ cho thấy bạn hiểu cấu trúc bên trong file.",
+      "en": "Explaining predicate pushdown via row-group min/max shows you understand the file's internals."
+    },
+    "followUps": [
+      { "vi": "Schema evolution trong Avro hoạt động thế nào (thêm, xoá field)?", "en": "How does schema evolution work in Avro (adding, removing fields)?" },
+      { "vi": "Snappy và Zstd khác nhau thế nào khi nén Parquet?", "en": "How do Snappy and Zstd differ for Parquet compression?" }
+    ],
+    "source": "https://parquet.apache.org/docs/"
+  },
+  {
+    "id": "data-partitioning",
+    "level": "mid",
+    "topic": "File Formats & Partitioning",
+    "q": {
+      "vi": "Partitioning dữ liệu trong data lake hoặc warehouse là gì? Chọn cột partition thế nào và 'small files problem' là gì?",
+      "en": "What is data partitioning in a data lake or warehouse? How do you choose a partition column, and what is the small files problem?"
+    },
+    "a": {
+      "vi": "Partitioning là chia dữ liệu thành các phần vật lý theo giá trị của một cột (thường là ngày), để query lọc theo cột đó chỉ đọc các phần liên quan (partition pruning).\n\nChọn cột partition:\n- Cột hay xuất hiện trong điều kiện lọc, thường là ngày sự kiện.\n- Cardinality thấp đến vừa: partition theo user_id tạo hàng triệu thư mục, phản tác dụng.\n- Mỗi partition nên đủ lớn (thường hàng trăm MB đến vài GB dữ liệu).\n- Cột lọc thường xuyên nhưng cardinality cao thì dùng clustering, sort hoặc Z-order thay vì partition.\n\nSmall files problem: quá nhiều file nhỏ (vài KB đến vài MB) do streaming, partition quá mịn hoặc nhiều task ghi song song. Mỗi file tốn chi phí mở, đọc metadata, liệt kê; query chậm hẳn. Cách xử lý: compaction định kỳ (OPTIMIZE trong Delta, rewrite_data_files trong Iceberg), repartition trước khi ghi, partition thô hơn.\n\nIceberg có hidden partitioning: người dùng lọc theo timestamp, engine tự áp vào partition theo ngày, và có thể đổi cách partition mà không cần ghi lại dữ liệu cũ.",
+      "en": "Partitioning splits data into physical parts by the value of a column (usually a date), so queries filtering on that column read only the relevant parts (partition pruning).\n\nChoosing the partition column:\n- A column that often appears in filters, usually the event date.\n- Low to moderate cardinality: partitioning by user_id creates millions of directories and backfires.\n- Each partition should be reasonably large (typically hundreds of MB to a few GB).\n- For frequently filtered high-cardinality columns, use clustering, sorting or Z-ordering instead of partitions.\n\nThe small files problem: too many tiny files (KB to a few MB) from streaming, overly fine partitions or many parallel writer tasks. Each file costs opening, metadata reads, listing; queries slow down dramatically. Fixes: periodic compaction (OPTIMIZE in Delta, rewrite_data_files in Iceberg), repartitioning before writing, coarser partitions.\n\nIceberg offers hidden partitioning: users filter on a timestamp, the engine maps it to daily partitions, and you can change the partition scheme without rewriting old data."
+    },
+    "tip": {
+      "vi": "Phân biệt rõ khi nào partition và khi nào cluster/sort cho cột cardinality cao là điểm cộng lớn.",
+      "en": "Clearly distinguishing when to partition versus cluster/sort for high-cardinality columns is a big plus."
+    },
+    "followUps": [
+      { "vi": "Bucketing khác partitioning thế nào?", "en": "How does bucketing differ from partitioning?" },
+      { "vi": "Nếu query lọc bằng to_date(event_ts) thay vì cột partition thì có bị mất pruning không?", "en": "If a query filters on to_date(event_ts) instead of the partition column, is pruning lost?" }
+    ]
+  },
+  {
+    "id": "data-spark-lazy-evaluation",
+    "level": "junior",
+    "topic": "Spark",
+    "q": {
+      "vi": "Lazy evaluation trong Spark là gì? Transformation và action khác nhau thế nào? Job, stage, task là gì?",
+      "en": "What is lazy evaluation in Spark? How do transformations and actions differ? What are jobs, stages and tasks?"
+    },
+    "a": {
+      "vi": "Spark không chạy ngay khi bạn gọi transformation mà chỉ ghi lại kế hoạch; đến khi gặp action mới tối ưu toàn bộ kế hoạch và thực thi.\n- Transformation: select, filter, join, groupBy, withColumn. Trả về DataFrame mới, chưa tính gì.\n- Action: count, collect, show, write. Kích hoạt tính toán thật.\n\nNhờ lazy, Catalyst optimizer nhìn thấy cả kế hoạch để đẩy filter xuống nguồn dữ liệu, chỉ đọc cột cần, chọn chiến lược join; rồi Tungsten sinh code hiệu quả.\n\nCách chia việc:\n- Mỗi action tạo một job.\n- Job chia thành stage tại các ranh giới shuffle (wide transformation như groupBy, join); các narrow transformation (filter, map) được gộp chung trong một stage.\n- Mỗi stage gồm nhiều task, một task xử lý một partition trên một executor core.\n\nHệ quả: gọi nhiều action trên cùng DataFrame sẽ tính lại từ đầu, nên cache hoặc persist khi dùng lại. Tránh collect() dữ liệu lớn về driver. Dùng DataFrame API thay vì RDD để được tối ưu hoá, và xem kế hoạch bằng explain() hoặc Spark UI.",
+      "en": "Spark does not execute when you call a transformation; it only records the plan, and when it hits an action it optimizes the whole plan and runs it.\n- Transformations: select, filter, join, groupBy, withColumn. Return a new DataFrame, computing nothing yet.\n- Actions: count, collect, show, write. Trigger actual computation.\n\nBecause of laziness, the Catalyst optimizer sees the entire plan to push filters down to the source, read only needed columns, and pick join strategies; then Tungsten generates efficient code.\n\nHow work is split:\n- Each action creates a job.\n- A job is split into stages at shuffle boundaries (wide transformations like groupBy, join); narrow transformations (filter, map) are pipelined within one stage.\n- Each stage has many tasks, one task processing one partition on one executor core.\n\nConsequences: multiple actions on the same DataFrame recompute from scratch, so cache or persist when reusing. Never collect() large data to the driver. Use the DataFrame API instead of RDDs to benefit from optimization, and inspect plans with explain() or the Spark UI."
+    },
+    "tip": {
+      "vi": "Liên hệ 'ranh giới stage = shuffle' giúp bạn chuyển tự nhiên sang câu hỏi tối ưu hiệu năng tiếp theo.",
+      "en": "Linking 'stage boundary = shuffle' lets you transition naturally into the performance questions that follow."
+    },
+    "followUps": [
+      { "vi": "cache() và persist() khác nhau thế nào, khi nào nên unpersist?", "en": "How do cache() and persist() differ, and when should you unpersist?" },
+      { "vi": "Driver và executor làm nhiệm vụ gì?", "en": "What do the driver and executors do?" }
+    ],
+    "source": "https://spark.apache.org/docs/latest/rdd-programming-guide.html"
+  },
+  {
+    "id": "data-spark-shuffle-partitions",
+    "level": "mid",
+    "topic": "Spark",
+    "q": {
+      "vi": "Shuffle trong Spark là gì và vì sao tốn kém? Bạn tinh chỉnh số partition và join thế nào?",
+      "en": "What is a shuffle in Spark and why is it expensive? How do you tune partitions and joins?"
+    },
+    "a": {
+      "vi": "Shuffle là khi Spark phải phân phối lại dữ liệu giữa các executor theo key (cho groupBy, join, distinct, orderBy); nó tốn kém vì phải serialize, ghi ra đĩa và gửi qua mạng.\n\nTinh chỉnh partition:\n- spark.sql.shuffle.partitions mặc định 200, thường không hợp với mọi job. Mục tiêu khoảng 100-200 MB mỗi partition.\n- Adaptive Query Execution (AQE, bật mặc định từ Spark 3.2) tự gộp partition nhỏ sau shuffle, đổi chiến lược join khi chạy, và tách partition bị skew.\n- repartition(n) gây full shuffle, dùng để tăng partition hoặc phân theo key; coalesce(n) giảm partition không cần shuffle, hợp trước khi ghi file.\n\nTối ưu join:\n- Broadcast join khi một bảng nhỏ (dưới spark.sql.autoBroadcastJoinThreshold, mặc định 10 MB, hoặc dùng hint broadcast): gửi bảng nhỏ đến mọi executor, không shuffle bảng lớn.\n- Lọc và chọn cột trước khi join; tận dụng partition hoặc bucket theo key join.\n\nChẩn đoán bằng Spark UI: xem shuffle read/write, spill ra đĩa, và thời gian task chênh lệch lớn (dấu hiệu skew).",
+      "en": "A shuffle is when Spark must redistribute data across executors by key (for groupBy, join, distinct, orderBy); it is expensive because data is serialized, written to disk and sent over the network.\n\nTuning partitions:\n- spark.sql.shuffle.partitions defaults to 200, which rarely fits every job. Aim for roughly 100-200 MB per partition.\n- Adaptive Query Execution (AQE, on by default since Spark 3.2) coalesces small post-shuffle partitions, switches join strategies at runtime, and splits skewed partitions.\n- repartition(n) triggers a full shuffle, used to increase partitions or partition by key; coalesce(n) reduces partitions without a shuffle, good before writing files.\n\nJoin optimization:\n- Broadcast join when one side is small (under spark.sql.autoBroadcastJoinThreshold, default 10 MB, or via a broadcast hint): ship the small table to every executor and avoid shuffling the big one.\n- Filter and select columns before joining; leverage partitioning or bucketing on the join key.\n\nDiagnose with the Spark UI: look at shuffle read/write, spill to disk, and large differences in task duration (a sign of skew)."
+    },
+    "code": "from pyspark.sql.functions import broadcast\n\nresult = (orders\n    .filter('order_date >= \"2025-01-01\"')\n    .join(broadcast(countries), 'country_code'))\nresult.explain()  # expect BroadcastHashJoin, no shuffle of orders",
+    "tip": {
+      "vi": "Nhắc AQE và con số mặc định (200 partition, 10 MB broadcast) cho thấy bạn đã tinh chỉnh job thật.",
+      "en": "Mentioning AQE and the defaults (200 partitions, 10 MB broadcast) shows you have tuned real jobs."
+    },
+    "followUps": [
+      { "vi": "Sort-merge join và broadcast hash join khác nhau thế nào?", "en": "How do sort-merge join and broadcast hash join differ?" },
+      { "vi": "Spill ra đĩa là gì, xử lý thế nào?", "en": "What is spill to disk and how do you address it?" }
+    ],
+    "source": "https://spark.apache.org/docs/latest/sql-performance-tuning.html"
+  },
+  {
+    "id": "data-spark-skew",
+    "level": "senior",
+    "topic": "Spark",
+    "q": {
+      "vi": "Một Spark job chạy 99% task trong vài phút nhưng vài task cuối mất hàng giờ. Bạn chẩn đoán và xử lý thế nào?",
+      "en": "A Spark job finishes 99% of tasks in minutes but the last few take hours. How do you diagnose and fix it?"
+    },
+    "a": {
+      "vi": "Đây gần như chắc chắn là data skew: một vài key (ví dụ user_id NULL, một khách hàng cực lớn, giá trị mặc định 'unknown') chiếm phần lớn dữ liệu nên dồn vào vài partition.\n\nChẩn đoán:\n- Spark UI: trong stage chậm, so sánh max với median của thời gian task và shuffle read size; chênh lệch hàng chục lần là skew.\n- Đếm số dòng theo key join hoặc groupBy để tìm key nóng.\n\nXử lý, từ đơn giản đến phức tạp:\n- Loại hoặc tách riêng key rác: lọc NULL trước khi join, xử lý chúng riêng rồi union lại.\n- Bật AQE skew join (spark.sql.adaptive.skewJoin.enabled, mặc định bật khi AQE bật) để Spark tự chia partition lớn.\n- Broadcast bảng nhỏ nếu được, khi đó không còn shuffle theo key.\n- Salting: thêm số ngẫu nhiên 0..N-1 vào key ở bảng lớn, nhân bản bảng nhỏ N lần với từng salt, join theo (key, salt). Với aggregation thì gom hai bước: theo (key, salt) rồi theo key.\n\nTăng memory executor chỉ che triệu chứng. Sau khi sửa, thêm monitoring phân phối key vì skew thường quay lại khi dữ liệu tăng.",
+      "en": "This is almost certainly data skew: a few keys (e.g. NULL user_id, one huge customer, a default 'unknown' value) hold most of the data, so they pile into a few partitions.\n\nDiagnosis:\n- Spark UI: in the slow stage, compare max versus median task duration and shuffle read size; a difference of tens of times means skew.\n- Count rows per join or groupBy key to find the hot keys.\n\nFixes, from simple to complex:\n- Remove or separate junk keys: filter NULLs before the join, process them separately and union back.\n- Enable AQE skew join (spark.sql.adaptive.skewJoin.enabled, on by default when AQE is on) so Spark splits large partitions itself.\n- Broadcast the small side if possible, which removes the key-based shuffle.\n- Salting: append a random number 0..N-1 to the key on the large side, replicate the small side N times with each salt, and join on (key, salt). For aggregations, aggregate in two steps: by (key, salt), then by key.\n\nAdding executor memory only hides the symptom. After fixing, monitor key distribution, because skew tends to come back as data grows."
+    },
+    "code": "from pyspark.sql import functions as F\nN = 16\nbig_s = big.withColumn('salt', (F.rand() * N).cast('int'))\nsmall_s = small.crossJoin(spark.range(N).withColumnRenamed('id', 'salt'))\njoined = big_s.join(small_s, ['key', 'salt']).drop('salt')",
+    "tip": {
+      "vi": "Bắt đầu bằng cách thử đơn giản (lọc NULL, AQE, broadcast) trước salting cho thấy bạn thực dụng, không phức tạp hoá.",
+      "en": "Trying simple fixes (filter NULLs, AQE, broadcast) before salting shows pragmatism rather than over-engineering."
+    },
+    "followUps": [
+      { "vi": "Salting có nhược điểm gì?", "en": "What are the downsides of salting?" },
+      { "vi": "Làm sao phát hiện skew sớm trước khi job chạy chậm trên production?", "en": "How do you detect skew early, before jobs slow down in production?" }
+    ]
+  },
+  {
+    "id": "data-kafka-basics",
+    "level": "mid",
+    "topic": "Kafka",
+    "q": {
+      "vi": "Kafka hoạt động thế nào trong pipeline dữ liệu? Giải thích topic, partition, consumer group, offset và delivery semantics.",
+      "en": "How does Kafka work in a data pipeline? Explain topics, partitions, consumer groups, offsets and delivery semantics."
+    },
+    "a": {
+      "vi": "Kafka là một distributed commit log: producer ghi sự kiện nối đuôi vào topic, consumer đọc theo vị trí của mình, và dữ liệu được giữ theo thời gian retention chứ không bị xoá khi đọc xong.\n- Topic chia thành partition, đơn vị song song và đơn vị đảm bảo thứ tự. Thứ tự chỉ được đảm bảo trong một partition, nên sự kiện cùng key (ví dụ order_id) cần cùng partition bằng cách gửi kèm key.\n- Consumer group: mỗi partition được giao cho đúng một consumer trong group; số consumer hữu ích tối đa bằng số partition. Nhiều group độc lập đọc cùng topic.\n- Offset: vị trí đã đọc, consumer commit offset. Đọc lại hoặc replay bằng cách reset offset.\n\nDelivery semantics:\n- At-most-once: commit trước khi xử lý, có thể mất dữ liệu.\n- At-least-once: xử lý xong mới commit, có thể trùng; phổ biến nhất, nên sink phải idempotent (upsert theo event_id).\n- Exactly-once: idempotent producer cộng transaction, chỉ đúng trong phạm vi Kafka (ví dụ Kafka Streams); ra hệ thống ngoài vẫn cần sink idempotent.\n\nThêm: Schema Registry với Avro/Protobuf để quản lý schema; Kafka 4.0 bỏ ZooKeeper, chỉ còn KRaft.",
+      "en": "Kafka is a distributed commit log: producers append events to topics, consumers read from their own position, and data is retained for a retention period rather than deleted once read.\n- Topics are split into partitions, the unit of parallelism and of ordering. Order is guaranteed only within a partition, so events with the same key (e.g. order_id) must share a partition by sending them with that key.\n- Consumer group: each partition is assigned to exactly one consumer in the group; the useful number of consumers is at most the number of partitions. Multiple independent groups can read the same topic.\n- Offset: the position read so far, committed by the consumer. Reprocess or replay by resetting offsets.\n\nDelivery semantics:\n- At-most-once: commit before processing, data may be lost.\n- At-least-once: commit after processing, duplicates possible; the most common, so sinks must be idempotent (upsert by event_id).\n- Exactly-once: idempotent producer plus transactions, only holds within Kafka (e.g. Kafka Streams); external systems still need an idempotent sink.\n\nAlso: Schema Registry with Avro/Protobuf to manage schemas; Kafka 4.0 removed ZooKeeper, leaving only KRaft."
+    },
+    "tip": {
+      "vi": "Câu 'at-least-once cộng sink idempotent' là đáp án thực tế mà người phỏng vấn mong đợi hơn là hứa exactly-once.",
+      "en": "'At-least-once plus an idempotent sink' is the practical answer interviewers expect, rather than promising exactly-once."
+    },
+    "followUps": [
+      { "vi": "Consumer lag là gì và bạn xử lý khi lag tăng thế nào?", "en": "What is consumer lag and how do you respond when it grows?" },
+      { "vi": "Log compaction dùng để làm gì?", "en": "What is log compaction used for?" }
+    ],
+    "source": "https://kafka.apache.org/documentation/"
+  },
+  {
+    "id": "data-airflow-dag",
+    "level": "junior",
+    "topic": "Orchestration",
+    "q": {
+      "vi": "Airflow là gì? DAG, task, operator, scheduler hoạt động thế nào và những lỗi thường gặp khi viết DAG?",
+      "en": "What is Airflow? How do DAGs, tasks, operators and the scheduler work, and what are common mistakes when writing DAGs?"
+    },
+    "a": {
+      "vi": "Airflow là công cụ orchestration: định nghĩa pipeline bằng code Python dưới dạng DAG, lên lịch chạy, quản lý phụ thuộc, retry và theo dõi.\n- DAG: đồ thị có hướng không chu trình gồm các task và quan hệ phụ thuộc, có schedule (cron hoặc asset/dataset).\n- Task: một bước công việc; operator là template cho task (BashOperator, SQL operator, KubernetesPodOperator), còn TaskFlow API cho phép viết task bằng hàm Python với decorator @task.\n- Scheduler tạo DAG run cho mỗi khoảng dữ liệu (data interval) và đẩy task sẵn sàng cho executor (Celery, Kubernetes) chạy.\n\nLỗi thường gặp:\n- Viết code nặng ở top-level file DAG (gọi API, query DB): scheduler parse file liên tục nên bị chậm.\n- Dùng thời gian hiện tại trong task thay vì data interval hoặc logical date, khiến chạy lại hay backfill ra sai kết quả.\n- Truyền dữ liệu lớn qua XCom; XCom chỉ dành cho metadata nhỏ, dữ liệu nên nằm ở storage.\n- Để Airflow tự xử lý dữ liệu nặng thay vì giao cho Spark hay warehouse; Airflow nên điều phối, không phải compute.\n\nLưu ý version: Airflow 3 (2025) đổi mặc định catchup thành False và đổi tên dataset thành asset.",
+      "en": "Airflow is an orchestration tool: you define pipelines in Python code as DAGs, schedule them, and manage dependencies, retries and monitoring.\n- DAG: a directed acyclic graph of tasks and their dependencies, with a schedule (cron or asset/dataset-based).\n- Task: one unit of work; an operator is a template for a task (BashOperator, SQL operators, KubernetesPodOperator), and the TaskFlow API lets you write tasks as Python functions with the @task decorator.\n- The scheduler creates a DAG run for each data interval and hands ready tasks to an executor (Celery, Kubernetes) to run.\n\nCommon mistakes:\n- Heavy top-level code in the DAG file (API calls, DB queries): the scheduler parses files constantly, so it slows down.\n- Using the current time inside tasks instead of the data interval or logical date, so reruns or backfills produce wrong results.\n- Passing large data through XCom; XCom is for small metadata, data belongs in storage.\n- Letting Airflow process heavy data itself instead of delegating to Spark or the warehouse; Airflow should orchestrate, not compute.\n\nVersion note: Airflow 3 (2025) changed the catchup default to False and renamed datasets to assets."
+    },
+    "code": "from airflow.sdk import dag, task  # Airflow 3; Airflow 2 uses airflow.decorators\nimport pendulum\n\n@dag(schedule='@daily', start_date=pendulum.datetime(2025, 1, 1), catchup=False)\ndef daily_sales():\n    @task\n    def load(data_interval_start=None, data_interval_end=None):\n        print(f'loading {data_interval_start} -> {data_interval_end}')\n    load()\n\ndaily_sales()",
+    "tip": {
+      "vi": "Nhấn mạnh 'dùng data interval chứ không dùng now()' là cầu nối tự nhiên sang câu hỏi idempotency và backfill.",
+      "en": "Stressing 'use the data interval, not now()' is a natural bridge to the idempotency and backfill questions."
+    },
+    "followUps": [
+      { "vi": "Sensor là gì và vì sao nên dùng chế độ deferrable?", "en": "What is a sensor and why prefer deferrable mode?" },
+      { "vi": "So sánh Airflow với Dagster hoặc Prefect.", "en": "Compare Airflow with Dagster or Prefect." }
+    ],
+    "source": "https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html"
+  },
+  {
+    "id": "data-idempotency-backfill",
+    "level": "mid",
+    "topic": "Orchestration",
+    "q": {
+      "vi": "Task idempotent trong pipeline dữ liệu là gì? Vì sao quan trọng, và bạn backfill dữ liệu 6 tháng thế nào?",
+      "en": "What is an idempotent task in a data pipeline? Why does it matter, and how would you backfill 6 months of data?"
+    },
+    "a": {
+      "vi": "Task idempotent là task chạy một lần hay nhiều lần với cùng đầu vào đều cho ra cùng kết quả, không nhân bản dữ liệu. Nó quan trọng vì retry, chạy lại thủ công và backfill là chuyện hằng ngày.\n\nCách làm cho task idempotent:\n- Xử lý theo khoảng dữ liệu cố định (data interval) thay vì 'dữ liệu mới từ lần chạy trước'.\n- Ghi đè partition đích: xoá rồi ghi, hoặc INSERT OVERWRITE partition dt = ngày đó; không dùng INSERT append thuần.\n- Hoặc MERGE/upsert theo khoá duy nhất.\n- Không phụ thuộc thời gian hiện tại hay trạng thái ngoài thay đổi được.\n- Ghi vào bảng tạm rồi swap hoặc commit một lần, để lỗi giữa chừng không để lại dữ liệu dở dang.\n\nBackfill 6 tháng:\n- Vì task đã idempotent theo ngày, chỉ cần chạy lại cho các interval đó (airflow backfill hoặc tạo run theo khoảng ngày).\n- Giới hạn số run song song (max_active_runs) để không quá tải warehouse hay nguồn API.\n- Chạy thử vài ngày, so sánh số liệu với bản cũ, rồi mới chạy toàn bộ.\n- Báo trước cho người dùng dashboard và kiểm tra các bảng phía sau cũng cần tính lại.",
+      "en": "An idempotent task produces the same result whether it runs once or many times with the same input, without duplicating data. It matters because retries, manual reruns and backfills happen all the time.\n\nMaking tasks idempotent:\n- Process a fixed data interval rather than 'new data since the last run'.\n- Overwrite the target partition: delete then write, or INSERT OVERWRITE partition dt = that day; never a plain INSERT append.\n- Or MERGE/upsert on a unique key.\n- Do not depend on the current time or mutable external state.\n- Write to a staging table then swap or commit once, so a mid-run failure leaves no partial data.\n\nBackfilling 6 months:\n- Since the task is idempotent per day, just rerun those intervals (airflow backfill or creating runs over a date range).\n- Limit parallel runs (max_active_runs) so you do not overload the warehouse or a source API.\n- Trial a few days, compare the numbers with the old output, then run the full range.\n- Notify dashboard users in advance and check which downstream tables also need recomputing."
+    },
+    "code": "-- idempotent daily load: safe to rerun for {{ ds }}\nDELETE FROM fact_sales WHERE sale_date = '{{ ds }}';\nINSERT INTO fact_sales\nSELECT * FROM staging_sales WHERE sale_date = '{{ ds }}';",
+    "tip": {
+      "vi": "Định nghĩa idempotent bằng ví dụ 'chạy lại hai lần không làm doanh thu nhân đôi' giúp người nghe hiểu ngay.",
+      "en": "Defining idempotency with 'rerunning twice does not double revenue' makes it instantly clear."
+    },
+    "followUps": [
+      { "vi": "Đoạn DELETE rồi INSERT ở trên có vấn đề gì nếu không nằm trong transaction?", "en": "What goes wrong with the DELETE then INSERT above if it is not in a transaction?" },
+      { "vi": "Xử lý dữ liệu đến muộn vài ngày thế nào trong pipeline theo ngày?", "en": "How do you handle data that arrives days late in a daily pipeline?" }
+    ],
+    "source": "https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html"
+  },
+  {
+    "id": "data-quality",
+    "level": "senior",
+    "topic": "Data Quality",
+    "q": {
+      "vi": "Bạn đảm bảo chất lượng dữ liệu trong một nền tảng có hàng trăm pipeline thế nào? Data contract là gì?",
+      "en": "How do you ensure data quality across a platform with hundreds of pipelines? What is a data contract?"
+    },
+    "a": {
+      "vi": "Tôi coi dữ liệu như sản phẩm phần mềm: có kiểm thử tự động ở mỗi tầng, có giám sát trên production, có người chịu trách nhiệm, và lỗi bị chặn trước khi tới dashboard.\n\nCác chiều cần kiểm tra: đầy đủ (null, thiếu dòng), duy nhất, hợp lệ (giá trị trong miền cho phép), nhất quán (khoá ngoại khớp, tổng khớp nguồn), kịp thời (freshness).\n\nCông cụ và thực hành:\n- Test trong pipeline: dbt tests (unique, not_null, relationships, accepted_values), Great Expectations hoặc Soda cho rule phức tạp hơn.\n- Write-audit-publish: ghi vào bảng tạm, chạy kiểm tra, đạt mới publish; lỗi nghiêm trọng thì dừng pipeline thay vì phát hành dữ liệu sai.\n- Data observability: theo dõi volume, freshness, phân phối và schema thay đổi, cảnh báo bất thường.\n- Lineage để biết lỗi ảnh hưởng tới bảng và dashboard nào.\n\nData contract là thoả thuận giữa team tạo dữ liệu (thường là team sản phẩm hoặc backend) và team dùng: schema, ý nghĩa field, SLA, quy tắc thay đổi. Kiểm tra contract trong CI của bên tạo dữ liệu, để thay đổi phá vỡ bị chặn từ nguồn thay vì làm hỏng pipeline phía sau.\n\nCuối cùng là phân mức độ nghiêm trọng, có owner cho từng dataset, tránh cảnh báo rác khiến mọi người bỏ qua.",
+      "en": "I treat data like a software product: automated tests at every layer, production monitoring, clear ownership, and failures caught before they reach dashboards.\n\nDimensions to check: completeness (nulls, missing rows), uniqueness, validity (values within the allowed domain), consistency (foreign keys match, totals reconcile with source), timeliness (freshness).\n\nTools and practices:\n- Tests in the pipeline: dbt tests (unique, not_null, relationships, accepted_values), Great Expectations or Soda for more complex rules.\n- Write-audit-publish: write to a staging table, run checks, publish only if they pass; on severe failures stop the pipeline rather than ship wrong data.\n- Data observability: monitor volume, freshness, distributions and schema changes, alerting on anomalies.\n- Lineage to know which tables and dashboards an issue affects.\n\nA data contract is an agreement between the team producing data (often a product or backend team) and its consumers: schema, field meaning, SLAs, change rules. Check the contract in the producer's CI, so breaking changes are blocked at the source instead of breaking downstream pipelines.\n\nFinally, classify severity, give every dataset an owner, and avoid noisy alerts that people learn to ignore."
+    },
+    "tip": {
+      "vi": "Ở level senior, nói về con người và quy trình (owner, contract, mức độ nghiêm trọng) chứ không chỉ liệt kê công cụ test.",
+      "en": "At senior level, talk about people and process (owners, contracts, severity), not just a list of testing tools."
+    },
+    "followUps": [
+      { "vi": "Khi phát hiện dữ liệu sai đã lên dashboard của CEO, bạn xử lý thế nào?", "en": "When wrong data has already reached the CEO's dashboard, what do you do?" },
+      { "vi": "Bạn xử lý thay đổi schema từ nguồn (thêm, đổi tên cột) ra sao?", "en": "How do you handle upstream schema changes (added or renamed columns)?" }
+    ]
+  },
+  {
+    "id": "data-metrics-definition",
+    "level": "junior",
+    "topic": "Analytics",
+    "q": {
+      "vi": "Bạn định nghĩa một metric như 'Daily Active Users' thế nào cho chặt chẽ? North star metric và guardrail metric là gì?",
+      "en": "How do you define a metric like 'Daily Active Users' rigorously? What are north star and guardrail metrics?"
+    },
+    "a": {
+      "vi": "Một metric tốt phải có định nghĩa không mơ hồ, đến mức hai người tính độc lập ra cùng một số.\n\nVới DAU, cần chốt:\n- 'Active' là gì: mở app, đăng nhập, hay thực hiện hành động có giá trị (gửi tin nhắn, xem nội dung)? Mở app do push tự động có tính không?\n- 'Ngày' theo múi giờ nào: UTC hay giờ địa phương.\n- Đếm theo đơn vị nào: user_id hay device_id, xử lý người dùng chưa đăng nhập ra sao.\n- Loại trừ gì: bot, tài khoản test, nhân viên nội bộ.\n- Nguồn dữ liệu và bảng chuẩn duy nhất (semantic layer) để mọi dashboard dùng chung.\n\nNorth star metric phản ánh giá trị cốt lõi người dùng nhận được và tương quan với tăng trưởng dài hạn (ví dụ số đêm được đặt cho app đặt phòng). Input metric là các yếu tố team tác động được để đẩy north star. Guardrail metric là chỉ số không được xấu đi khi tối ưu cái khác: tỉ lệ crash, huỷ đăng ký, khiếu nại, thời gian tải.\n\nCẩn thận định luật Goodhart: khi một chỉ số thành mục tiêu, người ta sẽ tối ưu nó theo cách làm mất ý nghĩa.",
+      "en": "A good metric has an unambiguous definition, to the point that two people computing it independently get the same number.\n\nFor DAU, you need to pin down:\n- What 'active' means: opening the app, logging in, or a meaningful action (sending a message, viewing content)? Does an app open triggered by a push count?\n- Which time zone defines a 'day': UTC or local time.\n- The counting unit: user_id or device_id, and how to treat logged-out users.\n- Exclusions: bots, test accounts, internal employees.\n- The data source and a single canonical table (semantic layer) shared by every dashboard.\n\nA north star metric reflects the core value users receive and correlates with long-term growth (e.g. nights booked for a booking app). Input metrics are levers the team can move to push the north star. Guardrail metrics must not get worse while you optimize something else: crash rate, unsubscribes, complaints, load time.\n\nBeware Goodhart's law: once a measure becomes a target, people optimize it in ways that strip its meaning."
+    },
+    "tip": {
+      "vi": "Liệt kê các câu hỏi làm rõ (múi giờ, đơn vị đếm, loại trừ) quan trọng hơn đưa ra một định nghĩa duy nhất.",
+      "en": "Listing the clarifying questions (time zone, counting unit, exclusions) matters more than giving one single definition."
+    },
+    "followUps": [
+      { "vi": "DAU tăng 20% sau một release, bạn kiểm tra những gì trước khi ăn mừng?", "en": "DAU jumped 20% after a release; what do you check before celebrating?" },
+      { "vi": "Tỉ lệ DAU/MAU nói lên điều gì?", "en": "What does the DAU/MAU ratio tell you?" }
+    ]
+  },
+  {
+    "id": "data-cohort-retention",
+    "level": "junior",
+    "topic": "Analytics",
+    "q": {
+      "vi": "Cohort analysis là gì? Viết SQL tính retention theo tháng cho các cohort người dùng.",
+      "en": "What is cohort analysis? Write SQL to compute monthly retention for user cohorts."
+    },
+    "a": {
+      "vi": "Cohort analysis nhóm người dùng theo thời điểm họ bắt đầu (thường là tháng đăng ký hoặc lần dùng đầu tiên) rồi theo dõi hành vi của từng nhóm theo thời gian kể từ mốc đó.\n\nVì sao cần: chỉ số tổng như MAU có thể tăng nhờ marketing kéo người mới trong khi người cũ rời đi. Cohort tách được hai hiệu ứng đó, cho thấy sản phẩm có giữ chân người dùng tốt hơn qua từng phiên bản hay không.\n\nCách tính retention:\n- Xác định cohort_month của mỗi user (tháng hoạt động đầu tiên).\n- Lấy các tháng user có hoạt động, tính month_number = số tháng kể từ cohort.\n- Đếm user distinct theo (cohort_month, month_number), chia cho kích thước cohort ở month 0.\n\nKết quả thường hiển thị dạng bảng tam giác hoặc đường cong retention. Đường cong đi ngang (flatten) là dấu hiệu tốt của product-market fit; đường cong tiến về 0 nghĩa là không giữ được ai.\n\nLưu ý: tháng gần nhất chưa trọn vẹn sẽ trông thấp; định nghĩa 'active' phải thống nhất với metric chung.",
+      "en": "Cohort analysis groups users by when they started (usually signup month or first use) and tracks each group's behavior over time since that point.\n\nWhy it matters: an aggregate like MAU can rise because marketing brings in new users while existing ones churn. Cohorts separate those two effects and show whether the product retains users better over successive versions.\n\nComputing retention:\n- Determine each user's cohort_month (first month of activity).\n- Take the months each user was active and compute month_number = months since the cohort.\n- Count distinct users per (cohort_month, month_number) and divide by the cohort size at month 0.\n\nThe result is usually shown as a triangle table or retention curves. A curve that flattens is a good sign of product-market fit; a curve heading to zero means nobody sticks.\n\nNotes: the latest, incomplete month will look low; the definition of 'active' must match the shared metric definition."
+    },
+    "code": "WITH activity AS (\n  SELECT DISTINCT user_id, DATE_TRUNC('month', event_time) AS m FROM events\n), cohorts AS (\n  SELECT user_id, MIN(m) AS cohort FROM activity GROUP BY user_id\n)\nSELECT c.cohort,\n       (EXTRACT(YEAR FROM a.m) - EXTRACT(YEAR FROM c.cohort)) * 12\n         + EXTRACT(MONTH FROM a.m) - EXTRACT(MONTH FROM c.cohort) AS month_number,\n       COUNT(*) AS users,\n       ROUND(COUNT(*) * 1.0 / FIRST_VALUE(COUNT(*)) OVER (\n         PARTITION BY c.cohort ORDER BY MIN(a.m)), 3) AS retention\nFROM activity a JOIN cohorts c USING (user_id)\nGROUP BY c.cohort, a.m\nORDER BY 1, 2;",
+    "tip": {
+      "vi": "Giải thích vì sao chỉ số tổng có thể đánh lừa còn cohort thì không là điểm nhà tuyển dụng analyst muốn nghe.",
+      "en": "Explaining why aggregates can mislead while cohorts do not is what analyst interviewers want to hear."
+    },
+    "followUps": [
+      { "vi": "Retention N-day, unbounded và bracket khác nhau thế nào?", "en": "How do N-day, unbounded and bracket retention differ?" },
+      { "vi": "Bạn tính churn rate cho app subscription thế nào?", "en": "How do you compute churn rate for a subscription app?" }
+    ]
+  },
+  {
+    "id": "data-ab-testing",
+    "level": "mid",
+    "topic": "Analytics",
+    "q": {
+      "vi": "Bạn thiết kế và phân tích một A/B test thế nào? p-value, statistical power và sample size nghĩa là gì?",
+      "en": "How do you design and analyze an A/B test? What do p-value, statistical power and sample size mean?"
+    },
+    "a": {
+      "vi": "A/B test chia ngẫu nhiên người dùng vào nhóm control và treatment để đo tác động nhân quả của một thay đổi; mọi quyết định thiết kế phải chốt trước khi chạy.\n\nThiết kế:\n- Giả thuyết và một primary metric (ví dụ conversion rate), cộng guardrail metric.\n- Đơn vị ngẫu nhiên hoá: thường là user, không phải session, để một người không thấy cả hai phiên bản.\n- Sample size từ power analysis: chọn alpha (thường 0,05), power (thường 80%) và minimum detectable effect (MDE). Hiệu ứng càng nhỏ cần càng nhiều mẫu; xấp xỉ n ≈ 16σ²/δ² mỗi nhóm.\n- Thời gian chạy đủ ít nhất một hoặc hai chu kỳ tuần để tránh lệch theo ngày.\n\nKhái niệm:\n- p-value: xác suất thấy khác biệt lớn như vậy hoặc hơn nếu thực sự không có khác biệt. Không phải xác suất giả thuyết đúng.\n- Power: xác suất phát hiện được hiệu ứng nếu nó thật sự tồn tại với độ lớn MDE.\n\nPhân tích: kiểm tra sample ratio mismatch trước, rồi báo cáo hiệu ứng kèm confidence interval, không chỉ p-value. Có ý nghĩa thống kê chưa chắc có ý nghĩa kinh doanh.",
+      "en": "An A/B test randomly splits users into control and treatment to measure the causal impact of a change; every design decision must be fixed before it runs.\n\nDesign:\n- A hypothesis and one primary metric (e.g. conversion rate), plus guardrail metrics.\n- Randomization unit: usually the user, not the session, so one person never sees both versions.\n- Sample size from a power analysis: choose alpha (usually 0.05), power (usually 80%) and the minimum detectable effect (MDE). Smaller effects need more samples; roughly n ≈ 16σ²/δ² per group.\n- Run long enough to cover at least one or two weekly cycles to avoid day-of-week bias.\n\nConcepts:\n- p-value: the probability of seeing a difference this large or larger if there were truly no difference. It is not the probability that the hypothesis is true.\n- Power: the probability of detecting the effect if it truly exists at the MDE size.\n\nAnalysis: check for sample ratio mismatch first, then report the effect with a confidence interval, not just a p-value. Statistical significance does not guarantee business significance."
+    },
+    "tip": {
+      "vi": "Giải thích p-value đúng định nghĩa (và nói rõ nó không phải gì) là cách nhanh nhất để ghi điểm.",
+      "en": "Defining the p-value correctly (and stating what it is not) is the fastest way to score points."
+    },
+    "followUps": [
+      { "vi": "Lỗi Type I và Type II là gì?", "en": "What are Type I and Type II errors?" },
+      { "vi": "Test với metric dạng tỉ lệ (conversion) và dạng trung bình (doanh thu/user) khác nhau thế nào?", "en": "How does testing a proportion metric (conversion) differ from a mean metric (revenue per user)?" }
+    ]
+  },
+  {
+    "id": "data-ab-testing-pitfalls",
+    "level": "senior",
+    "topic": "Analytics",
+    "q": {
+      "vi": "Những sai lầm phổ biến khiến kết quả A/B test không đáng tin là gì? Bạn phòng tránh thế nào?",
+      "en": "What common mistakes make A/B test results untrustworthy? How do you prevent them?"
+    },
+    "a": {
+      "vi": "Phần lớn kết quả A/B sai không do công thức thống kê mà do quy trình; tôi kiểm tra một danh sách cố định trước khi tin bất kỳ kết quả nào.\n- Peeking: xem kết quả mỗi ngày và dừng ngay khi p < 0,05 làm tăng mạnh false positive. Chốt thời gian chạy trước, hoặc dùng phương pháp sequential testing được thiết kế cho việc xem sớm.\n- Multiple testing: kiểm tra 20 metric hay nhiều biến thể, kiểu gì cũng có cái 'có ý nghĩa' do may rủi. Chỉ định một primary metric, điều chỉnh bằng Bonferroni hoặc kiểm soát FDR.\n- Sample ratio mismatch (SRM): chia 50/50 nhưng thực tế 48/52, kiểm tra bằng chi-square. SRM thường do bug gán nhóm hoặc logging, kết quả khi đó không dùng được.\n- Novelty và primacy effect: người dùng phản ứng với cái mới trong vài ngày đầu; theo dõi hiệu ứng theo thời gian.\n- Interference: ở marketplace hay mạng xã hội, nhóm treatment ảnh hưởng nhóm control; cần randomize theo cụm hoặc theo khu vực, thời gian.\n- Đơn vị phân tích khác đơn vị ngẫu nhiên hoá làm sai variance.\n\nĐể tăng độ nhạy mà không tăng mẫu, dùng CUPED (dùng dữ liệu trước thí nghiệm để giảm variance). Và chạy A/A test để kiểm tra chính nền tảng thí nghiệm.",
+      "en": "Most wrong A/B results come from process, not from the statistical formula; I run through a fixed checklist before trusting any result.\n- Peeking: checking daily and stopping as soon as p < 0.05 sharply inflates false positives. Fix the duration up front, or use sequential testing methods designed for early looks.\n- Multiple testing: check 20 metrics or many variants and something will be 'significant' by chance. Designate one primary metric, and correct with Bonferroni or control the FDR.\n- Sample ratio mismatch (SRM): a 50/50 split that actually lands at 48/52, detected with a chi-square test. SRM usually comes from assignment or logging bugs, and the results are then unusable.\n- Novelty and primacy effects: users react to something new in the first days; track the effect over time.\n- Interference: in marketplaces or social networks, treatment affects control; randomize by cluster, region or time.\n- Analyzing at a different unit than the randomization unit gives wrong variance.\n\nTo increase sensitivity without more samples, use CUPED (using pre-experiment data to reduce variance). And run A/A tests to validate the experimentation platform itself."
+    },
+    "tip": {
+      "vi": "Nhắc SRM và A/A test là dấu hiệu bạn đã vận hành nền tảng thí nghiệm thật, không chỉ học thống kê.",
+      "en": "Mentioning SRM and A/A tests signals you have operated a real experimentation platform, not just studied statistics."
+    },
+    "followUps": [
+      { "vi": "Kết quả có ý nghĩa thống kê nhưng primary metric tăng còn guardrail giảm, bạn quyết định thế nào?", "en": "The result is significant but the primary metric rose while a guardrail fell; how do you decide?" },
+      { "vi": "Khi không thể A/B test (ví dụ đổi giá toàn quốc), bạn đo tác động thế nào?", "en": "When you cannot A/B test (e.g. a nationwide price change), how do you measure impact?" }
+    ]
+  },
+  {
+    "id": "data-pipeline-design",
+    "level": "senior",
+    "topic": "Platform Design",
+    "q": {
+      "vi": "Thiết kế nền tảng dữ liệu thu thập event từ app (hàng trăm triệu event mỗi ngày) phục vụ cả dashboard hằng ngày và chỉ số gần thời gian thực.",
+      "en": "Design a data platform that collects app events (hundreds of millions per day) serving both daily dashboards and near real-time metrics."
+    },
+    "a": {
+      "vi": "Tôi sẽ làm rõ yêu cầu trước (độ trễ cần thiết, ai dùng, ngân sách, yêu cầu PII), rồi đề xuất kiến trúc nhiều tầng với một nguồn dữ liệu thô bất biến làm nền.\n- Thu thập: SDK gửi event theo lô, có event_id (UUID) và event time, tới một collector API; collector validate schema và đẩy vào Kafka (hoặc Kinesis, Pub/Sub). Schema quản lý bằng Schema Registry và data contract với team app.\n- Tầng raw: ghi liên tục từ Kafka xuống object storage dạng Iceberg/Delta, partition theo ngày event; giữ nguyên dữ liệu thô để replay và backfill.\n- Real-time: một job streaming (Flink hoặc Spark Structured Streaming) tính các chỉ số cần độ trễ thấp theo event time có watermark, ghi vào store phục vụ nhanh như ClickHouse hoặc Druid.\n- Batch: dbt hoặc Spark biến đổi raw → staging (dedupe theo event_id, chuẩn hoá) → mart (fact, dimension, bảng tổng hợp) cho BI; điều phối bằng Airflow, task idempotent theo partition.\n- Chất lượng và vận hành: test, freshness, giám sát consumer lag, lineage, phân quyền và che PII, xoá dữ liệu theo yêu cầu GDPR.\n\nĐánh đổi chính: số liệu real-time chỉ là xấp xỉ, batch là nguồn sự thật; nói rõ điều này với người dùng để tránh hai con số mâu thuẫn.",
+      "en": "I would clarify requirements first (required latency, who consumes it, budget, PII constraints), then propose a layered architecture built on an immutable raw data source.\n- Collection: the SDK sends batched events with an event_id (UUID) and event time to a collector API; the collector validates the schema and pushes to Kafka (or Kinesis, Pub/Sub). Schemas are managed with a Schema Registry and a data contract with the app team.\n- Raw layer: continuously write from Kafka to object storage as Iceberg/Delta, partitioned by event date; keep raw data untouched for replay and backfills.\n- Real-time: a streaming job (Flink or Spark Structured Streaming) computes low-latency metrics on event time with watermarks, writing to a fast serving store like ClickHouse or Druid.\n- Batch: dbt or Spark transforms raw → staging (dedupe by event_id, normalization) → marts (facts, dimensions, aggregates) for BI; orchestrated by Airflow with tasks idempotent per partition.\n- Quality and operations: tests, freshness, consumer lag monitoring, lineage, access control and PII masking, GDPR deletion requests.\n\nThe key trade-off: real-time numbers are approximate and batch is the source of truth; make that explicit to users to avoid two conflicting numbers."
+    },
+    "tip": {
+      "vi": "Dành phút đầu để hỏi yêu cầu và nêu con số ước lượng (event/giây, dung lượng/ngày) trước khi vẽ kiến trúc.",
+      "en": "Spend the first minute on requirements and back-of-envelope numbers (events/second, storage/day) before drawing the architecture."
+    },
+    "followUps": [
+      { "vi": "Bạn xử lý event bị gửi trùng hoặc đến muộn vài ngày từ thiết bị offline thế nào?", "en": "How do you handle duplicate events or events arriving days late from offline devices?" },
+      { "vi": "Chi phí tăng gấp đôi sau 6 tháng, bạn tối ưu ở đâu trước?", "en": "Costs doubled after 6 months; where do you optimize first?" }
+    ]
+  }
+]

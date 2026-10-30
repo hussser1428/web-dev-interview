@@ -1,0 +1,992 @@
+[
+  {
+    "id": "ai-supervised-vs-unsupervised",
+    "level": "intern",
+    "topic": "ML Fundamentals",
+    "q": {
+      "vi": "Supervised, unsupervised và reinforcement learning khác nhau thế nào? Cho ví dụ.",
+      "en": "How do supervised, unsupervised and reinforcement learning differ? Give examples."
+    },
+    "a": {
+      "vi": "Khác nhau ở loại tín hiệu mà model học: supervised có nhãn, unsupervised không có nhãn, reinforcement learning học từ phần thưởng khi tương tác với môi trường.\n- Supervised: có cặp (input, label). Regression dự đoán một con số (giá nhà), classification dự đoán lớp (email có phải spam không).\n- Unsupervised: chỉ có input, model tự tìm cấu trúc. Ví dụ clustering (phân khúc khách hàng bằng K-means), giảm chiều (PCA), phát hiện bất thường.\n- Self-supervised: tự tạo nhãn từ chính dữ liệu, ví dụ đoán token tiếp theo — đây là cách pretrain LLM.\n- Reinforcement learning: agent chọn hành động, nhận reward và tối ưu tổng reward dài hạn (game, robot, RLHF cho LLM).\nThực tế dữ liệu có nhãn rất đắt, nên người ta hay kết hợp: pretrain self-supervised trên dữ liệu lớn không nhãn, rồi fine-tune supervised trên một lượng nhỏ dữ liệu có nhãn.",
+      "en": "They differ in the learning signal: supervised learning has labels, unsupervised has none, and reinforcement learning learns from rewards while interacting with an environment.\n- Supervised: (input, label) pairs. Regression predicts a number (house price), classification predicts a class (is this email spam).\n- Unsupervised: inputs only, the model finds structure on its own. Examples: clustering (customer segmentation with K-means), dimensionality reduction (PCA), anomaly detection.\n- Self-supervised: labels are generated from the data itself, e.g. predicting the next token — this is how LLMs are pretrained.\n- Reinforcement learning: an agent takes actions, receives rewards and maximizes long-term cumulative reward (games, robotics, RLHF for LLMs).\nIn practice labeled data is expensive, so teams often combine them: self-supervised pretraining on large unlabeled data, then supervised fine-tuning on a small labeled set."
+    },
+    "tip": {
+      "vi": "Nhắc đến self-supervised và liên hệ với cách LLM được pretrain sẽ cho thấy bạn hiểu bức tranh hiện đại, không chỉ định nghĩa sách giáo khoa.",
+      "en": "Mentioning self-supervised learning and linking it to LLM pretraining shows you see the modern picture, not just textbook definitions."
+    },
+    "followUps": [
+      {
+        "vi": "Semi-supervised learning là gì và khi nào hữu ích?",
+        "en": "What is semi-supervised learning and when is it useful?"
+      },
+      {
+        "vi": "Làm sao đánh giá một model clustering khi không có nhãn?",
+        "en": "How do you evaluate a clustering model without labels?"
+      }
+    ]
+  },
+  {
+    "id": "ai-train-val-test-split",
+    "level": "intern",
+    "topic": "ML Fundamentals",
+    "q": {
+      "vi": "Tại sao phải chia train/validation/test? Cross-validation dùng khi nào?",
+      "en": "Why split data into train/validation/test? When do you use cross-validation?"
+    },
+    "a": {
+      "vi": "Mỗi tập có một vai trò riêng: train để học trọng số, validation để chọn hyperparameter và model, test để ước lượng hiệu năng thật đúng một lần ở cuối.\n- Nếu tune trên test, ta vô tình overfit vào test và con số báo cáo sẽ quá lạc quan.\n- Tỉ lệ phổ biến là 70/15/15 hoặc 80/10/10; dataset rất lớn thì val/test chỉ cần vài phần trăm.\n- Cách chia phải mô phỏng lúc chạy thật: dữ liệu theo thời gian thì chia theo thời gian; nhiều bản ghi của cùng một user thì chia theo user (group split); lớp mất cân bằng thì dùng stratified split.\nCross-validation (k-fold): chia dữ liệu train thành k phần, lần lượt lấy mỗi phần làm validation rồi lấy trung bình. Dùng khi dữ liệu ít để kết quả ổn định hơn và thấy được độ dao động; đổi lại tốn gấp k lần thời gian train. Với chuỗi thời gian thì dùng TimeSeriesSplit thay vì xáo trộn ngẫu nhiên.",
+      "en": "Each set has its own job: train to learn the weights, validation to choose hyperparameters and models, and test to estimate real performance exactly once at the end.\n- If you tune on the test set you implicitly overfit to it and the reported number becomes too optimistic.\n- Common ratios are 70/15/15 or 80/10/10; with very large datasets, val/test only need a few percent.\n- The split must mimic production: time-ordered data is split by time; many records per user are split by user (group split); imbalanced classes use a stratified split.\nCross-validation (k-fold): split the training data into k parts, use each part as validation in turn, then average. Use it when data is small, to get a more stable estimate and see the variance; the cost is k times the training time. For time series use TimeSeriesSplit instead of random shuffling."
+    },
+    "tip": {
+      "vi": "Điểm cộng lớn là nói được rằng cách chia phải giống phân phối production (theo thời gian, theo user), không chỉ là chia ngẫu nhiên.",
+      "en": "You score big by saying the split must match the production distribution (by time, by user), not just a random split."
+    },
+    "followUps": [
+      {
+        "vi": "Nested cross-validation dùng để làm gì?",
+        "en": "What is nested cross-validation for?"
+      },
+      {
+        "vi": "Nếu điểm validation và test chênh nhau nhiều, bạn nghi ngờ điều gì?",
+        "en": "If validation and test scores differ a lot, what do you suspect?"
+      }
+    ],
+    "source": "https://scikit-learn.org/stable/modules/cross_validation.html"
+  },
+  {
+    "id": "ai-bias-variance",
+    "level": "junior",
+    "topic": "ML Fundamentals",
+    "q": {
+      "vi": "Giải thích bias-variance trade-off.",
+      "en": "Explain the bias-variance trade-off."
+    },
+    "a": {
+      "vi": "Lỗi dự đoán có thể tách thành bias, variance và nhiễu không thể giảm; giảm thành phần này thường làm tăng thành phần kia.\n- Bias cao: model quá đơn giản, giả định sai về dữ liệu → underfitting, lỗi cao cả trên train lẫn validation. Ví dụ dùng đường thẳng cho quan hệ phi tuyến.\n- Variance cao: model quá nhạy với tập train cụ thể → overfitting, train rất tốt nhưng validation kém; đổi dữ liệu một chút là model thay đổi nhiều.\nChẩn đoán bằng cách so sánh train error với validation error, hoặc vẽ learning curve.\n- Bias cao: thêm feature, dùng model phức tạp hơn, giảm regularization, train lâu hơn.\n- Variance cao: thêm dữ liệu, tăng regularization, model đơn giản hơn, ensemble kiểu bagging.\nLưu ý: với deep learning hiện đại, model rất lớn kèm đủ dữ liệu và regularization vẫn generalize tốt (hiện tượng double descent), nên trade-off này là công cụ tư duy hơn là quy luật cứng.",
+      "en": "Prediction error can be decomposed into bias, variance and irreducible noise; reducing one usually increases the other.\n- High bias: the model is too simple and makes wrong assumptions → underfitting, high error on both train and validation. Example: fitting a straight line to a non-linear relationship.\n- High variance: the model is too sensitive to the specific training set → overfitting, great on train but poor on validation; small changes in data change the model a lot.\nDiagnose by comparing train error with validation error, or by plotting learning curves.\n- High bias: add features, use a more complex model, reduce regularization, train longer.\n- High variance: get more data, increase regularization, use a simpler model, ensemble with bagging.\nNote: in modern deep learning, very large models with enough data and regularization still generalize well (double descent), so the trade-off is a thinking tool rather than a strict law."
+    },
+    "tip": {
+      "vi": "Luôn gắn mỗi trường hợp với cách chẩn đoán (train vs validation error) và hành động cụ thể — người phỏng vấn muốn thấy bạn biết sửa, không chỉ biết định nghĩa.",
+      "en": "Always tie each case to a diagnosis (train vs validation error) and a concrete action — interviewers want to see you can fix it, not just define it."
+    },
+    "followUps": [
+      {
+        "vi": "Bagging và boosting giảm bias hay variance?",
+        "en": "Do bagging and boosting reduce bias or variance?"
+      },
+      {
+        "vi": "Đọc learning curve thế nào để biết có nên thu thập thêm dữ liệu?",
+        "en": "How do you read a learning curve to decide whether more data will help?"
+      }
+    ]
+  },
+  {
+    "id": "ai-overfitting",
+    "level": "junior",
+    "topic": "ML Fundamentals",
+    "q": {
+      "vi": "Overfitting là gì? Xử lý thế nào khi dataset nhỏ?",
+      "en": "What is overfitting? How do you handle it with a small dataset?"
+    },
+    "a": {
+      "vi": "Overfitting là khi model học thuộc cả nhiễu của tập train, nên điểm trên train rất tốt nhưng trên validation/test lại kém.\n\nNhận biết: train loss tiếp tục giảm trong khi validation loss đi ngang rồi tăng; khoảng cách giữa điểm train và validation lớn.\n\nCách xử lý khi dữ liệu nhỏ:\n- Data augmentation (lật, cắt ảnh; paraphrase văn bản), thu thập hoặc gán nhãn thêm nếu được.\n- Transfer learning từ model pretrained, chỉ fine-tune vài lớp cuối hoặc dùng LoRA.\n- Regularization: L1/L2, dropout, weight decay.\n- Model đơn giản hơn, ít tham số hơn; early stopping theo validation loss.\n- Cross-validation để đánh giá ổn định hơn thay vì dựa vào một tập validation nhỏ.\n\nCũng nên kiểm tra data leakage hoặc dữ liệu trùng lặp giữa train và test, vì chúng có thể che giấu overfitting cho đến khi lên production.",
+      "en": "Overfitting is when the model memorizes noise in the training set, so it scores very well on train but poorly on validation/test.\n\nSymptoms: train loss keeps falling while validation loss plateaus and then rises; a large gap between train and validation scores.\n\nWith small data:\n- Data augmentation (flipping, cropping images; paraphrasing text), and collect or label more data if possible.\n- Transfer learning from a pretrained model, fine-tuning only the last layers or using LoRA.\n- Regularization: L1/L2, dropout, weight decay.\n- A simpler model with fewer parameters; early stopping on validation loss.\n- Cross-validation for a more stable estimate instead of relying on one small validation set.\n\nAlso check for data leakage or duplicates between train and test, since they can hide overfitting until production."
+    },
+    "tip": {
+      "vi": "Mô tả được dấu hiệu trên đường cong loss và ưu tiên transfer learning khi dữ liệu nhỏ là cách trả lời rất thực tế.",
+      "en": "Describing the loss-curve symptom and prioritizing transfer learning for small data makes a very practical answer."
+    },
+    "followUps": [
+      {
+        "vi": "Early stopping hoạt động thế nào và cần lưu ý gì?",
+        "en": "How does early stopping work and what should you watch out for?"
+      },
+      {
+        "vi": "Data augmentation nào phù hợp với dữ liệu văn bản hoặc dữ liệu bảng?",
+        "en": "Which data augmentation methods suit text or tabular data?"
+      }
+    ]
+  },
+  {
+    "id": "ai-regularization-l1-l2",
+    "level": "junior",
+    "topic": "ML Fundamentals",
+    "q": {
+      "vi": "L1 và L2 regularization khác nhau thế nào?",
+      "en": "What is the difference between L1 and L2 regularization?"
+    },
+    "a": {
+      "vi": "Cả hai đều cộng thêm một khoản phạt theo độ lớn trọng số vào loss để model bớt phức tạp, nhưng L1 đẩy nhiều trọng số về đúng 0 còn L2 chỉ làm trọng số nhỏ lại.\n- L1 (Lasso): phạt tổng |w|. Gradient của khoản phạt có độ lớn không đổi nên kéo nhiều trọng số về 0 → model sparse, coi như tự chọn feature. Khi các feature tương quan mạnh, L1 hay chọn tùy ý một cái.\n- L2 (Ridge, weight decay): phạt tổng w². Trọng số lớn bị phạt nặng, mọi trọng số co về gần 0 nhưng hiếm khi bằng 0; ổn định hơn khi có feature tương quan.\n- Elastic Net kết hợp cả hai.\nHệ số lambda (alpha) càng lớn càng giảm variance nhưng tăng bias; chọn bằng validation. Cần scale feature trước vì khoản phạt phụ thuộc thang đo. Trong deep learning, L2 thường được áp dụng dưới dạng weight decay; với Adam nên dùng AdamW để weight decay tách khỏi bước cập nhật gradient.",
+      "en": "Both add a penalty on weight magnitude to the loss to make the model less complex, but L1 drives many weights to exactly zero while L2 only shrinks them.\n- L1 (Lasso): penalizes the sum of |w|. Its gradient has constant magnitude, so it pushes many weights to zero → a sparse model, effectively built-in feature selection. With strongly correlated features, L1 tends to pick one arbitrarily.\n- L2 (Ridge, weight decay): penalizes the sum of w². Large weights are punished heavily; all weights shrink toward zero but rarely reach it; more stable with correlated features.\n- Elastic Net combines both.\nA larger lambda (alpha) lowers variance but raises bias; choose it with validation. Scale features first, because the penalty depends on feature scale. In deep learning, L2 is usually applied as weight decay; with Adam, use AdamW so weight decay is decoupled from the gradient update."
+    },
+    "tip": {
+      "vi": "Giải thích vì sao L1 tạo sparsity (gradient hằng số, hoặc hình học vùng ràng buộc hình thoi) sẽ khiến câu trả lời nổi bật.",
+      "en": "Explaining why L1 creates sparsity (constant gradient, or the diamond-shaped constraint region) makes your answer stand out."
+    },
+    "followUps": [
+      {
+        "vi": "Tại sao phải scale feature trước khi dùng regularization?",
+        "en": "Why must you scale features before applying regularization?"
+      },
+      {
+        "vi": "Weight decay trong AdamW khác L2 trong Adam ở điểm nào?",
+        "en": "How does weight decay in AdamW differ from L2 in Adam?"
+      }
+    ],
+    "source": "https://scikit-learn.org/stable/modules/linear_model.html"
+  },
+  {
+    "id": "ai-data-leakage",
+    "level": "mid",
+    "topic": "ML Fundamentals",
+    "q": {
+      "vi": "Data leakage là gì? Cho ví dụ và cách phòng tránh.",
+      "en": "What is data leakage? Give examples and how to prevent it."
+    },
+    "a": {
+      "vi": "Data leakage là khi thông tin không thể có tại thời điểm dự đoán thật lại lọt vào quá trình train, khiến điểm offline rất đẹp nhưng lên production thì sụp.\nCác dạng hay gặp:\n- Target leakage: feature được tạo ra sau hoặc từ chính nhãn, ví dụ dự đoán khách rời bỏ nhưng lại dùng cột 'ngày hủy hợp đồng'.\n- Train-test contamination: fit scaler, imputer, chọn feature hay oversampling trên toàn bộ dữ liệu trước khi chia.\n- Leakage theo thời gian: xáo trộn ngẫu nhiên chuỗi thời gian, dùng tương lai để đoán quá khứ.\n- Trùng lặp: cùng một user hoặc ảnh gần giống nhau nằm ở cả train và test.\nPhòng tránh: chia dữ liệu đầu tiên; đặt mọi bước tiền xử lý trong Pipeline để chỉ fit trên fold train; chia theo thời gian hoặc theo group; với mỗi feature hãy hỏi 'lúc dự đoán thì giá trị này đã có chưa?'. Dấu hiệu cảnh báo: một feature có importance cao bất thường hoặc độ chính xác gần như hoàn hảo.",
+      "en": "Data leakage is when information that would not be available at real prediction time leaks into training, so offline scores look great but production performance collapses.\nCommon forms:\n- Target leakage: a feature created after, or derived from, the label, e.g. predicting churn while using a 'contract cancellation date' column.\n- Train-test contamination: fitting a scaler, imputer, feature selection or oversampling on the full dataset before splitting.\n- Temporal leakage: randomly shuffling time series, using the future to predict the past.\n- Duplicates: the same user or near-identical images appearing in both train and test.\nPrevention: split first; put every preprocessing step inside a Pipeline so it is fit only on the training fold; split by time or by group; for each feature ask 'is this value available at prediction time?'. Warning signs: one feature with suspiciously high importance, or near-perfect accuracy."
+    },
+    "code": "from sklearn.pipeline import make_pipeline\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import cross_val_score\n\n# scaler is re-fit inside each training fold -> no leakage\npipe = make_pipeline(StandardScaler(), LogisticRegression())\nscores = cross_val_score(pipe, X, y, cv=5, scoring=\"f1\")",
+    "tip": {
+      "vi": "Kể một trường hợp leakage thật bạn từng gặp hoặc đọc được, kèm cách phát hiện, sẽ thuyết phục hơn mọi định nghĩa.",
+      "en": "Telling a real leakage case you hit or read about, with how it was detected, is more convincing than any definition."
+    },
+    "followUps": [
+      {
+        "vi": "Target encoding có thể gây leakage thế nào và làm sao tránh?",
+        "en": "How can target encoding cause leakage and how do you avoid it?"
+      },
+      {
+        "vi": "Làm sao phát hiện leakage khi model đã lên production?",
+        "en": "How do you detect leakage once a model is already in production?"
+      }
+    ],
+    "source": "https://scikit-learn.org/stable/common_pitfalls.html"
+  },
+  {
+    "id": "ai-precision-recall-f1",
+    "level": "intern",
+    "topic": "Evaluation Metrics",
+    "q": {
+      "vi": "Precision, recall và F1 là gì? Khi nào ưu tiên precision, khi nào ưu tiên recall?",
+      "en": "What are precision, recall and F1? When do you prioritize precision versus recall?"
+    },
+    "a": {
+      "vi": "Precision là trong những ca model báo dương tính thì bao nhiêu phần đúng; recall là trong những ca dương tính thật thì model bắt được bao nhiêu.\n- Precision = TP / (TP + FP)\n- Recall = TP / (TP + FN)\n- F1 = trung bình điều hòa của precision và recall, chỉ cao khi cả hai cùng cao.\nƯu tiên theo chi phí của từng loại lỗi:\n- Sàng lọc ung thư, phát hiện gian lận: bỏ sót rất tốn kém → ưu tiên recall.\n- Lọc spam, chặn nội dung: báo nhầm gây phiền người dùng → ưu tiên precision.\nHai chỉ số đánh đổi nhau qua ngưỡng quyết định: hạ threshold thì recall tăng, precision giảm. Accuracy dễ gây hiểu nhầm khi dữ liệu mất cân bằng: nếu 99% giao dịch hợp lệ, model luôn đoán 'hợp lệ' vẫn đạt 99% accuracy nhưng recall bằng 0. Với bài toán nhiều lớp, cần nói rõ dùng macro hay weighted average.",
+      "en": "Precision is how many of the cases the model flags as positive are actually positive; recall is how many of the truly positive cases the model catches.\n- Precision = TP / (TP + FP)\n- Recall = TP / (TP + FN)\n- F1 = the harmonic mean of precision and recall, high only when both are high.\nPrioritize based on the cost of each error type:\n- Cancer screening, fraud detection: misses are very costly → prioritize recall.\n- Spam filtering, content blocking: false alarms annoy users → prioritize precision.\nThe two trade off through the decision threshold: lowering the threshold raises recall and lowers precision. Accuracy is misleading on imbalanced data: if 99% of transactions are legitimate, a model that always predicts 'legitimate' gets 99% accuracy with zero recall. For multi-class problems, state whether you use macro or weighted averaging."
+    },
+    "code": "from sklearn.metrics import classification_report, confusion_matrix\n\nprint(confusion_matrix(y_true, y_pred))\nprint(classification_report(y_true, y_pred))  # precision, recall, f1 per class",
+    "tip": {
+      "vi": "Luôn quy về chi phí nghiệp vụ của false positive và false negative — đó là điều người phỏng vấn muốn nghe.",
+      "en": "Always tie it back to the business cost of false positives versus false negatives — that is what interviewers want to hear."
+    },
+    "followUps": [
+      {
+        "vi": "F-beta score là gì và chọn beta thế nào?",
+        "en": "What is the F-beta score and how do you choose beta?"
+      },
+      {
+        "vi": "Macro và micro average khác nhau ra sao?",
+        "en": "How do macro and micro averaging differ?"
+      }
+    ],
+    "source": "https://scikit-learn.org/stable/modules/model_evaluation.html"
+  },
+  {
+    "id": "ai-roc-auc",
+    "level": "junior",
+    "topic": "Evaluation Metrics",
+    "q": {
+      "vi": "ROC-AUC đo cái gì? Khi nào nên dùng PR-AUC thay thế?",
+      "en": "What does ROC-AUC measure? When should you use PR-AUC instead?"
+    },
+    "a": {
+      "vi": "ROC-AUC đo khả năng model xếp hạng mẫu dương cao hơn mẫu âm trên mọi ngưỡng; AUC = 0.5 là đoán ngẫu nhiên, 1.0 là hoàn hảo.\n- Đường ROC vẽ True Positive Rate (recall) theo False Positive Rate khi quét threshold từ cao xuống thấp.\n- AUC có thể hiểu là xác suất một mẫu dương ngẫu nhiên được chấm điểm cao hơn một mẫu âm ngẫu nhiên.\n- Ưu điểm: không phụ thuộc threshold, tiện để so sánh model.\nHạn chế: khi lớp dương rất hiếm, FPR luôn nhỏ vì số mẫu âm quá lớn, nên ROC-AUC trông đẹp dù precision thực tế thấp. Khi đó nên xem PR curve và PR-AUC (average precision). AUC cũng không nói gì về calibration, tức xác suất dự đoán có đáng tin hay không; nếu cần dùng xác suất trực tiếp thì kiểm tra thêm log loss hoặc calibration curve. Cuối cùng vẫn phải chọn một threshold cụ thể theo yêu cầu nghiệp vụ.",
+      "en": "ROC-AUC measures how well the model ranks positives above negatives across all thresholds; AUC = 0.5 is random guessing, 1.0 is perfect.\n- The ROC curve plots True Positive Rate (recall) against False Positive Rate as you sweep the threshold from high to low.\n- AUC can be read as the probability that a random positive gets a higher score than a random negative.\n- Advantage: threshold-independent, convenient for comparing models.\nLimitation: when positives are very rare, FPR stays small because there are so many negatives, so ROC-AUC looks good even when real precision is low. In that case look at the PR curve and PR-AUC (average precision). AUC also says nothing about calibration, i.e. whether predicted probabilities can be trusted; if you use probabilities directly, also check log loss or a calibration curve. In the end you still have to pick a concrete threshold from business requirements."
+    },
+    "tip": {
+      "vi": "Diễn giải AUC theo nghĩa xác suất xếp hạng và chỉ ra điểm yếu với dữ liệu mất cân bằng là hai ý ghi điểm chính.",
+      "en": "Interpreting AUC as a ranking probability and pointing out its weakness on imbalanced data are the two key scoring points."
+    },
+    "followUps": [
+      {
+        "vi": "Bạn chọn threshold cuối cùng như thế nào?",
+        "en": "How do you choose the final threshold?"
+      },
+      {
+        "vi": "Calibration là gì và làm sao calibrate một model?",
+        "en": "What is calibration and how do you calibrate a model?"
+      }
+    ]
+  },
+  {
+    "id": "ai-imbalanced-data",
+    "level": "mid",
+    "topic": "Evaluation Metrics",
+    "q": {
+      "vi": "Bạn xử lý dữ liệu mất cân bằng lớp (ví dụ 1% gian lận) như thế nào?",
+      "en": "How do you handle class-imbalanced data (e.g. 1% fraud)?"
+    },
+    "a": {
+      "vi": "Với dữ liệu mất cân bằng, trước hết phải đổi cách đo, sau đó mới can thiệp vào dữ liệu hoặc loss.\n- Metric: bỏ accuracy, dùng precision/recall, F1, PR-AUC, confusion matrix; chọn threshold theo chi phí FP/FN thay vì mặc định 0.5.\n- Chia dữ liệu bằng stratified split để mỗi tập đều có đủ lớp hiếm.\n- Cân bằng ở mức loss: class_weight hoặc focal loss — thường là cách đơn giản và hiệu quả nhất.\n- Resampling: undersample lớp lớn, oversample lớp nhỏ hoặc SMOTE. Chỉ áp dụng trên tập train, không bao giờ trên validation/test, nếu không sẽ leakage.\n- Model: gradient boosting xử lý khá tốt; nếu lớp cực hiếm có thể coi đây là bài toán anomaly detection.\n- Dữ liệu: thu thập thêm mẫu lớp hiếm thường đáng giá hơn mọi mẹo kỹ thuật.\nLưu ý: resampling hoặc class weight làm lệch xác suất dự đoán; nếu nghiệp vụ cần xác suất chính xác thì phải calibrate lại.",
+      "en": "With imbalanced data, first change how you measure, and only then intervene in the data or the loss.\n- Metrics: drop accuracy, use precision/recall, F1, PR-AUC and the confusion matrix; pick the threshold from FP/FN costs instead of the default 0.5.\n- Use a stratified split so every set contains enough of the rare class.\n- Rebalance in the loss: class_weight or focal loss — usually the simplest and most effective option.\n- Resampling: undersample the majority, oversample the minority or use SMOTE. Apply it only to the training set, never to validation/test, or you introduce leakage.\n- Models: gradient boosting handles it fairly well; if the class is extremely rare, treat it as anomaly detection.\n- Data: collecting more rare-class examples is often worth more than any technical trick.\nNote: resampling or class weights distort predicted probabilities; if the business needs accurate probabilities, recalibrate."
+    },
+    "tip": {
+      "vi": "Nói 'đổi metric và threshold trước, resampling sau' cho thấy bạn có tư duy thực tế, không lao ngay vào SMOTE.",
+      "en": "Saying 'change the metric and threshold first, resample later' shows practical judgment instead of jumping straight to SMOTE."
+    },
+    "followUps": [
+      {
+        "vi": "Focal loss hoạt động thế nào?",
+        "en": "How does focal loss work?"
+      },
+      {
+        "vi": "Vì sao không được oversample trước khi chia train/test?",
+        "en": "Why must you not oversample before the train/test split?"
+      }
+    ]
+  },
+  {
+    "id": "ai-linear-vs-logistic-regression",
+    "level": "intern",
+    "topic": "Classic Models",
+    "q": {
+      "vi": "Linear regression và logistic regression khác nhau thế nào?",
+      "en": "How do linear regression and logistic regression differ?"
+    },
+    "a": {
+      "vi": "Linear regression dự đoán một giá trị liên tục, còn logistic regression dự đoán xác suất thuộc một lớp, nên được dùng cho classification dù tên có chữ regression.\n- Linear: y = w·x + b, tối ưu Mean Squared Error, có nghiệm đóng hoặc giải bằng gradient descent. Ví dụ dự đoán giá nhà.\n- Logistic: đưa w·x + b qua hàm sigmoid để ra xác suất từ 0 đến 1, tối ưu log loss (cross-entropy). Ví dụ dự đoán khách có click quảng cáo không. Mở rộng cho nhiều lớp bằng softmax.\n- Không dùng MSE cho logistic vì khi kết hợp với sigmoid, hàm loss không còn lồi và gradient yếu.\nCả hai đều là model tuyến tính: ranh giới quyết định của logistic là một siêu phẳng, muốn bắt quan hệ phi tuyến phải tự tạo feature. Ưu điểm lớn là nhanh, dễ giải thích qua hệ số và là baseline tốt. Cần chú ý scale feature, đa cộng tuyến và outlier (đặc biệt với linear).",
+      "en": "Linear regression predicts a continuous value, while logistic regression predicts the probability of belonging to a class, so it is used for classification despite the name.\n- Linear: y = w·x + b, minimizes Mean Squared Error, solved in closed form or with gradient descent. Example: predicting house prices.\n- Logistic: passes w·x + b through a sigmoid to get a probability between 0 and 1, minimizes log loss (cross-entropy). Example: predicting whether a user clicks an ad. Extends to multiple classes with softmax.\n- MSE is not used for logistic regression because combined with the sigmoid the loss becomes non-convex and gradients get weak.\nBoth are linear models: the logistic decision boundary is a hyperplane, so capturing non-linear relationships requires engineered features. Their big advantages are speed, interpretability through coefficients, and being a strong baseline. Watch out for feature scaling, multicollinearity and outliers (especially for linear)."
+    },
+    "tip": {
+      "vi": "Nhấn mạnh logistic regression là model phân loại và luôn nên là baseline đầu tiên trước khi thử model phức tạp.",
+      "en": "Stress that logistic regression is a classifier and should always be the first baseline before trying complex models."
+    },
+    "followUps": [
+      {
+        "vi": "Diễn giải hệ số của logistic regression thế nào?",
+        "en": "How do you interpret logistic regression coefficients?"
+      },
+      {
+        "vi": "Đa cộng tuyến ảnh hưởng gì đến linear regression?",
+        "en": "How does multicollinearity affect linear regression?"
+      }
+    ],
+    "source": "https://scikit-learn.org/stable/modules/linear_model.html"
+  },
+  {
+    "id": "ai-decision-tree-random-forest",
+    "level": "junior",
+    "topic": "Classic Models",
+    "q": {
+      "vi": "Decision tree hoạt động thế nào? Random forest cải thiện điều gì?",
+      "en": "How does a decision tree work? What does random forest improve?"
+    },
+    "a": {
+      "vi": "Decision tree chia dữ liệu bằng một chuỗi câu hỏi if-else trên feature; random forest là tập hợp nhiều cây được train trên các mẫu khác nhau rồi lấy trung bình hoặc bỏ phiếu.\n- Decision tree: tại mỗi node chọn feature và ngưỡng làm giảm impurity nhiều nhất (Gini, entropy cho classification; MSE cho regression). Dễ giải thích, không cần scale feature, nhưng cây sâu rất dễ overfit — variance cao.\n- Random forest dùng bagging: mỗi cây train trên một bootstrap sample, và mỗi lần chia chỉ xét một tập con ngẫu nhiên các feature. Sự ngẫu nhiên này làm các cây ít tương quan với nhau, nên lấy trung bình giúp giảm variance mạnh mà bias gần như không đổi.\n- Ưu điểm: mạnh ngay với tham số mặc định, ít phải tune, có out-of-bag error và feature importance.\n- Nhược điểm: model lớn, inference chậm hơn, khó giải thích hơn một cây; feature importance dựa trên impurity có thể thiên vị feature nhiều giá trị, nên kiểm tra thêm bằng permutation importance.",
+      "en": "A decision tree splits data with a sequence of if-else questions on features; a random forest is a collection of trees trained on different samples whose predictions are averaged or voted.\n- Decision tree: at each node it picks the feature and threshold that reduce impurity the most (Gini, entropy for classification; MSE for regression). Easy to explain, no feature scaling needed, but deep trees overfit easily — high variance.\n- Random forest uses bagging: each tree is trained on a bootstrap sample, and each split considers only a random subset of features. This randomness decorrelates the trees, so averaging cuts variance sharply while bias stays about the same.\n- Pros: strong with default parameters, little tuning, provides out-of-bag error and feature importance.\n- Cons: large models, slower inference, harder to explain than a single tree; impurity-based importance can favor high-cardinality features, so double-check with permutation importance."
+    },
+    "tip": {
+      "vi": "Giải thích được vì sao chọn ngẫu nhiên feature ở mỗi lần chia giúp các cây ít tương quan là chi tiết phân biệt ứng viên giỏi.",
+      "en": "Explaining why random feature selection at each split decorrelates the trees is the detail that separates strong candidates."
+    },
+    "followUps": [
+      {
+        "vi": "Out-of-bag error là gì?",
+        "en": "What is out-of-bag error?"
+      },
+      {
+        "vi": "Bạn sẽ kiểm soát overfitting của một decision tree bằng tham số nào?",
+        "en": "Which parameters would you use to control overfitting in a decision tree?"
+      }
+    ],
+    "source": "https://scikit-learn.org/stable/modules/ensemble.html"
+  },
+  {
+    "id": "ai-gradient-boosting",
+    "level": "mid",
+    "topic": "Classic Models",
+    "q": {
+      "vi": "Gradient boosting hoạt động thế nào và khác random forest ra sao? Vì sao nó thường thắng với dữ liệu dạng bảng?",
+      "en": "How does gradient boosting work and how is it different from random forest? Why does it often win on tabular data?"
+    },
+    "a": {
+      "vi": "Gradient boosting xây các cây nông một cách tuần tự, mỗi cây mới học để sửa phần lỗi (chính xác hơn là gradient của loss) mà các cây trước còn để lại.\n- Khác random forest: RF train các cây sâu song song rồi lấy trung bình để giảm variance; boosting cộng dồn các cây yếu để giảm bias.\n- Tham số chính: learning_rate, số cây, độ sâu cây, subsample và column sampling, regularization trên lá. Learning rate nhỏ, nhiều cây kèm early stopping trên validation thường cho kết quả tốt nhất.\n- Các thư viện như XGBoost, LightGBM, CatBoost bổ sung histogram binning, xử lý missing value, categorical feature và train rất nhanh.\nVì sao thắng với dữ liệu bảng: xử lý tốt feature hỗn hợp, không cần scale, bắt được tương tác phi tuyến, và thường vượt deep learning trên tabular data cỡ vừa.\nRủi ro: dễ overfit nếu nhiều cây mà không early stopping, nhạy với nhãn nhiễu, và vì train tuần tự nên không song song hóa được ở mức cây.",
+      "en": "Gradient boosting builds shallow trees sequentially, each new tree learning to correct the remaining error (more precisely, the gradient of the loss) left by the previous trees.\n- Versus random forest: RF trains deep trees in parallel and averages them to reduce variance; boosting adds up weak trees to reduce bias.\n- Key parameters: learning_rate, number of trees, tree depth, subsample and column sampling, leaf regularization. A small learning rate with many trees plus early stopping on validation usually works best.\n- Libraries such as XGBoost, LightGBM and CatBoost add histogram binning, missing-value handling, categorical features and very fast training.\nWhy it wins on tabular data: it handles mixed feature types well, needs no scaling, captures non-linear interactions, and often beats deep learning on medium-sized tabular data.\nRisks: overfitting with many trees and no early stopping, sensitivity to label noise, and sequential training means no parallelism at the tree level."
+    },
+    "tip": {
+      "vi": "Tóm gọn 'bagging giảm variance, boosting giảm bias' rồi nêu cách bạn tune learning rate với early stopping.",
+      "en": "Summarize 'bagging reduces variance, boosting reduces bias', then explain how you tune learning rate with early stopping."
+    },
+    "followUps": [
+      {
+        "vi": "LightGBM khác XGBoost ở cách phát triển cây thế nào?",
+        "en": "How does LightGBM grow trees differently from XGBoost?"
+      },
+      {
+        "vi": "Bạn giải thích dự đoán của model boosting cho stakeholder bằng cách nào?",
+        "en": "How would you explain a boosting model's predictions to stakeholders?"
+      }
+    ],
+    "source": "https://scikit-learn.org/stable/modules/ensemble.html"
+  },
+  {
+    "id": "ai-feature-engineering",
+    "level": "junior",
+    "topic": "Feature Engineering",
+    "q": {
+      "vi": "Bạn xử lý missing values, biến categorical và scale feature như thế nào?",
+      "en": "How do you handle missing values, categorical variables and feature scaling?"
+    },
+    "a": {
+      "vi": "Mục tiêu là biến dữ liệu thô thành dạng model hiểu được mà không làm lọt thông tin từ validation/test, nên mọi bước đều fit trên train rồi mới áp dụng cho các tập khác.\n- Missing values: tìm hiểu vì sao thiếu trước. Có thể điền median/mode, điền theo nhóm, hoặc thêm cột cờ 'is_missing' vì việc thiếu cũng là tín hiệu. Model cây như LightGBM xử lý missing trực tiếp.\n- Categorical: one-hot khi ít giá trị; cardinality cao thì dùng target encoding (phải tính theo fold để tránh leakage), hashing hoặc embedding. Ordinal encoding chỉ khi có thứ tự thật.\n- Scaling: StandardScaler hoặc MinMax cần cho model dựa trên khoảng cách hoặc gradient (KNN, SVM, linear, neural net); model cây không cần. Dữ liệu lệch nặng thì dùng log transform.\n- Feature mới: tỉ lệ, chênh lệch thời gian, aggregate theo user, đặc trưng ngày giờ.\nĐóng gói tất cả trong Pipeline/ColumnTransformer để train và serving dùng cùng một logic, tránh training-serving skew.",
+      "en": "The goal is to turn raw data into something the model understands without leaking information from validation/test, so every step is fit on train and only then applied to the other sets.\n- Missing values: first understand why they are missing. Impute with median/mode, impute per group, or add an 'is_missing' flag column since missingness itself is a signal. Tree models like LightGBM handle missing values natively.\n- Categorical: one-hot for few values; for high cardinality use target encoding (computed per fold to avoid leakage), hashing or embeddings. Ordinal encoding only when there is a real order.\n- Scaling: StandardScaler or MinMax is needed for distance- or gradient-based models (KNN, SVM, linear, neural nets); tree models do not need it. Use a log transform for heavily skewed data.\n- New features: ratios, time differences, per-user aggregates, date-time features.\nWrap everything in a Pipeline/ColumnTransformer so training and serving share the same logic and avoid training-serving skew."
+    },
+    "code": "from sklearn.compose import ColumnTransformer\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.impute import SimpleImputer\nfrom sklearn.preprocessing import OneHotEncoder, StandardScaler\n\npre = ColumnTransformer([\n    (\"num\", make_pipeline(SimpleImputer(strategy=\"median\"), StandardScaler()), num_cols),\n    (\"cat\", OneHotEncoder(handle_unknown=\"ignore\"), cat_cols),\n])",
+    "tip": {
+      "vi": "Nhắc đến training-serving skew và việc fit tiền xử lý chỉ trên train cho thấy bạn đã từng đưa model lên production.",
+      "en": "Mentioning training-serving skew and fitting preprocessing only on train shows you have shipped models to production."
+    },
+    "followUps": [
+      {
+        "vi": "Xử lý giá trị categorical chưa từng thấy lúc inference thế nào?",
+        "en": "How do you handle unseen categorical values at inference time?"
+      },
+      {
+        "vi": "Khi nào nên bỏ một feature?",
+        "en": "When should you drop a feature?"
+      }
+    ],
+    "source": "https://scikit-learn.org/stable/modules/preprocessing.html"
+  },
+  {
+    "id": "ai-activation-functions",
+    "level": "intern",
+    "topic": "Deep Learning",
+    "q": {
+      "vi": "Vì sao neural network cần activation function? So sánh sigmoid, ReLU và GELU.",
+      "en": "Why do neural networks need activation functions? Compare sigmoid, ReLU and GELU."
+    },
+    "a": {
+      "vi": "Activation function đưa tính phi tuyến vào mạng; không có nó, chồng bao nhiêu layer tuyến tính cũng chỉ tương đương một phép biến đổi tuyến tính duy nhất.\n- Sigmoid: ra giá trị 0–1, dùng ở output cho binary classification. Ở hidden layer dễ gây vanishing gradient vì bão hòa ở hai đầu.\n- Tanh: ra -1 đến 1, có tâm 0, nhưng vẫn bị bão hòa.\n- ReLU: max(0, x), tính nhanh, gradient không bị nhỏ dần với x dương; là lựa chọn mặc định cho CNN/MLP. Nhược điểm là 'dying ReLU' khi neuron luôn ra 0; Leaky ReLU khắc phục bằng độ dốc nhỏ cho x âm.\n- GELU, SiLU/Swish: mượt hơn ReLU, phổ biến trong transformer và LLM hiện nay.\n- Softmax: dùng ở output cho multi-class, biến logits thành phân phối xác suất.\nChọn activation ở output theo bài toán: regression thường không dùng, binary dùng sigmoid, multi-class dùng softmax. Trong PyTorch, nn.CrossEntropyLoss đã bao gồm softmax nên cần đưa logits thô vào.",
+      "en": "Activation functions add non-linearity to the network; without them, stacking any number of linear layers is still equivalent to a single linear transformation.\n- Sigmoid: outputs 0–1, used at the output for binary classification. In hidden layers it causes vanishing gradients because it saturates at both ends.\n- Tanh: outputs -1 to 1, zero-centered, but still saturates.\n- ReLU: max(0, x), cheap to compute, gradients do not shrink for positive x; the default for CNNs/MLPs. Its weakness is 'dying ReLU' when a neuron always outputs 0; Leaky ReLU fixes this with a small slope for negative x.\n- GELU, SiLU/Swish: smoother than ReLU, common in transformers and today's LLMs.\n- Softmax: at the output for multi-class, turns logits into a probability distribution.\nPick the output activation by task: regression usually has none, binary uses sigmoid, multi-class uses softmax. In PyTorch, nn.CrossEntropyLoss already includes softmax, so feed it raw logits."
+    },
+    "tip": {
+      "vi": "Mở đầu bằng lập luận 'không có phi tuyến thì mạng sâu cũng chỉ là một phép tuyến tính' — đó là ý cốt lõi người phỏng vấn chờ.",
+      "en": "Open with 'without non-linearity a deep network collapses into one linear map' — that is the core point interviewers wait for."
+    },
+    "followUps": [
+      {
+        "vi": "Vanishing gradient là gì và vì sao sigmoid gây ra nó?",
+        "en": "What is the vanishing gradient problem and why does sigmoid cause it?"
+      },
+      {
+        "vi": "Vì sao không nên áp softmax trước CrossEntropyLoss trong PyTorch?",
+        "en": "Why should you not apply softmax before CrossEntropyLoss in PyTorch?"
+      }
+    ]
+  },
+  {
+    "id": "ai-backpropagation",
+    "level": "junior",
+    "topic": "Deep Learning",
+    "q": {
+      "vi": "Giải thích backpropagation. Vanishing và exploding gradient là gì?",
+      "en": "Explain backpropagation. What are vanishing and exploding gradients?"
+    },
+    "a": {
+      "vi": "Backpropagation là thuật toán tính gradient của loss theo từng trọng số bằng chain rule, đi ngược từ output về input, để optimizer cập nhật trọng số.\nMột bước train gồm:\n- Forward pass: tính output và loss, lưu lại các giá trị trung gian (activation).\n- Backward pass: bắt đầu từ dLoss/dOutput, mỗi layer nhân gradient nhận được với đạo hàm cục bộ của nó rồi truyền tiếp về layer trước. Nhờ tái sử dụng kết quả trung gian, chi phí chỉ cỡ vài lần một forward pass.\n- Optimizer dùng gradient để cập nhật, ví dụ w = w - lr * grad.\nPyTorch làm việc này tự động qua autograd, dựng computational graph khi chạy forward.\nVấn đề thường gặp: vanishing gradient (nhân nhiều đạo hàm nhỏ, như sigmoid ở mạng sâu) và exploding gradient (hay gặp ở RNN). Khắc phục bằng ReLU/GELU, khởi tạo trọng số hợp lý (He/Xavier), normalization, residual connection và gradient clipping. Việc lưu activation cho backward cũng là lý do training tốn bộ nhớ GPU hơn inference rất nhiều.",
+      "en": "Backpropagation is the algorithm that computes the gradient of the loss with respect to every weight using the chain rule, going backward from output to input, so the optimizer can update the weights.\nOne training step:\n- Forward pass: compute the output and loss, storing intermediate values (activations).\n- Backward pass: starting from dLoss/dOutput, each layer multiplies the incoming gradient by its local derivative and passes it to the previous layer. Because intermediate results are reused, the cost is only a few times a forward pass.\n- The optimizer uses the gradients to update, e.g. w = w - lr * grad.\nPyTorch does this automatically with autograd, building the computational graph during the forward pass.\nCommon problems: vanishing gradients (multiplying many small derivatives, like sigmoid in deep nets) and exploding gradients (common in RNNs). Fixes: ReLU/GELU, proper weight initialization (He/Xavier), normalization, residual connections and gradient clipping. Storing activations for the backward pass is also why training needs far more GPU memory than inference."
+    },
+    "tip": {
+      "vi": "Nối backprop với chi phí bộ nhớ (lưu activation) và các kỹ thuật như residual connection cho thấy bạn hiểu cả lý thuyết lẫn thực hành.",
+      "en": "Connecting backprop to memory cost (stored activations) and techniques like residual connections shows both theory and practice."
+    },
+    "followUps": [
+      {
+        "vi": "Residual connection giúp gradient lan truyền tốt hơn thế nào?",
+        "en": "How do residual connections help gradients flow?"
+      },
+      {
+        "vi": "Gradient checkpointing đánh đổi điều gì?",
+        "en": "What does gradient checkpointing trade off?"
+      }
+    ]
+  },
+  {
+    "id": "ai-optimizers",
+    "level": "mid",
+    "topic": "Deep Learning",
+    "q": {
+      "vi": "So sánh SGD, momentum, Adam và AdamW. Bạn chọn learning rate thế nào?",
+      "en": "Compare SGD, momentum, Adam and AdamW. How do you choose the learning rate?"
+    },
+    "a": {
+      "vi": "Optimizer quyết định cách dùng gradient để cập nhật trọng số; các loại khác nhau ở cách xử lý quán tính và learning rate cho từng tham số.\n- SGD: w -= lr * grad trên mini-batch. Đơn giản, thường generalize tốt nhưng hội tụ chậm và nhạy với learning rate.\n- SGD + momentum: tích lũy trung bình gradient trước đó, giúp đi nhanh qua vùng phẳng và giảm dao động.\n- RMSProp: chia gradient cho trung bình bình phương gradient, tự điều chỉnh bước cho từng tham số.\n- Adam: kết hợp momentum và RMSProp, có bias correction. Hội tụ nhanh, ít phải tune, là lựa chọn mặc định cho transformer.\n- AdamW: tách weight decay khỏi bước cập nhật gradient; đây là chuẩn khi train và fine-tune LLM.\nLearning rate quan trọng hơn việc chọn optimizer: dùng warmup ở đầu rồi giảm dần (cosine hoặc linear decay), thử vài giá trị theo thang log. Batch size lớn thường cần learning rate lớn hơn. Adam tốn thêm bộ nhớ bằng hai lần số tham số để lưu hai moment, rất đáng kể khi train model lớn.",
+      "en": "The optimizer decides how gradients are used to update weights; they differ in how they handle momentum and per-parameter learning rates.\n- SGD: w -= lr * grad on mini-batches. Simple, often generalizes well, but converges slowly and is sensitive to the learning rate.\n- SGD + momentum: accumulates an average of past gradients, moving faster through flat regions and damping oscillations.\n- RMSProp: divides the gradient by a running average of squared gradients, adapting the step size per parameter.\n- Adam: combines momentum and RMSProp with bias correction. Converges fast, needs little tuning, the default for transformers.\n- AdamW: decouples weight decay from the gradient update; the standard for training and fine-tuning LLMs.\nThe learning rate matters more than the optimizer choice: use warmup at the start then decay (cosine or linear), and try a few values on a log scale. Larger batch sizes usually need a larger learning rate. Adam needs extra memory equal to twice the parameter count for its two moments, which is significant for large models."
+    },
+    "tip": {
+      "vi": "Nói rõ 'learning rate và schedule quan trọng hơn chọn optimizer' kèm warmup + cosine decay là câu trả lời của người đã train thật.",
+      "en": "Saying 'the learning rate and schedule matter more than the optimizer', with warmup plus cosine decay, sounds like someone who has actually trained models."
+    },
+    "followUps": [
+      {
+        "vi": "Vì sao cần warmup khi train transformer?",
+        "en": "Why is warmup needed when training transformers?"
+      },
+      {
+        "vi": "Loss bị NaN giữa chừng, bạn kiểm tra những gì?",
+        "en": "Your loss becomes NaN mid-training — what do you check?"
+      }
+    ],
+    "source": "https://pytorch.org/docs/stable/optim.html"
+  },
+  {
+    "id": "ai-batchnorm-dropout",
+    "level": "mid",
+    "topic": "Deep Learning",
+    "q": {
+      "vi": "Batch normalization và dropout hoạt động thế nào? Chúng khác nhau gì giữa lúc train và inference?",
+      "en": "How do batch normalization and dropout work? How do they behave differently in training and inference?"
+    },
+    "a": {
+      "vi": "Batch normalization chuẩn hóa activation để train ổn định và nhanh hơn, còn dropout tắt ngẫu nhiên neuron khi train để chống overfitting.\n- BatchNorm: chuẩn hóa mỗi kênh theo mean/variance của mini-batch rồi scale và shift bằng hai tham số học được. Cho phép learning rate lớn hơn và ít nhạy với khởi tạo. Lúc inference dùng running mean/variance đã tích lũy khi train. Nhược điểm: phụ thuộc batch size, batch nhỏ thì ước lượng bị nhiễu.\n- LayerNorm: chuẩn hóa theo feature của từng mẫu, không phụ thuộc batch, nên là chuẩn trong transformer và RNN (nhiều LLM dùng biến thể RMSNorm).\n- Dropout: mỗi bước train tắt ngẫu nhiên một tỉ lệ p neuron, buộc mạng không phụ thuộc vào vài neuron cụ thể, giống như train một ensemble ngầm. Khi inference thì tắt dropout.\nLỗi kinh điển: quên gọi model.eval() khi đánh giá, khiến dropout vẫn chạy và BatchNorm dùng thống kê của batch test, kết quả dao động và sai.",
+      "en": "Batch normalization normalizes activations so training is more stable and faster, while dropout randomly disables neurons during training to fight overfitting.\n- BatchNorm: normalizes each channel with the mini-batch mean/variance, then scales and shifts with two learned parameters. It allows larger learning rates and reduces sensitivity to initialization. At inference it uses the running mean/variance accumulated during training. Downside: it depends on batch size, and small batches give noisy estimates.\n- LayerNorm: normalizes across the features of each sample, independent of the batch, so it is standard in transformers and RNNs (many LLMs use the RMSNorm variant).\n- Dropout: at each training step it randomly disables a fraction p of neurons, forcing the network not to rely on a few specific ones, like training an implicit ensemble. It is turned off at inference.\nClassic bug: forgetting model.eval() during evaluation, so dropout still runs and BatchNorm uses test-batch statistics, giving noisy, wrong results."
+    },
+    "tip": {
+      "vi": "Nhắc lỗi quên model.eval() và lý do transformer dùng LayerNorm thay vì BatchNorm là hai điểm cộng rõ ràng.",
+      "en": "Mentioning the forgotten model.eval() bug and why transformers use LayerNorm instead of BatchNorm are two clear bonus points."
+    },
+    "followUps": [
+      {
+        "vi": "Vì sao BatchNorm hoạt động kém với batch size nhỏ?",
+        "en": "Why does BatchNorm work poorly with small batch sizes?"
+      },
+      {
+        "vi": "Pre-norm và post-norm trong transformer khác nhau thế nào?",
+        "en": "What is the difference between pre-norm and post-norm in transformers?"
+      }
+    ]
+  },
+  {
+    "id": "ai-cnn-vs-rnn",
+    "level": "junior",
+    "topic": "Deep Learning",
+    "q": {
+      "vi": "CNN và RNN phù hợp với loại dữ liệu nào? Vì sao transformer đã thay thế RNN ở nhiều bài toán?",
+      "en": "What kinds of data suit CNNs and RNNs? Why have transformers replaced RNNs for many tasks?"
+    },
+    "a": {
+      "vi": "CNN khai thác cấu trúc không gian cục bộ như ảnh, RNN xử lý chuỗi theo từng bước thời gian; ngày nay transformer đã thay RNN ở hầu hết bài toán chuỗi.\n- CNN: các filter nhỏ trượt trên ảnh và chia sẻ trọng số, nên ít tham số và bất biến khi vật thể dịch chuyển. Chồng nhiều layer để receptive field rộng dần: lớp đầu bắt cạnh, lớp sau bắt hình dạng rồi vật thể. Pooling hoặc stride giảm kích thước. Dùng cho phân loại ảnh, detection, segmentation, cả audio.\n- RNN: duy trì hidden state truyền qua từng bước, hợp với dữ liệu tuần tự. RNN thuần bị vanishing gradient với chuỗi dài; LSTM và GRU dùng các cổng để giữ thông tin lâu hơn.\n- Hạn chế của RNN: xử lý tuần tự nên khó song song hóa trên GPU và vẫn khó nhớ phụ thuộc rất xa.\nTransformer dùng attention để mọi vị trí nhìn trực tiếp lẫn nhau và train song song cả chuỗi, nên thắng ở NLP. Với ảnh, Vision Transformer cạnh tranh tốt với CNN khi có nhiều dữ liệu, còn CNN vẫn hiệu quả trên thiết bị nhỏ.",
+      "en": "CNNs exploit local spatial structure such as images, RNNs process sequences step by step; today transformers have replaced RNNs for most sequence tasks.\n- CNN: small filters slide over the image and share weights, so there are few parameters and translation invariance. Stacking layers widens the receptive field: early layers detect edges, later ones shapes and then objects. Pooling or strides reduce size. Used for image classification, detection, segmentation, even audio.\n- RNN: keeps a hidden state passed through each step, suited to sequential data. Vanilla RNNs suffer vanishing gradients on long sequences; LSTM and GRU use gates to retain information longer.\n- RNN limits: sequential processing is hard to parallelize on GPUs, and very long-range dependencies remain difficult.\nTransformers use attention so every position looks directly at every other and the whole sequence trains in parallel, which is why they won in NLP. For images, Vision Transformers compete well with CNNs given lots of data, while CNNs remain efficient on small devices."
+    },
+    "tip": {
+      "vi": "Giải thích bằng 'inductive bias' (CNN giả định tính cục bộ, RNN giả định tính tuần tự) sẽ làm câu trả lời sâu hơn hẳn.",
+      "en": "Framing it in terms of inductive bias (CNNs assume locality, RNNs assume sequential order) makes the answer noticeably deeper."
+    },
+    "followUps": [
+      {
+        "vi": "Receptive field là gì và làm sao tăng nó?",
+        "en": "What is a receptive field and how do you enlarge it?"
+      },
+      {
+        "vi": "LSTM dùng những cổng nào và mỗi cổng làm gì?",
+        "en": "Which gates does an LSTM use and what does each do?"
+      }
+    ]
+  },
+  {
+    "id": "ai-pytorch-training-loop",
+    "level": "junior",
+    "topic": "Deep Learning",
+    "q": {
+      "vi": "Viết một vòng lặp training cơ bản trong PyTorch và giải thích từng bước.",
+      "en": "Write a basic PyTorch training loop and explain each step."
+    },
+    "a": {
+      "vi": "Mỗi bước train gồm: forward, tính loss, xóa gradient cũ, backward, cập nhật trọng số; ngoài ra phải chuyển đúng mode train/eval.\n- model.train() bật dropout và để BatchNorm ở chế độ train.\n- optimizer.zero_grad(): PyTorch cộng dồn gradient, nếu không xóa thì gradient các batch sẽ chồng lên nhau.\n- loss.backward() tính gradient qua autograd; optimizer.step() cập nhật trọng số.\n- Khi đánh giá: model.eval() và torch.no_grad() để tắt dropout, dùng running stats và không dựng graph, tiết kiệm bộ nhớ.\n- Model và dữ liệu phải ở cùng device.\nThực tế còn thêm: learning rate scheduler, gradient clipping, mixed precision (autocast với bf16), lưu checkpoint theo điểm validation tốt nhất, log metric. Lỗi hay gặp: quên zero_grad, quên eval(), gọi loss.item() ở mỗi bước gây đồng bộ GPU làm chậm, áp softmax trước CrossEntropyLoss.",
+      "en": "Each training step is: forward, compute loss, clear old gradients, backward, update weights; you also need the correct train/eval mode.\n- model.train() enables dropout and puts BatchNorm in training mode.\n- optimizer.zero_grad(): PyTorch accumulates gradients, so without clearing them gradients from different batches pile up.\n- loss.backward() computes gradients through autograd; optimizer.step() updates the weights.\n- For evaluation: model.eval() and torch.no_grad() to disable dropout, use running stats and skip building the graph, saving memory.\n- The model and data must be on the same device.\nIn practice you add: a learning rate scheduler, gradient clipping, mixed precision (autocast with bf16), checkpointing on the best validation score, and metric logging. Common bugs: forgetting zero_grad, forgetting eval(), calling loss.item() every step which forces GPU syncs and slows training, applying softmax before CrossEntropyLoss."
+    },
+    "code": "model.to(device)\nopt = torch.optim.AdamW(model.parameters(), lr=3e-4)\nloss_fn = torch.nn.CrossEntropyLoss()\n\nfor epoch in range(epochs):\n    model.train()\n    for x, y in train_loader:\n        x, y = x.to(device), y.to(device)\n        opt.zero_grad()\n        loss = loss_fn(model(x), y)  # raw logits\n        loss.backward()\n        opt.step()\n\n    model.eval()\n    with torch.no_grad():\n        val_loss = sum(loss_fn(model(x.to(device)), y.to(device)).item() for x, y in val_loader)",
+    "tip": {
+      "vi": "Tự nêu ra các lỗi phổ biến (zero_grad, eval, no_grad) trước khi bị hỏi chứng tỏ bạn đã debug training thật.",
+      "en": "Volunteering the common bugs (zero_grad, eval, no_grad) before being asked proves you have debugged real training runs."
+    },
+    "followUps": [
+      {
+        "vi": "Gradient accumulation là gì và khi nào dùng?",
+        "en": "What is gradient accumulation and when do you use it?"
+      },
+      {
+        "vi": "Mixed precision với bf16 và fp16 khác nhau thế nào?",
+        "en": "How does mixed precision with bf16 differ from fp16?"
+      }
+    ],
+    "source": "https://pytorch.org/tutorials/beginner/basics/optimization_tutorial.html"
+  },
+  {
+    "id": "ai-attention-transformer",
+    "level": "mid",
+    "topic": "Transformers",
+    "q": {
+      "vi": "Self-attention hoạt động thế nào? Các thành phần chính của một transformer là gì?",
+      "en": "How does self-attention work? What are the main components of a transformer?"
+    },
+    "a": {
+      "vi": "Attention cho phép mỗi token tự quyết định nên lấy thông tin từ những token nào khác trong chuỗi, bằng cách tính độ tương đồng giữa query và key rồi lấy trung bình có trọng số của value.\n- Mỗi token được chiếu thành ba vector Q, K, V. Attention = softmax(Q·Kᵀ / √d) · V. Chia cho √d để softmax không bị bão hòa khi số chiều lớn.\n- Multi-head: chạy nhiều attention song song trên các không gian con, mỗi head học một kiểu quan hệ khác nhau.\n- Một block transformer gồm attention và feed-forward, có residual connection và LayerNorm. Vì attention không biết thứ tự, cần positional encoding (LLM hiện nay hay dùng RoPE).\n- Decoder-only LLM dùng causal mask để mỗi token chỉ nhìn về các token trước nó.\nƯu điểm so với RNN: train song song toàn chuỗi, nối trực tiếp các vị trí xa nhau. Nhược điểm: compute và bộ nhớ tăng theo bình phương độ dài chuỗi; các kỹ thuật như FlashAttention, KV cache, grouped-query attention giúp giảm chi phí khi train và inference.",
+      "en": "Attention lets each token decide which other tokens in the sequence to take information from, by computing similarity between queries and keys and then taking a weighted average of the values.\n- Each token is projected into three vectors Q, K, V. Attention = softmax(Q·Kᵀ / √d) · V. Dividing by √d keeps the softmax from saturating when the dimension is large.\n- Multi-head: several attentions run in parallel on subspaces, each head learning a different kind of relationship.\n- A transformer block has attention plus a feed-forward layer, with residual connections and LayerNorm. Because attention is order-agnostic, positional encoding is needed (today's LLMs often use RoPE).\n- Decoder-only LLMs use a causal mask so each token only attends to earlier tokens.\nAdvantages over RNNs: the whole sequence trains in parallel and distant positions connect directly. Drawback: compute and memory grow quadratically with sequence length; techniques like FlashAttention, KV cache and grouped-query attention reduce training and inference cost."
+    },
+    "code": "import numpy as np\n\ndef attention(Q, K, V, mask=None):\n    scores = Q @ K.T / np.sqrt(Q.shape[-1])\n    if mask is not None:\n        scores = np.where(mask, scores, -1e9)\n    w = np.exp(scores - scores.max(-1, keepdims=True))\n    w /= w.sum(-1, keepdims=True)  # softmax over keys\n    return w @ V",
+    "tip": {
+      "vi": "Viết được công thức và giải thích vì sao chia √d, rồi nối sang chi phí O(n²) và KV cache, là câu trả lời mức mid vững.",
+      "en": "Writing the formula, explaining the √d scaling, then linking to O(n²) cost and the KV cache is a solid mid-level answer."
+    },
+    "followUps": [
+      {
+        "vi": "KV cache là gì và vì sao nó làm inference nhanh hơn?",
+        "en": "What is the KV cache and why does it speed up inference?"
+      },
+      {
+        "vi": "Encoder-only, decoder-only và encoder-decoder khác nhau thế nào?",
+        "en": "How do encoder-only, decoder-only and encoder-decoder models differ?"
+      }
+    ]
+  },
+  {
+    "id": "ai-embeddings",
+    "level": "junior",
+    "topic": "Transformers",
+    "q": {
+      "vi": "Embedding là gì? Dùng embedding vào việc gì trong thực tế?",
+      "en": "What is an embedding? What are embeddings used for in practice?"
+    },
+    "a": {
+      "vi": "Embedding là vector số dày đặc biểu diễn một đối tượng (từ, câu, ảnh, sản phẩm) sao cho các đối tượng giống nhau về nghĩa nằm gần nhau trong không gian vector.\n- Khác one-hot: one-hot thưa, rất nhiều chiều và mọi từ cách đều nhau; embedding chỉ vài trăm đến vài nghìn chiều và mang thông tin ngữ nghĩa.\n- Cách học: word2vec học từ ngữ cảnh xung quanh; sentence embedding hiện đại dùng transformer được train bằng contrastive learning (kéo cặp liên quan lại gần, đẩy cặp không liên quan ra xa).\n- Đo độ giống bằng cosine similarity hoặc dot product; nếu vector đã chuẩn hóa thì hai cách cho cùng thứ hạng.\nỨng dụng: semantic search và RAG, recommendation, clustering, phát hiện trùng lặp, làm feature cho model khác.\nLưu ý thực tế: query và document phải dùng cùng một model embedding; đổi model thì phải embed lại toàn bộ dữ liệu; embedding tổng quát có thể kém ở lĩnh vực chuyên ngành, nên đánh giá trên dữ liệu thật trước khi chọn.",
+      "en": "An embedding is a dense numeric vector representing an object (word, sentence, image, product) so that semantically similar objects lie close together in vector space.\n- Versus one-hot: one-hot is sparse, very high-dimensional and every word is equally distant; embeddings have a few hundred to a few thousand dimensions and carry semantic information.\n- How they are learned: word2vec learns from surrounding context; modern sentence embeddings use transformers trained with contrastive learning (pull related pairs together, push unrelated pairs apart).\n- Similarity is measured with cosine similarity or dot product; for normalized vectors both give the same ranking.\nUses: semantic search and RAG, recommendations, clustering, duplicate detection, features for other models.\nPractical notes: queries and documents must use the same embedding model; switching models means re-embedding all data; general-purpose embeddings can be weak in specialized domains, so evaluate on your real data before choosing."
+    },
+    "tip": {
+      "vi": "Nhắc đến việc phải re-embed toàn bộ dữ liệu khi đổi model cho thấy bạn nghĩ đến vận hành thực tế.",
+      "en": "Mentioning that changing models means re-embedding everything shows you think about real operations."
+    },
+    "followUps": [
+      {
+        "vi": "Contrastive learning tạo embedding như thế nào?",
+        "en": "How does contrastive learning produce embeddings?"
+      },
+      {
+        "vi": "Bi-encoder và cross-encoder khác nhau ra sao?",
+        "en": "How do bi-encoders and cross-encoders differ?"
+      }
+    ]
+  },
+  {
+    "id": "ai-tokenization",
+    "level": "junior",
+    "topic": "LLM",
+    "q": {
+      "vi": "Tokenization trong LLM là gì? Context window ảnh hưởng gì đến ứng dụng?",
+      "en": "What is tokenization in LLMs? How does the context window affect applications?"
+    },
+    "a": {
+      "vi": "Tokenization chia văn bản thành các token — thường là mảnh của từ — rồi ánh xạ thành ID để model xử lý; LLM hiện nay chủ yếu dùng subword như BPE hoặc SentencePiece.\n- Vì sao dùng subword: tách theo từ thì từ vựng quá lớn và gặp từ lạ; tách theo ký tự thì chuỗi quá dài. Subword giữ nguyên từ phổ biến, còn từ hiếm được ghép từ nhiều mảnh.\n- Hệ quả thực tế: chi phí API, giới hạn context và tốc độ đều tính theo token chứ không theo ký tự. Tiếng Việt và nhiều ngôn ngữ khác thường tốn nhiều token hơn tiếng Anh cho cùng nội dung.\n- Context window là số token tối đa model xử lý trong một lần, gồm cả prompt và output. Context dài tốn compute, tăng latency, và model có thể bỏ sót thông tin nằm ở giữa ngữ cảnh dài.\n- Tokenization giải thích nhiều lỗi lạ: đếm chữ cái sai, tính toán số kém, nhạy với khoảng trắng.\nMỗi model có tokenizer riêng, nên luôn đếm token bằng đúng tokenizer của model đang dùng.",
+      "en": "Tokenization splits text into tokens — usually pieces of words — and maps them to IDs the model processes; today's LLMs mostly use subword schemes like BPE or SentencePiece.\n- Why subwords: word-level splitting gives a huge vocabulary and unknown words; character-level makes sequences too long. Subwords keep common words whole and build rare words from several pieces.\n- Practical consequences: API cost, context limits and speed are all measured in tokens, not characters. Vietnamese and many other languages often need more tokens than English for the same content.\n- The context window is the maximum number of tokens the model handles at once, including both prompt and output. Long contexts cost compute, add latency, and the model may miss information buried in the middle.\n- Tokenization explains many odd failures: miscounting letters, weak arithmetic, sensitivity to whitespace.\nEach model has its own tokenizer, so always count tokens with the exact tokenizer of the model you use."
+    },
+    "tip": {
+      "vi": "Liên hệ token với chi phí và latency thực tế, nhất là với tiếng Việt, cho thấy bạn đã làm sản phẩm LLM thật.",
+      "en": "Linking tokens to real cost and latency, especially for non-English text, shows you have built real LLM products."
+    },
+    "followUps": [
+      {
+        "vi": "BPE xây dựng từ vựng như thế nào?",
+        "en": "How does BPE build its vocabulary?"
+      },
+      {
+        "vi": "Khi tài liệu dài hơn context window, bạn xử lý thế nào?",
+        "en": "How do you handle documents longer than the context window?"
+      }
+    ],
+    "source": "https://huggingface.co/docs/transformers/tokenizer_summary"
+  },
+  {
+    "id": "ai-llm-training-stages",
+    "level": "mid",
+    "topic": "LLM",
+    "q": {
+      "vi": "Một LLM được huấn luyện qua những giai đoạn nào? RLHF là gì?",
+      "en": "What stages does LLM training go through? What is RLHF?"
+    },
+    "a": {
+      "vi": "Thường có ba giai đoạn: pretraining để học ngôn ngữ và kiến thức, supervised fine-tuning để học làm theo chỉ dẫn, và preference tuning như RLHF để căn chỉnh theo mong muốn của con người.\n- Pretraining: self-supervised, dự đoán token tiếp theo trên lượng văn bản khổng lồ. Chiếm phần lớn compute, tạo ra base model biết nhiều nhưng chưa biết trò chuyện.\n- SFT (instruction tuning): train trên các cặp prompt và câu trả lời mẫu chất lượng cao, giúp model theo đúng định dạng hội thoại.\n- RLHF: người gán nhãn so sánh các câu trả lời; dữ liệu đó dùng để train reward model, rồi tối ưu LLM bằng RL (ví dụ PPO) để tăng reward, kèm ràng buộc KL để không lệch quá xa model ban đầu. DPO là lựa chọn phổ biến khác, tối ưu trực tiếp từ các cặp ưu tiên mà không cần reward model riêng.\n- Gần đây có thêm RL với phần thưởng kiểm chứng được (đáp án toán, test code) để cải thiện khả năng suy luận.\nRủi ro cần biết: reward hacking và sycophancy, tức model chiều lòng người dùng thay vì trả lời đúng.",
+      "en": "There are usually three stages: pretraining to learn language and knowledge, supervised fine-tuning to learn to follow instructions, and preference tuning such as RLHF to align with human preferences.\n- Pretraining: self-supervised next-token prediction on a huge amount of text. It takes most of the compute and produces a base model that knows a lot but cannot hold a conversation yet.\n- SFT (instruction tuning): training on high-quality prompt and example-answer pairs so the model follows the chat format.\n- RLHF: labelers compare answers; that data trains a reward model, then the LLM is optimized with RL (e.g. PPO) to increase reward, with a KL constraint so it does not drift too far from the starting model. DPO is another popular choice that optimizes directly on preference pairs without a separate reward model.\n- More recently, RL with verifiable rewards (math answers, code tests) is used to improve reasoning.\nRisks to know: reward hacking and sycophancy, where the model pleases the user instead of being correct."
+    },
+    "tip": {
+      "vi": "Giải thích vai trò của ràng buộc KL và nhắc DPO như phương án thay thế cho thấy bạn theo kịp thực hành hiện tại.",
+      "en": "Explaining the role of the KL constraint and mentioning DPO as an alternative shows you keep up with current practice."
+    },
+    "followUps": [
+      {
+        "vi": "Base model và instruct model khác nhau thế nào khi dùng?",
+        "en": "How do base and instruct models differ in use?"
+      },
+      {
+        "vi": "Reward hacking là gì? Cho ví dụ.",
+        "en": "What is reward hacking? Give an example."
+      }
+    ]
+  },
+  {
+    "id": "ai-temperature-sampling",
+    "level": "junior",
+    "topic": "LLM",
+    "q": {
+      "vi": "Temperature, top-k và top-p ảnh hưởng thế nào đến output của LLM?",
+      "en": "How do temperature, top-k and top-p affect LLM output?"
+    },
+    "a": {
+      "vi": "Temperature điều chỉnh độ 'phẳng' của phân phối xác suất token trước khi sampling: thấp thì chắc chắn và dễ lặp lại, cao thì đa dạng nhưng dễ lạc đề.\n- Model ra logits cho mọi token; chia logits cho temperature rồi qua softmax. T < 1 làm phân phối nhọn hơn, T > 1 làm phẳng hơn, T tiến về 0 gần như greedy decoding.\n- Top-k: chỉ sample trong k token có xác suất cao nhất.\n- Top-p (nucleus): chọn tập token nhỏ nhất có tổng xác suất ≥ p; linh hoạt hơn top-k vì kích thước tập thay đổi theo độ chắc chắn của model.\n- Ngoài ra còn repetition/frequency penalty, stop sequences, max tokens.\nChọn theo tác vụ: trích xuất dữ liệu, phân loại, sinh code nên dùng nhiệt độ thấp; viết sáng tạo, brainstorm dùng cao hơn. Thường chỉ chỉnh temperature hoặc top-p, không chỉnh mạnh cả hai cùng lúc. Lưu ý temperature 0 vẫn có thể không hoàn toàn tất định do tính toán song song trên GPU và batching phía server.",
+      "en": "Temperature controls how 'flat' the token probability distribution is before sampling: low is confident and repetitive, high is diverse but prone to drifting off topic.\n- The model outputs logits for every token; they are divided by the temperature and passed through softmax. T < 1 sharpens the distribution, T > 1 flattens it, and T close to 0 is almost greedy decoding.\n- Top-k: sample only from the k most likely tokens.\n- Top-p (nucleus): choose the smallest set of tokens whose total probability is ≥ p; more adaptive than top-k because the set size follows the model's confidence.\n- There are also repetition/frequency penalties, stop sequences and max tokens.\nChoose by task: data extraction, classification and code generation want low temperature; creative writing and brainstorming use higher values. Usually tune either temperature or top-p, not both aggressively. Note that temperature 0 may still not be fully deterministic because of parallel GPU computation and server-side batching."
+    },
+    "tip": {
+      "vi": "Giải thích bằng cơ chế chia logits trước softmax, rồi nêu lựa chọn theo từng loại tác vụ, là cách trả lời gọn và chính xác.",
+      "en": "Explaining the logits-divided-before-softmax mechanism, then giving per-task choices, is a concise and accurate answer."
+    },
+    "followUps": [
+      {
+        "vi": "Vì sao temperature 0 vẫn có thể cho kết quả khác nhau?",
+        "en": "Why can temperature 0 still give different outputs?"
+      },
+      {
+        "vi": "Beam search khác sampling ở điểm nào?",
+        "en": "How does beam search differ from sampling?"
+      }
+    ]
+  },
+  {
+    "id": "ai-hallucination",
+    "level": "mid",
+    "topic": "LLM",
+    "q": {
+      "vi": "Vì sao LLM bị hallucination và bạn giảm nó trong sản phẩm thế nào?",
+      "en": "Why do LLMs hallucinate and how do you reduce it in a product?"
+    },
+    "a": {
+      "vi": "Hallucination là khi LLM sinh ra thông tin nghe hợp lý nhưng sai hoặc không có căn cứ; gốc rễ là model được train để sinh văn bản trôi chảy theo xác suất, không phải để kiểm chứng sự thật.\nNguyên nhân: kiến thức thiếu hoặc lỗi thời, câu hỏi nằm ngoài dữ liệu train, prompt mơ hồ, và quá trình train thường thưởng cho việc đoán thay vì nói 'không biết'.\nCách giảm:\n- Grounding bằng RAG: đưa tài liệu liên quan vào prompt, yêu cầu chỉ trả lời dựa trên đó và trích dẫn nguồn.\n- Cho phép model trả lời 'không đủ thông tin'.\n- Temperature thấp cho tác vụ dữ kiện; structured output để dễ kiểm tra.\n- Dùng tool (tìm kiếm, tính toán, query database) thay vì để model tự nhớ.\n- Kiểm chứng sau khi sinh: đối chiếu trích dẫn với nguồn, dùng model khác hoặc luật để kiểm tra, human review cho nghiệp vụ rủi ro cao.\n- Đo lường bằng bộ eval về faithfulness và độ chính xác.\nKhông thể loại bỏ hoàn toàn, nên thiết kế sản phẩm phải giả định model có thể sai.",
+      "en": "Hallucination is when an LLM produces plausible-sounding but false or unsupported information; the root cause is that the model is trained to generate fluent text by probability, not to verify facts.\nCauses: missing or outdated knowledge, questions outside the training data, vague prompts, and training that often rewards guessing over saying 'I don't know'.\nHow to reduce it:\n- Ground with RAG: put relevant documents in the prompt, require answers based only on them, and cite sources.\n- Allow the model to answer 'not enough information'.\n- Low temperature for factual tasks; structured output so it is easy to check.\n- Use tools (search, calculation, database queries) instead of relying on the model's memory.\n- Verify after generation: check citations against sources, use another model or rules to validate, human review for high-risk flows.\n- Measure with an eval set for faithfulness and accuracy.\nIt cannot be eliminated entirely, so product design must assume the model can be wrong."
+    },
+    "tip": {
+      "vi": "Kết thúc bằng ý 'thiết kế sản phẩm phải giả định model có thể sai' cho thấy tư duy kỹ sư chứ không chỉ là mẹo prompt.",
+      "en": "Ending with 'the product must assume the model can be wrong' shows engineering judgment, not just prompt tricks."
+    },
+    "followUps": [
+      {
+        "vi": "Bạn đo faithfulness của câu trả lời bằng cách nào?",
+        "en": "How do you measure the faithfulness of an answer?"
+      },
+      {
+        "vi": "RAG có thể vẫn gây hallucination trong trường hợp nào?",
+        "en": "In what cases can RAG still lead to hallucination?"
+      }
+    ]
+  },
+  {
+    "id": "ai-prompt-engineering",
+    "level": "junior",
+    "topic": "Prompt Engineering",
+    "q": {
+      "vi": "Những kỹ thuật prompt engineering nào bạn hay dùng? Làm sao biết prompt đã tốt?",
+      "en": "Which prompt engineering techniques do you use? How do you know a prompt is good?"
+    },
+    "a": {
+      "vi": "Prompt tốt là prompt rõ ràng, đủ ngữ cảnh và có tiêu chí đầu ra cụ thể, được cải tiến dựa trên đánh giá chứ không phải cảm tính.\nKỹ thuật chính:\n- Nêu rõ vai trò, mục tiêu, người đọc và ràng buộc; tách phần chỉ dẫn và dữ liệu bằng delimiter hoặc tag.\n- Few-shot: đưa vài ví dụ input-output tiêu biểu, đa dạng, gồm cả ca khó.\n- Cho model suy nghĩ từng bước trước khi trả lời với bài toán nhiều bước (hoặc dùng model có chế độ reasoning).\n- Chỉ định định dạng đầu ra (JSON schema, structured output) để code xử lý tiếp.\n- Chia tác vụ lớn thành chuỗi prompt nhỏ (prompt chaining).\n- System prompt cho quy tắc chung, user message cho dữ liệu cụ thể.\nĐể biết prompt tốt: quản lý prompt như code (version, review) và có bộ test case chạy lại mỗi khi sửa prompt hoặc đổi model. Cảnh giác prompt injection: nội dung từ người dùng hay tài liệu bên ngoài không được coi là chỉ dẫn đáng tin.",
+      "en": "A good prompt is clear, gives enough context and has concrete output criteria, and it is improved through evaluation rather than gut feeling.\nMain techniques:\n- State the role, goal, audience and constraints clearly; separate instructions from data with delimiters or tags.\n- Few-shot: give a few representative, diverse input-output examples, including hard cases.\n- Let the model think step by step before answering on multi-step problems (or use a model with a reasoning mode).\n- Specify the output format (JSON schema, structured output) so code can process it.\n- Split large tasks into a chain of smaller prompts (prompt chaining).\n- System prompt for general rules, user message for the specific data.\nTo know a prompt is good: manage prompts like code (versioning, review) and keep a test set you rerun whenever you change the prompt or the model. Watch for prompt injection: content from users or external documents must not be treated as trusted instructions."
+    },
+    "tip": {
+      "vi": "Nhấn mạnh 'prompt phải có bộ test đi kèm' sẽ tách bạn khỏi những ứng viên chỉ liệt kê mẹo.",
+      "en": "Stressing that 'a prompt needs a test set' separates you from candidates who only list tricks."
+    },
+    "followUps": [
+      {
+        "vi": "Prompt injection là gì và bạn phòng chống thế nào?",
+        "en": "What is prompt injection and how do you defend against it?"
+      },
+      {
+        "vi": "Khi nào few-shot lại làm kết quả tệ hơn?",
+        "en": "When can few-shot examples make results worse?"
+      }
+    ]
+  },
+  {
+    "id": "ai-rag-vs-finetune",
+    "level": "mid",
+    "topic": "RAG",
+    "q": {
+      "vi": "RAG và fine-tuning khác nhau thế nào? Khi nào chọn cái nào?",
+      "en": "How do RAG and fine-tuning differ? When would you choose each?"
+    },
+    "a": {
+      "vi": "RAG đưa kiến thức vào lúc chạy qua prompt, còn fine-tuning thay đổi trọng số của model; nói gọn là RAG cho kiến thức, fine-tuning cho hành vi.\n- RAG (Retrieval-Augmented Generation): tìm tài liệu liên quan (vector search, BM25…) rồi đưa vào prompt để LLM trả lời dựa trên đó.\n- Fine-tuning: huấn luyện thêm model trên dữ liệu của bạn.\nChọn RAG khi: kiến thức thay đổi thường xuyên, cần trích dẫn nguồn, cần phân quyền theo tài liệu, ít dữ liệu huấn luyện. Cập nhật chỉ cần re-index, không phải train lại.\nChọn fine-tuning khi: cần đổi phong cách hoặc định dạng đầu ra, tác vụ hẹp lặp lại, muốn một model nhỏ rẻ hơn làm tốt một việc, hoặc prompt đã quá dài và đắt.\nFine-tuning không phải cách tốt để nạp kiến thức mới: model vẫn có thể bịa và không trích dẫn được. Thứ tự hợp lý: thử prompt engineering, rồi RAG, rồi mới fine-tune; thường kết hợp cả hai. Luôn có bộ eval để đo.",
+      "en": "RAG injects knowledge at runtime through the prompt, while fine-tuning changes the model's weights; in short, RAG for knowledge, fine-tuning for behavior.\n- RAG (Retrieval-Augmented Generation): retrieve relevant documents (vector search, BM25…) and put them in the prompt so the LLM answers grounded in them.\n- Fine-tuning: further train the model on your data.\nChoose RAG when: knowledge changes often, you need citations or per-document permissions, or you have little training data. Updates only need re-indexing, not retraining.\nChoose fine-tuning when: you need a different style or output format, a narrow repeated task, a cheaper small model that does one thing well, or the prompt has become too long and expensive.\nFine-tuning is not a good way to add new knowledge: the model can still make things up and cannot cite. A sensible order: try prompt engineering, then RAG, then fine-tuning; they are often combined. Always have an eval set to measure."
+    },
+    "tip": {
+      "vi": "Câu 'RAG cho kiến thức, fine-tuning cho hành vi' cùng thứ tự prompt → RAG → fine-tune là khung trả lời người phỏng vấn rất thích.",
+      "en": "'RAG for knowledge, fine-tuning for behavior' plus the prompt → RAG → fine-tune order is a framing interviewers love."
+    },
+    "followUps": [
+      {
+        "vi": "Khi nào nên kết hợp cả RAG và fine-tuning?",
+        "en": "When should you combine RAG and fine-tuning?"
+      },
+      {
+        "vi": "Chi phí vận hành của hai cách khác nhau thế nào?",
+        "en": "How do the operating costs of the two approaches differ?"
+      }
+    ]
+  },
+  {
+    "id": "ai-rag-chunking",
+    "level": "mid",
+    "topic": "RAG",
+    "q": {
+      "vi": "Bạn thiết kế pipeline RAG thế nào? Chunking ảnh hưởng ra sao đến chất lượng?",
+      "en": "How do you design a RAG pipeline? How does chunking affect quality?"
+    },
+    "a": {
+      "vi": "Pipeline RAG gồm hai luồng: indexing (load tài liệu, làm sạch, chunk, embed, lưu vào index) và query (viết lại câu hỏi, retrieve, rerank, đưa vào prompt, sinh câu trả lời có trích dẫn).\nChunking quyết định đơn vị được truy xuất:\n- Chunk quá to: embedding bị loãng vì nhiều chủ đề, tốn context và gây nhiễu.\n- Chunk quá nhỏ: mất ngữ cảnh, câu trả lời bị rời rạc.\n- Thường bắt đầu với vài trăm token và overlap 10–20%, rồi chỉnh theo kết quả eval.\n- Nên chia theo cấu trúc (heading, đoạn văn, hàm code) hơn là cắt cứng theo số ký tự; gắn metadata (tiêu đề, nguồn, ngày, quyền truy cập) để lọc và trích dẫn.\n- Kỹ thuật nâng cao: thêm tiêu đề hoặc tóm tắt tài liệu vào mỗi chunk (contextual chunking); retrieve chunk nhỏ nhưng trả về đoạn cha lớn hơn.\nĐể tăng chất lượng retrieval: hybrid search (BM25 + vector), rerank bằng cross-encoder, query rewriting. Phần lớn lỗi RAG nằm ở khâu retrieval chứ không phải ở LLM.",
+      "en": "A RAG pipeline has two flows: indexing (load documents, clean, chunk, embed, store in an index) and querying (rewrite the question, retrieve, rerank, put into the prompt, generate an answer with citations).\nChunking defines the unit that gets retrieved:\n- Chunks too large: the embedding gets diluted across topics, wastes context and adds noise.\n- Chunks too small: context is lost and answers become fragmented.\n- Usually start with a few hundred tokens and 10–20% overlap, then tune based on eval results.\n- Prefer splitting by structure (headings, paragraphs, code functions) over hard character cuts; attach metadata (title, source, date, access rights) for filtering and citation.\n- Advanced techniques: prepend the document title or summary to each chunk (contextual chunking); retrieve small chunks but return the larger parent section.\nTo improve retrieval: hybrid search (BM25 + vector), reranking with a cross-encoder, query rewriting. Most RAG failures are in retrieval, not in the LLM."
+    },
+    "tip": {
+      "vi": "Nói 'phần lớn lỗi RAG nằm ở retrieval' và đề xuất hybrid search + rerank là dấu hiệu bạn đã làm RAG thật.",
+      "en": "Saying 'most RAG failures are in retrieval' and proposing hybrid search plus reranking signals real RAG experience."
+    },
+    "followUps": [
+      {
+        "vi": "Vì sao hybrid search thường tốt hơn chỉ dùng vector search?",
+        "en": "Why does hybrid search often beat pure vector search?"
+      },
+      {
+        "vi": "Bạn xử lý bảng biểu và PDF scan trong RAG thế nào?",
+        "en": "How do you handle tables and scanned PDFs in RAG?"
+      }
+    ]
+  },
+  {
+    "id": "ai-vector-db",
+    "level": "mid",
+    "topic": "RAG",
+    "q": {
+      "vi": "Vector database hoạt động thế nào? Bạn chọn giải pháp lưu trữ vector dựa trên tiêu chí gì?",
+      "en": "How does a vector database work? What criteria do you use to choose a vector store?"
+    },
+    "a": {
+      "vi": "Vector database lưu embedding và tìm nhanh các vector gần nhất với query bằng approximate nearest neighbor (ANN), chấp nhận sai số nhỏ để đổi lấy tốc độ trên hàng triệu vector.\n- Brute-force so từng vector thì chính xác nhưng chậm khi dữ liệu lớn.\n- HNSW: đồ thị nhiều tầng, recall cao, truy vấn nhanh nhưng tốn RAM; các tham số như M, ef điều chỉnh đánh đổi giữa recall và tốc độ.\n- IVF: gom cụm rồi chỉ tìm trong vài cụm gần nhất; kết hợp product quantization để nén vector, tiết kiệm bộ nhớ nhưng giảm độ chính xác.\nTiêu chí chọn: metadata filtering (theo tenant, quyền truy cập), hybrid search với keyword, khả năng cập nhật/xóa, khả năng scale và chi phí vận hành. Nếu đã có PostgreSQL và dữ liệu vừa phải, extension pgvector thường đủ dùng và đơn giản hơn dựng thêm hệ thống riêng.\nLưu ý: dùng đúng metric mà model embedding được train (cosine hay dot product), và đo recall@k của ANN so với tìm kiếm chính xác.",
+      "en": "A vector database stores embeddings and quickly finds the vectors nearest to a query using approximate nearest neighbor (ANN) search, accepting a small error in exchange for speed over millions of vectors.\n- Brute force compares every vector: exact but slow at scale.\n- HNSW: a multi-layer graph with high recall and fast queries, but memory-hungry; parameters like M and ef tune the recall-speed trade-off.\n- IVF: clusters vectors and searches only the nearest few clusters; combined with product quantization it compresses vectors, saving memory at some cost in accuracy.\nSelection criteria: metadata filtering (by tenant, access rights), hybrid search with keywords, update/delete support, scalability and operating cost. If you already run PostgreSQL and the data is moderate, the pgvector extension is often enough and simpler than adding a separate system.\nNotes: use the metric the embedding model was trained with (cosine or dot product), and measure the ANN's recall@k against exact search."
+    },
+    "tip": {
+      "vi": "Đề xuất pgvector khi quy mô vừa phải cho thấy bạn chọn công nghệ theo nhu cầu, không chạy theo xu hướng.",
+      "en": "Suggesting pgvector at moderate scale shows you pick technology by need, not by hype."
+    },
+    "followUps": [
+      {
+        "vi": "Metadata filtering ảnh hưởng thế nào đến hiệu năng ANN?",
+        "en": "How does metadata filtering affect ANN performance?"
+      },
+      {
+        "vi": "Bạn đảm bảo người dùng chỉ truy xuất được tài liệu họ có quyền xem thế nào?",
+        "en": "How do you ensure users only retrieve documents they are allowed to see?"
+      }
+    ]
+  },
+  {
+    "id": "ai-rag-evaluation",
+    "level": "senior",
+    "topic": "RAG",
+    "q": {
+      "vi": "Bạn đánh giá chất lượng một hệ thống RAG như thế nào?",
+      "en": "How do you evaluate the quality of a RAG system?"
+    },
+    "a": {
+      "vi": "Tôi tách đánh giá RAG thành hai phần — retrieval và generation — vì phải biết lỗi nằm ở đâu mới sửa đúng chỗ.\n- Bộ dữ liệu eval: vài trăm câu hỏi thật từ người dùng hoặc chuyên gia, kèm tài liệu liên quan và đáp án tham chiếu; có thể sinh thêm bằng LLM nhưng phải có người duyệt. Gồm cả câu hỏi không có đáp án trong tài liệu.\n- Retrieval: recall@k, precision@k, MRR, nDCG — tài liệu đúng có nằm trong top k và ở vị trí cao không.\n- Generation: faithfulness (câu trả lời có được context hỗ trợ không), answer relevance, độ đúng so với đáp án, chất lượng trích dẫn, và tỉ lệ từ chối đúng khi không có thông tin.\n- Công cụ: LLM-as-judge với rubric rõ ràng, nhưng phải đối chiếu với một mẫu do người chấm để kiểm tra mức đồng thuận.\n- Online: thumbs up/down, tỉ lệ người dùng hỏi lại, A/B test, latency và chi phí mỗi truy vấn.\nChạy bộ eval như regression test mỗi khi đổi chunking, model embedding, prompt hoặc LLM.",
+      "en": "I split RAG evaluation into two parts — retrieval and generation — because you need to know where the failure is to fix the right thing.\n- Eval dataset: a few hundred real questions from users or domain experts, with relevant documents and reference answers; you can generate more with an LLM but a human must review them. Include questions whose answers are not in the documents.\n- Retrieval: recall@k, precision@k, MRR, nDCG — is the right document in the top k and ranked high.\n- Generation: faithfulness (is the answer supported by the context), answer relevance, correctness against the reference, citation quality, and the rate of correctly declining when information is missing.\n- Tooling: LLM-as-judge with a clear rubric, but checked against a human-graded sample to measure agreement.\n- Online: thumbs up/down, rate of users re-asking, A/B tests, latency and cost per query.\nRun the eval set as a regression test whenever you change chunking, the embedding model, the prompt or the LLM."
+    },
+    "tip": {
+      "vi": "Tách retrieval với generation và nhắc việc kiểm định LLM-as-judge bằng người chấm là hai điểm thể hiện tầm senior.",
+      "en": "Separating retrieval from generation and validating LLM-as-judge against human grading are two senior-level signals."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu recall@k tốt nhưng câu trả lời vẫn sai, bạn điều tra gì tiếp?",
+        "en": "If recall@k is good but answers are still wrong, what do you investigate next?"
+      },
+      {
+        "vi": "Làm sao xây bộ eval khi chưa có người dùng thật?",
+        "en": "How do you build an eval set before you have real users?"
+      }
+    ]
+  },
+  {
+    "id": "ai-lora-peft",
+    "level": "mid",
+    "topic": "Fine-tuning",
+    "q": {
+      "vi": "LoRA là gì? Vì sao PEFT được dùng phổ biến khi fine-tune LLM?",
+      "en": "What is LoRA? Why is PEFT so widely used for fine-tuning LLMs?"
+    },
+    "a": {
+      "vi": "LoRA đóng băng trọng số gốc và chỉ train thêm hai ma trận hạng thấp cho một số layer, nên số tham số cần train chỉ còn một phần rất nhỏ, thường dưới 1%.\n- Ý tưởng: phần cập nhật ΔW cho một ma trận lớn có thể xấp xỉ bằng tích B·A với rank r nhỏ (khoảng 8–64). Output = W·x + (α/r)·B·A·x.\n- Lợi ích: tốn ít VRAM vì không cần gradient và trạng thái optimizer cho toàn bộ model; adapter chỉ vài chục MB, có thể giữ nhiều adapter cho nhiều tác vụ trên cùng một base model; khi deploy có thể merge vào trọng số để không tăng latency.\n- QLoRA: load base model dạng lượng tử hóa 4-bit rồi train LoRA trên đó, giúp fine-tune model lớn trên một GPU.\n- Tham số cần chọn: rank, alpha, các layer áp dụng (attention projection, thường thêm cả MLP), learning rate thường cao hơn full fine-tune.\nPEFT là cả họ phương pháp, gồm cả prefix tuning và adapters. Hạn chế: khi cần thay đổi lớn như học ngôn ngữ mới, full fine-tune có thể tốt hơn. Chất lượng dữ liệu quan trọng hơn kỹ thuật.",
+      "en": "LoRA freezes the original weights and trains only two low-rank matrices added to some layers, so the trainable parameters are a tiny fraction, usually under 1%.\n- Idea: the update ΔW for a large matrix can be approximated by a product B·A with a small rank r (around 8–64). Output = W·x + (α/r)·B·A·x.\n- Benefits: much less VRAM because there are no gradients or optimizer states for the full model; adapters are only tens of MB, so you can keep many adapters for different tasks on one base model; at deployment they can be merged into the weights to add no latency.\n- QLoRA: load the base model quantized to 4-bit and train LoRA on top, making it possible to fine-tune large models on a single GPU.\n- Choices: rank, alpha, target layers (attention projections, often MLP too), and a learning rate usually higher than full fine-tuning.\nPEFT is the whole family, including prefix tuning and adapters. Limitation: for large shifts such as a new language, full fine-tuning may do better. Data quality matters more than technique."
+    },
+    "code": "from peft import LoraConfig, get_peft_model\n\nconfig = LoraConfig(r=16, lora_alpha=32, lora_dropout=0.05,\n                    target_modules=[\"q_proj\", \"v_proj\"], task_type=\"CAUSAL_LM\")\nmodel = get_peft_model(base_model, config)\nmodel.print_trainable_parameters()",
+    "tip": {
+      "vi": "Giải thích được vì sao LoRA tiết kiệm bộ nhớ (không lưu optimizer state cho trọng số gốc) thay vì chỉ nói 'ít tham số hơn'.",
+      "en": "Explain why LoRA saves memory (no optimizer state for the frozen weights) instead of just saying 'fewer parameters'."
+    },
+    "followUps": [
+      {
+        "vi": "Bạn chuẩn bị dữ liệu fine-tune thế nào và cần bao nhiêu mẫu?",
+        "en": "How do you prepare fine-tuning data and how many examples do you need?"
+      },
+      {
+        "vi": "Catastrophic forgetting là gì và làm sao hạn chế?",
+        "en": "What is catastrophic forgetting and how do you limit it?"
+      }
+    ],
+    "source": "https://huggingface.co/docs/peft/index"
+  },
+  {
+    "id": "ai-llm-evaluation",
+    "level": "senior",
+    "topic": "LLM Evaluation",
+    "q": {
+      "vi": "Bạn xây dựng quy trình đánh giá (eval) cho một ứng dụng LLM như thế nào?",
+      "en": "How do you build an evaluation process for an LLM application?"
+    },
+    "a": {
+      "vi": "Tôi coi eval là phần cốt lõi của sản phẩm LLM: xây bộ test từ ca sử dụng thật, chấm tự động mỗi lần thay đổi và theo dõi tiếp ở production.\n- Định nghĩa 'tốt' theo nghiệp vụ trước: đúng định dạng, đúng sự thật, giọng văn, an toàn, latency, chi phí.\n- Dataset: lấy mẫu từ log thật, thêm edge case và các lỗi từng gặp; mỗi bug trở thành một test case mới.\n- Cách chấm: kiểm tra tất định khi có thể (parse JSON, regex, so khớp đáp án, chạy unit test cho code); LLM-as-judge với rubric cụ thể cho tiêu chí mở; human review định kỳ để hiệu chỉnh judge.\n- Cẩn thận bias của judge: thích câu trả lời dài, thiên vị vị trí, thiên vị chính model của nó. So sánh từng cặp và đảo thứ tự giúp giảm bias.\n- Quy trình: chạy eval trong CI khi đổi prompt hoặc model, so với baseline, không chỉ nhìn điểm trung bình mà xem từng ca bị tụt.\n- Production: tracing, thu feedback người dùng, red teaming cho prompt injection và nội dung độc hại.\nBenchmark công khai ít nói lên chất lượng cho bài toán cụ thể của bạn.",
+      "en": "I treat evals as a core part of an LLM product: build a test set from real use cases, score it automatically on every change, and keep monitoring in production.\n- Define 'good' in business terms first: correct format, factual accuracy, tone, safety, latency, cost.\n- Dataset: sample from real logs, add edge cases and past failures; every bug becomes a new test case.\n- Scoring: deterministic checks wherever possible (JSON parsing, regex, exact-match answers, running unit tests for code); LLM-as-judge with a specific rubric for open-ended criteria; periodic human review to calibrate the judge.\n- Watch for judge bias: preferring longer answers, position bias, favoring its own model. Pairwise comparison with swapped order reduces it.\n- Process: run evals in CI when the prompt or model changes, compare with a baseline, and look at individual regressions, not just the average score.\n- Production: tracing, user feedback, red teaming for prompt injection and harmful content.\nPublic benchmarks say little about quality on your specific problem."
+    },
+    "tip": {
+      "vi": "Nói 'mỗi bug trở thành một test case' và 'ưu tiên kiểm tra tất định trước LLM-as-judge' cho thấy kinh nghiệm thực chiến.",
+      "en": "Saying 'every bug becomes a test case' and 'deterministic checks before LLM-as-judge' shows hands-on experience."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao biết LLM-as-judge của bạn đáng tin?",
+        "en": "How do you know your LLM-as-judge is trustworthy?"
+      },
+      {
+        "vi": "Bạn quyết định có nâng cấp lên model mới hay không dựa trên gì?",
+        "en": "How do you decide whether to upgrade to a new model?"
+      }
+    ]
+  },
+  {
+    "id": "ai-agents-tool-use",
+    "level": "senior",
+    "topic": "Agents",
+    "q": {
+      "vi": "LLM agent và tool calling hoạt động thế nào? Bạn cần lưu ý gì khi đưa agent lên production?",
+      "en": "How do LLM agents and tool calling work? What do you watch out for when putting agents in production?"
+    },
+    "a": {
+      "vi": "Agent là hệ thống mà LLM tự quyết định chuỗi hành động: chọn tool, gọi tool, đọc kết quả rồi lặp lại cho đến khi xong mục tiêu, thay vì đi theo một luồng cố định viết sẵn.\n- Tool calling: mô tả tool bằng tên, mô tả và JSON schema; model trả về lời gọi có cấu trúc, code của mình thực thi rồi trả kết quả lại vào hội thoại. Các giao thức như MCP chuẩn hóa cách kết nối tool và nguồn dữ liệu.\n- Vòng lặp: suy nghĩ → hành động → quan sát, có giới hạn số bước, timeout và điều kiện dừng.\nKinh nghiệm khi đưa lên production:\n- Bắt đầu bằng workflow đơn giản (chuỗi prompt cố định, routing); chỉ dùng agent khi bài toán thật sự mở, vì agent đắt, chậm và khó đoán hơn.\n- Tool ít, rõ nghĩa, trả lỗi dễ hiểu để model tự sửa.\n- Quản lý context: tóm tắt lịch sử, chỉ trả về dữ liệu cần thiết.\n- An toàn: quyền tối thiểu, sandbox, người xác nhận trước hành động không thể hoàn tác, chống prompt injection từ kết quả tool.\n- Đánh giá bằng tỉ lệ hoàn thành tác vụ end-to-end và xem trace từng bước.",
+      "en": "An agent is a system where the LLM decides its own sequence of actions: choose a tool, call it, read the result and repeat until the goal is done, instead of following a fixed, pre-written flow.\n- Tool calling: tools are described with a name, description and JSON schema; the model returns a structured call, your code executes it and feeds the result back into the conversation. Protocols such as MCP standardize how tools and data sources are connected.\n- The loop: think → act → observe, with a step limit, timeouts and a stop condition.\nLessons for production:\n- Start with simple workflows (fixed prompt chains, routing); use agents only when the problem is truly open-ended, because they are more expensive, slower and less predictable.\n- Few, well-named tools that return clear errors so the model can self-correct.\n- Manage context: summarize history and return only the data needed.\n- Safety: least privilege, sandboxing, human confirmation before irreversible actions, defense against prompt injection in tool results.\n- Evaluate by end-to-end task completion rate and inspect step-by-step traces."
+    },
+    "tip": {
+      "vi": "Nói rằng bạn sẽ thử workflow đơn giản trước khi dùng agent là tín hiệu trưởng thành mà người phỏng vấn senior tìm kiếm.",
+      "en": "Saying you would try a simple workflow before reaching for an agent is the maturity signal senior interviewers look for."
+    },
+    "followUps": [
+      {
+        "vi": "Agent bị lặp vô hạn hoặc gọi sai tool, bạn debug thế nào?",
+        "en": "An agent loops forever or calls the wrong tool — how do you debug it?"
+      },
+      {
+        "vi": "Thiết kế hệ thống multi-agent có lợi và hại gì?",
+        "en": "What are the pros and cons of a multi-agent design?"
+      }
+    ]
+  },
+  {
+    "id": "ai-model-serving",
+    "level": "mid",
+    "topic": "MLOps",
+    "q": {
+      "vi": "Bạn deploy một model ML lên production thế nào? So sánh batch và online inference.",
+      "en": "How do you deploy an ML model to production? Compare batch and online inference."
+    },
+    "a": {
+      "vi": "Chọn kiểu serving theo yêu cầu latency: batch inference khi kết quả có thể tính trước, online inference khi cần trả lời từng request theo thời gian thực.\n- Batch: chạy định kỳ (ví dụ mỗi đêm) trên toàn bộ dữ liệu, ghi kết quả vào database. Rẻ, đơn giản, dễ chạy lại, nhưng kết quả có thể cũ.\n- Online: đóng gói model sau một API (REST/gRPC) trong container, autoscale theo tải. Cần quan tâm p95/p99 latency, throughput, cold start.\n- Streaming: xử lý theo sự kiện từ hàng đợi, nằm giữa hai kiểu trên.\nThực hành tốt:\n- Experiment tracking và model registry (ví dụ MLflow) lưu version model cùng code, dữ liệu và tham số đã dùng để train.\n- Dùng chung logic feature giữa train và serving (feature store hoặc cùng pipeline) để tránh training-serving skew.\n- Triển khai an toàn: shadow deployment, canary, A/B test, rollback nhanh.\n- Tối ưu: gộp request thành batch, quantization, ONNX/TensorRT; với LLM dùng inference server chuyên dụng có continuous batching và KV cache.\n- Có monitoring và fallback khi model lỗi.",
+      "en": "Choose the serving mode from latency requirements: batch inference when results can be precomputed, online inference when each request needs a real-time answer.\n- Batch: runs periodically (e.g. nightly) over all data and writes results to a database. Cheap, simple, easy to rerun, but results can be stale.\n- Online: the model sits behind an API (REST/gRPC) in a container, autoscaled with load. Watch p95/p99 latency, throughput and cold starts.\n- Streaming: event-driven processing from a queue, in between the two.\nGood practices:\n- Experiment tracking and a model registry (e.g. MLflow) store model versions along with the code, data and parameters used to train them.\n- Share feature logic between training and serving (a feature store or the same pipeline) to avoid training-serving skew.\n- Safe rollout: shadow deployment, canary, A/B testing, fast rollback.\n- Optimization: request batching, quantization, ONNX/TensorRT; for LLMs use a dedicated inference server with continuous batching and KV cache.\n- Monitoring and a fallback when the model fails."
+    },
+    "tip": {
+      "vi": "Bắt đầu từ yêu cầu latency và nghiệp vụ, rồi mới nói công cụ — đừng mở đầu bằng danh sách framework.",
+      "en": "Start from latency and business requirements, then tools — do not open with a list of frameworks."
+    },
+    "followUps": [
+      {
+        "vi": "Shadow deployment và canary khác nhau thế nào?",
+        "en": "How do shadow deployment and canary releases differ?"
+      },
+      {
+        "vi": "Training-serving skew là gì và phát hiện bằng cách nào?",
+        "en": "What is training-serving skew and how do you detect it?"
+      }
+    ]
+  },
+  {
+    "id": "ai-drift-monitoring",
+    "level": "senior",
+    "topic": "MLOps",
+    "q": {
+      "vi": "Bạn giám sát model ở production và phát hiện drift như thế nào?",
+      "en": "How do you monitor a model in production and detect drift?"
+    },
+    "a": {
+      "vi": "Model ở production xuống cấp âm thầm khi dữ liệu thật thay đổi, nên tôi giám sát ở ba tầng: hệ thống, dữ liệu đầu vào và chất lượng dự đoán.\n- Data drift: phân phối feature thay đổi, ví dụ có tập khách hàng mới. Đo bằng PSI, KS test hoặc khoảng cách phân phối so với dữ liệu train.\n- Concept drift: quan hệ giữa feature và nhãn thay đổi, ví dụ kẻ gian đổi chiêu. Chỉ thấy rõ khi có nhãn.\n- Prediction drift: phân phối output thay đổi, là tín hiệu sớm khi nhãn về chậm.\nTriển khai:\n- Log input, output, version model; theo dõi metric hệ thống (latency, lỗi) và metric nghiệp vụ.\n- Kiểm tra chất lượng dữ liệu: schema, null, giá trị ngoài miền — nhiều sự cố thật là do pipeline hỏng chứ không phải drift.\n- Nhãn về trễ thì dùng proxy metric và gán nhãn mẫu định kỳ.\n- Đặt ngưỡng cảnh báo theo ý nghĩa nghiệp vụ, vì kiểm định thống kê trên dữ liệu lớn gần như luôn báo có khác biệt.\n- Retrain theo lịch hoặc theo trigger, nhưng model mới phải qua eval và canary trước khi thay thế.",
+      "en": "Production models degrade silently as real data changes, so I monitor at three levels: the system, the input data and prediction quality.\n- Data drift: feature distributions change, e.g. a new customer segment. Measure with PSI, a KS test or a distribution distance against the training data.\n- Concept drift: the relationship between features and labels changes, e.g. fraudsters change tactics. Only clearly visible once labels arrive.\n- Prediction drift: the output distribution changes, an early signal when labels are delayed.\nImplementation:\n- Log inputs, outputs and model version; track system metrics (latency, errors) and business metrics.\n- Data quality checks: schema, nulls, out-of-range values — many real incidents are broken pipelines, not drift.\n- When labels are delayed, use proxy metrics and label samples periodically.\n- Set alert thresholds by business significance, because statistical tests on large data almost always report a difference.\n- Retrain on a schedule or a trigger, but a new model must pass evals and a canary before replacing the old one."
+    },
+    "tip": {
+      "vi": "Nhắc rằng nhiều sự cố là do pipeline dữ liệu hỏng chứ không phải drift cho thấy bạn từng trực production thật.",
+      "en": "Pointing out that many incidents are broken data pipelines rather than drift shows you have been on call for real."
+    },
+    "followUps": [
+      {
+        "vi": "PSI được tính thế nào và ngưỡng nào là đáng lo?",
+        "en": "How is PSI computed and what value is worrying?"
+      },
+      {
+        "vi": "Giám sát một ứng dụng LLM khác gì giám sát model ML truyền thống?",
+        "en": "How does monitoring an LLM application differ from monitoring a classic ML model?"
+      }
+    ]
+  },
+  {
+    "id": "ai-llm-cost-latency",
+    "level": "senior",
+    "topic": "Cost & Latency",
+    "q": {
+      "vi": "Ứng dụng LLM của bạn quá chậm và quá đắt. Bạn tối ưu thế nào?",
+      "en": "Your LLM application is too slow and too expensive. How do you optimize it?"
+    },
+    "a": {
+      "vi": "Tôi làm theo thứ tự: đo để biết token và thời gian tiêu vào đâu, giảm số token, chọn model vừa đủ, cache, và cuối cùng mới tối ưu hạ tầng.\n- Hiểu latency: time-to-first-token phụ thuộc độ dài prompt (prefill), tổng thời gian phụ thuộc số token output (decode). Output thường đắt và chậm hơn input, nên giới hạn độ dài trả lời và yêu cầu định dạng gọn.\n- Model routing: model nhỏ, rẻ cho tác vụ dễ (phân loại, trích xuất), chỉ chuyển sang model lớn khi cần; có thể fine-tune hoặc distill model nhỏ cho tác vụ hẹp.\n- Caching: prompt caching cho phần prefix cố định (system prompt, tài liệu dài), cache kết quả cho câu hỏi lặp lại.\n- Giảm context: retrieval tốt hơn thay vì nhồi cả tài liệu, tóm tắt lịch sử hội thoại.\n- Trải nghiệm: streaming để người dùng thấy phản hồi sớm, chạy song song các bước độc lập, dùng batch API cho việc không gấp.\n- Tự host: quantization, continuous batching, speculative decoding.\nMọi tối ưu đều phải chạy lại bộ eval để chắc chắn chất lượng không bị tụt.",
+      "en": "I go in order: measure where tokens and time are spent, cut tokens, pick a model that is just good enough, cache, and only then optimize infrastructure.\n- Understand latency: time-to-first-token depends on prompt length (prefill), total time depends on the number of output tokens (decode). Output is usually more expensive and slower than input, so cap response length and ask for a compact format.\n- Model routing: small, cheap models for easy tasks (classification, extraction), escalating to a large model only when needed; fine-tune or distill a small model for narrow tasks.\n- Caching: prompt caching for fixed prefixes (system prompt, long documents), result caching for repeated questions.\n- Shrink context: better retrieval instead of stuffing whole documents, summarize conversation history.\n- User experience: stream so users see a response early, run independent steps in parallel, use batch APIs for non-urgent work.\n- Self-hosting: quantization, continuous batching, speculative decoding.\nEvery optimization must be followed by rerunning the eval set to make sure quality did not drop."
+    },
+    "tip": {
+      "vi": "Mở đầu bằng 'đo trước' và kết thúc bằng 'chạy lại eval' cho thấy bạn tối ưu có kiểm soát, không đánh đổi chất lượng mù quáng.",
+      "en": "Opening with 'measure first' and closing with 'rerun evals' shows controlled optimization, not blind quality trade-offs."
+    },
+    "followUps": [
+      {
+        "vi": "Prefill và decode khác nhau thế nào về tài nguyên phần cứng?",
+        "en": "How do prefill and decode differ in hardware resource usage?"
+      },
+      {
+        "vi": "Bạn thiết kế model routing thế nào để không giảm chất lượng?",
+        "en": "How do you design model routing without hurting quality?"
+      }
+    ]
+  }
+]

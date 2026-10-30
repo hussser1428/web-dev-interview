@@ -1,0 +1,589 @@
+[
+  {
+    "id": "mobile-native-vs-cross-platform",
+    "level": "intern",
+    "topic": "Platforms",
+    "q": {
+      "vi": "Native app, cross-platform app và web app (PWA) khác nhau thế nào? Khi nào chọn loại nào?",
+      "en": "How do native, cross-platform and web (PWA) apps differ? When would you pick each?"
+    },
+    "a": {
+      "vi": "Khác biệt chính nằm ở chỗ code chạy trên gì và truy cập được bao nhiêu tính năng của thiết bị.\n- Native: viết riêng cho từng nền tảng (Kotlin cho Android, Swift cho iOS). Hiệu năng tốt nhất, dùng API mới ngay khi ra, UI đúng chuẩn platform; đổi lại phải duy trì hai codebase.\n- Cross-platform (Flutter, React Native, Kotlin Multiplatform): một codebase cho cả hai, tiết kiệm nhân lực; nhưng thêm một lớp trung gian, tính năng native đặc thù vẫn cần viết code riêng, và phụ thuộc vào tốc độ cập nhật của framework.\n- Web app/PWA: chạy trong trình duyệt, cập nhật tức thì, không qua store; nhưng hạn chế truy cập phần cứng, push và chạy nền, nhất là trên iOS.\n\nChọn native khi app nặng về hiệu năng, đồ hoạ hoặc tích hợp sâu với hệ điều hành; chọn cross-platform khi cần ra mắt nhanh trên cả hai nền tảng với team nhỏ; chọn PWA cho nội dung đơn giản, cần SEO hoặc chưa chắc có nên làm app.",
+      "en": "The core difference is what the code runs on and how much of the device it can reach.\n- Native: written separately per platform (Kotlin for Android, Swift for iOS). Best performance, new APIs available on day one, platform-correct UI; the cost is maintaining two codebases.\n- Cross-platform (Flutter, React Native, Kotlin Multiplatform): one codebase for both, saving people; but it adds an intermediate layer, platform-specific features still need native code, and you depend on how fast the framework keeps up.\n- Web app/PWA: runs in the browser, updates instantly, no store review; but limited access to hardware, push and background work, especially on iOS.\n\nPick native when the app is performance- or graphics-heavy or deeply integrated with the OS; pick cross-platform to ship on both platforms quickly with a small team; pick a PWA for simple content, SEO needs, or when you are not yet sure an app is worth it."
+    },
+    "tip": {
+      "vi": "Đừng nói loại nào tốt nhất; hãy gắn lựa chọn với ràng buộc cụ thể: team, deadline, yêu cầu hiệu năng và tính năng phần cứng.",
+      "en": "Don't name a universal winner; tie the choice to concrete constraints: team, deadline, performance needs and hardware features."
+    },
+    "followUps": [
+      { "vi": "Kotlin Multiplatform khác Flutter ở điểm nào?", "en": "How does Kotlin Multiplatform differ from Flutter?" },
+      { "vi": "PWA trên iOS bị giới hạn những gì?", "en": "What are the limitations of PWAs on iOS?" }
+    ]
+  },
+  {
+    "id": "mobile-lifecycle",
+    "level": "junior",
+    "topic": "Lifecycle",
+    "q": {
+      "vi": "Vòng đời (lifecycle) của một màn hình trên mobile là gì? Vì sao cần quan tâm?",
+      "en": "What is the lifecycle of a mobile screen? Why does it matter?"
+    },
+    "a": {
+      "vi": "Lifecycle là chuỗi trạng thái mà hệ điều hành đưa một màn hình đi qua, từ lúc tạo đến lúc huỷ, và gọi callback ở mỗi bước.\n- Android Activity: onCreate → onStart (hiển thị) → onResume (tương tác được) → onPause → onStop (bị che hoàn toàn) → onDestroy. Fragment có thêm view lifecycle riêng (onCreateView/onDestroyView).\n- iOS UIViewController: viewDidLoad (một lần) → viewWillAppear → viewDidAppear → viewWillDisappear → viewDidDisappear.\n\nCần quan tâm vì:\n- Hệ điều hành có thể huỷ màn hình hoặc cả process bất cứ lúc nào (xoay màn hình, thiếu RAM) → phải lưu và khôi phục state.\n- Bật/tắt camera, GPS, listener, animation đúng lúc để tránh rò rỉ bộ nhớ và tốn pin.\n- Không cập nhật UI sau khi màn hình đã bị huỷ.\n\nThực tế hiện nay dùng lifecycle-aware component: repeatOnLifecycle hoặc collectAsStateWithLifecycle trên Android, onAppear/onDisappear và .task trong SwiftUI.",
+      "en": "The lifecycle is the sequence of states the OS moves a screen through, from creation to destruction, calling a callback at each step.\n- Android Activity: onCreate → onStart (visible) → onResume (interactive) → onPause → onStop (fully hidden) → onDestroy. Fragments also have a separate view lifecycle (onCreateView/onDestroyView).\n- iOS UIViewController: viewDidLoad (once) → viewWillAppear → viewDidAppear → viewWillDisappear → viewDidDisappear.\n\nIt matters because:\n- The OS can destroy the screen or the whole process at any time (rotation, low memory) → you must save and restore state.\n- Start/stop camera, GPS, listeners and animations at the right moment to avoid leaks and battery drain.\n- Never update UI after the screen is destroyed.\n\nIn practice today you use lifecycle-aware components: repeatOnLifecycle or collectAsStateWithLifecycle on Android, onAppear/onDisappear and .task in SwiftUI."
+    },
+    "tip": {
+      "vi": "Nêu một ví dụ cụ thể như dừng camera ở onPause/onStop để chứng minh bạn hiểu vì sao lifecycle quan trọng, không chỉ thuộc tên hàm.",
+      "en": "Give a concrete example like releasing the camera in onPause/onStop to show you understand why the lifecycle matters, not just the method names."
+    },
+    "followUps": [
+      { "vi": "onPause và onStop khác nhau thế nào khi có một dialog hoặc chế độ multi-window?", "en": "How do onPause and onStop differ with a dialog or in multi-window mode?" },
+      { "vi": "Khi người dùng bấm Home trên iOS, app chuyển qua những trạng thái nào?", "en": "Which states does an iOS app go through when the user presses Home?" }
+    ],
+    "source": "https://developer.android.com/guide/components/activities/activity-lifecycle"
+  },
+  {
+    "id": "mobile-config-change-process-death",
+    "level": "mid",
+    "topic": "Lifecycle",
+    "q": {
+      "vi": "Configuration change và process death trên Android khác nhau thế nào? Bạn giữ state qua hai trường hợp này ra sao?",
+      "en": "How do configuration changes and process death differ on Android? How do you keep state across both?"
+    },
+    "a": {
+      "vi": "Configuration change (xoay màn hình, đổi ngôn ngữ, dark mode) huỷ và tạo lại Activity nhưng process vẫn sống; process death là khi hệ điều hành giết cả process lúc app ở background để lấy RAM.\n- Qua configuration change: ViewModel sống sót, nên giữ state màn hình trong ViewModel là đủ.\n- Qua process death: ViewModel mất hết. Chỉ còn saved instance state (Bundle) mà hệ thống lưu lại, nên dùng SavedStateHandle trong ViewModel hoặc rememberSaveable trong Compose cho dữ liệu nhỏ như ID, text đang gõ, vị trí cuộn.\n- Dữ liệu lớn hoặc quan trọng phải nằm trong persistent storage (Room, DataStore), state chỉ lưu khoá để load lại.\n\nBẫy hay gặp: Bundle có giới hạn kích thước (khoảng 1 MB cho transaction), nhét list lớn vào sẽ crash TransactionTooLargeException. Test bằng Developer options 'Don't keep activities' hoặc lệnh adb shell am kill khi app ở background. iOS có khái niệm tương tự: state restoration và @SceneStorage trong SwiftUI.",
+      "en": "A configuration change (rotation, language, dark mode) destroys and recreates the Activity while the process stays alive; process death is when the OS kills the whole process while the app is in the background to reclaim RAM.\n- Across configuration changes: the ViewModel survives, so keeping screen state in the ViewModel is enough.\n- Across process death: the ViewModel is gone. Only the saved instance state (Bundle) the system persisted remains, so use SavedStateHandle in the ViewModel or rememberSaveable in Compose for small data like IDs, typed text, scroll position.\n- Large or important data must live in persistent storage (Room, DataStore); saved state only keeps the keys to reload it.\n\nCommon trap: the Bundle has a size limit (about 1 MB per transaction), and stuffing a big list into it crashes with TransactionTooLargeException. Test with the 'Don't keep activities' developer option or adb shell am kill while the app is backgrounded. iOS has a similar concept: state restoration and @SceneStorage in SwiftUI."
+    },
+    "code": "class SearchViewModel(private val state: SavedStateHandle) : ViewModel() {\n    // survives both rotation and process death\n    val query = state.getStateFlow(\"query\", \"\")\n    fun onQueryChange(q: String) { state[\"query\"] = q }\n}",
+    "tip": {
+      "vi": "Nói rõ cách bạn tái hiện process death khi test; đa số ứng viên chỉ biết xoay màn hình.",
+      "en": "Explain how you reproduce process death when testing; most candidates only know about rotation."
+    },
+    "followUps": [
+      { "vi": "Vì sao không nên giữ reference tới Activity hoặc View trong ViewModel?", "en": "Why should a ViewModel never hold a reference to an Activity or View?" },
+      { "vi": "remember và rememberSaveable khác nhau thế nào?", "en": "What is the difference between remember and rememberSaveable?" }
+    ],
+    "source": "https://developer.android.com/topic/libraries/architecture/saving-states"
+  },
+  {
+    "id": "mobile-declarative-ui",
+    "level": "intern",
+    "topic": "UI",
+    "q": {
+      "vi": "Declarative UI (Jetpack Compose, SwiftUI, Flutter) khác imperative UI (XML View, UIKit) thế nào?",
+      "en": "How does declarative UI (Jetpack Compose, SwiftUI, Flutter) differ from imperative UI (XML Views, UIKit)?"
+    },
+    "a": {
+      "vi": "Với declarative UI, bạn mô tả UI trông như thế nào cho một state nhất định (UI = f(state)); framework tự tính phần thay đổi và cập nhật màn hình. Với imperative UI, bạn tự tìm từng view và ra lệnh thay đổi nó, như textView.setText() hay label.isHidden = true.\n\nLợi ích của declarative:\n- Ít bug lệch state, vì không còn phải nhớ cập nhật mọi view khi dữ liệu đổi.\n- Code ngắn hơn, dễ tái sử dụng component, preview nhanh.\n- Hợp với unidirectional data flow: state đi xuống, event đi lên.\n\nĐánh đổi:\n- Phải hiểu cơ chế render lại (recomposition, body re-evaluation, rebuild) để tránh vẽ lại thừa.\n- Một số view phức tạp hoặc thư viện cũ vẫn là imperative, cần lớp interop (AndroidView, UIViewRepresentable).\n\nHiện nay Compose và SwiftUI là mặc định cho dự án mới, nhưng nhiều app lớn vẫn chạy song song với View/UIKit.",
+      "en": "With declarative UI you describe what the UI should look like for a given state (UI = f(state)); the framework computes what changed and updates the screen. With imperative UI you find each view and command it to change, like textView.setText() or label.isHidden = true.\n\nBenefits of declarative:\n- Fewer out-of-sync bugs, because you no longer have to remember to update every view when data changes.\n- Less code, easier component reuse, fast previews.\n- Fits unidirectional data flow: state flows down, events flow up.\n\nTrade-offs:\n- You must understand the re-render mechanism (recomposition, body re-evaluation, rebuild) to avoid unnecessary redraws.\n- Some complex views or legacy libraries remain imperative and need an interop layer (AndroidView, UIViewRepresentable).\n\nToday Compose and SwiftUI are the default for new projects, but many large apps still run them side by side with Views/UIKit."
+    },
+    "tip": {
+      "vi": "Câu 'UI là hàm của state' kèm ví dụ một bug lệch state kiểu imperative sẽ làm câu trả lời rất thuyết phục.",
+      "en": "The phrase 'UI is a function of state' plus an example of an imperative out-of-sync bug makes the answer convincing."
+    },
+    "followUps": [
+      { "vi": "Unidirectional data flow là gì?", "en": "What is unidirectional data flow?" },
+      { "vi": "Bạn sẽ migrate một app XML sang Compose theo từng bước thế nào?", "en": "How would you migrate an XML app to Compose incrementally?" }
+    ]
+  },
+  {
+    "id": "mobile-swiftui-state",
+    "level": "junior",
+    "topic": "UI",
+    "q": {
+      "vi": "Trong SwiftUI, @State, @Binding, @StateObject/@ObservedObject và @Observable khác nhau thế nào?",
+      "en": "In SwiftUI, how do @State, @Binding, @StateObject/@ObservedObject and @Observable differ?"
+    },
+    "a": {
+      "vi": "Chúng khác nhau ở chỗ ai sở hữu state và state là value type hay reference type.\n- @State: state cục bộ do chính view sở hữu, thường là value type nhỏ (Bool, String). SwiftUI giữ nó bên ngoài struct view nên không mất khi view được tạo lại.\n- @Binding: tham chiếu hai chiều tới state của view cha; view con đọc và ghi nhưng không sở hữu.\n- @StateObject: view tạo và sở hữu một ObservableObject (class), giữ nguyên qua các lần render.\n- @ObservedObject: view chỉ nhận object từ bên ngoài, không sở hữu. Dùng nhầm @ObservedObject để tạo object là bug kinh điển: object bị tạo lại và mất state.\n\nTừ iOS 17, macro @Observable thay thế ObservableObject: chỉ cần @State cho object mình sở hữu, truyền thẳng cho view con, và SwiftUI theo dõi đến từng property được đọc nên ít render thừa hơn. @Environment dùng cho dependency chia sẻ rộng.",
+      "en": "They differ in who owns the state and whether it is a value type or a reference type.\n- @State: local state owned by the view itself, usually a small value type (Bool, String). SwiftUI stores it outside the view struct so it survives the view being recreated.\n- @Binding: a two-way reference to a parent's state; the child reads and writes it but does not own it.\n- @StateObject: the view creates and owns an ObservableObject (class), kept across renders.\n- @ObservedObject: the view only receives an object from outside and does not own it. Using @ObservedObject to create an object is a classic bug: the object gets recreated and loses state.\n\nSince iOS 17, the @Observable macro replaces ObservableObject: you just use @State for an object you own, pass it directly to children, and SwiftUI tracks each property actually read, so there are fewer unnecessary re-renders. @Environment is for widely shared dependencies."
+    },
+    "code": "@Observable final class CartModel { var items: [Item] = [] }\n\nstruct CartScreen: View {\n    @State private var model = CartModel()   // owner (iOS 17+)\n    @State private var showSheet = false\n    var body: some View {\n        CartList(model: model)\n            .sheet(isPresented: $showSheet) { Checkout() }\n    }\n}",
+    "tip": {
+      "vi": "Nhắc tới bug @ObservedObject bị tạo lại và cách @Observable của iOS 17 đơn giản hoá mọi thứ để cho thấy bạn cập nhật kiến thức.",
+      "en": "Mention the recreated-@ObservedObject bug and how iOS 17's @Observable simplifies things to show you are current."
+    },
+    "followUps": [
+      { "vi": "Vì sao view trong SwiftUI là struct chứ không phải class?", "en": "Why are SwiftUI views structs rather than classes?" },
+      { "vi": "Khi nào dùng @Environment thay vì truyền qua init?", "en": "When would you use @Environment instead of passing through init?" }
+    ]
+  },
+  {
+    "id": "mobile-compose-recomposition",
+    "level": "mid",
+    "topic": "UI",
+    "q": {
+      "vi": "Recomposition trong Jetpack Compose là gì? Làm sao tránh recomposition thừa?",
+      "en": "What is recomposition in Jetpack Compose? How do you avoid unnecessary recomposition?"
+    },
+    "a": {
+      "vi": "Recomposition là khi Compose gọi lại các composable có state đầu vào thay đổi để cập nhật UI; Compose cố gắng chỉ chạy lại phần nhỏ nhất bị ảnh hưởng và bỏ qua (skip) composable có tham số không đổi.\n\nCách tránh recomposition thừa:\n- Đọc state càng muộn càng tốt: truyền lambda () -> Int thay vì giá trị, dùng Modifier.offset { } dạng lambda cho animation để chỉ chạy layout/draw.\n- derivedStateOf khi state đổi liên tục nhưng kết quả hiếm khi đổi (ví dụ hiện nút 'lên đầu' khi cuộn qua item đầu tiên).\n- remember cho phép tính tốn kém; key ổn định trong LazyColumn (items(key = { it.id })).\n- Tham số stable: data class immutable, tránh List từ bên ngoài không được coi là stable; từ Kotlin 2.0.20, strong skipping mode bật mặc định giúp nhiều trường hợp tự skip được.\n\nĐo trước khi tối ưu: Layout Inspector hiển thị số lần recompose, và Compose compiler report cho biết class nào unstable. Composable phải không có side effect; dùng LaunchedEffect hoặc SideEffect cho việc đó.",
+      "en": "Recomposition is Compose re-invoking composables whose input state changed in order to update the UI; Compose tries to rerun only the smallest affected part and skips composables whose parameters did not change.\n\nHow to avoid unnecessary recomposition:\n- Read state as late as possible: pass a lambda () -> Int instead of a value, use lambda-based Modifier.offset { } for animations so only layout/draw reruns.\n- derivedStateOf when state changes often but the result rarely does (e.g. showing a 'scroll to top' button once past the first item).\n- remember for expensive calculations; stable keys in LazyColumn (items(key = { it.id })).\n- Stable parameters: immutable data classes, beware of List types from external modules not being treated as stable; since Kotlin 2.0.20, strong skipping mode is on by default and lets many cases skip automatically.\n\nMeasure before optimizing: Layout Inspector shows recomposition counts, and Compose compiler reports tell you which classes are unstable. Composables must be free of side effects; use LaunchedEffect or SideEffect for those."
+    },
+    "code": "val listState = rememberLazyListState()\nval showScrollTop by remember {\n    derivedStateOf { listState.firstVisibleItemIndex > 0 }\n}\nLazyColumn(state = listState) {\n    items(products, key = { it.id }) { ProductRow(it) }\n}",
+    "tip": {
+      "vi": "Nhấn mạnh 'đo trước bằng Layout Inspector rồi mới tối ưu' và nhắc strong skipping mode để cho thấy kiến thức mới.",
+      "en": "Stress 'measure with Layout Inspector first, then optimize' and mention strong skipping mode to show up-to-date knowledge."
+    },
+    "followUps": [
+      { "vi": "Ba phase của Compose (composition, layout, drawing) là gì?", "en": "What are Compose's three phases (composition, layout, drawing)?" },
+      { "vi": "LaunchedEffect và rememberCoroutineScope khác nhau thế nào?", "en": "How do LaunchedEffect and rememberCoroutineScope differ?" }
+    ],
+    "source": "https://developer.android.com/develop/ui/compose/lifecycle"
+  },
+  {
+    "id": "mobile-flutter-architecture",
+    "level": "junior",
+    "topic": "Cross-platform",
+    "q": {
+      "vi": "Flutter render UI như thế nào? Widget, Element và RenderObject là gì?",
+      "en": "How does Flutter render UI? What are Widgets, Elements and RenderObjects?"
+    },
+    "a": {
+      "vi": "Flutter không dùng view native của hệ điều hành mà tự vẽ toàn bộ UI lên một canvas bằng rendering engine riêng (Impeller, mặc định trên iOS và Android hiện đại; Skia trước đây), nên UI giống hệt nhau trên mọi nền tảng.\n\nBa cây chính:\n- Widget: mô tả cấu hình UI, immutable và rẻ, tạo lại liên tục mỗi lần build.\n- Element: instance của widget tại một vị trí trong cây, sống lâu, giữ State của StatefulWidget và quyết định tái sử dụng hay tạo mới dựa trên type và key.\n- RenderObject: lo layout, paint, hit-test; tốn kém nên được tái sử dụng nhiều nhất có thể.\n\nCode Dart được biên dịch AOT ra mã máy khi release (nhanh khi chạy), và JIT khi debug để có hot reload. Giao tiếp với code native qua platform channels hoặc FFI.\n\nHệ quả thực tế: setState đúng chỗ, tách widget nhỏ, dùng const constructor để Flutter bỏ qua rebuild; và vì tự vẽ nên cần chú ý accessibility và cảm giác native.",
+      "en": "Flutter does not use the OS's native views; it draws the entire UI onto a canvas with its own rendering engine (Impeller, the default on iOS and modern Android; Skia previously), so the UI is identical across platforms.\n\nThree main trees:\n- Widget: an immutable, cheap description of UI configuration, recreated constantly on every build.\n- Element: the instance of a widget at a position in the tree, long-lived, holds a StatefulWidget's State and decides whether to reuse or recreate based on type and key.\n- RenderObject: handles layout, painting, hit-testing; expensive, so it is reused as much as possible.\n\nDart code is compiled AOT to machine code for release (fast at runtime) and JIT in debug to enable hot reload. It talks to native code through platform channels or FFI.\n\nPractical consequences: call setState in the right place, split into small widgets, use const constructors so Flutter skips rebuilds; and because it draws itself, pay attention to accessibility and native feel."
+    },
+    "tip": {
+      "vi": "Giải thích vai trò của Key khi Element quyết định tái sử dụng sẽ ghi điểm, vì đây là nguồn bug phổ biến trong list.",
+      "en": "Explaining the role of Keys in how Elements decide reuse scores points, because it is a common source of list bugs."
+    },
+    "followUps": [
+      { "vi": "Hot reload khác hot restart thế nào?", "en": "How does hot reload differ from hot restart?" },
+      { "vi": "Khi nào cần dùng GlobalKey hoặc ValueKey?", "en": "When do you need a GlobalKey or ValueKey?" }
+    ],
+    "source": "https://docs.flutter.dev/resources/architectural-overview"
+  },
+  {
+    "id": "mobile-react-native-new-architecture",
+    "level": "mid",
+    "topic": "Cross-platform",
+    "q": {
+      "vi": "Kiến trúc React Native cũ dùng bridge có vấn đề gì? New Architecture (JSI, Fabric, TurboModules) giải quyết ra sao?",
+      "en": "What was wrong with React Native's old bridge architecture? How does the New Architecture (JSI, Fabric, TurboModules) fix it?"
+    },
+    "a": {
+      "vi": "Bridge cũ cho JavaScript và native nói chuyện bằng cách serialize message thành JSON, gửi bất đồng bộ theo lô; New Architecture thay nó bằng JSI để JS gọi trực tiếp vào đối tượng C++.\n\nVấn đề của bridge: chi phí serialize, mọi lời gọi đều async nên không thể đọc layout đồng bộ, dễ nghẽn khi truyền nhiều dữ liệu (cuộn list, animation, gesture), và native module được khởi tạo hết lúc start làm chậm khởi động.\n\nNew Architecture:\n- JSI: JS giữ tham chiếu tới object C++ và gọi trực tiếp, có thể đồng bộ.\n- Fabric: renderer mới viết bằng C++, hỗ trợ cập nhật đồng bộ khi cần và các tính năng concurrent của React 18 trở lên.\n- TurboModules: native module được load lazy, có type an toàn nhờ Codegen sinh code từ spec TypeScript.\n- Hermes là engine JS mặc định, biên dịch sẵn ra bytecode giúp start nhanh hơn.\n\nNew Architecture bật mặc định từ RN 0.76, và từ 0.82 không còn tắt được. Khi migrate, rủi ro chính là thư viện bên thứ ba chưa hỗ trợ.",
+      "en": "The old bridge let JavaScript and native talk by serializing messages to JSON and sending them asynchronously in batches; the New Architecture replaces it with JSI so JS can call C++ objects directly.\n\nProblems with the bridge: serialization overhead, every call was async so you could not read layout synchronously, it clogged under heavy traffic (list scrolling, animation, gestures), and all native modules were initialized at startup, slowing launch.\n\nNew Architecture:\n- JSI: JS holds references to C++ objects and calls them directly, synchronously if needed.\n- Fabric: a new renderer written in C++, supports synchronous updates when needed and the concurrent features of React 18 and later.\n- TurboModules: native modules load lazily, with type safety through Codegen generating code from a TypeScript spec.\n- Hermes is the default JS engine, precompiling to bytecode for faster startup.\n\nThe New Architecture is on by default since RN 0.76, and from 0.82 it can no longer be turned off. When migrating, the main risk is third-party libraries that do not support it yet."
+    },
+    "tip": {
+      "vi": "Nêu mốc version (0.76 mặc định) và rủi ro thư viện bên thứ ba khi migrate cho thấy bạn đã làm thật chứ không chỉ đọc lý thuyết.",
+      "en": "Citing the version milestone (default in 0.76) and the third-party library risk when migrating shows hands-on experience, not just theory."
+    },
+    "followUps": [
+      { "vi": "Vì sao animation nên chạy trên UI thread (Reanimated) thay vì JS thread?", "en": "Why should animations run on the UI thread (Reanimated) instead of the JS thread?" },
+      { "vi": "Expo có phù hợp cho app production không?", "en": "Is Expo suitable for production apps?" }
+    ],
+    "source": "https://reactnative.dev/architecture/landing-page"
+  },
+  {
+    "id": "mobile-cross-platform-tradeoffs",
+    "level": "senior",
+    "topic": "Cross-platform",
+    "q": {
+      "vi": "Công ty muốn làm app mới cho cả iOS và Android. Bạn sẽ chọn native, Flutter, React Native hay Kotlin Multiplatform? Lập luận thế nào?",
+      "en": "The company wants a new app for both iOS and Android. Would you choose native, Flutter, React Native or Kotlin Multiplatform? How do you reason about it?"
+    },
+    "a": {
+      "vi": "Không có đáp án chung; tôi quyết định dựa trên team hiện có, loại sản phẩm, và chi phí dài hạn chứ không chỉ tốc độ ra MVP.\n\nCác câu hỏi tôi đặt ra:\n- Team: đã giỏi TypeScript/React (nghiêng về React Native), có dev Android/Kotlin mạnh (KMP), hay bắt đầu từ đầu (Flutter dễ đồng nhất)?\n- Sản phẩm: UI tuỳ biến mạnh, giống nhau trên hai nền tảng thì Flutter hợp; cần cảm giác native và tích hợp sâu (widget, watch, camera, AR) thì native hoặc KMP chia sẻ logic còn UI native.\n- Chia sẻ code với web: React Native tận dụng được nhiều nhất.\n- Rủi ro: phụ thuộc framework, độ trễ hỗ trợ API mới của OS, kích thước app, khả năng tuyển người.\n\nKMP với Compose Multiplatform (iOS stable từ 2025) cho phép chia sẻ dần từng phần, rủi ro thấp cho app native có sẵn. Tôi thường đề xuất làm spike hai tuần với màn hình khó nhất, đo hiệu năng và trải nghiệm dev, rồi mới chốt. Dù chọn gì vẫn cần người hiểu native cho phần build, signing và debug crash.",
+      "en": "There is no universal answer; I decide based on the existing team, the product type and long-term cost, not just MVP speed.\n\nQuestions I ask:\n- Team: already strong in TypeScript/React (leans React Native), strong Android/Kotlin devs (KMP), or starting fresh (Flutter is easy to standardize)?\n- Product: heavily custom UI that looks the same on both platforms suits Flutter; a native feel and deep integration (widgets, watch, camera, AR) points to native or KMP sharing logic with native UI.\n- Code sharing with web: React Native leverages it most.\n- Risks: framework dependency, lag in supporting new OS APIs, app size, hiring.\n\nKMP with Compose Multiplatform (iOS stable since 2025) lets you share incrementally, which is low-risk for an existing native app. I usually propose a two-week spike on the hardest screen, measuring performance and developer experience, before committing. Whatever you pick, you still need people who understand native for builds, signing and crash debugging."
+    },
+    "tip": {
+      "vi": "Ở level senior, đề xuất cách giảm rủi ro quyết định (spike, tiêu chí đo) quan trọng hơn việc chọn đúng framework.",
+      "en": "At senior level, proposing how to de-risk the decision (a spike, measurable criteria) matters more than picking the 'right' framework."
+    },
+    "followUps": [
+      { "vi": "Bạn sẽ tích hợp Flutter hoặc React Native vào một app native có sẵn thế nào?", "en": "How would you add Flutter or React Native into an existing native app?" },
+      { "vi": "Chi phí ẩn của cross-platform sau 2-3 năm là gì?", "en": "What are the hidden costs of cross-platform after 2-3 years?" }
+    ]
+  },
+  {
+    "id": "mobile-state-management",
+    "level": "junior",
+    "topic": "State Management",
+    "q": {
+      "vi": "State management trên mobile là gì? Phân biệt UI state cục bộ và state dùng chung, kể vài giải pháp phổ biến.",
+      "en": "What is state management on mobile? Distinguish local UI state from shared state and name some common solutions."
+    },
+    "a": {
+      "vi": "State management là cách tổ chức dữ liệu thay đổi theo thời gian để UI luôn phản ánh đúng, có một nguồn sự thật duy nhất (single source of truth) và luồng cập nhật dễ đoán.\n- UI state cục bộ: chỉ một màn hình hay component cần, như text đang gõ, tab đang chọn. Để gần nơi dùng: remember, @State, useState, setState.\n- State dùng chung: người dùng đăng nhập, giỏ hàng, dữ liệu từ server. Đặt ở tầng cao hơn: ViewModel + repository, hoặc store toàn cục.\n\nGiải pháp phổ biến:\n- Android: ViewModel phơi bày StateFlow, UI collect.\n- iOS: @Observable model, @Environment.\n- Flutter: Provider, Riverpod, Bloc.\n- React Native: Context, Redux Toolkit, Zustand; dữ liệu server dùng TanStack Query.\n\nNguyên tắc chung là unidirectional data flow: UI gửi event, tầng state xử lý và phát state mới, UI chỉ render. Sai lầm hay gặp: đẩy mọi thứ vào global store, hoặc copy cùng dữ liệu ở nhiều nơi rồi lệch nhau.",
+      "en": "State management is how you organize data that changes over time so the UI always reflects it correctly, with a single source of truth and a predictable update flow.\n- Local UI state: needed by one screen or component, like typed text or the selected tab. Keep it close to where it is used: remember, @State, useState, setState.\n- Shared state: the logged-in user, the cart, server data. Lift it higher: ViewModel + repository, or a global store.\n\nCommon solutions:\n- Android: a ViewModel exposing StateFlow, collected by the UI.\n- iOS: @Observable models, @Environment.\n- Flutter: Provider, Riverpod, Bloc.\n- React Native: Context, Redux Toolkit, Zustand; server data with TanStack Query.\n\nThe common principle is unidirectional data flow: the UI sends events, the state layer handles them and emits new state, the UI only renders. Typical mistakes: pushing everything into a global store, or copying the same data into several places until they drift apart."
+    },
+    "tip": {
+      "vi": "Tách riêng 'server state' (cache dữ liệu từ API) khỏi 'client state' là điểm cộng lớn trong câu này.",
+      "en": "Separating 'server state' (cached API data) from 'client state' is a big plus on this question."
+    },
+    "followUps": [
+      { "vi": "StateFlow và SharedFlow khác nhau thế nào, dùng cái nào cho event một lần?", "en": "How do StateFlow and SharedFlow differ, and which fits one-off events?" },
+      { "vi": "Bloc và Riverpod khác nhau ở điểm nào?", "en": "How do Bloc and Riverpod differ?" }
+    ]
+  },
+  {
+    "id": "mobile-main-thread",
+    "level": "intern",
+    "topic": "Concurrency",
+    "q": {
+      "vi": "Main thread (UI thread) là gì? Vì sao không được gọi network hay đọc database trên main thread?",
+      "en": "What is the main (UI) thread? Why must you not do network calls or database reads on it?"
+    },
+    "a": {
+      "vi": "Main thread là thread duy nhất được phép vẽ UI và xử lý thao tác chạm; nếu nó bị chặn, app đứng hình.\n\nMàn hình 60 Hz cho mỗi frame khoảng 16 ms (120 Hz chỉ còn khoảng 8 ms). Mọi việc trên main thread phải xong trong khoảng đó, nếu không sẽ rớt frame (jank). Network có thể mất vài giây, đọc file hoặc database cũng không đoán trước được thời gian.\n\nHậu quả:\n- Android: chặn main thread khoảng 5 giây sẽ hiện ANR (App Not Responding); gọi network trên main thread còn bị ném NetworkOnMainThreadException.\n- iOS: UI đứng, và watchdog có thể kill app nếu khởi động quá lâu.\n\nCách làm đúng: chạy việc nặng ở background (Kotlin coroutines với Dispatchers.IO, Swift async/await, isolate trong Flutter) rồi quay về main thread để cập nhật UI. Ngược lại, chỉ được chạm vào UI từ main thread.",
+      "en": "The main thread is the only thread allowed to draw UI and handle touches; if it is blocked, the app freezes.\n\nA 60 Hz screen gives each frame about 16 ms (only about 8 ms at 120 Hz). Everything on the main thread must finish within that budget or frames drop (jank). A network call can take seconds, and file or database reads have unpredictable latency.\n\nConsequences:\n- Android: blocking the main thread for about 5 seconds shows an ANR (App Not Responding); network on the main thread even throws NetworkOnMainThreadException.\n- iOS: the UI freezes, and the watchdog can kill the app if launch takes too long.\n\nThe right approach: run heavy work in the background (Kotlin coroutines on Dispatchers.IO, Swift async/await, isolates in Flutter) and switch back to the main thread to update the UI. Conversely, only touch the UI from the main thread."
+    },
+    "tip": {
+      "vi": "Nêu con số 16 ms mỗi frame và ANR khoảng 5 giây giúp câu trả lời cụ thể và đáng tin.",
+      "en": "Quoting the 16 ms frame budget and the roughly 5-second ANR makes the answer concrete and credible."
+    },
+    "followUps": [
+      { "vi": "JavaScript trong React Native chạy trên thread nào?", "en": "Which thread does JavaScript run on in React Native?" },
+      { "vi": "Flutter là single-thread, vậy xử lý JSON lớn thế nào?", "en": "Flutter is single-threaded, so how do you parse a large JSON?" }
+    ]
+  },
+  {
+    "id": "mobile-coroutines-async",
+    "level": "mid",
+    "topic": "Concurrency",
+    "q": {
+      "vi": "Giải thích Kotlin coroutines (scope, dispatcher, structured concurrency) và so sánh với Swift async/await.",
+      "en": "Explain Kotlin coroutines (scope, dispatcher, structured concurrency) and compare them with Swift async/await."
+    },
+    "a": {
+      "vi": "Coroutine là tác vụ có thể tạm dừng (suspend) mà không chặn thread, giúp viết code bất đồng bộ như code tuần tự; structured concurrency đảm bảo mọi coroutine con gắn với một scope và bị huỷ cùng scope.\n- Scope: viewModelScope, lifecycleScope; khi ViewModel bị clear thì mọi request đang chạy tự cancel, không rò rỉ.\n- Dispatcher: Main cho UI, IO cho network/disk, Default cho tính toán CPU. Dùng withContext để đổi thread; hàm suspend nên main-safe.\n- Lỗi: exception ở con lan lên cha và huỷ anh em; dùng supervisorScope khi muốn các tác vụ độc lập.\n- Cancellation là cooperative: vòng lặp dài phải kiểm tra isActive hoặc gọi ensureActive.\n\nSwift tương tự: async/await, Task và TaskGroup có structured concurrency và cancellation; actor bảo vệ state khỏi data race, @MainActor đảm bảo code chạy trên main thread. Swift 6 kiểm tra data race lúc compile (strict concurrency), điều Kotlin không có. Bẫy chung: dùng GlobalScope hoặc Task không gắn lifecycle, dẫn tới việc chạy tiếp khi màn hình đã đóng.",
+      "en": "A coroutine is a task that can suspend without blocking a thread, letting you write async code that reads sequentially; structured concurrency ensures every child coroutine belongs to a scope and is cancelled with it.\n- Scope: viewModelScope, lifecycleScope; when the ViewModel is cleared, in-flight requests cancel automatically, with no leaks.\n- Dispatcher: Main for UI, IO for network/disk, Default for CPU work. Use withContext to switch threads; suspend functions should be main-safe.\n- Errors: an exception in a child propagates to the parent and cancels siblings; use supervisorScope when tasks should be independent.\n- Cancellation is cooperative: long loops must check isActive or call ensureActive.\n\nSwift is similar: async/await, Task and TaskGroup provide structured concurrency and cancellation; actors protect state from data races, and @MainActor guarantees code runs on the main thread. Swift 6 checks data races at compile time (strict concurrency), which Kotlin does not. A shared trap: GlobalScope or a Task not tied to a lifecycle, which keeps running after the screen is gone."
+    },
+    "code": "class ProfileViewModel(private val repo: UserRepository) : ViewModel() {\n    val state = MutableStateFlow<UiState>(UiState.Loading)\n    fun load(id: String) = viewModelScope.launch {\n        state.value = runCatching { repo.getUser(id) } // repo switches to IO inside\n            .fold({ UiState.Success(it) }, { UiState.Error(it.message) })\n    }\n}",
+    "tip": {
+      "vi": "Giải thích vì sao viewModelScope tránh leak và vì sao không bắt CancellationException một cách vô tình sẽ gây ấn tượng.",
+      "en": "Explaining why viewModelScope prevents leaks and why you must not accidentally swallow CancellationException is impressive."
+    },
+    "followUps": [
+      { "vi": "launch và async khác nhau thế nào?", "en": "How do launch and async differ?" },
+      { "vi": "Cold Flow và hot Flow khác nhau ra sao?", "en": "What is the difference between cold and hot Flows?" }
+    ],
+    "source": "https://developer.android.com/kotlin/coroutines"
+  },
+  {
+    "id": "mobile-networking-bad-network",
+    "level": "junior",
+    "topic": "Networking & Offline",
+    "q": {
+      "vi": "Mạng di động không ổn định. Bạn thiết kế lớp networking của app thế nào để xử lý mạng chậm hoặc mất kết nối?",
+      "en": "Mobile networks are unreliable. How do you design an app's networking layer to handle slow or lost connectivity?"
+    },
+    "a": {
+      "vi": "Giả định mạng luôn có thể chậm hoặc mất, và thiết kế để app vẫn dùng được, người dùng luôn biết chuyện gì đang xảy ra.\n- Timeout hợp lý cho connect và read, không để request treo mãi.\n- Retry có exponential backoff và jitter, chỉ cho request idempotent (GET) hoặc có idempotency key; không retry lỗi 4xx.\n- Cache: tôn trọng HTTP cache header (OkHttp, URLCache), hiện dữ liệu cũ trước rồi cập nhật sau (stale-while-revalidate).\n- Phân trang và giảm payload: chỉ lấy field cần, nén gzip, ảnh đúng kích thước.\n- Huỷ request khi màn hình đóng để không tốn pin và băng thông.\n- Theo dõi trạng thái mạng (ConnectivityManager, NWPathMonitor) để hiện banner offline, nhưng đừng tin tuyệt đối: 'có kết nối' chưa chắc gọi được server.\n- UI có đủ trạng thái loading, empty, error kèm nút thử lại.\n\nTest bằng Network Link Conditioner trên iOS hoặc giả lập mạng chậm trên emulator.",
+      "en": "Assume the network can always be slow or gone, and design so the app stays usable and the user always knows what is happening.\n- Sensible connect and read timeouts, so requests never hang forever.\n- Retry with exponential backoff and jitter, only for idempotent requests (GET) or ones with an idempotency key; never retry 4xx errors.\n- Caching: honor HTTP cache headers (OkHttp, URLCache), show stale data first and refresh after (stale-while-revalidate).\n- Pagination and smaller payloads: fetch only needed fields, gzip, correctly sized images.\n- Cancel requests when the screen closes to save battery and bandwidth.\n- Watch network state (ConnectivityManager, NWPathMonitor) to show an offline banner, but do not trust it fully: 'connected' does not mean the server is reachable.\n- The UI has proper loading, empty and error states with a retry button.\n\nTest with Network Link Conditioner on iOS or a throttled network on the emulator."
+    },
+    "tip": {
+      "vi": "Nhắc chuyện chỉ retry request idempotent cho thấy bạn hiểu rủi ro tạo đơn hàng hai lần.",
+      "en": "Mentioning that you only retry idempotent requests shows you understand the risk of creating an order twice."
+    },
+    "followUps": [
+      { "vi": "Làm sao xử lý access token hết hạn khi nhiều request chạy cùng lúc?", "en": "How do you handle an expired access token when several requests run concurrently?" },
+      { "vi": "Certificate pinning là gì, có rủi ro gì?", "en": "What is certificate pinning and what are its risks?" }
+    ]
+  },
+  {
+    "id": "mobile-offline-first-sync",
+    "level": "mid",
+    "topic": "Networking & Offline",
+    "q": {
+      "vi": "Thiết kế offline-first cho app (ví dụ app ghi chú) thế nào? Đồng bộ và xử lý xung đột ra sao?",
+      "en": "How would you design an offline-first app (e.g. a notes app)? How do you sync and resolve conflicts?"
+    },
+    "a": {
+      "vi": "Offline-first nghĩa là database local là nguồn sự thật cho UI; network chỉ là cơ chế đồng bộ chạy nền.\n- Đọc: UI quan sát database local (Room Flow, Core Data/SwiftData). Repository kéo dữ liệu mới từ server rồi ghi vào DB, UI tự cập nhật.\n- Ghi: ghi ngay vào DB local và đánh dấu pending (hoặc thêm vào bảng outbox), UI phản hồi tức thì; một worker đẩy lên server khi có mạng. Android dùng WorkManager với constraint có mạng; iOS dùng BGTaskScheduler hoặc đẩy khi app mở lại.\n- Đồng bộ tăng dần: server trả thay đổi từ một mốc (updatedAt hoặc sync token), có tombstone cho bản ghi bị xoá.\n- Mỗi thao tác có ID do client sinh (UUID) để retry không tạo bản trùng.\n\nXử lý xung đột: last-write-wins theo thời gian server là đơn giản nhất nhưng có thể mất dữ liệu; merge theo field; hoặc hiện cho người dùng chọn. Với cộng tác thời gian thực mới cần CRDT. Lựa chọn phụ thuộc vào việc mất một chỉnh sửa có chấp nhận được không.",
+      "en": "Offline-first means the local database is the source of truth for the UI; the network is just a background sync mechanism.\n- Reads: the UI observes the local database (Room Flow, Core Data/SwiftData). The repository pulls fresh data from the server and writes it to the DB, and the UI updates automatically.\n- Writes: write to the local DB immediately and mark it pending (or append to an outbox table), so the UI responds instantly; a worker pushes to the server when online. Android uses WorkManager with a network constraint; iOS uses BGTaskScheduler or pushes when the app reopens.\n- Incremental sync: the server returns changes since a checkpoint (updatedAt or a sync token), with tombstones for deleted records.\n- Each operation has a client-generated ID (UUID) so retries never create duplicates.\n\nConflict resolution: last-write-wins by server time is simplest but can lose data; per-field merge; or let the user choose. Only real-time collaboration really needs CRDTs. The choice depends on whether losing an edit is acceptable."
+    },
+    "tip": {
+      "vi": "Hỏi lại yêu cầu (có nhiều thiết bị cùng sửa không, mất dữ liệu có chấp nhận được không) trước khi chọn chiến lược xung đột.",
+      "en": "Ask clarifying questions (do multiple devices edit concurrently, is data loss acceptable) before choosing a conflict strategy."
+    },
+    "followUps": [
+      { "vi": "Tại sao không dùng timestamp của client để so sánh xung đột?", "en": "Why not compare client timestamps to resolve conflicts?" },
+      { "vi": "Khi schema DB local thay đổi giữa các version thì migrate thế nào?", "en": "How do you migrate the local DB schema between app versions?" }
+    ],
+    "source": "https://developer.android.com/topic/architecture/data-layer/offline-first"
+  },
+  {
+    "id": "mobile-local-storage",
+    "level": "junior",
+    "topic": "Storage",
+    "q": {
+      "vi": "Các cách lưu dữ liệu local trên mobile là gì? Khi nào dùng key-value, khi nào dùng database?",
+      "en": "What are the options for local storage on mobile? When do you use key-value storage versus a database?"
+    },
+    "a": {
+      "vi": "Chọn theo hình dạng và khối lượng dữ liệu: cấu hình nhỏ dùng key-value, dữ liệu có cấu trúc cần truy vấn dùng database, dữ liệu nhị phân lớn lưu file.\n- Key-value: Android DataStore (thay cho SharedPreferences, bất đồng bộ, an toàn hơn), iOS UserDefaults. Hợp cho cài đặt, cờ đã xem onboarding. Không dùng cho list lớn hay dữ liệu nhạy cảm.\n- Database: Room (lớp trên SQLite, kiểm tra query lúc compile, trả về Flow), Core Data hoặc SwiftData (iOS 17+), sqflite/Drift cho Flutter. Hợp cho dữ liệu nhiều bản ghi, cần lọc, sắp xếp, quan hệ, offline.\n- File: ảnh, video, file tải về; lưu trong thư mục riêng của app, phân biệt cache (hệ thống có thể xoá) và dữ liệu bền.\n- Secure storage: Keychain và Android Keystore cho token, mật khẩu.\n\nLưu ý: thao tác DB và file phải chạy ngoài main thread; luôn viết migration khi đổi schema; và nghĩ tới việc dữ liệu có được backup lên cloud hay không.",
+      "en": "Choose by data shape and size: small settings go into key-value storage, structured data you query goes into a database, large binary data goes into files.\n- Key-value: Android DataStore (replacing SharedPreferences, async and safer), iOS UserDefaults. Good for settings or an onboarding-seen flag. Not for big lists or sensitive data.\n- Database: Room (on top of SQLite, compile-time query checks, returns Flow), Core Data or SwiftData (iOS 17+), sqflite/Drift for Flutter. Good for many records that need filtering, sorting, relations, offline use.\n- Files: images, videos, downloads; stored in the app's private directory, distinguishing cache (the OS may purge it) from durable data.\n- Secure storage: Keychain and Android Keystore for tokens and passwords.\n\nNotes: DB and file operations must run off the main thread; always write migrations when the schema changes; and think about whether the data should be backed up to the cloud."
+    },
+    "tip": {
+      "vi": "Nói được vì sao DataStore thay SharedPreferences (API đồng bộ dễ chặn main thread, không báo lỗi) là điểm cộng.",
+      "en": "Explaining why DataStore replaced SharedPreferences (a synchronous API that can block the main thread and hides errors) is a plus."
+    },
+    "followUps": [
+      { "vi": "Bạn viết migration cho Room thế nào và test nó ra sao?", "en": "How do you write and test a Room migration?" },
+      { "vi": "Thư mục Caches và Documents trên iOS khác nhau thế nào?", "en": "How do the Caches and Documents directories on iOS differ?" }
+    ]
+  },
+  {
+    "id": "mobile-secure-storage",
+    "level": "mid",
+    "topic": "Storage",
+    "q": {
+      "vi": "Bạn lưu access token, refresh token và dữ liệu nhạy cảm trên thiết bị thế nào cho an toàn?",
+      "en": "How do you securely store access tokens, refresh tokens and sensitive data on the device?"
+    },
+    "a": {
+      "vi": "Không bao giờ lưu bí mật dạng plain text trong SharedPreferences hay UserDefaults; dùng kho khoá do hệ điều hành bảo vệ bằng phần cứng.\n- iOS: Keychain, chọn mức truy cập phù hợp như kSecAttrAccessibleWhenUnlockedThisDeviceOnly để không bị đồng bộ hay khôi phục sang máy khác. Có thể yêu cầu Face ID qua access control.\n- Android: Keystore sinh và giữ khoá trong phần cứng (TEE hoặc StrongBox), khoá không thể xuất ra. Dùng khoá đó để mã hoá token rồi lưu ciphertext vào DataStore. Thư viện Jetpack Security Crypto (EncryptedSharedPreferences) đã bị deprecate từ 2025, nên dự án mới tự mã hoá bằng Keystore hoặc dùng Tink.\n\nNguyên tắc khác:\n- Access token ngắn hạn, refresh token xoay vòng; có thể giữ access token chỉ trong bộ nhớ.\n- Không log token, không đưa vào URL, loại khỏi backup.\n- Không nhúng API secret vào app: mọi thứ trong APK/IPA đều có thể bị dịch ngược.\n- Trên máy root hoặc jailbreak không có gì tuyệt đối an toàn; dùng Play Integrity hoặc App Attest để server đánh giá rủi ro.",
+      "en": "Never store secrets as plain text in SharedPreferences or UserDefaults; use the OS key store protected by hardware.\n- iOS: Keychain, choosing an appropriate accessibility level such as kSecAttrAccessibleWhenUnlockedThisDeviceOnly so it is not synced or restored to another device. You can require Face ID via access control.\n- Android: the Keystore generates and holds keys in hardware (TEE or StrongBox) and keys cannot be exported. Use that key to encrypt the token and store the ciphertext in DataStore. The Jetpack Security Crypto library (EncryptedSharedPreferences) was deprecated in 2025, so new projects encrypt with Keystore directly or use Tink.\n\nOther principles:\n- Short-lived access tokens, rotating refresh tokens; the access token can live in memory only.\n- Never log tokens or put them in URLs; exclude them from backups.\n- Never embed API secrets in the app: anything in an APK/IPA can be reverse engineered.\n- Nothing is fully safe on a rooted or jailbroken device; use Play Integrity or App Attest so the server can assess risk."
+    },
+    "tip": {
+      "vi": "Câu 'mọi thứ trong app đều có thể bị dịch ngược' chứng tỏ bạn có tư duy bảo mật thực tế, không chỉ biết tên API.",
+      "en": "Saying 'anything shipped in the app can be reverse engineered' shows a realistic security mindset, not just API knowledge."
+    },
+    "followUps": [
+      { "vi": "Dữ liệu trong Keychain có còn sau khi gỡ app không?", "en": "Does Keychain data survive uninstalling the app?" },
+      { "vi": "Bạn bảo vệ API key của bên thứ ba (ví dụ Maps) thế nào?", "en": "How do you protect a third-party API key (e.g. Maps)?" }
+    ],
+    "source": "https://developer.android.com/training/articles/keystore"
+  },
+  {
+    "id": "mobile-list-virtualization",
+    "level": "junior",
+    "topic": "Performance",
+    "q": {
+      "vi": "Hiển thị danh sách 10.000 item trên mobile thế nào cho mượt? RecyclerView, LazyColumn, FlatList hoạt động ra sao?",
+      "en": "How do you show a 10,000-item list smoothly on mobile? How do RecyclerView, LazyColumn and FlatList work?"
+    },
+    "a": {
+      "vi": "Dùng list ảo hoá (virtualized): chỉ tạo và render các item đang hiển thị cộng một ít đệm, và tái sử dụng chúng khi cuộn, thay vì tạo 10.000 view cùng lúc.\n- RecyclerView: ViewHolder bị cuộn khỏi màn hình được đưa vào pool rồi bind dữ liệu mới. Dùng DiffUtil/ListAdapter để chỉ cập nhật item thay đổi.\n- LazyColumn (Compose), List/LazyVStack (SwiftUI), ListView.builder (Flutter): chỉ compose hoặc build item trong viewport.\n- FlatList (React Native): render theo cửa sổ; nhiều team chuyển sang FlashList để tái sử dụng view tốt hơn.\n\nMẹo để mượt:\n- Key ổn định theo ID để framework biết item nào là item nào khi dữ liệu đổi.\n- Item nhẹ, layout phẳng, không tính toán nặng trong bind/compose.\n- Ảnh tải bất đồng bộ, resize đúng kích thước, có cache (Coil, Glide, Kingfisher).\n- Phân trang thay vì tải hết: Paging 3 trên Android, infinite scroll.\n- Item có chiều cao cố định giúp tính toán cuộn nhanh hơn (getItemLayout trong FlatList).",
+      "en": "Use a virtualized list: only create and render the visible items plus a small buffer, and reuse them while scrolling, instead of creating 10,000 views at once.\n- RecyclerView: ViewHolders scrolled off screen go into a pool and get rebound with new data. Use DiffUtil/ListAdapter to update only changed items.\n- LazyColumn (Compose), List/LazyVStack (SwiftUI), ListView.builder (Flutter): only compose or build items in the viewport.\n- FlatList (React Native): renders a window of items; many teams move to FlashList for better view recycling.\n\nTips for smoothness:\n- Stable ID-based keys so the framework knows which item is which when data changes.\n- Light items, flat layouts, no heavy computation in bind/compose.\n- Images loaded asynchronously, resized to the right dimensions, cached (Coil, Glide, Kingfisher).\n- Paginate instead of loading everything: Paging 3 on Android, infinite scroll.\n- Fixed item heights make scroll calculations cheaper (getItemLayout in FlatList)."
+    },
+    "tip": {
+      "vi": "Nhắc tới key ổn định và ảnh resize đúng kích thước, hai nguyên nhân jank phổ biến nhất trong list.",
+      "en": "Mention stable keys and correctly sized images, the two most common causes of list jank."
+    },
+    "followUps": [
+      { "vi": "Vì sao dùng index làm key có thể gây bug?", "en": "Why can using the index as a key cause bugs?" },
+      { "vi": "notifyDataSetChanged có vấn đề gì?", "en": "What is wrong with notifyDataSetChanged?" }
+    ]
+  },
+  {
+    "id": "mobile-jank",
+    "level": "mid",
+    "topic": "Performance",
+    "q": {
+      "vi": "App bị giật (jank) khi cuộn hoặc chạy animation. Bạn tìm nguyên nhân và xử lý thế nào?",
+      "en": "The app janks while scrolling or animating. How do you find the cause and fix it?"
+    },
+    "a": {
+      "vi": "Jank xảy ra khi một frame không kịp hoàn thành trong ngân sách thời gian (khoảng 16 ms ở 60 Hz); việc đầu tiên là đo trên máy thật ở bản release, không đoán.\n\nCông cụ:\n- Android: Android Studio Profiler, system trace qua Perfetto, JankStats, Macrobenchmark để đo trước/sau.\n- iOS: Instruments (Time Profiler, Animation Hitches).\n- Flutter: DevTools performance view; React Native: Perf Monitor, xem JS thread hay UI thread bị nghẽn.\n\nNguyên nhân thường gặp và cách xử lý:\n- Việc nặng trên main thread (parse JSON, đọc DB, decode ảnh) → chuyển sang background.\n- Ảnh quá lớn so với view → downsample, cache.\n- Layout lồng sâu, đo lại nhiều lần, overdraw → làm phẳng layout.\n- Render lại thừa (recomposition, rebuild, re-render) → ổn định state và key.\n- GC liên tục do cấp phát object trong vòng lặp vẽ.\n- Lần chạy đầu chậm do code chưa được biên dịch tối ưu → Baseline Profiles trên Android.\n\nĐo bằng bản debug sẽ cho kết quả sai, vì debug chậm hơn nhiều.",
+      "en": "Jank happens when a frame misses its time budget (about 16 ms at 60 Hz); the first step is to measure on a real device with a release build, not guess.\n\nTools:\n- Android: Android Studio Profiler, system traces via Perfetto, JankStats, Macrobenchmark for before/after numbers.\n- iOS: Instruments (Time Profiler, Animation Hitches).\n- Flutter: DevTools performance view; React Native: Perf Monitor, checking whether the JS thread or UI thread is stalled.\n\nCommon causes and fixes:\n- Heavy work on the main thread (JSON parsing, DB reads, image decoding) → move it to the background.\n- Images much larger than their view → downsample, cache.\n- Deeply nested layouts, multiple measure passes, overdraw → flatten layouts.\n- Unnecessary re-rendering (recomposition, rebuilds, re-renders) → stabilize state and keys.\n- Constant GC from allocating objects in the draw loop.\n- Slow first runs because code is not yet optimally compiled → Baseline Profiles on Android.\n\nMeasuring a debug build gives misleading results, because debug is much slower."
+    },
+    "tip": {
+      "vi": "Kể một case thật: công cụ nào bạn dùng, thấy gì trong trace, sửa gì và số liệu trước/sau.",
+      "en": "Tell a real case: which tool you used, what the trace showed, what you changed and the before/after numbers."
+    },
+    "followUps": [
+      { "vi": "Làm sao theo dõi jank của người dùng thật trên production?", "en": "How do you monitor jank for real users in production?" },
+      { "vi": "Overdraw là gì và kiểm tra bằng cách nào?", "en": "What is overdraw and how do you check for it?" }
+    ]
+  },
+  {
+    "id": "mobile-memory-leaks",
+    "level": "mid",
+    "topic": "Performance",
+    "q": {
+      "vi": "Memory leak trên Android và iOS thường do đâu? Phát hiện và sửa thế nào?",
+      "en": "What typically causes memory leaks on Android and iOS? How do you detect and fix them?"
+    },
+    "a": {
+      "vi": "Leak xảy ra khi một object sống lâu vẫn giữ reference tới object lẽ ra đã chết (thường là màn hình), nên bộ nhớ không được giải phóng, lâu dần gây chậm hoặc crash OutOfMemory.\n\nAndroid (có GC):\n- Giữ Activity/Context/View trong singleton, static field, hoặc ViewModel.\n- Listener, callback, receiver đăng ký mà không huỷ.\n- Coroutine hoặc thread chạy tiếp sau khi màn hình đóng (GlobalScope).\n- Fragment giữ binding sau onDestroyView.\n→ Phát hiện bằng LeakCanary (in ra chuỗi reference gây leak) và Memory Profiler/heap dump.\n\niOS (ARC, đếm tham chiếu):\n- Retain cycle: closure giữ self mạnh trong khi self giữ closure; delegate khai báo strong.\n- Timer, NotificationCenter observer kiểu cũ giữ target.\n→ Sửa bằng [weak self] hoặc [unowned self], delegate là weak. Phát hiện bằng Memory Graph Debugger trong Xcode và Instruments (Leaks, Allocations).\n\nCách phòng: gắn mọi tác vụ với lifecycle, chỉ dùng applicationContext khi cần context sống lâu.",
+      "en": "A leak happens when a long-lived object keeps a reference to an object that should be dead (usually a screen), so its memory is never freed, eventually causing slowdowns or OutOfMemory crashes.\n\nAndroid (garbage collected):\n- Holding an Activity/Context/View in a singleton, static field or ViewModel.\n- Listeners, callbacks, receivers registered but never unregistered.\n- Coroutines or threads still running after the screen closes (GlobalScope).\n- A Fragment keeping its binding after onDestroyView.\n→ Detect with LeakCanary (it prints the reference chain causing the leak) and the Memory Profiler/heap dumps.\n\niOS (ARC, reference counting):\n- Retain cycles: a closure strongly captures self while self holds the closure; delegates declared strong.\n- Timers and old-style NotificationCenter observers retaining their target.\n→ Fix with [weak self] or [unowned self] and weak delegates. Detect with Xcode's Memory Graph Debugger and Instruments (Leaks, Allocations).\n\nPrevention: tie every task to a lifecycle, and use applicationContext only when you need a long-lived context."
+    },
+    "code": "// Swift: break the retain cycle\nviewModel.onUpdate = { [weak self] data in\n    guard let self else { return }\n    self.render(data)\n}",
+    "tip": {
+      "vi": "Phân biệt rõ GC (Android) và ARC (iOS) và vì sao ARC không tự xử lý được retain cycle.",
+      "en": "Clearly contrast GC (Android) with ARC (iOS) and explain why ARC cannot break retain cycles on its own."
+    },
+    "followUps": [
+      { "vi": "weak và unowned khác nhau thế nào, khi nào unowned gây crash?", "en": "How do weak and unowned differ, and when does unowned crash?" },
+      { "vi": "Vì sao Fragment phải set binding = null trong onDestroyView?", "en": "Why must a Fragment set binding = null in onDestroyView?" }
+    ]
+  },
+  {
+    "id": "mobile-startup-time",
+    "level": "senior",
+    "topic": "Performance",
+    "q": {
+      "vi": "Thời gian khởi động app quá lâu. Bạn đo và tối ưu cold start thế nào?",
+      "en": "App startup is too slow. How do you measure and optimize cold start?"
+    },
+    "a": {
+      "vi": "Cold start là khi process chưa tồn tại và phải tạo từ đầu; đây là trường hợp chậm nhất nên tôi đo nó trước, bằng số liệu thật chứ không cảm tính.\n\nĐo:\n- Android: Macrobenchmark đo time to initial display và time to full display (gọi reportFullyDrawn), Android vitals trên Play Console cho dữ liệu người dùng thật.\n- iOS: Instruments App Launch, MetricKit và Xcode Organizer cho dữ liệu thực tế.\n\nTối ưu:\n- Cắt việc trong Application.onCreate/AppDelegate: khởi tạo SDK lazy hoặc trì hoãn, chỉ giữ những gì màn hình đầu cần. Kiểm tra SDK bên thứ ba vì chúng thường là thủ phạm.\n- Không I/O hay network đồng bộ trên main thread khi khởi động.\n- Màn hình đầu nhẹ, hiện nội dung cache trước, dữ liệu mới tải sau.\n- Android: Baseline Profiles để biên dịch AOT các đường code nóng, R8 để giảm code, dùng SplashScreen API đúng cách thay vì splash giả có delay.\n- iOS: giảm số dynamic framework, tránh việc nặng trong static initializer và +load.\n\nCuối cùng đặt ngân sách và chạy benchmark trong CI để không bị chậm dần qua từng release.",
+      "en": "Cold start is when the process does not exist and must be created from scratch; it is the slowest case, so I measure it first, with real numbers rather than gut feel.\n\nMeasure:\n- Android: Macrobenchmark for time to initial display and time to full display (call reportFullyDrawn), Android vitals in Play Console for real-user data.\n- iOS: Instruments App Launch, MetricKit and Xcode Organizer for field data.\n\nOptimize:\n- Trim work in Application.onCreate/AppDelegate: initialize SDKs lazily or defer them, keeping only what the first screen needs. Audit third-party SDKs, as they are often the culprit.\n- No synchronous I/O or network on the main thread during startup.\n- A light first screen that shows cached content first and loads fresh data afterwards.\n- Android: Baseline Profiles to AOT-compile hot code paths, R8 to shrink code, the SplashScreen API used properly instead of a fake splash with a delay.\n- iOS: fewer dynamic frameworks, no heavy work in static initializers and +load.\n\nFinally, set a budget and run the benchmark in CI so startup does not regress release after release."
+    },
+    "tip": {
+      "vi": "Ở level senior, nói về việc giữ thành quả (ngân sách thời gian, benchmark trong CI) chứ không chỉ một lần tối ưu.",
+      "en": "At senior level, talk about protecting the gains (a time budget, benchmarks in CI), not just a one-off optimization."
+    },
+    "followUps": [
+      { "vi": "Cold, warm và hot start khác nhau thế nào?", "en": "How do cold, warm and hot starts differ?" },
+      { "vi": "Baseline Profile hoạt động thế nào?", "en": "How does a Baseline Profile work?" }
+    ],
+    "source": "https://developer.android.com/topic/performance/vitals/launch-time"
+  },
+  {
+    "id": "mobile-push-notifications",
+    "level": "junior",
+    "topic": "Push & Permissions",
+    "q": {
+      "vi": "Push notification hoạt động thế nào từ server đến thiết bị (APNs, FCM)?",
+      "en": "How do push notifications work from the server to the device (APNs, FCM)?"
+    },
+    "a": {
+      "vi": "Server của bạn không gửi trực tiếp tới điện thoại mà gửi qua dịch vụ push của nền tảng: APNs cho iOS, FCM cho Android (FCM cũng có thể chuyển tiếp sang APNs).\n\nLuồng:\n- App xin quyền thông báo (bắt buộc trên iOS, và trên Android 13+ với POST_NOTIFICATIONS).\n- App đăng ký và nhận device token, gửi token lên backend gắn với user.\n- Khi có sự kiện, backend gọi API của FCM/APNs với token và payload.\n- Hệ điều hành nhận và hiển thị, kể cả khi app không chạy.\n\nĐiểm cần biết:\n- Notification message được hệ thống tự hiển thị; data message (hoặc silent push trên iOS) để app tự xử lý, nhưng không được đảm bảo sẽ chạy, có thể bị giới hạn khi máy tiết kiệm pin.\n- Token có thể thay đổi (cài lại app, khôi phục máy), nên cập nhật mỗi lần nhận onNewToken và xoá token chết khi server báo lỗi.\n- Android 8+ cần notification channel.\n- Push không đảm bảo gửi tới, không dùng làm kênh dữ liệu quan trọng duy nhất.",
+      "en": "Your server does not send directly to the phone; it goes through the platform's push service: APNs for iOS, FCM for Android (FCM can also relay to APNs).\n\nFlow:\n- The app asks for notification permission (required on iOS, and on Android 13+ via POST_NOTIFICATIONS).\n- The app registers and receives a device token, then sends it to the backend linked to the user.\n- When an event occurs, the backend calls the FCM/APNs API with the token and payload.\n- The OS receives and displays it, even when the app is not running.\n\nThings to know:\n- Notification messages are displayed by the system; data messages (or silent pushes on iOS) let the app handle them itself, but they are not guaranteed to run and may be throttled in battery-saving modes.\n- Tokens can change (reinstall, device restore), so update on every onNewToken and remove dead tokens when the server reports errors.\n- Android 8+ requires notification channels.\n- Push delivery is not guaranteed; never use it as the only channel for critical data."
+    },
+    "tip": {
+      "vi": "Nhấn mạnh push không đảm bảo tới nơi và token có thể đổi, cho thấy bạn đã vận hành push thật.",
+      "en": "Stress that push is not guaranteed and tokens change, showing you have operated push in production."
+    },
+    "followUps": [
+      { "vi": "Khi nào nên xin quyền thông báo để tỉ lệ đồng ý cao?", "en": "When should you ask for notification permission to maximize opt-in?" },
+      { "vi": "Deep link từ notification vào đúng màn hình xử lý thế nào?", "en": "How do you deep link from a notification into the right screen?" }
+    ],
+    "source": "https://firebase.google.com/docs/cloud-messaging"
+  },
+  {
+    "id": "mobile-permissions-privacy",
+    "level": "intern",
+    "topic": "Push & Permissions",
+    "q": {
+      "vi": "Runtime permission là gì? Xin quyền (camera, vị trí...) thế nào cho đúng và tôn trọng quyền riêng tư?",
+      "en": "What are runtime permissions? How do you request permissions (camera, location...) correctly and respect privacy?"
+    },
+    "a": {
+      "vi": "Runtime permission là quyền nhạy cảm mà người dùng phải đồng ý trong lúc app chạy, không phải lúc cài; họ có thể từ chối hoặc thu hồi bất cứ lúc nào.\n\nCách làm đúng:\n- Xin đúng lúc, gắn với hành động: chỉ xin camera khi người dùng bấm 'Chụp ảnh', không xin hết lúc mở app.\n- Giải thích trước vì sao cần (màn hình rationale), và trên iOS phải khai báo chuỗi mô tả trong Info.plist, thiếu là bị crash hoặc bị từ chối khi review.\n- Xử lý cả trường hợp bị từ chối: app vẫn hoạt động ở mức giảm, và hướng dẫn mở Settings nếu bị từ chối vĩnh viễn.\n- Xin quyền tối thiểu: vị trí gần đúng thay vì chính xác, chỉ khi đang dùng app thay vì luôn luôn; dùng Photo Picker thay vì quyền đọc toàn bộ ảnh.\n- Luôn kiểm tra lại quyền trước khi dùng, vì người dùng có thể thu hồi.\n\nNgoài ra iOS yêu cầu App Tracking Transparency trước khi theo dõi người dùng giữa các app, và privacy manifest khai báo dữ liệu thu thập.",
+      "en": "Runtime permissions are sensitive permissions the user must grant while the app runs, not at install time; they can deny or revoke them at any time.\n\nDoing it right:\n- Ask at the right moment, tied to an action: request the camera only when the user taps 'Take photo', not everything at launch.\n- Explain why first (a rationale screen), and on iOS you must declare a usage description string in Info.plist; missing it causes a crash or a review rejection.\n- Handle denial: the app still works in a reduced mode, and guide the user to Settings if permanently denied.\n- Request the minimum: approximate instead of precise location, while-in-use instead of always; use the Photo Picker instead of full photo library access.\n- Always re-check permission before use, because the user may have revoked it.\n\nAlso, iOS requires App Tracking Transparency before tracking users across apps, and a privacy manifest declaring the data you collect."
+    },
+    "tip": {
+      "vi": "Ví dụ 'xin camera khi bấm nút chụp' và 'app vẫn chạy khi bị từ chối' là hai điểm nhà tuyển dụng muốn nghe.",
+      "en": "The examples 'ask for the camera when the capture button is tapped' and 'the app still works when denied' are what interviewers want to hear."
+    },
+    "followUps": [
+      { "vi": "Trên Android, shouldShowRequestPermissionRationale dùng để làm gì?", "en": "What is shouldShowRequestPermissionRationale used for on Android?" },
+      { "vi": "Privacy manifest của iOS là gì?", "en": "What is an iOS privacy manifest?" }
+    ],
+    "source": "https://developer.android.com/training/permissions/requesting"
+  },
+  {
+    "id": "mobile-mvvm-mvi",
+    "level": "mid",
+    "topic": "Architecture",
+    "q": {
+      "vi": "So sánh MVC, MVVM và MVI trong app mobile. Bạn chọn cái nào và vì sao?",
+      "en": "Compare MVC, MVVM and MVI in mobile apps. Which would you choose and why?"
+    },
+    "a": {
+      "vi": "Cả ba đều tách UI khỏi logic; khác nhau ở cách state và event chảy giữa các lớp.\n- MVC (kiểu UIKit truyền thống): ViewController vừa lo view vừa lo logic, dễ thành 'Massive View Controller' khó test.\n- MVVM: ViewModel giữ state và logic trình bày, phơi bày state có thể quan sát (StateFlow, @Observable); View chỉ render và gọi hàm ViewModel. Không phụ thuộc vào View nên dễ unit test. Đây là mặc định Google khuyến nghị.\n- MVI: một state bất biến duy nhất cho màn hình, UI gửi intent/event, reducer tạo state mới. Luồng một chiều rất rõ, dễ debug và tái hiện bug, hợp với màn hình phức tạp; đổi lại nhiều boilerplate hơn.\n\nThực tế phổ biến nhất hiện nay là MVVM có màu MVI: ViewModel phơi bày một data class UiState duy nhất và nhận event qua vài hàm. Tôi chọn theo độ phức tạp của màn hình và quy ước của team; quan trọng hơn tên pattern là single source of truth, state bất biến và logic không phụ thuộc framework UI.",
+      "en": "All three separate UI from logic; they differ in how state and events flow between layers.\n- MVC (traditional UIKit style): the ViewController handles both view and logic and easily becomes a 'Massive View Controller' that is hard to test.\n- MVVM: the ViewModel holds state and presentation logic and exposes observable state (StateFlow, @Observable); the View only renders and calls ViewModel functions. It does not depend on the View, so it is easy to unit test. This is Google's recommended default.\n- MVI: a single immutable state per screen, the UI sends intents/events, a reducer produces new state. Very clear one-way flow, easy to debug and reproduce bugs, good for complex screens; the cost is more boilerplate.\n\nThe most common practice today is MVI-flavored MVVM: the ViewModel exposes one UiState data class and receives events through a few functions. I choose based on screen complexity and team conventions; more important than the pattern name are a single source of truth, immutable state and logic independent of the UI framework."
+    },
+    "code": "data class FeedUiState(\n    val items: List<Post> = emptyList(),\n    val isLoading: Boolean = false,\n    val error: String? = null\n)\n// ViewModel exposes: val uiState: StateFlow<FeedUiState>\n// UI calls: viewModel.onRefresh(), viewModel.onLike(id)",
+    "tip": {
+      "vi": "Đừng tranh luận pattern nào đúng; nói về trade-off và cách bạn giữ state bất biến, test được.",
+      "en": "Don't argue which pattern is 'right'; discuss trade-offs and how you keep state immutable and testable."
+    },
+    "followUps": [
+      { "vi": "Xử lý event một lần (navigation, snackbar) trong MVVM thế nào?", "en": "How do you handle one-off events (navigation, snackbar) in MVVM?" },
+      { "vi": "Vì sao ViewModel không nên import android.* hay UIKit?", "en": "Why shouldn't a ViewModel import android.* or UIKit?" }
+    ],
+    "source": "https://developer.android.com/topic/architecture"
+  },
+  {
+    "id": "mobile-clean-architecture-modularization",
+    "level": "senior",
+    "topic": "Architecture",
+    "q": {
+      "vi": "Bạn tổ chức kiến trúc và module cho một app lớn với nhiều team thế nào? Clean architecture có cần thiết không?",
+      "en": "How do you structure architecture and modules for a large app with many teams? Is clean architecture necessary?"
+    },
+    "a": {
+      "vi": "Tôi chia theo layer để tách trách nhiệm và theo feature module để các team làm việc độc lập; mức độ 'clean' tuỳ quy mô, không áp dụng máy móc.\n\nLayer:\n- UI (màn hình, ViewModel) → domain (use case, tuỳ chọn, chỉ khi logic được dùng lại hoặc phức tạp) → data (repository, nguồn API và DB).\n- Phụ thuộc hướng vào trong; domain không biết framework, nên test và đổi nguồn dữ liệu dễ.\n\nModule:\n- feature modules (:feature:checkout), core modules (:core:network, :core:design-system), app module chỉ ghép lại.\n- Feature không phụ thuộc trực tiếp vào nhau; điều hướng qua route hoặc interface để tránh vòng phụ thuộc.\n- Lợi ích: build song song và incremental nhanh hơn, ranh giới sở hữu rõ, mỗi team tự chủ.\n\nRủi ro: chia quá nhỏ hoặc thêm use case chỉ gọi thẳng repository là boilerplate vô ích. Tôi bắt đầu đơn giản và tách module khi có đau thật: build chậm, xung đột merge, team giẫm chân nhau. Dùng convention plugin trong Gradle (hoặc Swift Package) để mọi module cấu hình thống nhất.",
+      "en": "I split by layer to separate responsibilities and by feature module so teams can work independently; how 'clean' to go depends on scale and should not be applied mechanically.\n\nLayers:\n- UI (screens, ViewModels) → domain (use cases, optional, only when logic is reused or complex) → data (repositories, API and DB sources).\n- Dependencies point inward; the domain knows no framework, so testing and swapping data sources is easy.\n\nModules:\n- Feature modules (:feature:checkout), core modules (:core:network, :core:design-system), and an app module that only wires them together.\n- Features do not depend on each other directly; navigate through routes or interfaces to avoid dependency cycles.\n- Benefits: faster parallel and incremental builds, clear ownership boundaries, team autonomy.\n\nRisks: splitting too finely, or adding use cases that just forward to a repository, is useless boilerplate. I start simple and split modules when there is real pain: slow builds, merge conflicts, teams stepping on each other. Use Gradle convention plugins (or Swift Packages) so every module is configured consistently."
+    },
+    "tip": {
+      "vi": "Câu 'tách khi có đau thật' và nêu dấu hiệu cụ thể (build chậm, xung đột) cho thấy tư duy senior thay vì giáo điều.",
+      "en": "Saying 'split when there is real pain' with concrete signals (slow builds, conflicts) shows senior judgment rather than dogma."
+    },
+    "followUps": [
+      { "vi": "Dependency injection (Hilt, Koin) giúp gì trong kiến trúc này?", "en": "How does dependency injection (Hilt, Koin) help in this architecture?" },
+      { "vi": "Bạn đo và giảm thời gian build của project nhiều module thế nào?", "en": "How do you measure and reduce build time in a multi-module project?" }
+    ]
+  },
+  {
+    "id": "mobile-testing",
+    "level": "mid",
+    "topic": "Testing",
+    "q": {
+      "vi": "Chiến lược test cho app mobile của bạn là gì? Unit test, UI test, snapshot test dùng khi nào?",
+      "en": "What is your testing strategy for a mobile app? When do you use unit, UI and snapshot tests?"
+    },
+    "a": {
+      "vi": "Tôi theo kim tự tháp test: nhiều unit test nhanh ở đáy, ít UI test end-to-end chậm và dễ flaky ở đỉnh.\n- Unit test (JUnit, XCTest, Swift Testing): ViewModel, use case, repository, mapper. Chạy trên JVM/máy dev trong vài giây. Thay dependency bằng fake (ví dụ repository giả trong bộ nhớ) hơn là mock khắp nơi, dùng kotlinx-coroutines-test và Turbine để test Flow.\n- Integration test: Room với database in-memory, lớp network với MockWebServer, kiểm tra migration.\n- UI test: Compose testing, Espresso, XCUITest cho vài luồng quan trọng nhất như đăng nhập, thanh toán. Chạy trên emulator trong CI hoặc device farm (Firebase Test Lab).\n- Snapshot/screenshot test (Paparazzi, Roborazzi, swift-snapshot-testing): bắt lỗi giao diện vỡ, dark mode, cỡ chữ lớn, không cần emulator với Paparazzi.\n\nKiến trúc tốt là điều kiện để test được: logic nằm ngoài Activity/ViewController và dependency được inject. Tôi đặt test chạy trên mỗi pull request và theo dõi test flaky để sửa hoặc cách ly ngay, vì test flaky làm team mất niềm tin.",
+      "en": "I follow the test pyramid: many fast unit tests at the base, few slow and flaky-prone end-to-end UI tests at the top.\n- Unit tests (JUnit, XCTest, Swift Testing): ViewModels, use cases, repositories, mappers. They run on the JVM/dev machine in seconds. Replace dependencies with fakes (e.g. an in-memory fake repository) rather than mocking everything, using kotlinx-coroutines-test and Turbine to test Flows.\n- Integration tests: Room with an in-memory database, the network layer with MockWebServer, migration checks.\n- UI tests: Compose testing, Espresso, XCUITest for a few critical flows like login and checkout. Run on emulators in CI or a device farm (Firebase Test Lab).\n- Snapshot/screenshot tests (Paparazzi, Roborazzi, swift-snapshot-testing): catch broken layouts, dark mode and large font issues, without an emulator in Paparazzi's case.\n\nGood architecture is the precondition for testability: logic lives outside Activities/ViewControllers and dependencies are injected. I run tests on every pull request and track flaky tests to fix or quarantine them right away, because flaky tests destroy team trust."
+    },
+    "tip": {
+      "vi": "Giải thích vì sao bạn chọn fake hơn mock và cách xử lý test flaky sẽ khác biệt so với câu trả lời chung chung.",
+      "en": "Explaining why you prefer fakes over mocks and how you handle flaky tests sets you apart from generic answers."
+    },
+    "followUps": [
+      { "vi": "Làm sao test code dùng coroutine có delay mà không phải chờ thật?", "en": "How do you test coroutine code with delays without actually waiting?" },
+      { "vi": "Bạn đo coverage thế nào, có đặt ngưỡng cứng không?", "en": "How do you measure coverage, and do you enforce a hard threshold?" }
+    ],
+    "source": "https://developer.android.com/training/testing/fundamentals"
+  },
+  {
+    "id": "mobile-app-release-signing",
+    "level": "junior",
+    "topic": "Release",
+    "q": {
+      "vi": "Quy trình phát hành app lên Google Play và App Store gồm những gì? Code signing là gì?",
+      "en": "What does releasing an app to Google Play and the App Store involve? What is code signing?"
+    },
+    "a": {
+      "vi": "Code signing là ký app bằng khoá riêng để store và thiết bị xác minh app đến từ đúng nhà phát triển và không bị sửa; mọi bản cập nhật phải được ký bởi cùng danh tính.\n\nAndroid:\n- Build Android App Bundle (AAB), ký bằng upload key; Google giữ app signing key qua Play App Signing (bắt buộc cho app mới) và sinh APK tối ưu cho từng máy.\n- Mất upload key vẫn xin reset được, nhưng giữ keystore và mật khẩu an toàn, không commit vào git.\n- Tăng versionCode mỗi lần phát hành.\n\niOS:\n- Cần Apple Developer account, certificate, App ID và provisioning profile; Xcode automatic signing hoặc fastlane match để quản lý cho cả team.\n- Upload lên App Store Connect, test qua TestFlight, rồi gửi review. Apple review thường kỹ hơn: hay bị từ chối vì crash, thiếu tính năng xoá tài khoản, mô tả quyền không rõ, hoặc thanh toán nội dung số không qua In-App Purchase.\n\nCả hai: chuẩn bị ảnh chụp, chính sách quyền riêng tư, khai báo dữ liệu thu thập (Data safety, App Privacy). Nên tự động hoá build và ký trong CI.",
+      "en": "Code signing means signing the app with a private key so stores and devices can verify it comes from the right developer and has not been tampered with; every update must be signed by the same identity.\n\nAndroid:\n- Build an Android App Bundle (AAB) signed with an upload key; Google holds the app signing key via Play App Signing (mandatory for new apps) and generates optimized APKs per device.\n- A lost upload key can be reset, but keep the keystore and passwords safe and never commit them to git.\n- Increment versionCode on every release.\n\niOS:\n- You need an Apple Developer account, a certificate, an App ID and a provisioning profile; Xcode automatic signing or fastlane match manages them for the team.\n- Upload to App Store Connect, test via TestFlight, then submit for review. Apple's review is usually stricter: common rejections are crashes, missing account deletion, unclear permission descriptions, or digital goods sold outside In-App Purchase.\n\nBoth: prepare screenshots, a privacy policy, and data collection declarations (Data safety, App Privacy). Automate builds and signing in CI."
+    },
+    "tip": {
+      "vi": "Kể một lý do bị Apple reject mà bạn từng gặp và cách xử lý sẽ rất thuyết phục.",
+      "en": "Sharing an Apple rejection you have faced and how you resolved it is very convincing."
+    },
+    "followUps": [
+      { "vi": "versionName và versionCode (hoặc CFBundleShortVersionString và CFBundleVersion) khác nhau thế nào?", "en": "How do versionName and versionCode (or CFBundleShortVersionString and CFBundleVersion) differ?" },
+      { "vi": "R8/ProGuard làm gì và cần lưu ý gì khi bật?", "en": "What does R8/ProGuard do and what should you watch for when enabling it?" }
+    ],
+    "source": "https://developer.android.com/studio/publish/app-signing"
+  },
+  {
+    "id": "mobile-staged-rollout-crash-reporting",
+    "level": "senior",
+    "topic": "Release",
+    "q": {
+      "vi": "App mobile không thể rollback như web. Bạn giảm rủi ro khi phát hành và phản ứng với sự cố production thế nào?",
+      "en": "Mobile apps can't be rolled back like the web. How do you reduce release risk and respond to production incidents?"
+    },
+    "a": {
+      "vi": "Vì bản đã cài không thể thu hồi và người dùng cập nhật chậm, tôi kết hợp phát hành từ từ, quan sát chặt, và khả năng tắt tính năng từ server.\n\nTrước và trong khi phát hành:\n- Kênh test nội bộ và beta (TestFlight, internal/closed testing).\n- Staged rollout trên Play (1% → 5% → 20% → 100%, có thể dừng) và phased release trên App Store (7 ngày, có thể tạm dừng).\n- Feature flag và remote config: ship code ở trạng thái tắt, bật dần cho từng nhóm, có kill switch khi lỗi.\n\nQuan sát:\n- Crash reporting (Firebase Crashlytics, Sentry) với mapping file R8 và dSYM để có stack trace đọc được.\n- Theo dõi crash-free users, ANR rate (Play vitals có ngưỡng xấu khoảng 1,09% crash và 0,47% ANR), cùng các chỉ số nghiệp vụ.\n\nKhi có sự cố: dừng rollout, tắt flag, sửa và phát hành hotfix (có thể xin expedited review của Apple). Backend phải tương thích ngược với nhiều version app cũ, và có cơ chế force update hoặc soft update cho trường hợp nghiêm trọng.",
+      "en": "Because installed builds cannot be recalled and users update slowly, I combine gradual releases, close monitoring, and the ability to switch features off from the server.\n\nBefore and during release:\n- Internal and beta channels (TestFlight, internal/closed testing).\n- Staged rollout on Play (1% → 5% → 20% → 100%, haltable) and phased release on the App Store (7 days, pausable).\n- Feature flags and remote config: ship code turned off, enable it gradually per cohort, with a kill switch for failures.\n\nMonitoring:\n- Crash reporting (Firebase Crashlytics, Sentry) with R8 mapping files and dSYMs for readable stack traces.\n- Track crash-free users and ANR rate (Play vitals' bad-behavior thresholds are about 1.09% crashes and 0.47% ANRs), plus business metrics.\n\nDuring an incident: halt the rollout, flip the flag, fix and ship a hotfix (you can request Apple's expedited review). The backend must stay backward compatible with many old app versions, and you need a force-update or soft-update mechanism for severe cases."
+    },
+    "tip": {
+      "vi": "Nhắc backend phải tương thích với version cũ và cơ chế force update; đây là điểm nhiều ứng viên bỏ sót.",
+      "en": "Mention backend compatibility with old versions and a force-update mechanism; many candidates miss these."
+    },
+    "followUps": [
+      { "vi": "Bạn quyết định khi nào dừng staged rollout dựa trên chỉ số nào?", "en": "Which metrics decide when you halt a staged rollout?" },
+      { "vi": "Dùng OTA update (như Expo Updates, Shorebird) có những giới hạn và rủi ro gì?", "en": "What are the limits and risks of OTA updates (e.g. Expo Updates, Shorebird)?" }
+    ]
+  }
+]

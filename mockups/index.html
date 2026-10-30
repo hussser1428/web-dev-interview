@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>DevInterview – Mockups</title>
+<style>
+  :root{
+    --bg:#0b0f17; --panel:#121826; --panel2:#182033; --line:#232c40;
+    --text:#e6e9f2; --muted:#8a93a8; --brand:#7c5cff; --brand2:#22d3ee;
+    --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font:14px/1.5 "Segoe UI",system-ui,sans-serif;width:1440px;height:900px;overflow:hidden}
+  .screen{display:none;height:900px}
+  .screen.on{display:flex}
+  /* sidebar */
+  .side{width:232px;background:var(--panel);border-right:1px solid var(--line);padding:20px 14px;display:flex;flex-direction:column;gap:4px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;margin:0 6px 22px}
+  .logo i{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--brand),var(--brand2));display:grid;place-items:center;font-style:normal;font-size:15px}
+  .nav{padding:9px 12px;border-radius:9px;color:var(--muted);display:flex;gap:10px;align-items:center}
+  .nav.on{background:var(--panel2);color:var(--text)}
+  .nav b{width:18px;text-align:center;font-weight:400}
+  .side .sec{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#5b647a;margin:18px 12px 6px}
+  .side .pro{margin-top:auto;background:linear-gradient(135deg,#2a1f66,#0f3b4a);border-radius:12px;padding:14px;font-size:13px}
+  .side .pro .btn{margin-top:10px;width:100%}
+  /* main */
+  .main{flex:1;padding:24px 28px;overflow:hidden;display:flex;flex-direction:column;gap:18px}
+  .top{display:flex;align-items:center;gap:14px}
+  .top h1{font-size:22px;font-weight:650}
+  .top .sub{color:var(--muted);font-size:13px}
+  .search{margin-left:auto;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 14px;width:340px;color:var(--muted)}
+  .avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#f472b6,#f59e0b)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .card h3{font-size:15px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .card h3 .more{margin-left:auto;font-size:12px;color:var(--brand2);font-weight:400}
+  .grid{display:grid;gap:18px}
+  .btn,.tag{white-space:nowrap}
+  .btn{background:var(--brand);color:#fff;border:0;border-radius:9px;padding:9px 16px;font:600 13px "Segoe UI";display:inline-flex;gap:8px;align-items:center;justify-content:center}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+  .btn.red{background:var(--bad)}
+  .tag{display:inline-block;font-size:11.5px;padding:2px 9px;border-radius:99px;background:var(--panel2);color:var(--muted);border:1px solid var(--line)}
+  .tag.p{color:#b9a8ff;border-color:#3b2f80;background:#1d1840}
+  .tag.c{color:#67e8f9;border-color:#155e6b;background:#0c2a33}
+  .tag.g{color:#86efac;border-color:#166534;background:#0d2a1a}
+  .tag.y{color:#fcd34d;border-color:#7a5a0f;background:#2b2108}
+  .tag.r{color:#fca5a5;border-color:#7f1d1d;background:#2c0f0f}
+  .muted{color:var(--muted)}
+  .bar{height:7px;background:var(--panel2);border-radius:99px;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--brand),var(--brand2))}
+  .row{display:flex;align-items:center;gap:10px}
+  .stat b{font-size:26px;display:block}
+  .q{padding:12px 0;border-top:1px solid var(--line);display:flex;gap:12px;align-items:center}
+  .q:first-of-type{border-top:0}
+  .q .t{flex:1}
+  .chk{width:18px;height:18px;border-radius:5px;border:1.5px solid #3a4560}
+  .chk.ok{background:var(--ok);border-color:var(--ok)}
+  pre{background:#0a0e15;border:1px solid var(--line);border-radius:10px;padding:14px;font:12.5px/1.6 Consolas,monospace;color:#c9d1e4;white-space:pre}
+  .k{color:#c792ea}.s{color:#c3e88d}.f{color:#82aaff}.cm{color:#5f6b85}.n{color:#f78c6c}
+  .bubble{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:14px 16px;max-width:88%}
+  .bubble.me{background:#1d1840;border-color:#3b2f80;margin-left:auto}
+  .tabs{display:flex;gap:6px}
+  .tabs span{padding:7px 14px;border-radius:8px;color:var(--muted);background:var(--panel);border:1px solid var(--line);font-size:13px}
+  .tabs span.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .ring{width:120px;height:120px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--brand2) 0 78%,var(--panel2) 78% 100%)}
+  .ring div{width:96px;height:96px;border-radius:50%;background:var(--panel);display:grid;place-items:center;text-align:center}
+  .ring b{font-size:30px;line-height:1}
+  .heat{display:grid;grid-template-columns:repeat(26,1fr);gap:4px}
+  .heat i{aspect-ratio:1;border-radius:3px;background:var(--panel2)}
+  .heat i.a{background:#2b2466}.heat i.b{background:#4c3bb8}.heat i.c{background:#7c5cff}
+</style>
+</head>
+<body>
+
+<!-- ============ 1. DASHBOARD ============ -->
+<section class="screen" id="dashboard">
+  <aside class="side">
+    <div class="logo"><i>&lt;/&gt;</i>DevInterview</div>
+    <div class="nav on"><b>◧</b>Tổng quan</div>
+    <div class="nav"><b>☰</b>Ngân hàng câu hỏi</div>
+    <div class="nav"><b>◎</b>Lộ trình học</div>
+    <div class="nav"><b>▶</b>Phỏng vấn thử (AI)</div>
+    <div class="nav"><b>⌘</b>Hỏi về project của bạn</div>
+    <div class="nav"><b>{ }</b>Live coding</div>
+    <div class="nav"><b>▤</b>Flashcards</div>
+    <div class="sec">Cộng đồng</div>
+    <div class="nav"><b>✎</b>Kinh nghiệm phỏng vấn</div>
+    <div class="nav"><b>★</b>Bảng xếp hạng</div>
+    <div class="pro"><b>Gói Pro</b><div class="muted" style="margin-top:4px">Phỏng vấn AI không giới hạn + chấm điểm giọng nói</div><button class="btn">Nâng cấp</button></div>
+  </aside>
+  <main class="main">
+    <div class="top">
+      <div><h1>Chào Thắng 👋</h1><div class="sub">Còn 12 ngày tới buổi phỏng vấn <b style="color:var(--text)">Backend Engineer @ Shopee</b></div></div>
+      <div class="search">⌕  Tìm câu hỏi, chủ đề, công ty…  <span style="float:right">Ctrl K</span></div>
+      <div class="avatar"></div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:repeat(4,1fr)">
+      <div class="card stat"><span class="muted">Chuỗi ngày học</span><b>🔥 17 ngày</b><span class="muted" style="font-size:12px">Kỷ lục: 23</span></div>
+      <div class="card stat"><span class="muted">Câu hỏi đã luyện</span><b>342</b><span style="color:var(--ok);font-size:12px">+28 tuần này</span></div>
+      <div class="card stat"><span class="muted">Phỏng vấn thử</span><b>9 buổi</b><span class="muted" style="font-size:12px">Điểm TB 7.4/10</span></div>
+      <div class="card stat"><span class="muted">Độ sẵn sàng</span><b style="color:var(--brand2)">78%</b><div class="bar" style="margin-top:6px"><i style="width:78%"></i></div></div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:1.35fr 1fr;flex:1;min-height:0">
+      <div class="grid" style="grid-template-rows:auto 1fr">
+        <div class="card">
+          <h3>Kế hoạch hôm nay <span class="more">Lộ trình: Backend Mid-level →</span></h3>
+          <div class="q"><div class="chk ok"></div><div class="t">Ôn 15 flashcard: <b>Database Indexing</b></div><span class="tag g">Xong</span></div>
+          <div class="q"><div class="chk ok"></div><div class="t">Đọc lý thuyết: <b>CAP theorem & Consistency models</b></div><span class="tag g">Xong</span></div>
+          <div class="q"><div class="chk"></div><div class="t">Luyện 5 câu <b>System Design</b> – Thiết kế URL shortener</div><span class="tag y">~25 phút</span></div>
+          <div class="q"><div class="chk"></div><div class="t">Phỏng vấn thử với AI – <b>Behavioral + Project deep-dive</b></div><button class="btn" style="padding:6px 12px">Bắt đầu</button></div>
+        </div>
+        <div class="card">
+          <h3>Câu hỏi hay được hỏi tuần này <span class="more">Xem tất cả →</span></h3>
+          <div class="q"><div class="t">Giải thích sự khác nhau giữa <b>process</b> và <b>thread</b>. Khi nào dùng cái nào?</div><span class="tag c">OS</span><span class="tag">Junior</span><span class="muted" style="font-size:12px">FPT · VNG</span></div>
+          <div class="q"><div class="t">Event loop trong Node.js hoạt động thế nào? microtask vs macrotask?</div><span class="tag p">Node.js</span><span class="tag">Mid</span><span class="muted" style="font-size:12px">Tiki · MoMo</span></div>
+          <div class="q"><div class="t">Làm sao xử lý <b>overfitting</b> khi train model với dataset nhỏ?</div><span class="tag y">AI/ML</span><span class="tag">Mid</span><span class="muted" style="font-size:12px">Zalo AI</span></div>
+          <div class="q"><div class="t">Thiết kế hệ thống notification cho 10 triệu user</div><span class="tag r">System Design</span><span class="tag">Senior</span><span class="muted" style="font-size:12px">Grab</span></div>
+        </div>
+      </div>
+      <div class="grid" style="grid-template-rows:auto auto 1fr">
+        <div class="card">
+          <h3>Mức độ thành thạo theo mảng</h3>
+          <div style="display:grid;gap:11px">
+            <div><div class="row" style="justify-content:space-between"><span>Data Structures & Algorithms</span><span class="muted">82%</span></div><div class="bar"><i style="width:82%"></i></div></div>
+            <div><div class="row" style="justify-content:space-between"><span>Backend / API</span><span class="muted">74%</span></div><div class="bar"><i style="width:74%"></i></div></div>
+            <div><div class="row" style="justify-content:space-between"><span>Database & SQL</span><span class="muted">61%</span></div><div class="bar"><i style="width:61%"></i></div></div>
+            <div><div class="row" style="justify-content:space-between"><span>System Design</span><span style="color:var(--warn)">42% · cần ôn</span></div><div class="bar"><i style="width:42%"></i></div></div>
+            <div><div class="row" style="justify-content:space-between"><span>DevOps / Docker / K8s</span><span style="color:var(--bad)">28% · yếu</span></div><div class="bar"><i style="width:28%"></i></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Hoạt động 6 tháng</h3>
+          <div class="heat">
+            <script>document.write(Array.from({length:156},(_,i)=>`<i class="${['','a','a','b','c',''][(i*7+i%5*3)%6]}"></i>`).join(''))</script>
+          </div>
+        </div>
+        <div class="card" style="background:linear-gradient(135deg,#1d1840,#0c2a33)">
+          <h3>🤖 Gợi ý từ AI</h3>
+          <p class="muted">Bạn trả lời tốt phần lý thuyết nhưng hay <b style="color:var(--text)">thiếu ví dụ thực tế</b>. Thử buổi “Project deep-dive” với repo <b style="color:var(--text)">ecommerce-api</b> của bạn — nhà tuyển dụng Backend thường hỏi sâu vào đây.</p>
+          <button class="btn" style="margin-top:12px">Luyện ngay với project</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</section>
+
+<!-- ============ 2. QUESTION BANK ============ -->
+<section class="screen" id="bank">
+  <aside class="side">
+    <div class="logo"><i>&lt;/&gt;</i>DevInterview</div>
+    <div class="nav"><b>◧</b>Tổng quan</div>
+    <div class="nav on"><b>☰</b>Ngân hàng câu hỏi</div>
+    <div class="nav"><b>◎</b>Lộ trình học</div>
+    <div class="nav"><b>▶</b>Phỏng vấn thử (AI)</div>
+    <div class="nav"><b>⌘</b>Hỏi về project của bạn</div>
+    <div class="nav"><b>{ }</b>Live coding</div>
+    <div class="nav"><b>▤</b>Flashcards</div>
+    <div class="sec">Mảng</div>
+    <div class="nav"><b>·</b>Frontend <span class="muted" style="margin-left:auto">1.2k</span></div>
+    <div class="nav on" style="background:#1d1840;color:#b9a8ff"><b>·</b>Backend <span style="margin-left:auto">1.8k</span></div>
+    <div class="nav"><b>·</b>AI / ML / LLM <span class="muted" style="margin-left:auto">940</span></div>
+    <div class="nav"><b>·</b>Data Engineer <span class="muted" style="margin-left:auto">610</span></div>
+    <div class="nav"><b>·</b>DevOps / Cloud <span class="muted" style="margin-left:auto">720</span></div>
+    <div class="nav"><b>·</b>Mobile <span class="muted" style="margin-left:auto">530</span></div>
+    <div class="nav"><b>·</b>Security <span class="muted" style="margin-left:auto">310</span></div>
+    <div class="nav"><b>·</b>Tester / QA <span class="muted" style="margin-left:auto">280</span></div>
+  </aside>
+  <main class="main" style="flex-direction:row;gap:0;padding:0">
+    <div style="width:560px;border-right:1px solid var(--line);padding:24px 22px;display:flex;flex-direction:column;gap:14px">
+      <div class="top"><h1>Backend</h1><span class="muted">1.842 câu hỏi</span></div>
+      <div class="search" style="width:100%;margin:0">⌕  Tìm trong Backend…</div>
+      <div class="row" style="flex-wrap:wrap;gap:6px">
+        <span class="tag p">Level: Junior–Mid ▾</span><span class="tag">Công ty ▾</span><span class="tag">Chủ đề ▾</span><span class="tag">Nguồn ▾</span><span class="tag">Chưa làm</span><span class="tag">⭐ Đã lưu</span>
+      </div>
+      <div class="tabs"><span class="on">Phổ biến</span><span>Mới nhất</span><span>Công ty hỏi nhiều</span><span>Hay sai</span></div>
+      <div class="card" style="padding:4px 16px;flex:1">
+        <div class="q" style="background:var(--panel2);margin:8px -10px;padding:12px 10px;border-radius:10px;border:1px solid #3b2f80"><div class="t"><b>Index trong database là gì? Khi nào index làm chậm hệ thống?</b><div class="row" style="margin-top:6px;gap:6px"><span class="tag c">Database</span><span class="tag">Mid</span><span class="muted" style="font-size:12px">Hỏi bởi 38 công ty</span></div></div><span class="tag y">Đang xem</span></div>
+        <div class="q"><div class="t">REST vs GraphQL vs gRPC — so sánh & use case<div class="row" style="margin-top:6px;gap:6px"><span class="tag c">API</span><span class="tag">Mid</span></div></div><div class="chk ok"></div></div>
+        <div class="q"><div class="t">Transaction isolation levels & các hiện tượng dirty/phantom read<div class="row" style="margin-top:6px;gap:6px"><span class="tag c">Database</span><span class="tag">Senior</span></div></div><div class="chk"></div></div>
+        <div class="q"><div class="t">JWT hoạt động thế nào? Lưu token ở đâu an toàn?<div class="row" style="margin-top:6px;gap:6px"><span class="tag c">Auth</span><span class="tag">Junior</span></div></div><div class="chk ok"></div></div>
+        <div class="q"><div class="t">Cache stampede là gì và cách phòng tránh với Redis<div class="row" style="margin-top:6px;gap:6px"><span class="tag c">Caching</span><span class="tag">Senior</span></div></div><div class="chk"></div></div>
+        <div class="q"><div class="t">Message queue: Kafka vs RabbitMQ, đảm bảo exactly-once?<div class="row" style="margin-top:6px;gap:6px"><span class="tag c">Messaging</span><span class="tag">Senior</span></div></div><div class="chk"></div></div>
+        <div class="q"><div class="t">N+1 query problem trong ORM và cách xử lý<div class="row" style="margin-top:6px;gap:6px"><span class="tag c">ORM</span><span class="tag">Junior</span></div></div><div class="chk"></div></div>
+      </div>
+    </div>
+    <div style="flex:1;padding:24px 28px;display:flex;flex-direction:column;gap:14px;overflow:hidden">
+      <div class="row"><span class="tag c">Database</span><span class="tag">Mid-level</span><span class="tag r">Hay sai: 46%</span><span style="margin-left:auto" class="row"><button class="btn ghost">⭐ Lưu</button><button class="btn ghost">＋ Flashcard</button></span></div>
+      <h1 style="font-size:22px">Index trong database là gì? Khi nào index làm chậm hệ thống?</h1>
+      <div class="row muted" style="font-size:12.5px;gap:16px"><span>Được hỏi tại: <b style="color:var(--text)">Shopee, Tiki, VNPay, +35</b></span><span>Nguồn: <span style="color:var(--brand2)">github.com/…/backend-interview-questions</span> · <span style="color:var(--brand2)">viblo.asia</span></span></div>
+      <div class="tabs"><span>✍ Tự trả lời trước</span><span class="on">Đáp án gợi ý</span><span>Câu hỏi follow-up (4)</span><span>Thảo luận (23)</span></div>
+      <div class="card" style="display:flex;flex-direction:column;gap:12px">
+        <p><b>Ý chính (nói trong 30s):</b> Index là cấu trúc dữ liệu phụ (thường là <b>B+Tree</b>) giúp tìm bản ghi mà không cần quét toàn bảng — đổi lại tốn bộ nhớ và làm chậm thao tác ghi.</p>
+        <p><b>Khi nào index làm chậm:</b></p>
+        <ul style="margin-left:20px;color:#c9d1e4;display:grid;gap:4px">
+          <li>Bảng ghi nhiều (INSERT/UPDATE liên tục) → mỗi lần ghi phải cập nhật mọi index</li>
+          <li>Cột có <b>cardinality thấp</b> (vd: gender) → optimizer vẫn chọn full scan</li>
+          <li>Index thừa / trùng lặp, composite index sai thứ tự cột</li>
+        </ul>
+        <pre><span class="cm">-- Composite index: thứ tự cột quan trọng (leftmost prefix)</span>
+<span class="k">CREATE INDEX</span> idx_orders_user_date <span class="k">ON</span> orders(user_id, created_at);
+
+<span class="cm">-- ✅ dùng được index</span>
+<span class="k">SELECT</span> * <span class="k">FROM</span> orders <span class="k">WHERE</span> user_id = <span class="n">42</span> <span class="k">AND</span> created_at &gt; <span class="s">'2026-01-01'</span>;
+<span class="cm">-- ❌ không dùng được (thiếu cột đầu)</span>
+<span class="k">SELECT</span> * <span class="k">FROM</span> orders <span class="k">WHERE</span> created_at &gt; <span class="s">'2026-01-01'</span>;</pre>
+        <div class="card" style="background:#2b2108;border-color:#7a5a0f;padding:12px 14px"><b style="color:#fcd34d">💡 Mẹo ghi điểm:</b> <span style="color:#e9dcb5">Kể một lần bạn dùng <code>EXPLAIN</code> để tối ưu query thật trong project — nhà tuyển dụng đánh giá cao trải nghiệm thực tế hơn định nghĩa.</span></div>
+      </div>
+      <div class="row" style="margin-top:auto"><button class="btn ghost">← Câu trước</button><span class="muted">Bạn thấy câu này:</span><span class="tag r">Khó</span><span class="tag y">Vừa</span><span class="tag g">Dễ</span><button class="btn" style="margin-left:auto">▶ Trả lời thử với AI</button><button class="btn ghost">Câu tiếp →</button></div>
+    </div>
+  </main>
+</section>
+
+<!-- ============ 3. MOCK INTERVIEW ============ -->
+<section class="screen" id="interview">
+  <main class="main" style="padding:0;gap:0">
+    <div class="row" style="padding:14px 24px;border-bottom:1px solid var(--line);background:var(--panel)">
+      <div class="logo" style="margin:0"><i>&lt;/&gt;</i></div>
+      <div><b>Phỏng vấn thử · Backend Engineer (Mid)</b><div class="muted" style="font-size:12px">Phong cách: Công ty sản phẩm · Vòng technical · Tiếng Việt</div></div>
+      <div class="row" style="margin-left:auto;gap:18px">
+        <span class="muted">Câu <b style="color:var(--text)">4</b>/8</span>
+        <div class="bar" style="width:180px"><i style="width:50%"></i></div>
+        <span class="tag r">● REC 18:42</span>
+        <button class="btn red">Kết thúc</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 520px;flex:1;min-height:0">
+      <div style="padding:22px 26px;display:flex;flex-direction:column;gap:14px">
+        <div class="row" style="gap:12px">
+          <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--brand),var(--brand2));display:grid;place-items:center;font-size:20px">🤖</div>
+          <div><b>AI Interviewer – “Minh”</b><div class="muted" style="font-size:12px">Senior Backend · đang hỏi follow-up</div></div>
+        </div>
+        <div class="bubble">Bạn vừa nói dùng Redis để cache danh sách sản phẩm. Vậy khi admin <b>cập nhật giá</b>, bạn đảm bảo người dùng không thấy giá cũ như thế nào? Có rủi ro gì khi nhiều request cùng miss cache?</div>
+        <div class="bubble me">Em dùng chiến lược cache-aside, khi update DB thì xoá key tương ứng trong Redis. Với trường hợp nhiều request cùng miss thì em sẽ dùng mutex lock bằng <code>SET NX</code>…</div>
+        <div class="bubble" style="border-style:dashed;color:var(--muted)">● ● ●  Minh đang suy nghĩ…</div>
+
+        <div class="card" style="margin-top:auto;padding:14px">
+          <div class="row" style="gap:14px">
+            <div style="width:56px;height:56px;border-radius:50%;background:var(--bad);display:grid;place-items:center;font-size:22px;box-shadow:0 0 0 8px #ef444433">🎙</div>
+            <div style="flex:1">
+              <div class="row" style="gap:3px;height:34px">
+                <script>document.write(Array.from({length:70},(_,i)=>`<i style="width:4px;border-radius:2px;background:var(--brand2);height:${6+Math.abs(Math.sin(i*.7)*26)}px;opacity:${.4+(i%3)*.2}"></i>`).join(''))</script>
+              </div>
+              <div class="muted" style="font-size:12px">Đang nghe… nói tự nhiên, AI sẽ chuyển thành văn bản</div>
+            </div>
+            <button class="btn ghost">⌨ Gõ</button>
+            <button class="btn ghost">💡 Gợi ý (2)</button>
+            <button class="btn ghost">⏭ Bỏ qua</button>
+          </div>
+        </div>
+      </div>
+      <div style="border-left:1px solid var(--line);background:var(--panel);padding:18px;display:flex;flex-direction:column;gap:12px">
+        <div class="tabs"><span class="on">{ } Code editor</span><span>✎ Whiteboard</span><span>📝 Ghi chú</span></div>
+        <div class="row muted" style="font-size:12px"><span class="tag">TypeScript ▾</span><span style="margin-left:auto">Tự lưu</span></div>
+<pre style="flex:1"><span class="k">async function</span> <span class="f">getProduct</span>(id: <span class="k">string</span>) {
+  <span class="k">const</span> key = <span class="s">`product:${id}`</span>;
+  <span class="k">const</span> cached = <span class="k">await</span> redis.<span class="f">get</span>(key);
+  <span class="k">if</span> (cached) <span class="k">return</span> JSON.<span class="f">parse</span>(cached);
+
+  <span class="cm">// chống cache stampede</span>
+  <span class="k">const</span> lock = <span class="k">await</span> redis.<span class="f">set</span>(<span class="s">`lock:${key}`</span>, <span class="n">1</span>,
+    <span class="s">'NX'</span>, <span class="s">'EX'</span>, <span class="n">5</span>);
+  <span class="k">if</span> (!lock) {
+    <span class="k">await</span> <span class="f">sleep</span>(<span class="n">50</span>);
+    <span class="k">return</span> <span class="f">getProduct</span>(id);
+  }
+  <span class="k">const</span> p = <span class="k">await</span> db.product.<span class="f">findById</span>(id);
+  <span class="k">await</span> redis.<span class="f">set</span>(key, JSON.<span class="f">stringify</span>(p),
+    <span class="s">'EX'</span>, <span class="n">300</span>);
+  <span class="k">await</span> redis.<span class="f">del</span>(<span class="s">`lock:${key}`</span>);
+  <span class="k">return</span> p;
+}</pre>
+        <div class="card" style="background:var(--panel2);padding:12px 14px">
+          <b style="font-size:13px">Đánh giá nhanh (chỉ hiện khi bật “Chế độ học”)</b>
+          <div class="row" style="margin-top:8px;gap:6px;flex-wrap:wrap"><span class="tag g">✓ Đúng hướng cache-aside</span><span class="tag g">✓ Có TTL</span><span class="tag y">! Chưa nói về race khi xoá key</span><span class="tag y">! Đệ quy không giới hạn</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</section>
+
+<!-- ============ 4. PROJECT DEEP-DIVE ============ -->
+<section class="screen" id="project">
+  <aside class="side">
+    <div class="logo"><i>&lt;/&gt;</i>DevInterview</div>
+    <div class="nav"><b>◧</b>Tổng quan</div>
+    <div class="nav"><b>☰</b>Ngân hàng câu hỏi</div>
+    <div class="nav"><b>◎</b>Lộ trình học</div>
+    <div class="nav"><b>▶</b>Phỏng vấn thử (AI)</div>
+    <div class="nav on"><b>⌘</b>Hỏi về project của bạn</div>
+    <div class="nav"><b>{ }</b>Live coding</div>
+    <div class="nav"><b>▤</b>Flashcards</div>
+  </aside>
+  <main class="main">
+    <div class="top"><div><h1>Project Deep-dive</h1><div class="sub">AI đọc repo / CV của bạn và đặt câu hỏi như nhà tuyển dụng thật</div></div></div>
+    <div class="card row" style="gap:12px;padding:14px">
+      <div class="search" style="flex:1;margin:0;color:var(--text)">🔗 https://github.com/thangpd/ecommerce-api</div>
+      <span class="muted">hoặc</span><button class="btn ghost">⬆ Tải CV (PDF)</button><button class="btn">Phân tích</button>
+    </div>
+    <div class="grid" style="grid-template-columns:360px 1fr;flex:1;min-height:0">
+      <div class="grid" style="grid-template-rows:auto 1fr">
+        <div class="card">
+          <h3>📦 ecommerce-api <span class="tag g" style="margin-left:auto">Đã phân tích</span></h3>
+          <div class="muted" style="font-size:12.5px;margin-bottom:10px">REST API bán hàng · 214 commits · 48 files</div>
+          <div class="row" style="flex-wrap:wrap;gap:6px"><span class="tag p">NestJS</span><span class="tag p">PostgreSQL</span><span class="tag p">Redis</span><span class="tag p">Docker</span><span class="tag p">JWT</span><span class="tag p">Stripe</span></div>
+        </div>
+        <div class="card">
+          <h3>Điểm AI phát hiện</h3>
+          <div style="display:grid;gap:10px;font-size:13px">
+            <div class="row" style="align-items:flex-start"><span class="tag g">Mạnh</span><span>Phân tầng module rõ, có unit test cho service</span></div>
+            <div class="row" style="align-items:flex-start"><span class="tag y">Dễ bị hỏi</span><span>Thanh toán Stripe — xử lý webhook trùng lặp?</span></div>
+            <div class="row" style="align-items:flex-start"><span class="tag y">Dễ bị hỏi</span><span>Trừ tồn kho khi 2 user mua cùng lúc</span></div>
+            <div class="row" style="align-items:flex-start"><span class="tag r">Rủi ro</span><span>Secret nằm trong <code>docker-compose.yml</code></span></div>
+            <div class="row" style="align-items:flex-start"><span class="tag r">Rủi ro</span><span>Không có pagination ở <code>GET /orders</code></span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="display:flex;flex-direction:column">
+        <h3>Câu hỏi nhà tuyển dụng có thể hỏi (24) <span class="more" style="color:var(--muted)"><span class="tabs"><span class="on">Tất cả</span><span>Kiến trúc</span><span>Trade-off</span><span>Scale</span><span>Behavioral</span></span></span></h3>
+        <div class="q"><div class="t"><b>Tại sao bạn chọn NestJS thay vì Express thuần?</b> Nếu làm lại bạn có chọn khác không?<div class="muted" style="font-size:12px;margin-top:3px">Trade-off · liên quan: <code>src/main.ts</code></div></div><span class="tag">Dễ</span><button class="btn ghost">Luyện</button></div>
+        <div class="q"><div class="t"><b>Nếu 2 người cùng mua sản phẩm cuối cùng</b>, code trong <code>order.service.ts</code> xử lý thế nào? Có xảy ra bán âm kho không?<div class="muted" style="font-size:12px;margin-top:3px">Concurrency · dòng 88–120</div></div><span class="tag r">Khó</span><button class="btn">Luyện</button></div>
+        <div class="q"><div class="t"><b>Stripe gửi webhook 2 lần</b> thì đơn hàng có bị xử lý 2 lần không? Bạn đảm bảo idempotency ra sao?<div class="muted" style="font-size:12px;margin-top:3px">Reliability · <code>payment.controller.ts</code></div></div><span class="tag r">Khó</span><button class="btn ghost">Luyện</button></div>
+        <div class="q"><div class="t"><b>Hệ thống chịu được bao nhiêu request/giây?</b> Nếu traffic tăng 50 lần vào ngày sale, bạn sẽ thay đổi gì?<div class="muted" style="font-size:12px;margin-top:3px">Scale · System design</div></div><span class="tag y">Vừa</span><button class="btn ghost">Luyện</button></div>
+        <div class="q"><div class="t"><b>Phần nào trong project bạn thấy khó nhất</b> và bạn đã debug nó như thế nào?<div class="muted" style="font-size:12px;margin-top:3px">Behavioral · STAR</div></div><span class="tag">Dễ</span><button class="btn ghost">Luyện</button></div>
+        <div class="q"><div class="t"><b>Bạn lưu secret/API key ở đâu</b> khi deploy production?<div class="muted" style="font-size:12px;margin-top:3px">Security · <code>docker-compose.yml</code></div></div><span class="tag y">Vừa</span><button class="btn ghost">Luyện</button></div>
+        <div class="row" style="margin-top:auto;padding-top:14px"><button class="btn" style="flex:1">▶ Phỏng vấn liên tục 8 câu về project này</button><button class="btn ghost">⬇ Xuất PDF ôn tập</button></div>
+      </div>
+    </div>
+  </main>
+</section>
+
+<!-- ============ 5. FEEDBACK REPORT ============ -->
+<section class="screen" id="report">
+  <aside class="side">
+    <div class="logo"><i>&lt;/&gt;</i>DevInterview</div>
+    <div class="nav"><b>◧</b>Tổng quan</div>
+    <div class="nav"><b>☰</b>Ngân hàng câu hỏi</div>
+    <div class="nav"><b>◎</b>Lộ trình học</div>
+    <div class="nav on"><b>▶</b>Phỏng vấn thử (AI)</div>
+    <div class="nav"><b>⌘</b>Hỏi về project của bạn</div>
+    <div class="nav"><b>{ }</b>Live coding</div>
+    <div class="nav"><b>▤</b>Flashcards</div>
+  </aside>
+  <main class="main">
+    <div class="top"><div><h1>Kết quả buổi phỏng vấn</h1><div class="sub">Backend Engineer (Mid) · 25/10/2026 · 32 phút · 8 câu</div></div>
+      <div class="row" style="margin-left:auto"><button class="btn ghost">▶ Xem lại bản ghi</button><button class="btn ghost">Chia sẻ</button><button class="btn">Luyện lại câu yếu</button></div></div>
+    <div class="grid" style="grid-template-columns:330px 1fr 1fr">
+      <div class="card row" style="gap:18px">
+        <div class="ring"><div><span><b>7.8</b><br><span class="muted" style="font-size:12px">/ 10</span></span></div></div>
+        <div><span class="tag g">Khả năng đậu: Cao</span><p class="muted" style="margin-top:8px;font-size:13px">Tốt hơn <b style="color:var(--text)">68%</b> ứng viên cùng vị trí</p><p style="color:var(--ok);font-size:13px;margin-top:4px">↑ +0.9 so với lần trước</p></div>
+      </div>
+      <div class="card">
+        <h3>Tiêu chí chấm</h3>
+        <div style="display:grid;gap:9px">
+          <div><div class="row" style="justify-content:space-between"><span>Kiến thức kỹ thuật</span><span>8.5</span></div><div class="bar"><i style="width:85%"></i></div></div>
+          <div><div class="row" style="justify-content:space-between"><span>Giải quyết vấn đề</span><span>8.0</span></div><div class="bar"><i style="width:80%"></i></div></div>
+          <div><div class="row" style="justify-content:space-between"><span>Chất lượng code</span><span>7.2</span></div><div class="bar"><i style="width:72%"></i></div></div>
+          <div><div class="row" style="justify-content:space-between"><span>Giao tiếp & cấu trúc câu trả lời</span><span style="color:var(--warn)">6.4</span></div><div class="bar"><i style="width:64%"></i></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Phân tích giọng nói</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div><span class="muted" style="font-size:12px">Tốc độ nói</span><b style="display:block;font-size:18px">148 từ/phút</b><span class="tag g">Vừa phải</span></div>
+          <div><span class="muted" style="font-size:12px">Từ đệm “ờ, kiểu là”</span><b style="display:block;font-size:18px">23 lần</b><span class="tag y">Hơi nhiều</span></div>
+          <div><span class="muted" style="font-size:12px">Im lặng dài nhất</span><b style="display:block;font-size:18px">11 giây</b><span class="tag y">Câu 6</span></div>
+          <div><span class="muted" style="font-size:12px">Thuật ngữ chính xác</span><b style="display:block;font-size:18px">92%</b><span class="tag g">Tốt</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="flex:1;min-height:0">
+      <h3>Chi tiết từng câu <span class="more">Mở rộng tất cả</span></h3>
+      <div class="q"><span class="tag g" style="width:44px;text-align:center">9.0</span><div class="t">Q1. Giới thiệu bản thân & project nổi bật</div><span class="muted" style="font-size:12px">Rõ ràng, đúng cấu trúc STAR</span></div>
+      <div class="q"><span class="tag g" style="width:44px;text-align:center">8.5</span><div class="t">Q2. So sánh SQL và NoSQL, chọn gì cho hệ thống đơn hàng?</div><span class="muted" style="font-size:12px">Có lập luận trade-off tốt</span></div>
+      <div class="q" style="flex-direction:column;align-items:stretch;background:var(--panel2);margin:6px -10px;padding:14px;border-radius:12px;border:1px solid var(--line)">
+        <div class="row"><span class="tag y" style="width:44px;text-align:center">6.0</span><div class="t"><b>Q4. Cache invalidation khi cập nhật giá sản phẩm</b></div><span class="tag">▲ thu gọn</span></div>
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:14px;margin-top:10px">
+          <div><div class="muted" style="font-size:12px;margin-bottom:4px">Câu trả lời của bạn (tóm tắt)</div><p style="font-size:13px">Cache-aside, xoá key khi update, dùng <code>SET NX</code> làm lock chống stampede.</p>
+            <div class="row" style="margin-top:8px;gap:6px;flex-wrap:wrap"><span class="tag r">✗ Thiếu: race condition khi đọc–ghi đồng thời</span><span class="tag r">✗ Đệ quy retry không giới hạn</span></div></div>
+          <div><div class="muted" style="font-size:12px;margin-bottom:4px">Câu trả lời mẫu nên có</div><p style="font-size:13px">Nêu <b>delayed double delete</b> hoặc versioning; giới hạn số lần retry; cân nhắc <b>write-through</b> với dữ liệu giá; đề cập TTL ngẫu nhiên tránh hết hạn đồng loạt.</p>
+            <div class="row" style="margin-top:8px;gap:6px"><span class="btn ghost" style="padding:5px 10px">📖 Bài học: Caching patterns</span><span class="btn" style="padding:5px 10px">↻ Trả lời lại</span></div></div>
+        </div>
+      </div>
+      <div class="q"><span class="tag r" style="width:44px;text-align:center">4.5</span><div class="t">Q6. Triển khai service lên Kubernetes, rolling update hoạt động thế nào?</div><span class="muted" style="font-size:12px">Đã thêm vào lộ trình ôn DevOps</span></div>
+    </div>
+  </main>
+</section>
+
+<script>
+  const s = new URLSearchParams(location.search).get('s') || 'dashboard';
+  document.getElementById(s).classList.add('on');
+</script>
+</body>
+</html>

@@ -1,0 +1,968 @@
+[
+  {
+    "id": "frontend-html-semantic",
+    "level": "intern",
+    "topic": "HTML & Accessibility",
+    "q": {
+      "vi": "Semantic HTML là gì? Tại sao nên dùng <header>, <nav>, <main>, <button> thay vì toàn <div>?",
+      "en": "What is semantic HTML? Why use <header>, <nav>, <main>, <button> instead of <div> everywhere?"
+    },
+    "a": {
+      "vi": "Semantic HTML là dùng thẻ mô tả đúng ý nghĩa của nội dung, chứ không chỉ để trình bày.\n\nLợi ích chính:\n- Accessibility: screen reader dựa vào thẻ để tạo landmark (main, nav), heading để người dùng nhảy nhanh; <button> có sẵn focus, Enter/Space và role, còn <div onclick> thì không.\n- SEO: search engine hiểu cấu trúc trang tốt hơn (heading, article, time...).\n- Dễ đọc, dễ bảo trì: nhìn code là hiểu bố cục.\n- Hành vi mặc định miễn phí: <form> submit bằng Enter, <a href> mở tab mới, <label for> click vào focus input.\n\nLỗi hay gặp: dùng <div> làm nút, nhảy cấp heading (h1 rồi h4), dùng <a> không có href cho hành động. Quy tắc: nếu có thẻ native đúng nghĩa, dùng nó trước khi nghĩ tới ARIA.",
+      "en": "Semantic HTML means using elements that describe what the content is, not just how it looks.\n\nMain benefits:\n- Accessibility: screen readers use elements to build landmarks (main, nav) and headings for quick navigation; a <button> comes with focus, Enter/Space handling and a role, while <div onclick> has none of that.\n- SEO: search engines understand page structure better (headings, article, time...).\n- Readability and maintenance: the layout is obvious from the code.\n- Free default behavior: <form> submits on Enter, <a href> can open in a new tab, clicking <label for> focuses the input.\n\nCommon mistakes: a <div> used as a button, skipped heading levels (h1 then h4), an <a> without href used for actions. Rule of thumb: if a native element with the right meaning exists, use it before reaching for ARIA."
+    },
+    "tip": {
+      "vi": "Nêu ví dụ cụ thể <button> vs <div onclick> (focus, bàn phím, role) sẽ cho thấy bạn hiểu thực tế chứ không học thuộc.",
+      "en": "Giving the concrete <button> vs <div onclick> example (focus, keyboard, role) shows practical understanding rather than memorization."
+    },
+    "followUps": [
+      { "vi": "Khác nhau giữa <section>, <article> và <div>?", "en": "What is the difference between <section>, <article> and <div>?" },
+      { "vi": "Khi nào nên dùng <a> và khi nào dùng <button>?", "en": "When should you use <a> versus <button>?" }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Glossary/Semantics"
+  },
+  {
+    "id": "frontend-a11y-basics",
+    "level": "junior",
+    "topic": "HTML & Accessibility",
+    "q": {
+      "vi": "Bạn làm gì để một trang web accessible? ARIA nên dùng khi nào?",
+      "en": "What do you do to make a web page accessible? When should you use ARIA?"
+    },
+    "a": {
+      "vi": "Accessibility là đảm bảo mọi người, kể cả người dùng screen reader, chỉ dùng bàn phím hoặc thị lực kém, đều dùng được sản phẩm; chuẩn tham chiếu là WCAG 2.2.\n\nViệc cơ bản tôi luôn làm:\n- Dùng semantic HTML và thứ tự heading hợp lý.\n- Ảnh có alt mô tả (ảnh trang trí thì alt rỗng).\n- Input có <label> gắn đúng, lỗi form được thông báo rõ.\n- Mọi thứ thao tác được bằng bàn phím, focus hiển thị rõ, không bẫy focus; modal phải chuyển focus vào và trả focus lại khi đóng.\n- Độ tương phản màu đủ (4.5:1 cho chữ thường), không chỉ dùng màu để truyền thông tin.\n\nARIA: quy tắc số một là không dùng ARIA nếu có thẻ native làm được. Dùng ARIA khi xây widget tùy biến (tabs, combobox) hoặc cần báo thay đổi động (aria-live, aria-expanded). ARIA sai còn tệ hơn không có ARIA.\n\nKiểm tra: axe/Lighthouse cho lỗi tự động, nhưng phải test tay bằng bàn phím và screen reader.",
+      "en": "Accessibility means making sure everyone, including screen reader users, keyboard-only users and people with low vision, can use the product; the reference standard is WCAG 2.2.\n\nBasics I always do:\n- Use semantic HTML and a logical heading order.\n- Images get descriptive alt text (empty alt for decorative ones).\n- Inputs have properly linked <label>s and form errors are announced clearly.\n- Everything works with the keyboard, focus is clearly visible, no focus traps; a modal moves focus in and returns it on close.\n- Sufficient color contrast (4.5:1 for normal text), and color is never the only way to convey information.\n\nARIA: the first rule is don't use ARIA if a native element can do the job. Use it when building custom widgets (tabs, combobox) or announcing dynamic changes (aria-live, aria-expanded). Wrong ARIA is worse than no ARIA.\n\nTesting: axe/Lighthouse catch automated issues, but you must also test manually with a keyboard and a screen reader."
+    },
+    "tip": {
+      "vi": "Nhắc 'first rule of ARIA' và việc test tay bằng bàn phím/screen reader là điểm cộng lớn, vì công cụ tự động chỉ bắt được một phần lỗi.",
+      "en": "Mentioning the 'first rule of ARIA' and manual keyboard/screen reader testing scores well, since automated tools catch only part of the issues."
+    },
+    "followUps": [
+      { "vi": "Bạn sẽ làm một modal accessible như thế nào?", "en": "How would you build an accessible modal?" },
+      { "vi": "aria-label, aria-labelledby và aria-describedby khác nhau ra sao?", "en": "How do aria-label, aria-labelledby and aria-describedby differ?" }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Web/Accessibility"
+  },
+  {
+    "id": "frontend-css-box-model",
+    "level": "intern",
+    "topic": "CSS",
+    "q": {
+      "vi": "Giải thích CSS box model. box-sizing: border-box khác content-box thế nào?",
+      "en": "Explain the CSS box model. How does box-sizing: border-box differ from content-box?"
+    },
+    "a": {
+      "vi": "Mỗi phần tử là một hộp gồm 4 lớp từ trong ra ngoài: content, padding, border, margin.\n\nbox-sizing quyết định width/height tính phần nào:\n- content-box (mặc định): width chỉ là phần content. Đặt width: 200px, padding 20px, border 2px thì hộp thực tế rộng 244px.\n- border-box: width bao gồm cả padding và border, nên hộp đúng 200px, content tự co lại. Dễ tính layout hơn nhiều, vì vậy hầu hết project đặt *, *::before, *::after { box-sizing: border-box; }.\n\nMargin không bao giờ nằm trong width. Lưu ý margin collapsing: margin dọc của hai block liền kề (hoặc cha và con đầu tiên) gộp lại thành giá trị lớn hơn thay vì cộng dồn; không xảy ra trong flex/grid container.\n\nNgoài ra phân biệt display block (chiếm cả dòng, nhận width/height), inline (không nhận width/height, margin dọc không đẩy layout) và inline-block.",
+      "en": "Every element is a box with four layers from inside out: content, padding, border, margin.\n\nbox-sizing decides what width/height covers:\n- content-box (default): width is only the content. With width: 200px, 20px padding and a 2px border, the real box is 244px wide.\n- border-box: width includes padding and border, so the box is exactly 200px and the content shrinks. Much easier for layout, which is why most projects set *, *::before, *::after { box-sizing: border-box; }.\n\nMargin is never part of width. Watch out for margin collapsing: vertical margins of adjacent blocks (or a parent and its first child) merge into the larger value instead of adding up; it does not happen inside flex/grid containers.\n\nAlso distinguish display block (takes the full line, accepts width/height), inline (ignores width/height, vertical margins don't push layout) and inline-block."
+    },
+    "code": "*, *::before, *::after { box-sizing: border-box; }\n.card { width: 200px; padding: 20px; border: 2px solid; }\n/* border-box: 200px total; content-box: 244px total */",
+    "tip": {
+      "vi": "Tính nhẩm một ví dụ cụ thể (200px + padding + border) và nhắc margin collapsing cho thấy bạn từng debug layout thật.",
+      "en": "Working through a concrete number (200px + padding + border) and mentioning margin collapsing shows you have debugged real layouts."
+    },
+    "followUps": [
+      { "vi": "Khi nào margin collapsing xảy ra và làm sao tránh?", "en": "When does margin collapsing happen and how do you avoid it?" },
+      { "vi": "Khác nhau giữa display: none và visibility: hidden?", "en": "What is the difference between display: none and visibility: hidden?" }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Box_model"
+  },
+  {
+    "id": "frontend-css-specificity",
+    "level": "junior",
+    "topic": "CSS",
+    "q": {
+      "vi": "CSS specificity và cascade hoạt động thế nào? Khi hai rule xung đột, rule nào thắng?",
+      "en": "How do CSS specificity and the cascade work? When two rules conflict, which one wins?"
+    },
+    "a": {
+      "vi": "Trình duyệt chọn giá trị theo cascade: nguồn và độ quan trọng (!important, origin), rồi cascade layer (@layer), rồi specificity, cuối cùng là thứ tự xuất hiện (rule sau thắng).\n\nSpecificity tính theo bộ ba (A, B, C):\n- A: số id (#header).\n- B: số class, attribute ([type=text]), pseudo-class (:hover).\n- C: số element và pseudo-element (div, ::before).\nSo sánh từ trái qua: một id luôn thắng bất kỳ số class nào. Inline style thắng mọi selector; !important vượt lên trên nữa. Selector * có specificity 0; :where() luôn bằng 0, còn :is()/:not() lấy specificity của đối số cao nhất.\n\nThực tế: giữ specificity thấp và đồng đều (BEM, CSS Modules, utility class), tránh id trong CSS và !important, vì cuộc chiến specificity khiến CSS khó override. @layer (hỗ trợ rộng từ 2022) giúp kiểm soát thứ tự ưu tiên giữa reset, thư viện và code của mình mà không cần tăng specificity.",
+      "en": "The browser picks a value via the cascade: origin and importance (!important, user agent vs author), then cascade layers (@layer), then specificity, and finally source order (the later rule wins).\n\nSpecificity is a triple (A, B, C):\n- A: number of ids (#header).\n- B: number of classes, attributes ([type=text]), pseudo-classes (:hover).\n- C: number of elements and pseudo-elements (div, ::before).\nCompare left to right: one id beats any number of classes. Inline styles beat all selectors; !important goes above that. The * selector has 0 specificity; :where() is always 0, while :is()/:not() take the highest specificity of their arguments.\n\nIn practice: keep specificity low and uniform (BEM, CSS Modules, utility classes), avoid ids in CSS and !important, because specificity wars make styles hard to override. @layer (widely supported since 2022) lets you order reset, library and app styles without bumping specificity."
+    },
+    "code": "#nav a        /* (1,0,1) */\n.menu .item a /* (0,2,1) */\n/* #nav a wins even though .menu .item a has more parts */",
+    "tip": {
+      "vi": "Nhắc @layer và :where() cho thấy bạn cập nhật CSS hiện đại, không chỉ dừng ở công thức tính điểm.",
+      "en": "Mentioning @layer and :where() shows you follow modern CSS, not just the scoring formula."
+    },
+    "followUps": [
+      { "vi": "Làm sao override style của một thư viện UI mà không dùng !important?", "en": "How do you override a UI library's styles without !important?" },
+      { "vi": "Thuộc tính nào được kế thừa (inherit) và thuộc tính nào không?", "en": "Which properties are inherited and which are not?" }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity"
+  },
+  {
+    "id": "frontend-css-flex-grid",
+    "level": "junior",
+    "topic": "CSS",
+    "q": {
+      "vi": "Flexbox và CSS Grid khác nhau thế nào? Khi nào dùng cái nào?",
+      "en": "How do Flexbox and CSS Grid differ? When do you use each?"
+    },
+    "a": {
+      "vi": "Flexbox là layout một chiều (theo hàng hoặc cột), nội dung quyết định kích thước; Grid là layout hai chiều (hàng và cột cùng lúc), container quyết định khung.\n\nFlexbox hợp với: thanh nav, nhóm nút, căn giữa một phần tử, danh sách item co giãn theo nội dung. Các thuộc tính chính: justify-content (trục chính), align-items (trục phụ), flex: 1 (flex-grow/shrink/basis), gap, flex-wrap.\n\nGrid hợp với: bố cục trang (header, sidebar, content), gallery, form nhiều cột, bất cứ khi nào cần các item thẳng hàng theo cả hai chiều. Thuộc tính chính: grid-template-columns với fr, repeat(auto-fill, minmax(200px, 1fr)) để responsive không cần media query, grid-template-areas.\n\nHai cái kết hợp tốt: Grid cho khung trang, Flex cho thành phần bên trong. Subgrid (hỗ trợ ở mọi trình duyệt lớn từ 2023) giúp item con căn theo grid của cha. Lỗi hay gặp: flex item không co lại vì min-width: auto, cần đặt min-width: 0.",
+      "en": "Flexbox is one-dimensional layout (a row or a column) where content drives sizing; Grid is two-dimensional (rows and columns at once) where the container defines the structure.\n\nFlexbox fits: nav bars, button groups, centering a single element, lists of items that size to their content. Key properties: justify-content (main axis), align-items (cross axis), flex: 1 (grow/shrink/basis), gap, flex-wrap.\n\nGrid fits: page layout (header, sidebar, content), galleries, multi-column forms, anywhere items must line up in both directions. Key properties: grid-template-columns with fr, repeat(auto-fill, minmax(200px, 1fr)) for responsiveness without media queries, grid-template-areas.\n\nThey combine well: Grid for the page skeleton, Flex for components inside. Subgrid (supported in all major browsers since 2023) lets children align to the parent's grid. A common gotcha: a flex item won't shrink because of min-width: auto; set min-width: 0."
+    },
+    "code": ".gallery {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));\n  gap: 16px;\n}\n.toolbar { display: flex; justify-content: space-between; align-items: center; }",
+    "tip": {
+      "vi": "Câu 'một chiều vs hai chiều, content-first vs layout-first' cộng với mẹo min-width: 0 thường gây ấn tượng tốt.",
+      "en": "The 'one vs two dimensions, content-first vs layout-first' framing plus the min-width: 0 gotcha usually impresses."
+    },
+    "followUps": [
+      { "vi": "auto-fill và auto-fit khác nhau thế nào?", "en": "What is the difference between auto-fill and auto-fit?" },
+      { "vi": "Có bao nhiêu cách căn giữa một phần tử theo cả hai chiều?", "en": "How many ways can you center an element both horizontally and vertically?" }
+    ]
+  },
+  {
+    "id": "frontend-css-responsive",
+    "level": "junior",
+    "topic": "CSS",
+    "q": {
+      "vi": "Bạn làm responsive design như thế nào? Media query và container query khác nhau ra sao?",
+      "en": "How do you build a responsive design? How do media queries differ from container queries?"
+    },
+    "a": {
+      "vi": "Responsive là để layout thích ứng với mọi kích thước màn hình, và tôi thường đi theo hướng mobile-first.\n\nCác công cụ chính:\n- Thẻ <meta name=viewport content='width=device-width, initial-scale=1'>, thiếu nó mobile sẽ hiển thị như desktop thu nhỏ.\n- Mobile-first: viết style cho màn nhỏ trước, rồi thêm @media (min-width: ...) cho màn lớn.\n- Layout linh hoạt: flex-wrap, grid với minmax/auto-fill, đơn vị tương đối (%, rem, vw), clamp() cho font và khoảng cách co giãn mượt.\n- Ảnh responsive: srcset/sizes hoặc <picture>, max-width: 100%.\n\nMedia query dựa vào kích thước viewport. Container query (@container, hỗ trợ ở các trình duyệt lớn từ 2023) dựa vào kích thước của container cha, nên một card có thể tự đổi layout dù đặt ở sidebar hẹp hay vùng content rộng. Đây là cách tốt hơn cho component tái sử dụng.\n\nNgoài ra cân nhắc prefers-reduced-motion, prefers-color-scheme và vùng chạm đủ lớn trên thiết bị cảm ứng.",
+      "en": "Responsive design means the layout adapts to any screen size, and I usually work mobile-first.\n\nMain tools:\n- The <meta name=viewport content='width=device-width, initial-scale=1'> tag; without it mobile renders a shrunken desktop page.\n- Mobile-first: write styles for small screens first, then add @media (min-width: ...) for larger ones.\n- Fluid layout: flex-wrap, grid with minmax/auto-fill, relative units (%, rem, vw), clamp() for smoothly scaling font sizes and spacing.\n- Responsive images: srcset/sizes or <picture>, max-width: 100%.\n\nMedia queries are based on the viewport size. Container queries (@container, supported in major browsers since 2023) are based on the size of a parent container, so a card can change its own layout whether it sits in a narrow sidebar or a wide content area. That is the better approach for reusable components.\n\nAlso consider prefers-reduced-motion, prefers-color-scheme and large enough tap targets on touch devices."
+    },
+    "code": ".wrapper { container-type: inline-size; }\n@container (min-width: 400px) {\n  .card { display: flex; }\n}\nh1 { font-size: clamp(1.5rem, 4vw, 3rem); }",
+    "tip": {
+      "vi": "Nói rõ lý do chọn container query cho component (phụ thuộc chỗ đặt, không phụ thuộc màn hình) là điểm phân biệt với ứng viên trung bình.",
+      "en": "Explaining why container queries suit components (they depend on placement, not the screen) sets you apart from average candidates."
+    },
+    "followUps": [
+      { "vi": "rem và em khác nhau thế nào? Nên dùng cái nào cho font-size?", "en": "How do rem and em differ? Which should you use for font-size?" },
+      { "vi": "srcset và sizes hoạt động như thế nào?", "en": "How do srcset and sizes work?" }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_queries"
+  },
+  {
+    "id": "frontend-js-var-let-const",
+    "level": "intern",
+    "topic": "JavaScript",
+    "q": {
+      "vi": "var, let và const khác nhau thế nào? Hoisting và Temporal Dead Zone là gì?",
+      "en": "What are the differences between var, let and const? What are hoisting and the Temporal Dead Zone?"
+    },
+    "a": {
+      "vi": "Khác biệt chính nằm ở scope, hoisting và khả năng gán lại.\n\n- var: function scope, được hoist và khởi tạo sẵn undefined, có thể khai báo lại; var ở top-level còn gắn vào window.\n- let: block scope ({ }), không khai báo lại trong cùng scope, có thể gán lại.\n- const: block scope, bắt buộc khởi tạo, không gán lại được. Nhưng const không làm object bất biến: vẫn sửa được thuộc tính, muốn bất biến thì dùng Object.freeze (nông).\n\nHoisting: khai báo được xử lý trước khi chạy code. let/const cũng được hoist nhưng không khởi tạo, nên truy cập trước dòng khai báo sẽ ném ReferenceError; khoảng đó gọi là Temporal Dead Zone. Function declaration được hoist cả thân hàm.\n\nVí dụ kinh điển: for (var i...) với setTimeout in ra cùng một giá trị vì chung một biến i; dùng let thì mỗi vòng lặp có binding riêng.\n\nThực tế: mặc định dùng const, cần gán lại thì let, không dùng var.",
+      "en": "The key differences are scope, hoisting and reassignment.\n\n- var: function-scoped, hoisted and initialized to undefined, can be redeclared; a top-level var also attaches to window.\n- let: block-scoped ({ }), cannot be redeclared in the same scope, can be reassigned.\n- const: block-scoped, must be initialized, cannot be reassigned. But const does not make objects immutable: properties can still change; use Object.freeze (shallow) for that.\n\nHoisting: declarations are processed before the code runs. let/const are hoisted too but not initialized, so accessing them before the declaration line throws a ReferenceError; that window is the Temporal Dead Zone. Function declarations are hoisted along with their body.\n\nClassic example: for (var i...) with setTimeout prints the same value because there is a single shared i; with let each iteration gets its own binding.\n\nIn practice: default to const, use let when you must reassign, never var."
+    },
+    "code": "for (var i = 0; i < 3; i++) setTimeout(() => console.log(i)); // 3 3 3\nfor (let j = 0; j < 3; j++) setTimeout(() => console.log(j)); // 0 1 2\n\nconsole.log(x); // ReferenceError (TDZ)\nlet x = 1;",
+    "tip": {
+      "vi": "Nói rõ 'let/const vẫn được hoist nhưng nằm trong TDZ' thay vì 'let không hoist', đây là chỗ nhiều người trả lời sai.",
+      "en": "Say 'let/const are hoisted but sit in the TDZ' rather than 'let is not hoisted'; many candidates get this wrong."
+    },
+    "followUps": [
+      { "vi": "Function declaration và function expression khác nhau gì về hoisting?", "en": "How do function declarations and function expressions differ in hoisting?" },
+      { "vi": "Làm sao làm một object bất biến hoàn toàn (deep freeze)?", "en": "How do you make an object fully immutable (deep freeze)?" }
+    ]
+  },
+  {
+    "id": "frontend-js-equality",
+    "level": "intern",
+    "topic": "JavaScript",
+    "q": {
+      "vi": "== và === khác nhau thế nào? Các giá trị falsy trong JavaScript là gì?",
+      "en": "What is the difference between == and ===? What are the falsy values in JavaScript?"
+    },
+    "a": {
+      "vi": "=== so sánh nghiêm ngặt: khác kiểu là false ngay. == so sánh lỏng: nếu khác kiểu sẽ ép kiểu (type coercion) rồi mới so sánh.\n\nVí dụ ép kiểu khó đoán: '0' == 0 là true, '' == 0 là true, nhưng '0' == '' là false; [] == false là true. Ngoại lệ hữu ích duy nhất: x == null đúng cho cả null và undefined.\n\nObject (mảng, hàm) được so sánh theo tham chiếu: {} === {} là false vì là hai object khác nhau.\n\nTrường hợp đặc biệt: NaN === NaN là false (dùng Number.isNaN); +0 === -0 là true. Object.is xử lý đúng cả hai trường hợp này và là thuật toán React dùng để so sánh state.\n\nGiá trị falsy: false, 0, -0, 0n, '', null, undefined, NaN (và document.all, hiếm gặp). Mọi thứ khác là truthy, kể cả '0', [], {}.\n\nThực tế: luôn dùng ===, dùng ?? thay vì || khi 0 hoặc '' là giá trị hợp lệ.",
+      "en": "=== is strict comparison: different types mean false immediately. == is loose: if types differ it applies type coercion before comparing.\n\nSurprising coercion examples: '0' == 0 is true, '' == 0 is true, yet '0' == '' is false; [] == false is true. The one useful exception: x == null is true for both null and undefined.\n\nObjects (arrays, functions) are compared by reference: {} === {} is false because they are two different objects.\n\nEdge cases: NaN === NaN is false (use Number.isNaN); +0 === -0 is true. Object.is handles both correctly and is the algorithm React uses to compare state.\n\nFalsy values: false, 0, -0, 0n, '', null, undefined, NaN (plus the rare document.all). Everything else is truthy, including '0', [], {}.\n\nIn practice: always use ===, and use ?? instead of || when 0 or '' are valid values."
+    },
+    "code": "0 || 10   // 10 (0 is falsy)\n0 ?? 10   // 0  (only null/undefined fall back)\nObject.is(NaN, NaN) // true",
+    "tip": {
+      "vi": "Liên hệ Object.is với cách React so sánh state, và phân biệt || với ??, sẽ biến câu hỏi cơ bản thành điểm cộng.",
+      "en": "Linking Object.is to how React compares state, and contrasting || with ??, turns a basic question into bonus points."
+    },
+    "followUps": [
+      { "vi": "Làm sao so sánh hai object theo nội dung?", "en": "How do you compare two objects by content?" },
+      { "vi": "typeof null trả về gì và tại sao?", "en": "What does typeof null return and why?" }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness"
+  },
+  {
+    "id": "frontend-js-closure",
+    "level": "junior",
+    "topic": "JavaScript",
+    "q": {
+      "vi": "Closure là gì? Cho ví dụ ứng dụng thực tế.",
+      "en": "What is a closure? Give a real-world use case."
+    },
+    "a": {
+      "vi": "Closure là khi một hàm ghi nhớ và truy cập được các biến trong scope nơi nó được tạo ra, kể cả khi hàm bên ngoài đã chạy xong.\n\nJavaScript dùng lexical scope: scope được xác định theo vị trí viết code. Khi hàm bên trong được trả về hoặc truyền đi, nó mang theo tham chiếu tới môi trường biến đó, nên biến không bị garbage collect.\n\nỨng dụng thực tế:\n- Đóng gói dữ liệu private (counter, module pattern) trước khi có #private field.\n- Function factory, currying, partial application.\n- Debounce/throttle giữ timer giữa các lần gọi.\n- Callback và event handler trong React đều là closure.\n\nCạm bẫy:\n- Stale closure trong React: useEffect hoặc setInterval giữ giá trị state cũ nếu thiếu dependency; sửa bằng dependency đúng, functional update setCount(c => c + 1) hoặc useRef.\n- Memory leak nếu closure giữ tham chiếu tới object lớn hoặc DOM node mà listener không được gỡ.",
+      "en": "A closure is a function that remembers and can access variables from the scope where it was created, even after the outer function has finished running.\n\nJavaScript uses lexical scope: scope is determined by where code is written. When an inner function is returned or passed around, it keeps a reference to that variable environment, so those variables are not garbage collected.\n\nReal uses:\n- Encapsulating private data (counter, module pattern) before #private fields existed.\n- Function factories, currying, partial application.\n- Debounce/throttle keeping a timer between calls.\n- Callbacks and event handlers in React are all closures.\n\nPitfalls:\n- Stale closures in React: useEffect or setInterval keeps an old state value if dependencies are missing; fix with correct dependencies, a functional update setCount(c => c + 1) or a useRef.\n- Memory leaks when a closure holds a large object or DOM node and the listener is never removed."
+    },
+    "code": "function makeCounter() {\n  let count = 0;\n  return () => ++count;\n}\nconst next = makeCounter();\nnext(); // 1\nnext(); // 2 — count lives on in the closure",
+    "tip": {
+      "vi": "Kết nối closure với lỗi stale closure trong React hooks cho thấy bạn hiểu khái niệm trong code thật.",
+      "en": "Connecting closures to stale-closure bugs in React hooks shows you understand the concept in real code."
+    },
+    "followUps": [
+      { "vi": "Stale closure trong useEffect là gì và sửa thế nào?", "en": "What is a stale closure in useEffect and how do you fix it?" },
+      { "vi": "Closure có thể gây memory leak trong trường hợp nào?", "en": "In what cases can closures cause memory leaks?" }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "frontend-js-this",
+    "level": "junior",
+    "topic": "JavaScript",
+    "q": {
+      "vi": "Từ khóa this trong JavaScript được xác định thế nào? Arrow function khác gì?",
+      "en": "How is the value of this determined in JavaScript? How do arrow functions differ?"
+    },
+    "a": {
+      "vi": "Với hàm thường, this được quyết định bởi cách hàm được gọi, không phải nơi hàm được định nghĩa.\n\nThứ tự ưu tiên:\n- new Foo(): this là object mới được tạo.\n- Gọi tường minh call/apply/bind: this là đối số truyền vào (bind tạo hàm mới gắn cố định this).\n- Gọi như method obj.fn(): this là obj.\n- Gọi trơn fn(): undefined trong strict mode (module, class luôn strict), hoặc globalThis ở non-strict.\n\nArrow function không có this riêng: nó lấy this từ scope bao quanh lúc định nghĩa (lexical this), và call/bind không đổi được. Vì vậy arrow hợp với callback bên trong method, nhưng không nên dùng làm method của object hay prototype.\n\nLỗi kinh điển: truyền method làm callback, ví dụ setTimeout(obj.fn) hoặc onClick={this.handle} trong class component, làm mất this. Sửa bằng bind, arrow function, hoặc class field dạng arrow.\n\nTrong event listener dạng hàm thường, this là element gắn listener (event.currentTarget).",
+      "en": "For regular functions, this is decided by how the function is called, not where it is defined.\n\nPrecedence:\n- new Foo(): this is the newly created object.\n- Explicit call/apply/bind: this is the argument passed (bind returns a new function with this fixed).\n- Method call obj.fn(): this is obj.\n- Plain call fn(): undefined in strict mode (modules and classes are always strict), or globalThis in sloppy mode.\n\nArrow functions have no own this: they take this from the surrounding scope at definition time (lexical this), and call/bind cannot change it. That makes arrows great for callbacks inside methods, but a poor choice for object or prototype methods.\n\nClassic bug: passing a method as a callback, e.g. setTimeout(obj.fn) or onClick={this.handle} in a class component, loses this. Fix with bind, an arrow wrapper, or an arrow class field.\n\nIn a regular-function event listener, this is the element the listener is attached to (event.currentTarget)."
+    },
+    "code": "const user = {\n  name: 'An',\n  hi() { return this.name; },\n  hiArrow: () => this?.name,\n};\nuser.hi();        // 'An'\nconst f = user.hi;\nf();              // TypeError in strict mode: this is undefined\nuser.hiArrow();   // undefined — lexical this",
+    "tip": {
+      "vi": "Trình bày theo thứ tự ưu tiên new > bind/call > method > gọi trơn giúp câu trả lời có cấu trúc và dễ thuyết phục.",
+      "en": "Presenting the precedence new > bind/call > method > plain call makes your answer structured and convincing."
+    },
+    "followUps": [
+      { "vi": "call, apply và bind khác nhau thế nào?", "en": "How do call, apply and bind differ?" },
+      { "vi": "Tự viết polyfill cho Function.prototype.bind?", "en": "Can you write a polyfill for Function.prototype.bind?" }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this"
+  },
+  {
+    "id": "frontend-js-event-loop",
+    "level": "junior",
+    "topic": "JavaScript",
+    "q": {
+      "vi": "Event loop trong JavaScript hoạt động thế nào? Microtask và macrotask khác nhau ra sao?",
+      "en": "How does the JavaScript event loop work? What is the difference between microtasks and macrotasks?"
+    },
+    "a": {
+      "vi": "JavaScript chạy đơn luồng với một call stack. Tác vụ bất đồng bộ (setTimeout, I/O, sự kiện) được trình duyệt/Node xử lý bên ngoài, xong thì đẩy callback vào hàng đợi.\n\nMỗi vòng lặp: chạy hết code đồng bộ → chạy HẾT microtask queue (Promise.then, await, queueMicrotask, MutationObserver) → trình duyệt có thể render (requestAnimationFrame chạy ngay trước bước này) → lấy MỘT macrotask (setTimeout, setInterval, sự kiện, I/O) → lặp lại.\n\nVì vậy Promise.then luôn chạy trước setTimeout(fn, 0). Phần code sau await cũng là microtask.\n\nHệ quả thực tế:\n- Microtask sinh liên tục có thể làm treo giao diện vì trình duyệt không kịp render.\n- Tác vụ đồng bộ dài (trên 50ms) chặn input và làm xấu INP; nên chia nhỏ, nhường main thread (setTimeout, scheduler.yield ở Chromium) hoặc chuyển sang Web Worker.\n- setTimeout(fn, 0) không chạy ngay mà sớm nhất ở vòng sau.",
+      "en": "JavaScript runs single-threaded with one call stack. Async work (setTimeout, I/O, events) is handled outside by the browser/Node, and its callback is queued when done.\n\nEach loop: run all synchronous code → drain the WHOLE microtask queue (Promise.then, await, queueMicrotask, MutationObserver) → the browser may render (requestAnimationFrame runs right before this step) → take ONE macrotask (setTimeout, setInterval, events, I/O) → repeat.\n\nThat is why Promise.then always runs before setTimeout(fn, 0). The code after an await is also a microtask.\n\nPractical consequences:\n- Endlessly chained microtasks can freeze the UI because the browser never gets to render.\n- Long synchronous tasks (over 50ms) block input and hurt INP; split them up, yield to the main thread (setTimeout, scheduler.yield in Chromium) or move work to a Web Worker.\n- setTimeout(fn, 0) does not run immediately, only on a later loop at the earliest."
+    },
+    "code": "console.log(1);\nsetTimeout(() => console.log(2), 0);\nPromise.resolve().then(() => console.log(3));\nconsole.log(4);\n// Output: 1 4 3 2",
+    "tip": {
+      "vi": "Nối event loop với hiệu năng thực tế (long task, INP, Web Worker) cho thấy bạn không chỉ học lý thuyết.",
+      "en": "Tying the event loop to real performance (long tasks, INP, Web Workers) shows it is more than theory for you."
+    },
+    "followUps": [
+      { "vi": "requestAnimationFrame chạy ở đâu trong event loop?", "en": "Where does requestAnimationFrame run in the event loop?" },
+      { "vi": "Event loop của Node.js khác trình duyệt ở điểm nào?", "en": "How does the Node.js event loop differ from the browser's?" }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop"
+  },
+  {
+    "id": "frontend-js-promise-async",
+    "level": "junior",
+    "topic": "JavaScript",
+    "q": {
+      "vi": "Promise và async/await hoạt động thế nào? Promise.all, allSettled, race, any khác nhau ra sao?",
+      "en": "How do Promises and async/await work? How do Promise.all, allSettled, race and any differ?"
+    },
+    "a": {
+      "vi": "Promise là object đại diện cho kết quả tương lai của một tác vụ bất đồng bộ, có 3 trạng thái: pending, fulfilled, rejected; đã settle thì không đổi nữa. .then/.catch trả về Promise mới nên có thể chain, thay cho callback hell.\n\nasync/await là cú pháp trên nền Promise: hàm async luôn trả về Promise, await tạm dừng hàm đó (không chặn thread) cho tới khi Promise settle. Lỗi bắt bằng try/catch.\n\nCác combinator:\n- Promise.all: chờ tất cả thành công, reject ngay khi một cái lỗi (fail-fast).\n- Promise.allSettled: chờ tất cả xong, trả về trạng thái từng cái, không bao giờ reject.\n- Promise.race: lấy cái settle đầu tiên, dù thành công hay lỗi; hay dùng làm timeout.\n- Promise.any: lấy cái thành công đầu tiên, chỉ reject (AggregateError) khi tất cả lỗi.\n\nLỗi hay gặp: await tuần tự trong vòng lặp khi các request độc lập (nên dùng Promise.all), quên await, quên xử lý rejection, và nghĩ Promise.all hủy được request khác (muốn hủy phải dùng AbortController).",
+      "en": "A Promise is an object representing the future result of an async operation, with three states: pending, fulfilled, rejected; once settled it never changes. .then/.catch return a new Promise, so they chain, replacing callback hell.\n\nasync/await is syntax on top of Promises: an async function always returns a Promise, and await pauses that function (without blocking the thread) until the Promise settles. Errors are caught with try/catch.\n\nCombinators:\n- Promise.all: waits for all to succeed, rejects as soon as one fails (fail-fast).\n- Promise.allSettled: waits for all to finish, returns each outcome, never rejects.\n- Promise.race: takes the first to settle, success or failure; often used for timeouts.\n- Promise.any: takes the first success, rejects (AggregateError) only if all fail.\n\nCommon mistakes: awaiting sequentially in a loop when requests are independent (use Promise.all), forgetting await, unhandled rejections, and assuming Promise.all cancels the others (cancellation needs AbortController)."
+    },
+    "code": "// Sequential: ~2s\nconst a = await fetchUser();\nconst b = await fetchPosts();\n// Parallel: ~1s\nconst [user, posts] = await Promise.all([fetchUser(), fetchPosts()]);",
+    "tip": {
+      "vi": "Chỉ ra lỗi await tuần tự và đề xuất Promise.all cho request độc lập là chi tiết hiệu năng mà interviewer rất thích.",
+      "en": "Pointing out sequential awaits and suggesting Promise.all for independent requests is a performance detail interviewers love."
+    },
+    "followUps": [
+      { "vi": "Làm sao hủy một fetch đang chạy?", "en": "How do you cancel an in-flight fetch?" },
+      { "vi": "Tự viết Promise.all từ đầu?", "en": "Can you implement Promise.all from scratch?" }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+  },
+  {
+    "id": "frontend-js-prototype",
+    "level": "mid",
+    "topic": "JavaScript",
+    "q": {
+      "vi": "Prototype và prototype chain trong JavaScript là gì? class trong ES6 liên quan thế nào?",
+      "en": "What are prototypes and the prototype chain in JavaScript? How do ES6 classes relate to them?"
+    },
+    "a": {
+      "vi": "JavaScript dùng kế thừa dựa trên prototype: mỗi object có một liên kết ẩn [[Prototype]] tới object khác, và khi truy cập thuộc tính không có trên object, engine sẽ tìm dọc theo chuỗi đó cho tới khi gặp null.\n\nVí dụ: [].map không nằm trên mảng mà nằm trên Array.prototype; chuỗi là arr → Array.prototype → Object.prototype → null.\n\nPhân biệt hai thứ dễ nhầm:\n- Thuộc tính .prototype của hàm constructor: object sẽ làm prototype cho các instance tạo bằng new.\n- [[Prototype]] của một object: đọc bằng Object.getPrototypeOf (thay cho __proto__ đã lỗi thời).\n\nclass trong ES6 chủ yếu là cú pháp trên nền cơ chế này: method khai báo trong class nằm trên Class.prototype, dùng chung cho mọi instance (tiết kiệm bộ nhớ), extends nối chuỗi prototype. Class có thêm vài khác biệt thật: luôn strict mode, phải gọi bằng new, có #private field.\n\nLưu ý: không nên sửa prototype của built-in (Array.prototype) vì gây xung đột; dùng Object.create(null) khi cần dictionary không kế thừa gì.",
+      "en": "JavaScript uses prototype-based inheritance: every object has a hidden [[Prototype]] link to another object, and when a property is not found on the object, the engine walks that chain until it reaches null.\n\nExample: [].map is not on the array itself but on Array.prototype; the chain is arr → Array.prototype → Object.prototype → null.\n\nTwo easily confused things:\n- A constructor function's .prototype property: the object that becomes the prototype of instances created with new.\n- An object's [[Prototype]]: read it with Object.getPrototypeOf (instead of the legacy __proto__).\n\nES6 classes are mostly syntax over this mechanism: methods declared in a class live on Class.prototype and are shared by all instances (saving memory), and extends links the prototype chain. Classes do add some real differences: always strict, must be called with new, support #private fields.\n\nNotes: don't modify built-in prototypes (Array.prototype) because it causes conflicts; use Object.create(null) when you need a dictionary that inherits nothing."
+    },
+    "code": "class Animal { speak() { return 'hi'; } }\nclass Dog extends Animal {}\nconst d = new Dog();\nObject.getPrototypeOf(d) === Dog.prototype;              // true\nObject.getPrototypeOf(Dog.prototype) === Animal.prototype; // true",
+    "tip": {
+      "vi": "Phân biệt rõ .prototype của hàm với [[Prototype]] của object là chỗ phân loại ứng viên hiểu sâu.",
+      "en": "Clearly separating a function's .prototype from an object's [[Prototype]] is what distinguishes candidates who truly understand it."
+    },
+    "followUps": [
+      { "vi": "Toán tử new thực hiện những bước gì?", "en": "What steps does the new operator perform?" },
+      { "vi": "instanceof hoạt động thế nào?", "en": "How does instanceof work?" }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain"
+  },
+  {
+    "id": "frontend-js-debounce-throttle",
+    "level": "mid",
+    "topic": "JavaScript",
+    "q": {
+      "vi": "Debounce và throttle khác nhau thế nào? Hãy viết hàm debounce.",
+      "en": "What is the difference between debounce and throttle? Write a debounce function."
+    },
+    "a": {
+      "vi": "Cả hai đều giới hạn tần suất gọi một hàm khi sự kiện xảy ra dồn dập, nhưng theo cách khác nhau.\n\n- Debounce: chỉ chạy sau khi sự kiện ngừng một khoảng thời gian. Mỗi lần sự kiện mới tới thì reset timer. Hợp với ô search gợi ý (gõ xong 300ms mới gọi API), validate form, resize xong mới tính lại layout.\n- Throttle: chạy tối đa một lần mỗi khoảng thời gian, đều đặn trong lúc sự kiện còn diễn ra. Hợp với scroll, mousemove, kéo thả, gửi analytics vị trí.\n\nKhi cài đặt cần chú ý: giữ đúng this và arguments, có thể hỗ trợ leading/trailing, có hàm cancel để dọn khi component unmount.\n\nTrong React, phải giữ instance debounce ổn định qua các lần render (useMemo/useRef), nếu không mỗi render tạo một debounce mới và nó không hoạt động. Với search, kết hợp AbortController để hủy request cũ tránh race condition. Với animation theo scroll, requestAnimationFrame thường tốt hơn throttle bằng thời gian.",
+      "en": "Both limit how often a function runs when events fire rapidly, but in different ways.\n\n- Debounce: runs only after events have stopped for a given delay. Every new event resets the timer. Good for search suggestions (call the API 300ms after typing stops), form validation, recalculating layout after resizing ends.\n- Throttle: runs at most once per interval, steadily while events keep firing. Good for scroll, mousemove, drag, sending position analytics.\n\nImplementation details: preserve this and arguments, optionally support leading/trailing calls, and provide cancel for cleanup on unmount.\n\nIn React the debounced instance must stay stable across renders (useMemo/useRef); otherwise each render creates a new debounce and it never works. For search, combine it with AbortController to cancel stale requests and avoid race conditions. For scroll-driven animation, requestAnimationFrame is often better than time-based throttling."
+    },
+    "code": "function debounce(fn, delay) {\n  let timer;\n  const debounced = function (...args) {\n    clearTimeout(timer);\n    timer = setTimeout(() => fn.apply(this, args), delay);\n  };\n  debounced.cancel = () => clearTimeout(timer);\n  return debounced;\n}",
+    "tip": {
+      "vi": "Nhắc lỗi tạo debounce mới mỗi lần render trong React và việc cancel khi unmount là dấu hiệu bạn đã dùng nó trong production.",
+      "en": "Mentioning the new-debounce-per-render bug in React and cancelling on unmount signals you have used it in production."
+    },
+    "followUps": [
+      { "vi": "Hãy viết hàm throttle có hỗ trợ trailing call.", "en": "Write a throttle function that supports a trailing call." },
+      { "vi": "Làm sao xử lý race condition khi kết quả search trả về không theo thứ tự?", "en": "How do you handle race conditions when search results return out of order?" }
+    ]
+  },
+  {
+    "id": "frontend-js-es-modules",
+    "level": "mid",
+    "topic": "JavaScript",
+    "q": {
+      "vi": "ES Modules khác CommonJS thế nào? Dynamic import dùng để làm gì?",
+      "en": "How do ES Modules differ from CommonJS? What is dynamic import used for?"
+    },
+    "a": {
+      "vi": "ES Modules (import/export) là chuẩn module chính thức của JavaScript, còn CommonJS (require/module.exports) là hệ thống cũ của Node.\n\nKhác biệt chính:\n- Tĩnh vs động: import/export của ESM nằm ở top-level và phân tích được lúc build, nên bundler làm được tree shaking. require là lời gọi hàm lúc runtime, có thể nằm trong if.\n- Binding: ESM export là live binding (giá trị cập nhật theo module gốc); CommonJS trả về bản sao giá trị tại thời điểm require.\n- Tải: ESM được thiết kế bất đồng bộ, hỗ trợ top-level await; CommonJS đồng bộ.\n- ESM luôn strict mode, không có __dirname/require sẵn; trong trình duyệt dùng <script type=module>, tự động defer.\n\nDynamic import(): trả về Promise của module, dùng để code splitting (tải route/component nặng khi cần, React.lazy dựa vào nó), tải có điều kiện hoặc tải thư viện lớn chỉ khi người dùng thao tác.\n\nThực tế 2025: thư viện mới nên phát hành ESM; Node hỗ trợ require() một module ESM đồng bộ từ v22 (không có top-level await), giảm bớt đau đầu khi trộn hai hệ.",
+      "en": "ES Modules (import/export) are JavaScript's official module standard, while CommonJS (require/module.exports) is Node's older system.\n\nKey differences:\n- Static vs dynamic: ESM import/export are top-level and analyzable at build time, which lets bundlers tree shake. require is a runtime function call and can sit inside an if.\n- Bindings: ESM exports are live bindings (values update with the source module); CommonJS gives a copy of the value at require time.\n- Loading: ESM is designed to be async and supports top-level await; CommonJS is synchronous.\n- ESM is always strict and has no built-in __dirname/require; in browsers it uses <script type=module>, which is deferred automatically.\n\nDynamic import() returns a Promise for the module and is used for code splitting (loading heavy routes/components on demand, React.lazy is built on it), conditional loading, or loading a large library only after a user action.\n\nIn 2025: new libraries should ship ESM; Node supports synchronously require()-ing an ESM module since v22 (without top-level await), easing interop pain."
+    },
+    "code": "button.addEventListener('click', async () => {\n  const { default: Chart } = await import('./chart.js');\n  new Chart(canvas, data);\n});",
+    "tip": {
+      "vi": "Giải thích vì sao tính tĩnh của ESM cho phép tree shaking sẽ nối câu hỏi này với kiến thức build tool, rất được đánh giá cao.",
+      "en": "Explaining why ESM's static structure enables tree shaking links this question to build tooling, which is highly valued."
+    },
+    "followUps": [
+      { "vi": "Circular dependency giữa các module xử lý thế nào?", "en": "How are circular dependencies between modules handled?" },
+      { "vi": "Trường exports trong package.json dùng để làm gì?", "en": "What is the exports field in package.json for?" }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules"
+  },
+  {
+    "id": "frontend-ts-interface-vs-type",
+    "level": "junior",
+    "topic": "TypeScript",
+    "q": {
+      "vi": "Trong TypeScript, interface và type alias khác nhau thế nào? Khi nào dùng cái nào?",
+      "en": "In TypeScript, how do interface and type alias differ? When do you use each?"
+    },
+    "a": {
+      "vi": "Với hình dạng object thì hai cái gần như thay thế được cho nhau; khác biệt nằm ở vài tính năng riêng.\n\ninterface:\n- Chỉ mô tả object/class shape.\n- Hỗ trợ declaration merging: khai báo cùng tên nhiều lần sẽ gộp lại, hữu ích khi mở rộng type của thư viện (ví dụ thêm field vào Window).\n- Kế thừa bằng extends, compiler báo lỗi xung đột rõ ràng và thường cache tốt hơn với hierarchy lớn.\n\ntype:\n- Đặt tên cho bất kỳ type nào: union ('a' | 'b'), tuple, primitive, function, mapped type, conditional type, template literal type.\n- Kết hợp bằng intersection (&).\n- Không merge được: khai báo trùng tên là lỗi.\n\nQuy ước phổ biến: dùng interface cho object shape và public API (props, contract), dùng type khi cần union, mapped/conditional type. Quan trọng nhất là nhất quán trong team. Nhớ rằng type chỉ tồn tại lúc compile, không kiểm tra dữ liệu runtime; dữ liệu từ API cần validate (ví dụ Zod).",
+      "en": "For object shapes the two are mostly interchangeable; the difference is in a few exclusive features.\n\ninterface:\n- Describes only object/class shapes.\n- Supports declaration merging: declaring the same name twice merges them, useful for augmenting library types (e.g. adding a field to Window).\n- Extends with extends; the compiler reports conflicts clearly and usually caches better in large hierarchies.\n\ntype:\n- Names any type: unions ('a' | 'b'), tuples, primitives, functions, mapped types, conditional types, template literal types.\n- Combines with intersections (&).\n- Cannot merge: a duplicate name is an error.\n\nA common convention: interface for object shapes and public APIs (props, contracts), type when you need unions or mapped/conditional types. Consistency within the team matters most. Remember types exist only at compile time and do not check runtime data; API responses still need validation (e.g. Zod)."
+    },
+    "code": "interface User { id: string; name: string }\ninterface User { email?: string } // merged\n\ntype Status = 'idle' | 'loading' | 'error';\ntype Admin = User & { role: 'admin' };",
+    "tip": {
+      "vi": "Nhắc declaration merging và việc type không kiểm tra runtime (cần validate dữ liệu API) cho thấy bạn hiểu giới hạn của TypeScript.",
+      "en": "Mentioning declaration merging and that types do not check runtime data (API data needs validation) shows you know TypeScript's limits."
+    },
+    "followUps": [
+      { "vi": "Discriminated union là gì và dùng thế nào?", "en": "What is a discriminated union and how do you use it?" },
+      { "vi": "Làm sao đồng bộ type với dữ liệu thực tế từ API?", "en": "How do you keep types in sync with real API data?" }
+    ],
+    "source": "https://www.typescriptlang.org/docs/handbook/2/everyday-types.html"
+  },
+  {
+    "id": "frontend-ts-any-unknown-never",
+    "level": "mid",
+    "topic": "TypeScript",
+    "q": {
+      "vi": "any, unknown và never khác nhau thế nào? Type narrowing là gì?",
+      "en": "How do any, unknown and never differ? What is type narrowing?"
+    },
+    "a": {
+      "vi": "Ba type này nằm ở hai đầu của hệ thống type.\n\n- any: tắt kiểm tra type hoàn toàn, gán đi đâu cũng được, gọi gì cũng được. Nó lây lan và che giấu lỗi, nên hạn chế tối đa (bật noImplicitAny, strict).\n- unknown: top type an toàn. Gán được mọi giá trị vào unknown, nhưng không dùng được nó cho tới khi thu hẹp type. Phù hợp cho dữ liệu từ ngoài vào: JSON.parse, response API, giá trị trong catch (useUnknownInCatchVariables bật trong strict).\n- never: bottom type, không có giá trị nào. Là kiểu trả về của hàm luôn throw hoặc lặp vô hạn, và là type còn lại khi đã loại hết các nhánh.\n\nNarrowing là cách TypeScript thu hẹp type theo luồng code: typeof, instanceof, toán tử in, so sánh với literal (discriminated union), Array.isArray, hoặc type guard tự viết (value is User).\n\nỨng dụng never: exhaustive check trong switch, nếu sau này thêm một case vào union mà quên xử lý thì compiler báo lỗi ngay.",
+      "en": "These types sit at opposite ends of the type system.\n\n- any: turns type checking off completely; it can be assigned anywhere and anything can be called on it. It spreads and hides bugs, so minimize it (enable noImplicitAny, strict).\n- unknown: the safe top type. Any value can be assigned to unknown, but you cannot use it until you narrow it. Ideal for external data: JSON.parse, API responses, caught errors (useUnknownInCatchVariables is on under strict).\n- never: the bottom type with no values. It is the return type of functions that always throw or loop forever, and the type left after every branch is eliminated.\n\nNarrowing is how TypeScript refines a type along the control flow: typeof, instanceof, the in operator, comparing against literals (discriminated unions), Array.isArray, or custom type guards (value is User).\n\nA use of never: exhaustive checks in a switch, so if a new case is added to the union and not handled, the compiler errors immediately."
+    },
+    "code": "type Shape = { kind: 'circle'; r: number } | { kind: 'square'; s: number };\nfunction area(sh: Shape) {\n  switch (sh.kind) {\n    case 'circle': return Math.PI * sh.r ** 2;\n    case 'square': return sh.s ** 2;\n    default: { const _x: never = sh; return _x; }\n  }\n}",
+    "tip": {
+      "vi": "Cho ví dụ exhaustive check bằng never là cách nhanh nhất chứng minh bạn dùng TypeScript ở mức nâng cao.",
+      "en": "Showing an exhaustive check with never is the fastest way to prove advanced TypeScript use."
+    },
+    "followUps": [
+      { "vi": "Viết một type guard kiểm tra object có phải User không?", "en": "Write a type guard that checks whether an object is a User." },
+      { "vi": "Type assertion (as) khác narrowing thế nào, khi nào nguy hiểm?", "en": "How does a type assertion (as) differ from narrowing, and when is it dangerous?" }
+    ],
+    "source": "https://www.typescriptlang.org/docs/handbook/2/narrowing.html"
+  },
+  {
+    "id": "frontend-ts-generics",
+    "level": "mid",
+    "topic": "TypeScript",
+    "q": {
+      "vi": "Generics trong TypeScript là gì? Kể vài utility type bạn hay dùng.",
+      "en": "What are generics in TypeScript? Name some utility types you use often."
+    },
+    "a": {
+      "vi": "Generics cho phép viết hàm, component hoặc type làm việc với nhiều kiểu dữ liệu mà vẫn giữ được thông tin type, thay vì dùng any.\n\nVí dụ hàm first<T>(arr: T[]): T | undefined: truyền mảng string thì kết quả là string. TypeScript thường tự suy ra T. Dùng constraint extends để giới hạn: <T extends { id: string }> hoặc <K extends keyof T> để lấy thuộc tính an toàn.\n\nỨng dụng thực tế: hàm fetch có type cho response, hook useState<T>, component Select<T> hoặc Table<T> tái sử dụng, kiểu ApiResponse<T>.\n\nUtility type hay dùng:\n- Partial<T>, Required<T>, Readonly<T>.\n- Pick<T, K>, Omit<T, K> để tạo type con, ví dụ form tạo mới không có id.\n- Record<K, V> cho dictionary.\n- ReturnType<F>, Parameters<F>, Awaited<T>.\n- NonNullable<T>, Exclude/Extract cho union.\n\nLưu ý: đừng lạm dụng generics phức tạp làm code khó đọc; nếu một tham số type chỉ xuất hiện một lần thì thường không cần generic.",
+      "en": "Generics let you write functions, components or types that work with many data types while preserving type information, instead of falling back to any.\n\nExample: first<T>(arr: T[]): T | undefined; pass a string array and the result is string. TypeScript usually infers T. Use extends constraints to limit it: <T extends { id: string }> or <K extends keyof T> to access properties safely.\n\nReal uses: a typed fetch helper, the useState<T> hook, reusable Select<T> or Table<T> components, an ApiResponse<T> type.\n\nUtility types I use often:\n- Partial<T>, Required<T>, Readonly<T>.\n- Pick<T, K>, Omit<T, K> to derive subtypes, e.g. a create form without id.\n- Record<K, V> for dictionaries.\n- ReturnType<F>, Parameters<F>, Awaited<T>.\n- NonNullable<T>, Exclude/Extract for unions.\n\nCaution: don't overuse complex generics that make code unreadable; if a type parameter appears only once, you usually don't need a generic."
+    },
+    "code": "function getProp<T, K extends keyof T>(obj: T, key: K): T[K] {\n  return obj[key];\n}\ntype CreateUser = Omit<User, 'id'>;\ntype Data = Awaited<ReturnType<typeof fetchUser>>;",
+    "tip": {
+      "vi": "Ví dụ K extends keyof T và quy tắc 'tham số type chỉ dùng một lần thì không cần generic' thể hiện sự chín chắn.",
+      "en": "The K extends keyof T example and the 'a type parameter used once is unnecessary' rule show maturity."
+    },
+    "followUps": [
+      { "vi": "Hãy tự viết lại Partial<T> bằng mapped type.", "en": "Re-implement Partial<T> with a mapped type." },
+      { "vi": "Conditional type và từ khóa infer dùng để làm gì?", "en": "What are conditional types and the infer keyword used for?" }
+    ],
+    "source": "https://www.typescriptlang.org/docs/handbook/2/generics.html"
+  },
+  {
+    "id": "frontend-dom-event-delegation",
+    "level": "junior",
+    "topic": "DOM & Events",
+    "q": {
+      "vi": "Event bubbling, capturing và event delegation là gì?",
+      "en": "What are event bubbling, capturing and event delegation?"
+    },
+    "a": {
+      "vi": "Một sự kiện DOM đi qua 3 pha: capturing (từ window đi xuống phần tử đích), target, rồi bubbling (từ đích nổi ngược lên window).\n\nMặc định addEventListener lắng nghe ở pha bubbling; truyền { capture: true } để nghe ở pha capturing. stopPropagation() chặn sự kiện đi tiếp; preventDefault() chỉ chặn hành vi mặc định (submit form, mở link), hai cái hoàn toàn khác nhau.\n\nevent.target là phần tử thực sự bị click; event.currentTarget là phần tử đang gắn listener.\n\nEvent delegation: thay vì gắn listener cho từng item, gắn một listener ở phần tử cha rồi dựa vào event.target (thường kèm closest()) để biết item nào được tác động. Lợi ích: ít listener hơn, tiết kiệm bộ nhớ, và tự hoạt động với item thêm vào sau.\n\nLưu ý: vài sự kiện không bubble (focus, blur; dùng focusin/focusout thay thế). React cũng dùng delegation: từ React 17 listener được gắn ở root container. Lạm dụng stopPropagation dễ làm hỏng analytics hoặc logic đóng dropdown khi click ra ngoài.",
+      "en": "A DOM event travels through three phases: capturing (from window down to the target), target, then bubbling (from the target back up to window).\n\nBy default addEventListener listens in the bubbling phase; pass { capture: true } to listen during capturing. stopPropagation() stops the event from travelling further; preventDefault() only cancels the default action (form submit, following a link); they are completely different.\n\nevent.target is the element actually clicked; event.currentTarget is the element the listener is attached to.\n\nEvent delegation: instead of attaching a listener to every item, attach one to the parent and use event.target (often with closest()) to find which item was acted on. Benefits: fewer listeners, less memory, and it automatically works for items added later.\n\nNotes: some events don't bubble (focus, blur; use focusin/focusout instead). React also uses delegation: since React 17 listeners are attached at the root container. Overusing stopPropagation easily breaks analytics or click-outside-to-close logic for dropdowns."
+    },
+    "code": "list.addEventListener('click', (e) => {\n  const item = e.target.closest('li[data-id]');\n  if (!item || !list.contains(item)) return;\n  removeItem(item.dataset.id);\n});",
+    "tip": {
+      "vi": "Phân biệt target với currentTarget và stopPropagation với preventDefault là chi tiết nhỏ nhưng interviewer hay hỏi vặn.",
+      "en": "Distinguishing target from currentTarget and stopPropagation from preventDefault is a small detail interviewers often probe."
+    },
+    "followUps": [
+      { "vi": "Làm sao gỡ một event listener và tại sao cần gỡ?", "en": "How do you remove an event listener and why does it matter?" },
+      { "vi": "Option passive: true trong addEventListener để làm gì?", "en": "What does the passive: true option in addEventListener do?" }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting/Event_bubbling"
+  },
+  {
+    "id": "frontend-perf-critical-rendering-path",
+    "level": "mid",
+    "topic": "Browser & Performance",
+    "q": {
+      "vi": "Điều gì xảy ra từ lúc trình duyệt nhận HTML tới khi vẽ ra màn hình (critical rendering path)? async và defer khác nhau thế nào?",
+      "en": "What happens from the moment the browser receives HTML until pixels appear (the critical rendering path)? How do async and defer differ?"
+    },
+    "a": {
+      "vi": "Critical rendering path là chuỗi bước trình duyệt biến HTML, CSS, JS thành pixel: parse HTML thành DOM, parse CSS thành CSSOM, kết hợp thành render tree (chỉ gồm phần tử hiển thị), layout (tính vị trí, kích thước), paint (vẽ pixel) và composite (ghép các layer, thường trên GPU).\n\nNhững thứ chặn render:\n- CSS là render-blocking: trình duyệt không vẽ cho tới khi có CSSOM, tránh nháy nội dung chưa style.\n- <script> thường là parser-blocking: dừng parse HTML để tải và chạy, vì script có thể sửa DOM.\n\nasync vs defer:\n- async: tải song song, chạy ngay khi tải xong, không theo thứ tự; hợp với script độc lập như analytics.\n- defer: tải song song, chạy theo thứ tự sau khi parse HTML xong, trước DOMContentLoaded; hợp với script ứng dụng. type=module mặc định là defer.\n\nTối ưu: inline CSS quan trọng, giảm CSS/JS chặn render, preload font và ảnh LCP, preconnect tới origin quan trọng, dùng fetchpriority=high cho ảnh hero.",
+      "en": "The critical rendering path is the sequence that turns HTML, CSS and JS into pixels: parse HTML into the DOM, parse CSS into the CSSOM, combine them into the render tree (visible elements only), layout (compute positions and sizes), paint (fill pixels) and composite (merge layers, usually on the GPU).\n\nWhat blocks rendering:\n- CSS is render-blocking: the browser won't paint until the CSSOM is ready, avoiding a flash of unstyled content.\n- A plain <script> is parser-blocking: HTML parsing stops to download and run it, because scripts can modify the DOM.\n\nasync vs defer:\n- async: downloads in parallel and runs as soon as it arrives, in no particular order; good for independent scripts like analytics.\n- defer: downloads in parallel and runs in order after HTML parsing finishes, before DOMContentLoaded; good for app scripts. type=module is deferred by default.\n\nOptimizations: inline critical CSS, reduce render-blocking CSS/JS, preload fonts and the LCP image, preconnect to key origins, use fetchpriority=high for the hero image."
+    },
+    "tip": {
+      "vi": "Kể đủ các bước DOM → CSSOM → render tree → layout → paint → composite rồi gắn mỗi bước với một kỹ thuật tối ưu sẽ ghi điểm mạnh.",
+      "en": "Listing DOM → CSSOM → render tree → layout → paint → composite and pairing each step with an optimization scores strongly."
+    },
+    "followUps": [
+      { "vi": "DOMContentLoaded và load khác nhau thế nào?", "en": "What is the difference between DOMContentLoaded and load?" },
+      { "vi": "preload, prefetch và preconnect khác nhau ra sao?", "en": "How do preload, prefetch and preconnect differ?" }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Web/Performance/Critical_rendering_path"
+  },
+  {
+    "id": "frontend-perf-reflow-repaint",
+    "level": "mid",
+    "topic": "Browser & Performance",
+    "q": {
+      "vi": "Reflow (layout) và repaint là gì? Làm sao để animation mượt 60fps?",
+      "en": "What are reflow (layout) and repaint? How do you keep animations smooth at 60fps?"
+    },
+    "a": {
+      "vi": "Reflow là khi trình duyệt phải tính lại vị trí và kích thước phần tử; repaint là vẽ lại pixel khi chỉ thay đổi hình thức. Reflow đắt nhất vì thường kéo theo repaint và có thể lan ra cả cây.\n\nNguyên nhân reflow: đổi width/height/margin/top, font, thêm xóa DOM, resize cửa sổ. Repaint: đổi color, background, visibility. Chỉ composite (rẻ nhất): transform và opacity, có thể chạy trên compositor thread mà không cần main thread.\n\nLayout thrashing: đọc thuộc tính layout (offsetHeight, getBoundingClientRect) xen kẽ với ghi style trong vòng lặp, buộc trình duyệt tính layout đồng bộ nhiều lần. Cách sửa: gom đọc trước, ghi sau, hoặc dùng requestAnimationFrame.\n\nĐể animation 60fps (khoảng 16ms mỗi frame):\n- Animate transform/opacity thay vì top/left/width.\n- Dùng CSS animation hoặc Web Animations API; JS animation thì chạy trong requestAnimationFrame.\n- will-change dùng có chọn lọc, vì mỗi layer tốn bộ nhớ GPU.\n- contain và content-visibility: auto để giới hạn phạm vi layout.\nKiểm chứng bằng tab Performance của DevTools.",
+      "en": "Reflow is when the browser must recompute element positions and sizes; repaint is redrawing pixels when only appearance changes. Reflow is the most expensive because it usually triggers a repaint and can cascade through the tree.\n\nReflow triggers: changing width/height/margin/top, fonts, adding or removing DOM nodes, resizing the window. Repaint: changing color, background, visibility. Composite-only (cheapest): transform and opacity, which can run on the compositor thread without the main thread.\n\nLayout thrashing: interleaving layout reads (offsetHeight, getBoundingClientRect) with style writes in a loop, forcing synchronous layout over and over. Fix: batch reads first, then writes, or use requestAnimationFrame.\n\nFor 60fps animation (about 16ms per frame):\n- Animate transform/opacity instead of top/left/width.\n- Use CSS animations or the Web Animations API; run JS animation inside requestAnimationFrame.\n- Use will-change sparingly, since every layer costs GPU memory.\n- Use contain and content-visibility: auto to limit layout scope.\nVerify with the DevTools Performance panel."
+    },
+    "code": "// Layout thrashing\nitems.forEach(el => { el.style.width = box.offsetWidth + 'px'; });\n// Better: read once, then write\nconst w = box.offsetWidth;\nitems.forEach(el => { el.style.width = w + 'px'; });",
+    "tip": {
+      "vi": "Nêu được khái niệm layout thrashing kèm ví dụ sửa là điểm khác biệt giữa người đọc lý thuyết và người từng tối ưu thật.",
+      "en": "Naming layout thrashing with a concrete fix separates people who read theory from those who have actually optimized."
+    },
+    "followUps": [
+      { "vi": "Tại sao transform rẻ hơn thay đổi top/left?", "en": "Why is transform cheaper than changing top/left?" },
+      { "vi": "content-visibility: auto hoạt động thế nào?", "en": "How does content-visibility: auto work?" }
+    ]
+  },
+  {
+    "id": "frontend-perf-core-web-vitals",
+    "level": "mid",
+    "topic": "Browser & Performance",
+    "q": {
+      "vi": "Core Web Vitals gồm những chỉ số nào? Bạn cải thiện từng chỉ số ra sao?",
+      "en": "What are the Core Web Vitals? How do you improve each one?"
+    },
+    "a": {
+      "vi": "Core Web Vitals là ba chỉ số Google dùng để đo trải nghiệm thực tế của người dùng, đánh giá ở phân vị thứ 75:\n\n- LCP (Largest Contentful Paint), tốt khi dưới 2.5s: thời điểm phần tử lớn nhất (ảnh hero, khối text) hiển thị. Cải thiện: giảm TTFB (CDN, cache), preload và fetchpriority=high cho ảnh LCP, không lazy-load ảnh LCP, ảnh định dạng AVIF/WebP đúng kích thước, giảm CSS/JS chặn render, SSR.\n- INP (Interaction to Next Paint), tốt khi dưới 200ms, thay FID từ tháng 3/2024: độ trễ từ tương tác tới lúc giao diện cập nhật. Cải thiện: chia nhỏ long task, giảm JS, nhường main thread, debounce xử lý nặng, dùng useTransition trong React, chuyển việc nặng sang Web Worker.\n- CLS (Cumulative Layout Shift), tốt khi dưới 0.1: mức nhảy layout bất ngờ. Cải thiện: luôn đặt width/height hoặc aspect-ratio cho ảnh, video, iframe; chừa chỗ cho quảng cáo, banner; font-display và font fallback có metric tương tự.\n\nĐo: lab data (Lighthouse) để debug, field data (CrUX, thư viện web-vitals) để biết người dùng thật trải nghiệm thế nào.",
+      "en": "Core Web Vitals are three metrics Google uses to measure real user experience, assessed at the 75th percentile:\n\n- LCP (Largest Contentful Paint), good under 2.5s: when the largest element (hero image, text block) renders. Improve: reduce TTFB (CDN, caching), preload and fetchpriority=high for the LCP image, never lazy-load the LCP image, properly sized AVIF/WebP images, less render-blocking CSS/JS, SSR.\n- INP (Interaction to Next Paint), good under 200ms, replaced FID in March 2024: latency from an interaction to the next visual update. Improve: break up long tasks, ship less JS, yield to the main thread, debounce heavy handlers, use useTransition in React, move heavy work to a Web Worker.\n- CLS (Cumulative Layout Shift), good under 0.1: how much the layout unexpectedly jumps. Improve: always set width/height or aspect-ratio on images, video, iframes; reserve space for ads and banners; use font-display and fallback fonts with matching metrics.\n\nMeasure: lab data (Lighthouse) for debugging, field data (CrUX, the web-vitals library) to know what real users experience."
+    },
+    "tip": {
+      "vi": "Nhắc INP đã thay FID và phân biệt lab data với field data cho thấy kiến thức của bạn cập nhật.",
+      "en": "Mentioning that INP replaced FID and distinguishing lab from field data shows your knowledge is current."
+    },
+    "followUps": [
+      { "vi": "Tại sao điểm Lighthouse cao nhưng field data vẫn kém?", "en": "Why can Lighthouse scores be high while field data is still poor?" },
+      { "vi": "TTFB là gì và ảnh hưởng LCP thế nào?", "en": "What is TTFB and how does it affect LCP?" }
+    ],
+    "source": "https://web.dev/articles/vitals"
+  },
+  {
+    "id": "frontend-perf-lazy-loading",
+    "level": "mid",
+    "topic": "Browser & Performance",
+    "q": {
+      "vi": "Lazy loading và code splitting là gì? Bạn áp dụng chúng thế nào trong một ứng dụng?",
+      "en": "What are lazy loading and code splitting? How do you apply them in an application?"
+    },
+    "a": {
+      "vi": "Ý tưởng chung là chỉ tải thứ người dùng cần ngay bây giờ, phần còn lại tải sau khi cần.\n\nCode splitting: chia bundle JS thành nhiều chunk thay vì một file khổng lồ. Thường làm theo route (mỗi trang một chunk, Next.js làm sẵn) và theo component nặng (editor, chart, map, modal ít dùng) bằng dynamic import(), React.lazy kèm Suspense hoặc next/dynamic.\n\nLazy loading tài nguyên:\n- Ảnh, iframe: thuộc tính loading=lazy native; nhưng không áp dụng cho ảnh LCP ở màn hình đầu.\n- Nội dung dưới màn hình: IntersectionObserver để tải hoặc render khi sắp cuộn tới.\n- Thư viện bên thứ ba (chat widget, analytics): tải sau khi trang tương tác được hoặc khi người dùng thao tác.\n\nTrade-off: chia quá nhỏ gây nhiều request và waterfall, lazy quá mức làm người dùng chờ khi click. Giảm bằng prefetch khi hover hoặc khi rảnh, và hiển thị skeleton để tránh CLS.\n\nĐo trước và sau bằng bundle analyzer và Web Vitals để chứng minh hiệu quả.",
+      "en": "The shared idea is to load only what the user needs right now and fetch the rest when it is needed.\n\nCode splitting: break the JS bundle into multiple chunks instead of one huge file. Usually by route (one chunk per page, which Next.js does for you) and by heavy component (editor, chart, map, rarely used modal) via dynamic import(), React.lazy with Suspense, or next/dynamic.\n\nLazy loading resources:\n- Images, iframes: the native loading=lazy attribute; but never on the above-the-fold LCP image.\n- Below-the-fold content: IntersectionObserver to load or render it when it is about to scroll into view.\n- Third-party libraries (chat widget, analytics): load after the page is interactive or on user action.\n\nTrade-offs: splitting too finely causes many requests and waterfalls, and over-lazy loading makes users wait on click. Mitigate with prefetching on hover or idle, and show skeletons to avoid CLS.\n\nMeasure before and after with a bundle analyzer and Web Vitals to prove the gain."
+    },
+    "code": "const Chart = React.lazy(() => import('./Chart'));\n\n<Suspense fallback={<Skeleton />}>\n  <Chart data={data} />\n</Suspense>\n\n<img src='photo.avif' loading='lazy' width='600' height='400' alt='...' />",
+    "tip": {
+      "vi": "Chủ động nói 'không lazy-load ảnh LCP' và nêu trade-off waterfall cho thấy bạn biết lazy loading cũng có thể làm chậm.",
+      "en": "Proactively saying 'never lazy-load the LCP image' and naming the waterfall trade-off shows you know lazy loading can also hurt."
+    },
+    "followUps": [
+      { "vi": "Bạn sẽ dùng IntersectionObserver để làm infinite scroll thế nào?", "en": "How would you use IntersectionObserver to build infinite scroll?" },
+      { "vi": "Làm sao biết thư viện nào đang làm bundle phình to?", "en": "How do you find which libraries are bloating the bundle?" }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Web/Performance/Lazy_loading"
+  },
+  {
+    "id": "frontend-perf-debug-slow-page",
+    "level": "senior",
+    "topic": "Browser & Performance",
+    "q": {
+      "vi": "Người dùng phàn nàn một trang chạy chậm. Bạn điều tra và xử lý như thế nào?",
+      "en": "Users complain that a page is slow. How do you investigate and fix it?"
+    },
+    "a": {
+      "vi": "Tôi bắt đầu bằng việc làm rõ 'chậm' là gì và đo trước khi sửa, thay vì đoán.\n\n1. Làm rõ: chậm lúc tải lần đầu, lúc chuyển trang, hay lúc tương tác (gõ, cuộn)? Trên thiết bị và mạng nào? Xem field data (RUM, CrUX, web-vitals) để biết LCP, INP hay CLS bị kém và ở phân khúc người dùng nào.\n2. Tái hiện: DevTools với CPU throttling 4x và mạng chậm, vì máy dev thường quá mạnh.\n3. Chẩn đoán theo loại:\n- Tải chậm: tab Network và Lighthouse, xem TTFB, waterfall, bundle size, ảnh nặng, tài nguyên chặn render, script bên thứ ba.\n- Tương tác chậm: tab Performance tìm long task, React Profiler tìm component render thừa, danh sách dài cần virtualization.\n- Càng dùng càng chậm: tab Memory, heap snapshot tìm leak (listener, interval chưa dọn).\n4. Sửa theo tác động lớn nhất trước, mỗi lần một thay đổi, đo lại.\n5. Ngăn tái diễn: performance budget trong CI (bundle size, Lighthouse CI), dashboard RUM có cảnh báo.\n\nĐiểm quan trọng là dữ liệu thật dẫn đường, và sửa nguyên nhân gốc chứ không chỉ triệu chứng.",
+      "en": "I start by clarifying what 'slow' means and measuring before changing anything, rather than guessing.\n\n1. Clarify: slow on first load, on navigation, or on interaction (typing, scrolling)? On which devices and networks? Check field data (RUM, CrUX, web-vitals) to see whether LCP, INP or CLS is poor and for which user segment.\n2. Reproduce: DevTools with 4x CPU throttling and a slow network, because dev machines are usually too fast.\n3. Diagnose by type:\n- Slow load: Network panel and Lighthouse; check TTFB, the waterfall, bundle size, heavy images, render-blocking resources, third-party scripts.\n- Slow interaction: Performance panel for long tasks, React Profiler for wasted renders, long lists that need virtualization.\n- Slower over time: Memory panel, heap snapshots to find leaks (listeners, intervals not cleaned up).\n4. Fix the highest-impact issue first, one change at a time, and re-measure.\n5. Prevent regressions: performance budgets in CI (bundle size, Lighthouse CI), RUM dashboards with alerts.\n\nThe key is that real data drives decisions, and fixing root causes, not just symptoms."
+    },
+    "tip": {
+      "vi": "Trình bày theo quy trình đo → tái hiện → chẩn đoán → sửa → chống tái diễn và nhắc throttling CPU là cách thể hiện tư duy senior.",
+      "en": "Following measure → reproduce → diagnose → fix → prevent and mentioning CPU throttling is how you show senior-level thinking."
+    },
+    "followUps": [
+      { "vi": "Virtualization cho danh sách dài hoạt động thế nào?", "en": "How does list virtualization work?" },
+      { "vi": "Bạn đặt performance budget cụ thể ra sao?", "en": "How would you define a concrete performance budget?" }
+    ]
+  },
+  {
+    "id": "frontend-react-props-state",
+    "level": "intern",
+    "topic": "React",
+    "q": {
+      "vi": "Props và state trong React khác nhau thế nào?",
+      "en": "What is the difference between props and state in React?"
+    },
+    "a": {
+      "vi": "Props là dữ liệu component nhận từ cha, chỉ đọc; state là dữ liệu component tự sở hữu và có thể thay đổi theo thời gian.\n\nProps:\n- Truyền từ trên xuống (one-way data flow), component con không được sửa props.\n- Có thể là bất cứ gì: giá trị, object, hàm callback, JSX (children).\n- Con muốn báo lên cha thì gọi callback cha truyền xuống, ví dụ onChange.\n\nState:\n- Khai báo bằng useState hoặc useReducer, thay đổi bằng hàm setter, không gán trực tiếp.\n- Mỗi lần set state, React lên lịch render lại component đó và các con.\n- State cập nhật bất đồng bộ và được batch: đọc state ngay sau khi set vẫn ra giá trị cũ; cần giá trị mới dựa trên giá trị cũ thì dùng setCount(c => c + 1).\n- Phải cập nhật immutable: tạo object/mảng mới thay vì sửa trực tiếp, nếu không React không thấy thay đổi.\n\nKhi hai component cần chung dữ liệu, nâng state lên cha gần nhất (lifting state up). Không lưu vào state thứ có thể tính ra từ props hoặc state khác.",
+      "en": "Props are data a component receives from its parent and are read-only; state is data the component owns and that can change over time.\n\nProps:\n- Flow top-down (one-way data flow); a child must not modify its props.\n- Can be anything: values, objects, callback functions, JSX (children).\n- To notify the parent, the child calls a callback passed down, e.g. onChange.\n\nState:\n- Declared with useState or useReducer, changed via the setter, never assigned directly.\n- Each set state schedules a re-render of that component and its children.\n- Updates are asynchronous and batched: reading state right after setting it gives the old value; when the new value depends on the old, use setCount(c => c + 1).\n- Updates must be immutable: create new objects/arrays instead of mutating, otherwise React does not see the change.\n\nWhen two components need the same data, lift the state up to their closest common parent. Don't store in state anything you can derive from props or other state."
+    },
+    "code": "function Counter({ step }) {\n  const [count, setCount] = useState(0);\n  return <button onClick={() => setCount(c => c + step)}>{count}</button>;\n}",
+    "tip": {
+      "vi": "Nhắc thêm batching, functional update và 'không lưu state dẫn xuất' sẽ nâng câu trả lời intern lên mức junior.",
+      "en": "Adding batching, functional updates and 'don't store derived state' lifts an intern answer to junior level."
+    },
+    "followUps": [
+      { "vi": "Tại sao không nên sửa trực tiếp object trong state?", "en": "Why shouldn't you mutate an object in state directly?" },
+      { "vi": "Prop drilling là gì và giải quyết thế nào?", "en": "What is prop drilling and how do you solve it?" }
+    ],
+    "source": "https://react.dev/learn/state-a-components-memory"
+  },
+  {
+    "id": "frontend-react-keys",
+    "level": "junior",
+    "topic": "React",
+    "q": {
+      "vi": "Tại sao React cần key khi render danh sách? Dùng index làm key có vấn đề gì?",
+      "en": "Why does React need keys when rendering lists? What is wrong with using the index as a key?"
+    },
+    "a": {
+      "vi": "Key giúp React nhận diện phần tử nào là phần tử nào giữa các lần render, để reconciliation biết item nào được thêm, xóa hay di chuyển, thay vì so sánh theo vị trí.\n\nKhi render lại, React so sánh cây mới với cây cũ. Với danh sách, cùng key nghĩa là cùng component: giữ nguyên DOM và state, chỉ cập nhật props. Key khác thì unmount cái cũ, mount cái mới.\n\nDùng index làm key: ổn nếu danh sách tĩnh, không bao giờ sắp xếp, lọc hay chèn. Nhưng khi chèn đầu, xóa giữa hoặc sort, index của item bị dịch, React gán state nhầm item: input giữ nội dung sai dòng, checkbox tick sai, animation lỗi, và render nhiều hơn cần thiết.\n\nKey tốt: ổn định, duy nhất trong cùng danh sách, thường là id từ dữ liệu. Không dùng Math.random() vì mỗi render tạo key mới, làm remount toàn bộ.\n\nMẹo hữu ích: đổi key của một component là cách chủ động reset toàn bộ state của nó, ví dụ <Form key={userId} />.",
+      "en": "Keys let React identify which element is which across renders, so reconciliation knows which items were added, removed or moved instead of comparing by position.\n\nOn re-render React diffs the new tree with the old one. In a list, the same key means the same component: DOM and state are kept and only props update. A different key means unmount the old one and mount a new one.\n\nUsing the index as key: fine if the list is static and never sorted, filtered or inserted into. But when you prepend, delete from the middle or sort, indexes shift and React attaches state to the wrong item: inputs keep text in the wrong row, the wrong checkbox is ticked, animations break, and more re-rendering happens than needed.\n\nGood keys are stable and unique among siblings, usually an id from the data. Never Math.random(), because each render creates new keys and remounts everything.\n\nA useful trick: changing a component's key deliberately resets all of its state, e.g. <Form key={userId} />."
+    },
+    "code": "{todos.map(todo => (\n  <TodoItem key={todo.id} todo={todo} />\n))}",
+    "tip": {
+      "vi": "Mô tả cụ thể lỗi input giữ sai nội dung khi dùng index, và mẹo dùng key để reset state, giúp bạn nổi bật.",
+      "en": "Describing the concrete wrong-input-content bug with index keys, plus the key-reset trick, makes you stand out."
+    },
+    "followUps": [
+      { "vi": "Thuật toán reconciliation của React giả định những gì?", "en": "What assumptions does React's reconciliation algorithm make?" },
+      { "vi": "Key có cần duy nhất trên toàn trang không?", "en": "Do keys need to be unique across the whole page?" }
+    ],
+    "source": "https://react.dev/learn/rendering-lists"
+  },
+  {
+    "id": "frontend-react-useeffect",
+    "level": "junior",
+    "topic": "React",
+    "q": {
+      "vi": "useEffect dùng để làm gì? Dependency array và cleanup hoạt động thế nào?",
+      "en": "What is useEffect for? How do the dependency array and cleanup work?"
+    },
+    "a": {
+      "vi": "useEffect dùng để đồng bộ component với hệ thống bên ngoài React: subscribe sự kiện, WebSocket, timer, thao tác DOM trực tiếp, widget bên thứ ba. Effect chạy sau khi React commit ra màn hình.\n\nDependency array:\n- Không truyền: chạy sau mọi lần render.\n- []: chạy một lần sau khi mount.\n- [a, b]: chạy lại khi a hoặc b thay đổi (so sánh bằng Object.is).\nPhải khai báo đủ mọi giá trị reactive dùng trong effect (rule exhaustive-deps), thiếu sẽ gây stale closure.\n\nCleanup: hàm return từ effect chạy trước lần effect kế tiếp và khi unmount; dùng để gỡ listener, clearInterval, đóng kết nối, hủy request (AbortController) tránh race condition.\n\nỞ development, StrictMode cố ý mount, unmount rồi mount lại để phát hiện effect thiếu cleanup.\n\nQuan trọng: nhiều trường hợp không cần effect. Dữ liệu tính được từ props/state thì tính khi render (hoặc useMemo); phản ứng với hành động người dùng thì làm trong event handler; fetch dữ liệu nên dùng framework hoặc thư viện như TanStack Query.",
+      "en": "useEffect synchronizes a component with systems outside React: event subscriptions, WebSockets, timers, direct DOM work, third-party widgets. Effects run after React commits to the screen.\n\nDependency array:\n- Omitted: runs after every render.\n- []: runs once after mount.\n- [a, b]: re-runs when a or b changes (compared with Object.is).\nYou must list every reactive value used in the effect (the exhaustive-deps rule); missing ones cause stale closures.\n\nCleanup: the function returned from the effect runs before the next effect run and on unmount; use it to remove listeners, clearInterval, close connections, and abort requests (AbortController) to avoid race conditions.\n\nIn development, StrictMode deliberately mounts, unmounts and remounts to expose effects without proper cleanup.\n\nImportant: many cases need no effect. Data derivable from props/state should be computed during render (or with useMemo); reactions to user actions belong in event handlers; data fetching is better handled by a framework or a library like TanStack Query."
+    },
+    "code": "useEffect(() => {\n  const controller = new AbortController();\n  fetch(`/api/users/${id}`, { signal: controller.signal })\n    .then(r => r.json())\n    .then(setUser)\n    .catch(() => {});\n  return () => controller.abort();\n}, [id]);",
+    "tip": {
+      "vi": "Nói 'effect là để đồng bộ với hệ thống bên ngoài' và nêu ví dụ 'You might not need an effect' cho thấy bạn theo tư duy React hiện đại.",
+      "en": "Saying 'effects are for syncing with external systems' and citing 'You might not need an effect' shows modern React thinking."
+    },
+    "followUps": [
+      { "vi": "Tại sao effect chạy hai lần ở development?", "en": "Why does an effect run twice in development?" },
+      { "vi": "useEffect và useLayoutEffect khác nhau thế nào?", "en": "How do useEffect and useLayoutEffect differ?" }
+    ],
+    "source": "https://react.dev/learn/you-might-not-need-an-effect"
+  },
+  {
+    "id": "frontend-react-hooks-rules",
+    "level": "junior",
+    "topic": "React",
+    "q": {
+      "vi": "Rules of Hooks là gì và tại sao tồn tại? Khi nào bạn viết custom hook?",
+      "en": "What are the Rules of Hooks and why do they exist? When do you write a custom hook?"
+    },
+    "a": {
+      "vi": "Có hai quy tắc chính: chỉ gọi hook ở top-level của component hoặc custom hook (không gọi trong if, vòng lặp, sau return sớm, hay trong hàm lồng), và chỉ gọi hook từ function component hoặc custom hook, không từ hàm JS thường.\n\nLý do: React không lưu state theo tên biến mà theo thứ tự gọi hook trong mỗi lần render. Nếu một hook nằm trong if, thứ tự có thể lệch giữa các lần render và state của hook này bị gán cho hook khác. Plugin eslint-plugin-react-hooks bắt các lỗi này. (Ngoại lệ: use() trong React 19 được gọi có điều kiện.)\n\nCustom hook là hàm bắt đầu bằng use, gọi các hook khác, dùng để tái sử dụng logic có state, không phải chia sẻ state: mỗi component gọi hook có state riêng.\n\nKhi nào viết: khi cùng một logic lặp lại ở nhiều component (useDebounce, useMediaQuery, useLocalStorage, useOnlineStatus), hoặc muốn tách logic phức tạp ra khỏi component cho dễ đọc, dễ test. Tránh custom hook chỉ bọc một useEffect mơ hồ như useMount; tên hook nên mô tả mục đích.",
+      "en": "There are two main rules: call hooks only at the top level of a component or custom hook (not inside conditions, loops, after an early return, or in nested functions), and call hooks only from function components or custom hooks, not from regular JS functions.\n\nWhy: React does not store state by variable name but by the order hooks are called on each render. If a hook sits inside an if, the order can shift between renders and one hook's state gets assigned to another. eslint-plugin-react-hooks catches these mistakes. (Exception: use() in React 19 can be called conditionally.)\n\nA custom hook is a function starting with use that calls other hooks. It reuses stateful logic, not state itself: each component calling it gets its own state.\n\nWhen to write one: when the same logic repeats across components (useDebounce, useMediaQuery, useLocalStorage, useOnlineStatus), or to pull complex logic out of a component for readability and testability. Avoid custom hooks that just wrap a vague useEffect like useMount; the name should describe the purpose."
+    },
+    "code": "function useOnlineStatus() {\n  const [online, setOnline] = useState(navigator.onLine);\n  useEffect(() => {\n    const update = () => setOnline(navigator.onLine);\n    window.addEventListener('online', update);\n    window.addEventListener('offline', update);\n    return () => {\n      window.removeEventListener('online', update);\n      window.removeEventListener('offline', update);\n    };\n  }, []);\n  return online;\n}",
+    "tip": {
+      "vi": "Giải thích bằng 'React dựa vào thứ tự gọi hook' và nhấn mạnh custom hook chia sẻ logic chứ không chia sẻ state là hai ý ghi điểm.",
+      "en": "Explaining 'React relies on hook call order' and stressing that custom hooks share logic, not state, are the two scoring points."
+    },
+    "followUps": [
+      { "vi": "Làm sao test một custom hook?", "en": "How do you test a custom hook?" },
+      { "vi": "useSyncExternalStore dùng khi nào?", "en": "When do you use useSyncExternalStore?" }
+    ],
+    "source": "https://react.dev/reference/rules/rules-of-hooks"
+  },
+  {
+    "id": "frontend-react-rerender",
+    "level": "mid",
+    "topic": "React",
+    "q": {
+      "vi": "Khi nào một component React bị render lại? Làm sao tránh render thừa?",
+      "en": "When does a React component re-render? How do you avoid unnecessary re-renders?"
+    },
+    "a": {
+      "vi": "Component render lại khi: state của nó đổi, component cha render lại (dù props không đổi), hoặc context nó dùng đổi giá trị. Render nghĩa là gọi lại hàm component để tính cây mới; React chỉ cập nhật DOM ở chỗ thực sự khác.\n\nCách tránh render thừa:\n- Đặt state gần nơi dùng nhất, tách component nhỏ; truyền component nặng qua children để nó không render lại theo state của cha.\n- React.memo cho component con nhận props ổn định.\n- useMemo / useCallback để giữ nguyên tham chiếu object/hàm truyền xuống component đã memo.\n- Tách context lớn thành nhiều context nhỏ, hoặc dùng store có selector (Zustand, Redux).\n- Danh sách dài thì virtualization.\n\nLưu ý: render thừa thường không phải vấn đề; chỉ tối ưu khi đo thấy chậm bằng React DevTools Profiler. React Compiler (bản ổn định 1.0 từ 2025) tự động memo hóa, giảm nhu cầu viết useMemo/useCallback thủ công nếu project bật nó.",
+      "en": "A component re-renders when: its state changes, its parent re-renders (even with unchanged props), or a context it consumes changes value. Rendering means calling the component function again to compute a new tree; React only touches the DOM where something actually differs.\n\nTo avoid wasted renders:\n- Keep state close to where it is used and split components; pass heavy components as children so they don't re-render with the parent's state.\n- React.memo for children with stable props.\n- useMemo / useCallback to keep object/function references stable when passed to memoized children.\n- Split one big context into smaller ones, or use a store with selectors (Zustand, Redux).\n- Virtualize long lists.\n\nNote: wasted renders are usually not a problem; optimize only when the React DevTools Profiler shows real slowness. React Compiler (stable 1.0 since 2025) memoizes automatically, reducing the need for manual useMemo/useCallback in projects that enable it."
+    },
+    "tip": {
+      "vi": "Nhắc pattern truyền children, nguyên tắc 'đo trước khi tối ưu' và React Compiler cho thấy bạn không memo một cách máy móc.",
+      "en": "Mentioning the children pattern, 'measure before optimizing' and React Compiler shows you don't memoize blindly."
+    },
+    "followUps": [
+      { "vi": "Tại sao React.memo vô dụng nếu truyền object literal làm props?", "en": "Why is React.memo useless if you pass an object literal as a prop?" },
+      { "vi": "Render phase và commit phase khác nhau thế nào?", "en": "How do the render phase and commit phase differ?" }
+    ],
+    "source": "https://react.dev/learn/render-and-commit"
+  },
+  {
+    "id": "frontend-react-state-management",
+    "level": "senior",
+    "topic": "React",
+    "q": {
+      "vi": "Bạn chọn giải pháp quản lý state thế nào cho một ứng dụng React lớn? Context, Redux, Zustand hay React Query?",
+      "en": "How do you choose state management for a large React app? Context, Redux, Zustand or React Query?"
+    },
+    "a": {
+      "vi": "Tôi phân loại state trước, vì mỗi loại có công cụ phù hợp riêng, thay vì dồn tất cả vào một global store.\n\n- Server state (dữ liệu từ API): cần cache, loading/error, refetch, invalidate, dedupe request. Dùng TanStack Query, SWR, RTK Query, hoặc data fetching của framework (Server Components ở Next.js). Phần lớn state mà trước đây nhét vào Redux thực ra thuộc loại này.\n- URL state (filter, tab, trang): để trong query string, chia sẻ link và back/forward hoạt động đúng.\n- Local UI state (mở modal, input): useState/useReducer ngay trong component.\n- Form state: React Hook Form hoặc form action.\n- Global client state (user đã đăng nhập, theme, giỏ hàng offline): phần còn lại, thường khá nhỏ.\n\nVới global client state:\n- Context: tốt cho giá trị ít đổi (theme, locale, auth). Mọi consumer render lại khi value đổi và không có selector.\n- Zustand/Jotai: nhẹ, có selector, ít boilerplate.\n- Redux Toolkit: hợp với team lớn cần quy ước chặt, DevTools time-travel, middleware.\n\nTiêu chí chọn: quy mô team, độ phức tạp cập nhật, nhu cầu debug, và đừng thêm thư viện khi useState đủ dùng.",
+      "en": "I classify the state first, because each kind has its own right tool, rather than putting everything into one global store.\n\n- Server state (API data): needs caching, loading/error, refetching, invalidation, request dedupe. Use TanStack Query, SWR, RTK Query, or the framework's data fetching (Server Components in Next.js). Most state people used to stuff into Redux is actually this.\n- URL state (filters, tabs, pagination): keep it in the query string so links are shareable and back/forward works.\n- Local UI state (modal open, input): useState/useReducer inside the component.\n- Form state: React Hook Form or form actions.\n- Global client state (logged-in user, theme, offline cart): what remains, usually small.\n\nFor global client state:\n- Context: good for rarely changing values (theme, locale, auth). Every consumer re-renders when the value changes and there are no selectors.\n- Zustand/Jotai: lightweight, selector-based, little boilerplate.\n- Redux Toolkit: suits large teams that need strict conventions, time-travel DevTools, middleware.\n\nSelection criteria: team size, update complexity, debugging needs, and never add a library when useState is enough."
+    },
+    "tip": {
+      "vi": "Phân loại server state, URL state, UI state, global state trước khi nói tới thư viện là dấu hiệu rõ nhất của tư duy senior.",
+      "en": "Classifying server, URL, UI and global state before naming any library is the clearest sign of senior thinking."
+    },
+    "followUps": [
+      { "vi": "Tại sao Context không phải là công cụ quản lý state?", "en": "Why is Context not really a state management tool?" },
+      { "vi": "Optimistic update làm thế nào với React Query?", "en": "How do you do optimistic updates with React Query?" }
+    ]
+  },
+  {
+    "id": "frontend-react-concurrent",
+    "level": "senior",
+    "topic": "React",
+    "q": {
+      "vi": "Concurrent rendering trong React 18+ là gì? useTransition và useDeferredValue giải quyết vấn đề gì?",
+      "en": "What is concurrent rendering in React 18+? What problems do useTransition and useDeferredValue solve?"
+    },
+    "a": {
+      "vi": "Concurrent rendering cho phép React chuẩn bị một bản render mới ở chế độ có thể gián đoạn: tạm dừng, ưu tiên việc khẩn cấp hơn, hoặc bỏ bản render đã cũ, thay vì render đồng bộ một mạch chặn main thread.\n\nReact chia cập nhật thành hai loại:\n- Urgent: gõ phím, click, cần phản hồi ngay.\n- Transition: chuyển đổi giao diện có thể chờ, như lọc danh sách lớn, chuyển tab, điều hướng.\n\nuseTransition trả về [isPending, startTransition]; cập nhật state bọc trong startTransition được đánh dấu ưu tiên thấp, nên input vẫn mượt và có thể hiện spinner bằng isPending. Từ React 19, startTransition nhận cả hàm async (Actions).\n\nuseDeferredValue nhận một giá trị và trả về bản trễ hơn; dùng khi bạn không kiểm soát chỗ set state, ví dụ giá trị đến từ props, để phần UI nặng render theo bản trễ.\n\nKết hợp với Suspense: transition giữ nguyên UI cũ thay vì hiện lại fallback khi dữ liệu mới đang tải.\n\nGiới hạn: không làm code nặng chạy nhanh hơn, chỉ ưu tiên lại; một tính toán đồng bộ nặng vẫn cần memo, chia nhỏ hoặc Web Worker. Không dùng transition cho input được kiểm soát.",
+      "en": "Concurrent rendering lets React prepare a new render in an interruptible way: pause it, handle something more urgent first, or throw away a stale render, instead of rendering synchronously in one block that holds the main thread.\n\nReact splits updates into two kinds:\n- Urgent: typing, clicking, which need immediate feedback.\n- Transitions: UI changes that can wait, such as filtering a big list, switching tabs, navigation.\n\nuseTransition returns [isPending, startTransition]; state updates wrapped in startTransition are marked low priority, so the input stays responsive and you can show a spinner via isPending. Since React 19, startTransition also accepts async functions (Actions).\n\nuseDeferredValue takes a value and returns a lagging version; use it when you don't control where state is set, e.g. a value from props, so the heavy UI renders against the deferred copy.\n\nWith Suspense: a transition keeps the old UI on screen instead of falling back to the spinner while new data loads.\n\nLimits: it doesn't make heavy code faster, it only reprioritizes; a heavy synchronous computation still needs memoization, chunking or a Web Worker. Don't use transitions for controlled input values."
+    },
+    "code": "const [query, setQuery] = useState('');\nconst deferredQuery = useDeferredValue(query);\n\n<input value={query} onChange={e => setQuery(e.target.value)} />\n<SlowList query={deferredQuery} />  // SlowList wrapped in memo",
+    "tip": {
+      "vi": "Nhấn mạnh 'concurrent không làm code nhanh hơn, chỉ ưu tiên lại' và nối với chỉ số INP là cách trả lời rất thuyết phục.",
+      "en": "Stressing that 'concurrency doesn't make code faster, it reprioritizes' and tying it to INP is very convincing."
+    },
+    "followUps": [
+      { "vi": "Automatic batching trong React 18 thay đổi gì?", "en": "What did automatic batching in React 18 change?" },
+      { "vi": "Suspense hoạt động thế nào với data fetching?", "en": "How does Suspense work with data fetching?" }
+    ],
+    "source": "https://react.dev/reference/react/useTransition"
+  },
+  {
+    "id": "frontend-react-ssr-hydration",
+    "level": "senior",
+    "topic": "React",
+    "q": {
+      "vi": "So sánh CSR, SSR, SSG. Hydration là gì và hydration mismatch xảy ra khi nào?",
+      "en": "Compare CSR, SSR and SSG. What is hydration and when does a hydration mismatch happen?"
+    },
+    "a": {
+      "vi": "Khác biệt nằm ở nơi và thời điểm tạo HTML.\n\n- CSR: server gửi HTML gần rỗng cùng JS, trình duyệt tự render. Hosting tĩnh đơn giản, nhưng màn hình đầu chậm, SEO kém hơn.\n- SSR: server render HTML cho từng request. Nội dung hiện sớm, SEO tốt, dữ liệu mới; tốn tài nguyên server và TTFB phụ thuộc việc lấy dữ liệu.\n- SSG: render HTML lúc build, phục vụ qua CDN, nhanh và rẻ nhất, nhưng dữ liệu cũ tới lần build sau; ISR/revalidate tái tạo định kỳ.\n\nHydration: sau khi HTML từ server hiển thị, React chạy lại component ở client, gắn event handler và state vào DOM có sẵn để trang tương tác được. Trước khi hydrate xong, trang nhìn thấy nhưng chưa bấm được.\n\nMismatch xảy ra khi HTML client render khác server: dùng Date.now(), Math.random(), window hoặc localStorage lúc render, định dạng ngày theo locale, HTML lồng sai (div trong p), extension trình duyệt sửa DOM. Cách sửa: render giá trị phụ thuộc client trong useEffect, dùng useId cho id, đảm bảo dữ liệu hai bên giống nhau.\n\nStreaming SSR với Suspense và selective hydration (React 18+) cho phép gửi và hydrate từng phần.",
+      "en": "The difference is where and when HTML is produced.\n\n- CSR: the server sends near-empty HTML plus JS and the browser renders everything. Simple static hosting, but slow first paint and weaker SEO.\n- SSR: the server renders HTML per request. Early content, good SEO, fresh data; costs server resources, and TTFB depends on data fetching.\n- SSG: HTML is rendered at build time and served from a CDN, fastest and cheapest, but stale until the next build; ISR/revalidation regenerates periodically.\n\nHydration: after server HTML is displayed, React runs the components again on the client and attaches event handlers and state to the existing DOM so the page becomes interactive. Until hydration finishes, the page is visible but not clickable.\n\nA mismatch happens when the client render differs from the server HTML: using Date.now(), Math.random(), window or localStorage during render, locale-dependent date formatting, invalid nesting (div inside p), browser extensions mutating the DOM. Fixes: render client-only values in useEffect, use useId for ids, make sure both sides get the same data.\n\nStreaming SSR with Suspense and selective hydration (React 18+) let you send and hydrate the page in pieces."
+    },
+    "tip": {
+      "vi": "Liệt kê nguyên nhân mismatch cụ thể và nhắc streaming/selective hydration thể hiện bạn đã gặp vấn đề này thực tế.",
+      "en": "Listing concrete mismatch causes and mentioning streaming/selective hydration shows you have hit this in practice."
+    },
+    "followUps": [
+      { "vi": "Bạn chọn SSR hay SSG cho trang sản phẩm thương mại điện tử?", "en": "Would you pick SSR or SSG for an e-commerce product page?" },
+      { "vi": "Islands architecture hoặc partial hydration là gì?", "en": "What is islands architecture or partial hydration?" }
+    ],
+    "source": "https://react.dev/reference/react-dom/client/hydrateRoot"
+  },
+  {
+    "id": "frontend-react-server-components",
+    "level": "senior",
+    "topic": "React",
+    "q": {
+      "vi": "React Server Components là gì? Khác SSR thế nào và khi nào dùng 'use client'?",
+      "en": "What are React Server Components? How do they differ from SSR, and when do you use 'use client'?"
+    },
+    "a": {
+      "vi": "Server Components là component chỉ chạy trên server (lúc build hoặc mỗi request), code của chúng không bao giờ gửi xuống trình duyệt; chính thức ổn định từ React 19 và là mặc định trong Next.js App Router.\n\nLợi ích:\n- Giảm JS ở client: thư viện nặng như markdown parser, date library dùng trên server không vào bundle.\n- Truy cập trực tiếp database, file system, secret, có thể là async component dùng await, không cần tạo API riêng.\n- Gần nguồn dữ liệu nên giảm waterfall request từ client.\n\nKhác SSR: SSR render component thành HTML, nhưng toàn bộ code component vẫn được gửi xuống để hydrate. RSC tạo ra một payload mô tả cây UI; phần server không cần hydrate. Hai thứ bổ trợ nhau: Next.js dùng cả hai.\n\n'use client' đánh dấu ranh giới: file đó và những gì nó import thành Client Component. Cần khi dùng state, effect, event handler, browser API. Server Component có thể render Client Component và truyền props có thể serialize (không truyền hàm, trừ Server Action), hoặc truyền Server Component làm children.\n\nNguyên tắc: đẩy 'use client' xuống lá càng sâu càng tốt; dùng import 'server-only' để tránh rò rỉ code server.",
+      "en": "Server Components are components that run only on the server (at build time or per request), and their code is never sent to the browser; they are stable as of React 19 and the default in the Next.js App Router.\n\nBenefits:\n- Less client JS: heavy libraries like a markdown parser or date library used on the server never enter the bundle.\n- Direct access to databases, file systems and secrets; they can be async components using await, with no separate API needed.\n- Running close to the data reduces client-side request waterfalls.\n\nVersus SSR: SSR renders components to HTML, but all component code is still shipped for hydration. RSC produces a payload describing the UI tree; the server parts need no hydration. They are complementary: Next.js uses both.\n\n'use client' marks a boundary: that file and everything it imports become Client Components. You need it for state, effects, event handlers, browser APIs. A Server Component can render Client Components and pass serializable props (no functions, except Server Actions), or pass Server Components as children.\n\nRule: push 'use client' as far down to the leaves as possible; use import 'server-only' to prevent server code from leaking."
+    },
+    "code": "// app/posts/page.tsx (Server Component)\nexport default async function Page() {\n  const posts = await db.post.findMany();\n  return <PostList posts={posts} />;\n}\n\n// LikeButton.tsx\n'use client';\nexport function LikeButton() { const [n, setN] = useState(0); /* ... */ }",
+    "tip": {
+      "vi": "Giải thích rõ RSC và SSR không loại trừ nhau và nói 'đẩy use client xuống lá' cho thấy bạn hiểu kiến trúc, không chỉ cú pháp.",
+      "en": "Clarifying that RSC and SSR are not mutually exclusive and saying 'push use client to the leaves' shows architectural understanding."
+    },
+    "followUps": [
+      { "vi": "Server Actions là gì và cần lưu ý gì về bảo mật?", "en": "What are Server Actions and what security concerns do they raise?" },
+      { "vi": "Tại sao không thể import Server Component vào Client Component?", "en": "Why can't you import a Server Component into a Client Component?" }
+    ],
+    "source": "https://react.dev/reference/rsc/server-components"
+  },
+  {
+    "id": "frontend-nextjs-rendering",
+    "level": "mid",
+    "topic": "Next.js",
+    "q": {
+      "vi": "Trong Next.js App Router, trang được render tĩnh hay động thế nào? Bạn kiểm soát cache và revalidate ra sao?",
+      "en": "In the Next.js App Router, how is a page rendered statically or dynamically? How do you control caching and revalidation?"
+    },
+    "a": {
+      "vi": "Next.js App Router quyết định theo từng route: nếu không dùng gì phụ thuộc request thì render tĩnh lúc build, ngược lại render động mỗi request.\n\nNhững thứ làm route thành động: đọc cookies(), headers(), searchParams, hoặc fetch dữ liệu không cache. Có thể ép bằng export const dynamic.\n\nRevalidate (cập nhật dữ liệu tĩnh):\n- Theo thời gian: export const revalidate = 60, hoặc fetch(url, { next: { revalidate: 60 } }), tương đương ISR.\n- Theo sự kiện: revalidatePath() hoặc revalidateTag() trong Server Action hay route handler khi dữ liệu thay đổi (ví dụ webhook từ CMS).\n\nLưu ý theo phiên bản: Next.js 14 mặc định cache fetch, Next.js 15 đổi thành không cache mặc định và client router cache không giữ trang động. Next.js 16 đưa ra Cache Components với directive 'use cache' để chủ động đánh dấu phần nào được cache, kết hợp Partial Prerendering: khung tĩnh trả về ngay, phần động stream qua Suspense.\n\nCác khái niệm khác: layout lồng nhau giữ state khi chuyển trang, loading.tsx và error.tsx dựa trên Suspense và error boundary, generateStaticParams cho route động render sẵn. Luôn kiểm tra output build để biết route nào tĩnh, route nào động.",
+      "en": "The Next.js App Router decides per route: if nothing request-specific is used, it renders statically at build time; otherwise it renders dynamically per request.\n\nWhat makes a route dynamic: reading cookies(), headers(), searchParams, or fetching uncached data. You can force it with export const dynamic.\n\nRevalidation (refreshing static data):\n- Time-based: export const revalidate = 60, or fetch(url, { next: { revalidate: 60 } }), the equivalent of ISR.\n- On-demand: revalidatePath() or revalidateTag() inside a Server Action or route handler when data changes (e.g. a CMS webhook).\n\nVersion notes: Next.js 14 cached fetch by default; Next.js 15 switched to uncached by default and the client router cache no longer keeps dynamic pages. Next.js 16 introduced Cache Components with the 'use cache' directive to explicitly mark what is cached, combined with Partial Prerendering: the static shell is served instantly and dynamic parts stream in through Suspense.\n\nOther concepts: nested layouts keep state across navigation, loading.tsx and error.tsx build on Suspense and error boundaries, generateStaticParams pre-renders dynamic routes. Always check the build output to see which routes are static and which are dynamic."
+    },
+    "tip": {
+      "vi": "Nói rõ hành vi cache thay đổi giữa Next.js 14, 15, 16 cho thấy bạn theo sát framework chứ không học theo tutorial cũ.",
+      "en": "Explaining how caching behavior changed across Next.js 14, 15 and 16 shows you follow the framework rather than old tutorials."
+    },
+    "followUps": [
+      { "vi": "Middleware (proxy) trong Next.js dùng cho việc gì?", "en": "What is Next.js middleware (proxy) used for?" },
+      { "vi": "next/image tối ưu ảnh như thế nào?", "en": "How does next/image optimize images?" }
+    ],
+    "source": "https://nextjs.org/docs/app"
+  },
+  {
+    "id": "frontend-sec-cors",
+    "level": "junior",
+    "topic": "Web Security",
+    "q": {
+      "vi": "CORS là gì? Tại sao gọi API bị lỗi CORS và sửa thế nào?",
+      "en": "What is CORS? Why do API calls fail with CORS errors and how do you fix them?"
+    },
+    "a": {
+      "vi": "CORS (Cross-Origin Resource Sharing) là cơ chế để server cho phép trình duyệt nới lỏng Same-Origin Policy, tức cho trang ở origin này đọc response từ origin khác. Origin gồm scheme, host và port.\n\nMặc định trình duyệt chặn JavaScript đọc response cross-origin. Server cho phép bằng header Access-Control-Allow-Origin (một origin cụ thể hoặc *).\n\nPreflight: với request không đơn giản (method PUT/DELETE, header tùy chỉnh như Authorization, Content-Type: application/json), trình duyệt gửi trước request OPTIONS hỏi server; server trả về Allow-Methods, Allow-Headers, có thể cache bằng Max-Age.\n\nGửi cookie cross-origin: client đặt credentials: 'include', server phải trả Access-Control-Allow-Credentials: true và origin cụ thể, không được dùng *.\n\nĐiểm quan trọng:\n- CORS được cấu hình ở server, không sửa được từ phía frontend; extension tắt CORS chỉ là che lỗi.\n- Ở development có thể dùng proxy của dev server (Vite, Next.js rewrites) để cùng origin.\n- CORS không phải lớp bảo mật cho server: request vẫn tới server, chỉ là trình duyệt không cho đọc response; curl hay Postman không bị CORS.",
+      "en": "CORS (Cross-Origin Resource Sharing) is a mechanism that lets a server tell the browser to relax the Same-Origin Policy, allowing a page on one origin to read responses from another. An origin is scheme, host and port.\n\nBy default the browser prevents JavaScript from reading cross-origin responses. The server allows it with the Access-Control-Allow-Origin header (a specific origin or *).\n\nPreflight: for non-simple requests (PUT/DELETE, custom headers like Authorization, Content-Type: application/json), the browser first sends an OPTIONS request to ask; the server replies with Allow-Methods, Allow-Headers, optionally cached via Max-Age.\n\nSending cookies cross-origin: the client sets credentials: 'include', and the server must return Access-Control-Allow-Credentials: true with a specific origin, not *.\n\nKey points:\n- CORS is configured on the server and cannot be fixed from the frontend; CORS-disabling extensions only hide the problem.\n- In development you can use the dev server's proxy (Vite, Next.js rewrites) to stay same-origin.\n- CORS is not server-side security: the request still reaches the server, the browser just refuses to expose the response; curl or Postman are not subject to CORS."
+    },
+    "tip": {
+      "vi": "Nhấn mạnh 'CORS do server cấu hình và không bảo vệ server' cùng chi tiết credentials không dùng được * là điểm cộng rõ ràng.",
+      "en": "Stressing 'CORS is configured by the server and does not protect it' plus the credentials-cannot-use-* detail are clear bonus points."
+    },
+    "followUps": [
+      { "vi": "Same-Origin Policy bảo vệ người dùng khỏi điều gì?", "en": "What does the Same-Origin Policy protect users from?" },
+      { "vi": "Tại sao request GET đơn giản không cần preflight?", "en": "Why don't simple GET requests need a preflight?" }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS"
+  },
+  {
+    "id": "frontend-sec-xss",
+    "level": "mid",
+    "topic": "Web Security",
+    "q": {
+      "vi": "XSS là gì? Có những loại nào và frontend phòng chống ra sao? CSP giúp gì?",
+      "en": "What is XSS? What types exist and how does the frontend defend against it? How does CSP help?"
+    },
+    "a": {
+      "vi": "XSS (Cross-Site Scripting) là khi kẻ tấn công chèn được script chạy trong trang của bạn, với quyền của người dùng: đánh cắp token, thực hiện hành động thay họ, sửa giao diện để lừa đảo.\n\nBa loại:\n- Stored: payload lưu trong database (comment, profile) rồi hiển thị cho người khác.\n- Reflected: payload nằm trong URL hoặc request và được server phản hồi lại.\n- DOM-based: JavaScript phía client lấy dữ liệu (location.hash, query) đưa thẳng vào sink nguy hiểm như innerHTML, eval.\n\nPhòng chống:\n- Escape output theo ngữ cảnh. React tự escape khi render {value}, nhưng không bảo vệ dangerouslySetInnerHTML, href='javascript:...', hoặc thao tác DOM trực tiếp.\n- HTML từ người dùng phải sanitize bằng DOMPurify.\n- Dùng textContent thay innerHTML; không dùng eval hay new Function với dữ liệu ngoài.\n- Cookie phiên đặt HttpOnly để script không đọc được.\n\nCSP (Content-Security-Policy) là lớp phòng thủ thứ hai: header giới hạn nguồn script được chạy, ví dụ script-src 'self' 'nonce-abc'. Chặn inline script và nguồn lạ nên kể cả khi bị chèn, script thường không chạy. Triển khai trước bằng Content-Security-Policy-Report-Only để xem vi phạm rồi mới bật thật.",
+      "en": "XSS (Cross-Site Scripting) is when an attacker manages to run script inside your page with the user's privileges: stealing tokens, performing actions on their behalf, altering the UI for phishing.\n\nThree types:\n- Stored: the payload is saved in the database (comments, profiles) and shown to other users.\n- Reflected: the payload is in the URL or request and the server echoes it back.\n- DOM-based: client-side JavaScript takes data (location.hash, query) and puts it straight into a dangerous sink like innerHTML or eval.\n\nDefenses:\n- Context-aware output escaping. React escapes {value} automatically, but does not protect dangerouslySetInnerHTML, href='javascript:...', or direct DOM manipulation.\n- User-provided HTML must be sanitized with DOMPurify.\n- Use textContent instead of innerHTML; never eval or new Function with external data.\n- Session cookies should be HttpOnly so scripts cannot read them.\n\nCSP (Content-Security-Policy) is a second line of defense: a header restricting which scripts may run, e.g. script-src 'self' 'nonce-abc'. It blocks inline scripts and unknown sources, so even an injected script usually won't execute. Roll it out first with Content-Security-Policy-Report-Only to see violations, then enforce."
+    },
+    "tip": {
+      "vi": "Nói rõ chỗ React không bảo vệ (dangerouslySetInnerHTML, javascript: URL) và CSP là lớp thứ hai chứ không thay escape sẽ ghi điểm.",
+      "en": "Naming where React doesn't protect you (dangerouslySetInnerHTML, javascript: URLs) and calling CSP a second layer, not a replacement for escaping, scores points."
+    },
+    "followUps": [
+      { "vi": "Lưu JWT trong localStorage có rủi ro gì liên quan XSS?", "en": "What XSS-related risk comes with storing a JWT in localStorage?" },
+      { "vi": "Trusted Types là gì?", "en": "What are Trusted Types?" }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP"
+  },
+  {
+    "id": "frontend-sec-csrf",
+    "level": "mid",
+    "topic": "Web Security",
+    "q": {
+      "vi": "CSRF là gì và phòng chống thế nào? SameSite cookie giúp gì?",
+      "en": "What is CSRF and how do you prevent it? How do SameSite cookies help?"
+    },
+    "a": {
+      "vi": "CSRF (Cross-Site Request Forgery) là khi một trang độc hại khiến trình duyệt của người dùng gửi request tới site của bạn, kèm cookie đăng nhập tự động, để thực hiện hành động họ không chủ ý, như chuyển tiền hay đổi email.\n\nĐiều kiện: xác thực dựa trên cookie được trình duyệt tự gửi. Kẻ tấn công không đọc được response, chỉ cần request có tác dụng phụ.\n\nCách phòng chống:\n- SameSite cookie: Lax (mặc định ở Chrome nếu không khai báo) không gửi cookie với request cross-site trừ điều hướng GET cấp cao nhất; Strict không bao giờ gửi cross-site. Đây là lớp bảo vệ mạnh nhưng không nên là lớp duy nhất (ví dụ subdomain bị chiếm vẫn là same-site).\n- CSRF token: giá trị ngẫu nhiên gắn với phiên, gửi trong form hoặc header, server kiểm tra; trang khác không đọc được nên không giả được.\n- Kiểm tra Origin/Referer header với request thay đổi dữ liệu.\n- Không dùng GET cho thao tác thay đổi dữ liệu.\n- Yêu cầu xác nhận lại (mật khẩu, OTP) với hành động nhạy cảm.\n\nNếu API xác thực bằng header Authorization: Bearer (token không tự gửi) thì về bản chất không bị CSRF, nhưng khi đó cần chú ý XSS hơn.",
+      "en": "CSRF (Cross-Site Request Forgery) is when a malicious page makes the user's browser send a request to your site, with login cookies attached automatically, to perform an action they didn't intend, like transferring money or changing their email.\n\nPrecondition: cookie-based authentication that the browser sends automatically. The attacker can't read the response; the request just needs a side effect.\n\nDefenses:\n- SameSite cookies: Lax (Chrome's default when unspecified) withholds cookies on cross-site requests except top-level GET navigations; Strict never sends them cross-site. A strong layer, but not the only one (e.g. a compromised subdomain is still same-site).\n- CSRF tokens: a random per-session value sent in a form field or header and verified by the server; other sites can't read it, so they can't forge it.\n- Check the Origin/Referer header on state-changing requests.\n- Never use GET for state-changing operations.\n- Require re-authentication (password, OTP) for sensitive actions.\n\nIf an API authenticates via an Authorization: Bearer header (not sent automatically), it is inherently not CSRF-prone, but then XSS deserves more attention."
+    },
+    "tip": {
+      "vi": "So sánh rõ CSRF với XSS (CSRF lợi dụng cookie tự gửi, không đọc được response) giúp interviewer thấy bạn hiểu mô hình tấn công.",
+      "en": "Contrasting CSRF with XSS (CSRF abuses auto-sent cookies and can't read responses) shows you understand the threat model."
+    },
+    "followUps": [
+      { "vi": "Same-site và same-origin khác nhau thế nào?", "en": "How do same-site and same-origin differ?" },
+      { "vi": "Double-submit cookie pattern hoạt động ra sao?", "en": "How does the double-submit cookie pattern work?" }
+    ],
+    "source": "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html"
+  },
+  {
+    "id": "frontend-net-cookies-storage",
+    "level": "junior",
+    "topic": "Networking",
+    "q": {
+      "vi": "Cookie, localStorage và sessionStorage khác nhau thế nào? Nên lưu token đăng nhập ở đâu?",
+      "en": "How do cookies, localStorage and sessionStorage differ? Where should you store an auth token?"
+    },
+    "a": {
+      "vi": "Khác biệt chính là ai đọc được, tồn tại bao lâu và có tự gửi lên server không.\n\n- Cookie: khoảng 4KB, tự động gửi kèm mọi request tới domain tương ứng. Có thuộc tính quan trọng: HttpOnly (JS không đọc được), Secure (chỉ qua HTTPS), SameSite (giảm CSRF), Expires/Max-Age, Domain, Path.\n- localStorage: khoảng 5-10MB mỗi origin, tồn tại tới khi bị xóa, không tự gửi lên server, JS đọc được, API đồng bộ (chặn main thread nếu dùng nhiều).\n- sessionStorage: giống localStorage nhưng gắn với từng tab và mất khi đóng tab.\n- Dữ liệu lớn hoặc offline: IndexedDB (bất đồng bộ), Cache API.\n\nLưu token: phương án an toàn phổ biến là session hoặc refresh token trong cookie HttpOnly, Secure, SameSite=Lax hoặc Strict, vì XSS không đọc trộm được; kết hợp CSRF token khi cần. Lưu JWT trong localStorage tiện nhưng bất kỳ XSS nào cũng lấy được token. Một mô hình khác là access token ngắn hạn trong bộ nhớ, refresh token trong cookie HttpOnly. Không bao giờ lưu dữ liệu nhạy cảm dạng plain trong localStorage.",
+      "en": "The key differences are who can read them, how long they live, and whether they are sent to the server automatically.\n\n- Cookies: about 4KB, sent automatically with every request to the matching domain. Important attributes: HttpOnly (unreadable by JS), Secure (HTTPS only), SameSite (mitigates CSRF), Expires/Max-Age, Domain, Path.\n- localStorage: roughly 5-10MB per origin, persists until cleared, never sent to the server automatically, readable by JS, synchronous API (blocks the main thread if overused).\n- sessionStorage: like localStorage but scoped to a single tab and cleared when the tab closes.\n- Large or offline data: IndexedDB (async), the Cache API.\n\nToken storage: the common secure option is a session or refresh token in an HttpOnly, Secure, SameSite=Lax or Strict cookie, because XSS cannot steal it; add CSRF tokens where needed. A JWT in localStorage is convenient, but any XSS can grab it. Another pattern is a short-lived access token in memory with a refresh token in an HttpOnly cookie. Never store sensitive data in plain form in localStorage."
+    },
+    "tip": {
+      "vi": "Trình bày trade-off XSS (localStorage) và CSRF (cookie) thay vì đưa đáp án tuyệt đối sẽ thể hiện tư duy bảo mật trưởng thành.",
+      "en": "Presenting the XSS (localStorage) vs CSRF (cookie) trade-off instead of an absolute answer shows mature security thinking."
+    },
+    "followUps": [
+      { "vi": "Sự kiện storage dùng để đồng bộ giữa các tab thế nào?", "en": "How can the storage event sync state between tabs?" },
+      { "vi": "Third-party cookie bị hạn chế ảnh hưởng gì tới ứng dụng?", "en": "How do third-party cookie restrictions affect applications?" }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies"
+  },
+  {
+    "id": "frontend-net-http-caching",
+    "level": "mid",
+    "topic": "Networking",
+    "q": {
+      "vi": "HTTP caching hoạt động thế nào? Cache-Control, ETag và chiến lược cache cho file tĩnh ra sao?",
+      "en": "How does HTTP caching work? What about Cache-Control, ETag and a caching strategy for static assets?"
+    },
+    "a": {
+      "vi": "HTTP caching cho phép trình duyệt và CDN tái sử dụng response: còn mới thì dùng luôn, hết hạn thì hỏi lại server.\n\nCache-Control là header chính:\n- max-age=N: còn mới trong N giây, không cần hỏi server. s-maxage cho shared cache như CDN.\n- no-cache: được lưu nhưng phải xác thực lại mỗi lần dùng (dễ nhầm với no-store).\n- no-store: không được lưu, dùng cho dữ liệu nhạy cảm.\n- private / public: chỉ trình duyệt hay cả CDN được lưu.\n- immutable: không bao giờ đổi, không cần revalidate kể cả khi reload.\n- stale-while-revalidate: trả bản cũ ngay, cập nhật ngầm.\n\nRevalidation: server gửi ETag (hoặc Last-Modified); lần sau trình duyệt gửi If-None-Match, nếu không đổi server trả 304 Not Modified không có body.\n\nChiến lược phổ biến:\n- JS, CSS, ảnh có hash trong tên file (app.3f9a.js): Cache-Control: public, max-age=31536000, immutable. Đổi nội dung thì đổi tên, nên không lo cache cũ.\n- index.html: no-cache để luôn lấy được bản mới trỏ tới file hash mới.\n- API: tùy dữ liệu, thường private, no-cache hoặc max-age ngắn.",
+      "en": "HTTP caching lets browsers and CDNs reuse responses: a fresh response is used directly, a stale one is revalidated with the server.\n\nCache-Control is the main header:\n- max-age=N: fresh for N seconds, no server round trip. s-maxage applies to shared caches like CDNs.\n- no-cache: may be stored but must be revalidated before each use (often confused with no-store).\n- no-store: must not be stored; for sensitive data.\n- private / public: only the browser, or CDNs too, may store it.\n- immutable: never changes, no revalidation even on reload.\n- stale-while-revalidate: serve the stale copy immediately and refresh in the background.\n\nRevalidation: the server sends an ETag (or Last-Modified); next time the browser sends If-None-Match, and if nothing changed the server replies 304 Not Modified with no body.\n\nA common strategy:\n- JS, CSS, images with a hash in the filename (app.3f9a.js): Cache-Control: public, max-age=31536000, immutable. New content means a new name, so stale cache is never an issue.\n- index.html: no-cache so it always picks up the new version pointing to new hashed files.\n- APIs: depends on the data, usually private, no-cache or a short max-age."
+    },
+    "tip": {
+      "vi": "Phân biệt no-cache với no-store và trình bày chiến lược file hash + immutable, html no-cache là câu trả lời mẫu interviewer mong đợi.",
+      "en": "Distinguishing no-cache from no-store and laying out the hashed-assets-immutable, html-no-cache strategy is exactly what interviewers hope to hear."
+    },
+    "followUps": [
+      { "vi": "Service Worker cache khác HTTP cache thế nào?", "en": "How does Service Worker caching differ from HTTP caching?" },
+      { "vi": "Header Vary dùng để làm gì?", "en": "What is the Vary header used for?" }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching"
+  },
+  {
+    "id": "frontend-net-http2-http3",
+    "level": "senior",
+    "topic": "Networking",
+    "q": {
+      "vi": "HTTP/1.1, HTTP/2 và HTTP/3 khác nhau thế nào? Điều đó thay đổi cách tối ưu frontend ra sao?",
+      "en": "How do HTTP/1.1, HTTP/2 and HTTP/3 differ? How does that change frontend optimization?"
+    },
+    "a": {
+      "vi": "Mỗi phiên bản giải quyết nút thắt của phiên bản trước, chủ yếu về việc truyền nhiều request song song hiệu quả.\n\n- HTTP/1.1: dạng text, mỗi kết nối TCP xử lý một request tại một thời điểm, trình duyệt mở khoảng 6 kết nối mỗi domain. Gây head-of-line blocking ở tầng ứng dụng, header lặp lại tốn băng thông.\n- HTTP/2: dạng binary, multiplexing nhiều stream trên một kết nối TCP, nén header bằng HPACK, có độ ưu tiên stream. Nhưng vẫn trên TCP, mất một gói tin thì mọi stream phải chờ (head-of-line blocking ở tầng TCP).\n- HTTP/3: chạy trên QUIC (UDP), mỗi stream độc lập nên mất gói chỉ ảnh hưởng stream đó; bắt tay nhanh hơn vì gộp TLS 1.3, hỗ trợ 0-RTT khi kết nối lại và connection migration khi đổi mạng (wifi sang 4G). Lợi rõ nhất trên mạng di động chập chờn.\n\nẢnh hưởng tới tối ưu:\n- Các mẹo thời HTTP/1.1 như domain sharding, gộp mọi thứ thành một bundle khổng lồ, CSS sprite không còn cần thiết, thậm chí phản tác dụng (sharding phá multiplexing).\n- Vẫn nên bundle hợp lý vì mỗi request vẫn có chi phí, nhưng chia chunk nhỏ hơn để cache tốt hơn là chấp nhận được.\n- HTTP/2 Server Push đã bị Chrome gỡ bỏ; thay bằng preload và 103 Early Hints.",
+      "en": "Each version fixes the previous one's bottleneck, mostly around carrying many parallel requests efficiently.\n\n- HTTP/1.1: text-based; each TCP connection handles one request at a time, so browsers open about 6 connections per domain. This causes application-level head-of-line blocking, and repeated headers waste bandwidth.\n- HTTP/2: binary, multiplexes many streams over one TCP connection, compresses headers with HPACK, supports stream prioritization. But it still runs on TCP, so one lost packet stalls every stream (TCP-level head-of-line blocking).\n- HTTP/3: runs on QUIC (UDP), with independent streams so packet loss only affects its own stream; faster handshakes by integrating TLS 1.3, 0-RTT on reconnect, and connection migration when the network changes (wifi to 4G). The biggest win is on flaky mobile networks.\n\nImpact on optimization:\n- HTTP/1.1-era tricks like domain sharding, merging everything into one giant bundle, and CSS sprites are no longer needed and can even backfire (sharding defeats multiplexing).\n- Sensible bundling still matters because each request has a cost, but smaller chunks for better caching are acceptable.\n- HTTP/2 Server Push was removed from Chrome; use preload and 103 Early Hints instead."
+    },
+    "tip": {
+      "vi": "Nối giao thức với quyết định thực tế (bỏ domain sharding, chia chunk, Early Hints thay Server Push) mới là phần thể hiện senior.",
+      "en": "Linking protocols to real decisions (drop domain sharding, chunking, Early Hints instead of Server Push) is what shows seniority."
+    },
+    "followUps": [
+      { "vi": "Head-of-line blocking là gì?", "en": "What is head-of-line blocking?" },
+      { "vi": "103 Early Hints hoạt động thế nào?", "en": "How does 103 Early Hints work?" }
+    ]
+  },
+  {
+    "id": "frontend-test-strategy",
+    "level": "junior",
+    "topic": "Testing",
+    "q": {
+      "vi": "Bạn test ứng dụng frontend như thế nào? Unit, integration và E2E test khác nhau ra sao?",
+      "en": "How do you test a frontend application? How do unit, integration and E2E tests differ?"
+    },
+    "a": {
+      "vi": "Tôi kết hợp nhiều tầng test, mỗi tầng đánh đổi giữa tốc độ, chi phí và độ tin cậy.\n\n- Unit test: test hàm thuần, util, custom hook độc lập. Nhanh, rẻ, chạy bằng Vitest hoặc Jest.\n- Integration/component test: render component cùng các con thật, mô phỏng người dùng tương tác, kiểm tra kết quả hiển thị. Dùng React Testing Library, mock network bằng MSW thay vì mock từng hàm fetch. Đây thường là tầng mang lại giá trị cao nhất cho frontend.\n- E2E test: chạy ứng dụng thật trong trình duyệt thật, đi qua luồng quan trọng như đăng nhập, thanh toán. Dùng Playwright hoặc Cypress. Tin cậy nhất nhưng chậm và dễ flaky, nên chỉ cho luồng then chốt.\n- Ngoài ra: static check (TypeScript, ESLint), visual regression, kiểm tra accessibility tự động (axe).\n\nNguyên tắc của Testing Library: test hành vi như người dùng thấy, không test chi tiết cài đặt. Truy vấn theo role và label (getByRole('button', { name: 'Lưu' })) thay vì class hay test-id, nên refactor không làm vỡ test và gián tiếp kiểm tra accessibility.\n\nKhông chạy theo 100% coverage; ưu tiên test logic quan trọng và bug từng xảy ra.",
+      "en": "I combine several layers of tests, each trading off speed, cost and confidence.\n\n- Unit tests: pure functions, utils, custom hooks in isolation. Fast and cheap, run with Vitest or Jest.\n- Integration/component tests: render a component with its real children, simulate user interaction, assert on what is displayed. Use React Testing Library and mock the network with MSW instead of mocking individual fetch calls. This is often the highest-value layer for frontend.\n- E2E tests: run the real app in a real browser through critical flows such as login and checkout. Use Playwright or Cypress. Most realistic but slow and prone to flakiness, so keep them for key flows.\n- Plus: static checks (TypeScript, ESLint), visual regression, automated accessibility checks (axe).\n\nTesting Library's principle: test behavior as the user sees it, not implementation details. Query by role and label (getByRole('button', { name: 'Save' })) rather than class names or test ids, so refactors don't break tests and accessibility is checked indirectly.\n\nDon't chase 100% coverage; prioritize important logic and bugs that have happened before."
+    },
+    "code": "test('adds a todo', async () => {\n  const user = userEvent.setup();\n  render(<TodoApp />);\n  await user.type(screen.getByRole('textbox', { name: /new todo/i }), 'Buy milk');\n  await user.click(screen.getByRole('button', { name: /add/i }));\n  expect(screen.getByText('Buy milk')).toBeInTheDocument();\n});",
+    "tip": {
+      "vi": "Nói 'test hành vi, không test implementation' và nhắc MSW, Playwright cho thấy bạn dùng công cụ hiện đại.",
+      "en": "Saying 'test behavior, not implementation' and mentioning MSW and Playwright shows you use modern tooling."
+    },
+    "followUps": [
+      { "vi": "Làm sao xử lý E2E test bị flaky?", "en": "How do you deal with flaky E2E tests?" },
+      { "vi": "Khi nào nên mock và khi nào không?", "en": "When should you mock and when shouldn't you?" }
+    ],
+    "source": "https://testing-library.com/docs/guiding-principles"
+  },
+  {
+    "id": "frontend-build-bundler",
+    "level": "mid",
+    "topic": "Build Tools",
+    "q": {
+      "vi": "Bundler (webpack, Vite) làm những gì? Vì sao Vite nhanh hơn webpack khi dev?",
+      "en": "What does a bundler (webpack, Vite) do? Why is Vite faster than webpack in development?"
+    },
+    "a": {
+      "vi": "Bundler đọc entry point, lần theo import để xây dependency graph, biến đổi code rồi xuất ra các file tối ưu cho trình duyệt.\n\nCác việc chính:\n- Resolve module, gộp thành bundle và chia chunk (code splitting).\n- Transform: TypeScript, JSX, cú pháp JS mới qua Babel, SWC hoặc esbuild; xử lý CSS, ảnh, font.\n- Tối ưu production: minify, tree shaking, hash tên file để cache lâu dài, source map.\n- Dev server với HMR: thay module mà không reload trang, giữ state.\n\nVì sao Vite nhanh khi dev:\n- webpack bundle toàn bộ ứng dụng trước khi phục vụ, project càng lớn khởi động càng chậm.\n- Vite tận dụng native ES modules của trình duyệt: không bundle code ứng dụng khi dev, chỉ transform file nào trình duyệt yêu cầu. Thư viện trong node_modules được pre-bundle một lần bằng esbuild (viết bằng Go, rất nhanh).\n- HMR chỉ cập nhật module thay đổi, tốc độ gần như không phụ thuộc kích thước project.\n\nKhi build production, Vite truyền thống dùng Rollup; các bản mới đang chuyển sang Rolldown viết bằng Rust để dev và build dùng chung một công cụ. Các lựa chọn khác: Turbopack (Next.js), Rspack (tương thích webpack, viết bằng Rust).",
+      "en": "A bundler reads the entry point, follows imports to build a dependency graph, transforms the code and outputs files optimized for the browser.\n\nMain jobs:\n- Resolve modules, combine them into bundles and split chunks (code splitting).\n- Transform: TypeScript, JSX, modern JS syntax via Babel, SWC or esbuild; handle CSS, images, fonts.\n- Production optimization: minification, tree shaking, hashed filenames for long-term caching, source maps.\n- A dev server with HMR: swap modules without a page reload, preserving state.\n\nWhy Vite is fast in dev:\n- webpack bundles the whole app before serving, so bigger projects start slower.\n- Vite leverages the browser's native ES modules: it doesn't bundle app code in dev, it only transforms the files the browser requests. Dependencies in node_modules are pre-bundled once with esbuild (written in Go, very fast).\n- HMR only updates the changed module, so speed is nearly independent of project size.\n\nFor production builds Vite traditionally used Rollup; newer versions are moving to Rolldown, written in Rust, so dev and build share one tool. Other options: Turbopack (Next.js), Rspack (webpack-compatible, written in Rust)."
+    },
+    "tip": {
+      "vi": "Giải thích bằng 'webpack bundle trước rồi phục vụ, Vite phục vụ ESM theo yêu cầu' là câu then chốt, gọn và chính xác.",
+      "en": "'webpack bundles first then serves, Vite serves ESM on demand' is the key line: concise and accurate."
+    },
+    "followUps": [
+      { "vi": "Source map là gì và có nên đưa lên production không?", "en": "What are source maps and should you ship them to production?" },
+      { "vi": "HMR hoạt động thế nào ở mức cơ bản?", "en": "How does HMR work at a basic level?" }
+    ],
+    "source": "https://vite.dev/guide/why"
+  },
+  {
+    "id": "frontend-build-tree-shaking",
+    "level": "mid",
+    "topic": "Build Tools",
+    "q": {
+      "vi": "Tree shaking là gì? Khi nào tree shaking không hoạt động và bạn giảm bundle size thế nào?",
+      "en": "What is tree shaking? When does it fail, and how do you reduce bundle size?"
+    },
+    "a": {
+      "vi": "Tree shaking là việc bundler loại bỏ code được export nhưng không bao giờ được import hay dùng tới, dựa trên phân tích tĩnh cấu trúc import/export của ES modules.\n\nKhi nào không hoạt động:\n- Thư viện chỉ phát hành CommonJS: require động nên không phân tích được.\n- Module có side effect (sửa global, import CSS, polyfill): bundler không dám bỏ. Thư viện khai báo \"sideEffects\": false trong package.json để báo là an toàn.\n- Import cả namespace rồi dùng động, hoặc barrel file (index.ts re-export mọi thứ) khiến bundler phải xử lý nhiều module và đôi khi kéo theo code thừa.\n- Class lớn với nhiều method: không shake được từng method.\n\nCách giảm bundle size:\n- Đo trước bằng bundle analyzer (rollup-plugin-visualizer, webpack-bundle-analyzer) hoặc source-map-explorer.\n- Chọn thư viện hỗ trợ ESM và nhẹ: lodash-es hoặc import theo đường dẫn thay vì cả lodash; date-fns hoặc Day.js thay Moment.\n- Code splitting theo route, lazy-load thư viện nặng.\n- Dùng API native thay polyfill khi trình duyệt mục tiêu đã hỗ trợ.\n- Đặt size budget trong CI (size-limit) để phát hiện khi bundle phình.",
+      "en": "Tree shaking is the bundler removing code that is exported but never imported or used, based on static analysis of ES module import/export structure.\n\nWhen it fails:\n- Libraries published only as CommonJS: require is dynamic, so it can't be analyzed.\n- Modules with side effects (mutating globals, importing CSS, polyfills): the bundler won't risk dropping them. Libraries declare \"sideEffects\": false in package.json to mark them as safe.\n- Importing a whole namespace and using it dynamically, or barrel files (an index.ts re-exporting everything) that force the bundler to process many modules and sometimes pull in unused code.\n- Big classes with many methods: individual methods can't be shaken out.\n\nHow to reduce bundle size:\n- Measure first with a bundle analyzer (rollup-plugin-visualizer, webpack-bundle-analyzer) or source-map-explorer.\n- Pick lightweight, ESM-friendly libraries: lodash-es or per-path imports instead of full lodash; date-fns or Day.js instead of Moment.\n- Split code by route and lazy-load heavy libraries.\n- Use native APIs instead of polyfills when target browsers support them.\n- Set a size budget in CI (size-limit) to catch bundle growth."
+    },
+    "code": "// Pulls in all of lodash (CommonJS)\nimport _ from 'lodash';\n// Tree-shakeable\nimport { debounce } from 'lodash-es';",
+    "tip": {
+      "vi": "Nhắc sideEffects trong package.json và vấn đề barrel file cho thấy bạn từng thực sự đào vào bundle chứ không chỉ biết định nghĩa.",
+      "en": "Mentioning sideEffects in package.json and barrel-file issues shows you have actually dug into bundles, not just memorized the definition."
+    },
+    "followUps": [
+      { "vi": "Dead code elimination khác tree shaking thế nào?", "en": "How does dead code elimination differ from tree shaking?" },
+      { "vi": "Làm sao biết một thư viện có tree-shakeable không?", "en": "How do you tell whether a library is tree-shakeable?" }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Glossary/Tree_shaking"
+  }
+]

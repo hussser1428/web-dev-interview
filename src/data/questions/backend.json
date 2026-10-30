@@ -1,0 +1,1148 @@
+[
+  {
+    "id": "backend-http-methods-idempotency",
+    "level": "intern",
+    "topic": "HTTP",
+    "q": {
+      "vi": "Các HTTP method phổ biến khác nhau thế nào? \"Safe\" và \"idempotent\" nghĩa là gì?",
+      "en": "How do the common HTTP methods differ? What do \"safe\" and \"idempotent\" mean?"
+    },
+    "a": {
+      "vi": "Mỗi method mô tả ý định với resource: GET đọc, POST tạo mới hoặc xử lý, PUT thay thế toàn bộ, PATCH sửa một phần, DELETE xoá.\n\n- Safe: request không làm thay đổi trạng thái server (GET, HEAD, OPTIONS). Có thể ghi log hay đếm lượt xem, nhưng client không yêu cầu thay đổi gì.\n- Idempotent: gọi 1 lần hay N lần thì trạng thái cuối trên server như nhau (GET, PUT, DELETE, HEAD, OPTIONS). Lần DELETE thứ hai có thể trả 404 nhưng trạng thái server vẫn giống lần đầu.\n- POST và PATCH mặc định không idempotent: gọi lại POST /orders có thể tạo 2 đơn.\n\nVì sao quan trọng: client, proxy và retry library chỉ được tự động retry an toàn các method idempotent khi mạng lỗi hoặc timeout. Với POST quan trọng như thanh toán, ta thêm header Idempotency-Key để server nhận ra request trùng và trả lại kết quả cũ thay vì xử lý lần hai.",
+      "en": "Each method states an intent on a resource: GET reads, POST creates or processes, PUT replaces entirely, PATCH partially updates, DELETE removes.\n\n- Safe: the request does not change server state (GET, HEAD, OPTIONS). The server may log or count views, but the client is not asking for any change.\n- Idempotent: calling it once or N times leaves the server in the same final state (GET, PUT, DELETE, HEAD, OPTIONS). A second DELETE may return 404, but the server state is the same as after the first.\n- POST and PATCH are not idempotent by default: retrying POST /orders may create two orders.\n\nWhy it matters: clients, proxies and retry libraries may only automatically retry idempotent methods after a network error or timeout. For critical POSTs such as payments, we add an Idempotency-Key header so the server detects the duplicate and returns the original result instead of processing it twice."
+    },
+    "tip": {
+      "vi": "Phân biệt rõ \"idempotent là về trạng thái server, không phải response giống nhau\" và nhắc Idempotency-Key cho thanh toán.",
+      "en": "Make clear that idempotency is about server state, not identical responses, and mention Idempotency-Key for payments."
+    },
+    "followUps": [
+      {
+        "vi": "PUT và PATCH khác nhau thế nào? PATCH có thể idempotent không?",
+        "en": "How do PUT and PATCH differ? Can PATCH be idempotent?"
+      },
+      {
+        "vi": "Bạn sẽ triển khai Idempotency-Key ở server như thế nào?",
+        "en": "How would you implement Idempotency-Key on the server?"
+      }
+    ],
+    "source": "https://www.rfc-editor.org/rfc/rfc9110"
+  },
+  {
+    "id": "backend-http-status-codes",
+    "level": "intern",
+    "topic": "HTTP",
+    "q": {
+      "vi": "Kể các nhóm HTTP status code và những mã hay dùng. 401 khác 403 thế nào?",
+      "en": "Describe the HTTP status code classes and the commonly used codes. How does 401 differ from 403?"
+    },
+    "a": {
+      "vi": "Status code chia 5 nhóm theo chữ số đầu: 1xx thông tin, 2xx thành công, 3xx chuyển hướng, 4xx lỗi phía client, 5xx lỗi phía server.\n\nMã hay dùng:\n- 200 OK, 201 Created (kèm header Location), 204 No Content.\n- 301/308 chuyển hướng vĩnh viễn, 302/307 tạm thời, 304 Not Modified cho cache.\n- 400 request sai định dạng, 404 không tìm thấy, 409 xung đột trạng thái, 422 dữ liệu hợp lệ về cú pháp nhưng sai nghiệp vụ, 429 vượt rate limit.\n- 500 lỗi chưa xử lý, 502/504 lỗi từ upstream qua gateway, 503 tạm thời quá tải hoặc bảo trì.\n\n401 Unauthorized thực chất là \"chưa xác thực\": thiếu hoặc sai token, client nên đăng nhập lại. 403 Forbidden là \"đã biết bạn là ai nhưng không có quyền\". Đôi khi trả 404 thay vì 403 để không tiết lộ resource có tồn tại.\n\nSai lầm hay gặp: luôn trả 200 rồi nhét lỗi vào body, khiến monitoring, cache và retry hiểu sai.",
+      "en": "Status codes fall into five classes by first digit: 1xx informational, 2xx success, 3xx redirection, 4xx client errors, 5xx server errors.\n\nCommon codes:\n- 200 OK, 201 Created (with a Location header), 204 No Content.\n- 301/308 permanent redirect, 302/307 temporary, 304 Not Modified for caching.\n- 400 malformed request, 404 not found, 409 state conflict, 422 syntactically valid but fails business validation, 429 rate limit exceeded.\n- 500 unhandled error, 502/504 upstream errors through a gateway, 503 temporarily overloaded or in maintenance.\n\n401 Unauthorized really means \"not authenticated\": the token is missing or invalid, so the client should log in again. 403 Forbidden means \"we know who you are, but you lack permission\". Sometimes 404 is returned instead of 403 to avoid revealing that the resource exists.\n\nA common mistake: always returning 200 with the error in the body, which misleads monitoring, caches and retry logic."
+    },
+    "tip": {
+      "vi": "Nói được 401 là authentication còn 403 là authorization, và vì sao không nên trả 200 cho lỗi.",
+      "en": "Say that 401 is about authentication and 403 about authorization, and why returning 200 for errors is harmful."
+    },
+    "followUps": [
+      {
+        "vi": "Client nên retry với những status code nào?",
+        "en": "Which status codes should a client retry on?"
+      },
+      {
+        "vi": "Khi nào dùng 409 Conflict?",
+        "en": "When would you use 409 Conflict?"
+      }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status"
+  },
+  {
+    "id": "backend-http-caching-headers",
+    "level": "junior",
+    "topic": "HTTP",
+    "q": {
+      "vi": "HTTP caching hoạt động thế nào? Giải thích Cache-Control, ETag và conditional request.",
+      "en": "How does HTTP caching work? Explain Cache-Control, ETag and conditional requests."
+    },
+    "a": {
+      "vi": "HTTP caching cho phép browser, CDN hoặc proxy dùng lại response cũ, giảm tải server và độ trễ, được điều khiển bằng header.\n\n- Cache-Control: max-age=60 (còn \"fresh\" 60 giây), s-maxage cho shared cache như CDN, no-cache (được lưu nhưng phải kiểm tra lại trước khi dùng), no-store (không được lưu, dùng cho dữ liệu nhạy cảm), private (chỉ browser được lưu, không cho CDN).\n- ETag: \"dấu vân tay\" của phiên bản response. Khi hết fresh, client gửi If-None-Match: <etag>; nếu chưa đổi, server trả 304 Not Modified không có body. Last-Modified/If-Modified-Since tương tự nhưng theo thời gian.\n- Vary: báo cache rằng response khác nhau theo header nào (vd Accept-Encoding, Authorization).\n\nNgoài ra ETag còn dùng cho optimistic concurrency: client gửi If-Match khi PUT, server trả 412 Precondition Failed nếu resource đã bị người khác sửa.\n\nLưu ý: không để CDN cache response có dữ liệu riêng của user; asset tĩnh có hash trong tên file thì đặt max-age dài kèm immutable.",
+      "en": "HTTP caching lets browsers, CDNs and proxies reuse earlier responses to cut server load and latency, and it is controlled by headers.\n\n- Cache-Control: max-age=60 (fresh for 60 seconds), s-maxage for shared caches like CDNs, no-cache (may be stored but must be revalidated before use), no-store (must not be stored, for sensitive data), private (browser only, not CDNs).\n- ETag: a fingerprint of the response version. Once stale, the client sends If-None-Match: <etag>; if unchanged, the server returns 304 Not Modified with no body. Last-Modified/If-Modified-Since works the same way using timestamps.\n- Vary: tells caches which request headers change the response (e.g. Accept-Encoding, Authorization).\n\nETag is also used for optimistic concurrency: the client sends If-Match on PUT, and the server returns 412 Precondition Failed if someone else already modified the resource.\n\nWatch out: never let a CDN cache user-specific responses; static assets with a content hash in the filename get a long max-age plus immutable."
+    },
+    "code": "HTTP/1.1 200 OK\nCache-Control: public, max-age=60\nETag: \"v42\"\n\n# later\nGET /products/1\nIf-None-Match: \"v42\"\n\nHTTP/1.1 304 Not Modified",
+    "tip": {
+      "vi": "Phân biệt no-cache với no-store, đây là chỗ nhiều ứng viên nhầm.",
+      "en": "Distinguish no-cache from no-store; many candidates mix them up."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao để invalidate cache trên CDN khi deploy bản mới?",
+        "en": "How do you invalidate CDN caches when deploying a new version?"
+      },
+      {
+        "vi": "Weak ETag và strong ETag khác nhau thế nào?",
+        "en": "What is the difference between weak and strong ETags?"
+      }
+    ],
+    "source": "https://www.rfc-editor.org/rfc/rfc9111"
+  },
+  {
+    "id": "backend-api-rest-design",
+    "level": "intern",
+    "topic": "REST API",
+    "q": {
+      "vi": "REST là gì? Thiết kế URL cho một REST API tốt như thế nào?",
+      "en": "What is REST? How do you design good URLs for a REST API?"
+    },
+    "a": {
+      "vi": "REST là một phong cách kiến trúc: mọi thứ là resource được định danh bằng URL, thao tác bằng HTTP method chuẩn, và server stateless, mỗi request tự mang đủ thông tin (vd token) để xử lý.\n\nQuy ước thiết kế URL:\n- Dùng danh từ số nhiều, không dùng động từ: GET /users/42, không phải /getUser?id=42.\n- Thể hiện quan hệ bằng lồng nhau vừa phải: GET /users/42/orders, tránh lồng quá 2 cấp.\n- Lọc, sắp xếp, phân trang bằng query string: /orders?status=paid&sort=-created_at&limit=20.\n- Dùng đúng method và status code: POST /orders trả 201 kèm Location.\n- Hành động không khớp CRUD thì mô hình hoá thành sub-resource, vd POST /orders/42/cancel, thay vì phá vỡ hết quy ước.\n- Thống nhất kiểu đặt tên (snake_case hoặc camelCase) và định dạng lỗi trên toàn API.\n\nThực tế hầu hết API \"RESTful\" không đầy đủ HATEOAS; điều quan trọng là nhất quán và dễ đoán.",
+      "en": "REST is an architectural style: everything is a resource identified by a URL, manipulated with standard HTTP methods, and the server is stateless, so each request carries everything needed to process it (e.g. a token).\n\nURL design conventions:\n- Use plural nouns, not verbs: GET /users/42, not /getUser?id=42.\n- Express relationships with moderate nesting: GET /users/42/orders, avoid nesting more than two levels.\n- Filter, sort and paginate via the query string: /orders?status=paid&sort=-created_at&limit=20.\n- Use the right method and status code: POST /orders returns 201 with Location.\n- Model actions that do not fit CRUD as sub-resources, e.g. POST /orders/42/cancel, rather than abandoning the conventions.\n- Keep naming (snake_case or camelCase) and error format consistent across the API.\n\nIn practice most \"RESTful\" APIs do not implement full HATEOAS; what matters is being consistent and predictable."
+    },
+    "tip": {
+      "vi": "Nhắc \"stateless\" và cho ví dụ cụ thể về một action khó mô hình hoá như cancel hay refund.",
+      "en": "Mention statelessness and give a concrete example of an awkward action such as cancel or refund."
+    },
+    "followUps": [
+      {
+        "vi": "Stateless thì làm sao biết user đã đăng nhập?",
+        "en": "If the server is stateless, how does it know the user is logged in?"
+      },
+      {
+        "vi": "HATEOAS là gì, bạn có dùng không?",
+        "en": "What is HATEOAS, and do you use it?"
+      }
+    ]
+  },
+  {
+    "id": "backend-api-pagination",
+    "level": "junior",
+    "topic": "REST API",
+    "q": {
+      "vi": "So sánh phân trang offset và cursor (keyset). Khi nào dùng cái nào?",
+      "en": "Compare offset and cursor (keyset) pagination. When do you use each?"
+    },
+    "a": {
+      "vi": "Offset đơn giản và cho phép nhảy trang, còn cursor nhanh và ổn định hơn với dữ liệu lớn hoặc thay đổi liên tục.\n\nOffset (LIMIT 20 OFFSET 10000):\n- Dễ làm, hỗ trợ \"đi tới trang 50\" và hiển thị tổng số trang.\n- Chậm dần vì DB vẫn phải đọc rồi bỏ qua 10000 dòng.\n- Khi có bản ghi mới chèn vào, trang sau bị lặp hoặc sót phần tử.\n\nCursor/keyset (WHERE (created_at, id) < (:last_created_at, :last_id) ORDER BY created_at DESC, id DESC LIMIT 20):\n- Dùng index nên tốc độ gần như không đổi dù ở trang sâu.\n- Không lặp/sót khi dữ liệu thay đổi; hợp với infinite scroll và feed.\n- Không nhảy trang tuỳ ý được; cần cột sắp xếp duy nhất (thêm id làm tie-breaker).\n- Trả cursor dạng chuỗi opaque (base64) để client không phụ thuộc cấu trúc bên trong.\n\nChọn: trang admin ít dữ liệu dùng offset; API public, feed, bảng lớn dùng cursor. Tránh trả COUNT(*) chính xác trên bảng rất lớn vì tốn kém.",
+      "en": "Offset is simple and allows jumping to any page, while cursor pagination is faster and more stable for large or constantly changing data.\n\nOffset (LIMIT 20 OFFSET 10000):\n- Easy to build, supports \"go to page 50\" and showing total pages.\n- Gets slower because the DB still reads and discards 10000 rows.\n- When new rows are inserted, later pages show duplicates or skip items.\n\nCursor/keyset (WHERE (created_at, id) < (:last_created_at, :last_id) ORDER BY created_at DESC, id DESC LIMIT 20):\n- Uses an index, so speed stays nearly constant even on deep pages.\n- No duplicates or gaps when data changes; ideal for infinite scroll and feeds.\n- Cannot jump to arbitrary pages; needs a unique sort key (add id as a tie-breaker).\n- Return the cursor as an opaque string (base64) so clients do not depend on its internals.\n\nChoice: small admin screens use offset; public APIs, feeds and large tables use cursors. Avoid exact COUNT(*) on very large tables because it is expensive."
+    },
+    "code": "-- keyset: needs index on (created_at, id)\nSELECT id, title, created_at FROM posts\nWHERE (created_at, id) < ($1, $2)\nORDER BY created_at DESC, id DESC\nLIMIT 20;",
+    "tip": {
+      "vi": "Giải thích vì sao OFFSET lớn chậm (vẫn phải quét qua các dòng bị bỏ) và nhắc tie-breaker id.",
+      "en": "Explain why a large OFFSET is slow (the skipped rows are still scanned) and mention the id tie-breaker."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu người dùng đổi tiêu chí sort thì cursor xử lý thế nào?",
+        "en": "How does the cursor handle the user changing the sort order?"
+      },
+      {
+        "vi": "Làm sao hiển thị tổng số kết quả mà không COUNT(*) toàn bảng?",
+        "en": "How can you show a result count without COUNT(*) over the whole table?"
+      }
+    ]
+  },
+  {
+    "id": "backend-api-versioning-errors",
+    "level": "mid",
+    "topic": "REST API",
+    "q": {
+      "vi": "Bạn version API và thiết kế định dạng lỗi như thế nào để không phá vỡ client?",
+      "en": "How do you version an API and design error responses so you do not break clients?"
+    },
+    "a": {
+      "vi": "Nguyên tắc chính là tránh breaking change càng lâu càng tốt; chỉ tăng major version khi buộc phải, và trả lỗi theo một định dạng thống nhất, máy đọc được.\n\nVersioning:\n- Phổ biến nhất là version trong URL (/v1/orders): dễ thấy, dễ route, dễ cache. Cách khác là header (Accept: application/vnd.app.v2+json) hoặc theo ngày như Stripe.\n- Thay đổi tương thích ngược (thêm field, thêm endpoint) không cần version mới; client phải bỏ qua field lạ.\n- Breaking change (đổi tên, xoá field, đổi kiểu) thì ra version mới, chạy song song, thông báo lịch deprecate (header Deprecation/Sunset) và theo dõi traffic bản cũ trước khi tắt.\n\nĐịnh dạng lỗi:\n- Dùng status code đúng, body theo chuẩn Problem Details (RFC 9457, content-type application/problem+json): type, title, status, detail, instance.\n- Thêm mã lỗi ổn định cho máy (vd \"insufficient_funds\"), danh sách lỗi validation theo field và request/trace id để tra log.\n- Không lộ stack trace hay câu SQL ra ngoài.",
+      "en": "The key principle is to avoid breaking changes as long as possible, bump the major version only when forced, and return errors in one consistent, machine-readable format.\n\nVersioning:\n- Most common is a version in the URL (/v1/orders): visible, easy to route and cache. Alternatives are a header (Accept: application/vnd.app.v2+json) or date-based versions like Stripe.\n- Backward-compatible changes (new fields, new endpoints) need no new version; clients must ignore unknown fields.\n- Breaking changes (renaming, removing fields, changing types) get a new version run side by side, with an announced deprecation schedule (Deprecation/Sunset headers) and monitoring of old-version traffic before shutdown.\n\nError format:\n- Use the correct status code and a Problem Details body (RFC 9457, content-type application/problem+json): type, title, status, detail, instance.\n- Add a stable machine-readable error code (e.g. \"insufficient_funds\"), per-field validation errors and a request/trace id for log lookup.\n- Never leak stack traces or SQL to clients."
+    },
+    "code": "HTTP/1.1 422 Unprocessable Content\nContent-Type: application/problem+json\n\n{\n  \"type\": \"https://api.example.com/errors/validation\",\n  \"title\": \"Invalid request\",\n  \"status\": 422,\n  \"errors\": [{ \"field\": \"email\", \"code\": \"invalid_format\" }],\n  \"traceId\": \"4bf92f3577b34da6\"\n}",
+    "tip": {
+      "vi": "Nhấn mạnh \"additive change không cần version mới\" và biết tên chuẩn RFC 9457 sẽ ghi điểm.",
+      "en": "Stressing that additive changes need no new version and naming RFC 9457 earns points."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao biết client nào còn dùng version cũ?",
+        "en": "How do you know which clients still use the old version?"
+      },
+      {
+        "vi": "Bạn dùng contract test hay OpenAPI diff để phát hiện breaking change thế nào?",
+        "en": "How would you use contract tests or OpenAPI diffs to catch breaking changes?"
+      }
+    ],
+    "source": "https://www.rfc-editor.org/rfc/rfc9457"
+  },
+  {
+    "id": "backend-api-graphql-grpc",
+    "level": "mid",
+    "topic": "GraphQL & gRPC",
+    "q": {
+      "vi": "So sánh REST, GraphQL và gRPC. Khi nào chọn cái nào?",
+      "en": "Compare REST, GraphQL and gRPC. When would you choose each?"
+    },
+    "a": {
+      "vi": "Cả ba đều là cách định nghĩa API; khác nhau ở ai quyết định hình dạng dữ liệu, định dạng truyền và hệ sinh thái.\n\n- REST: dựa trên HTTP và resource, JSON, tận dụng tốt HTTP caching, CDN, công cụ debug. Hợp với API public và CRUD. Nhược điểm: over-fetching/under-fetching, nhiều round-trip cho màn hình phức tạp.\n- GraphQL: một endpoint, client tự chọn field cần lấy theo schema có kiểu. Hợp khi nhiều loại client (web, mobile) cần dữ liệu khác nhau hoặc làm BFF gộp nhiều service. Nhược điểm: khó cache HTTP, dễ bị N+1 ở resolver (cần DataLoader), phải giới hạn độ sâu/độ phức tạp query để chống lạm dụng, phân quyền theo field phức tạp hơn.\n- gRPC: contract bằng Protocol Buffers, chạy trên HTTP/2, binary nên nhỏ và nhanh, sinh code client/server, hỗ trợ streaming hai chiều. Hợp cho giao tiếp nội bộ giữa microservice. Nhược điểm: browser không gọi trực tiếp được (cần gRPC-Web hoặc proxy), khó đọc khi debug.\n\nThực tế nhiều hệ thống kết hợp: gRPC nội bộ, REST hoặc GraphQL cho client bên ngoài.",
+      "en": "All three are ways to define APIs; they differ in who decides the data shape, the wire format and the ecosystem.\n\n- REST: resource-based over HTTP, JSON, makes good use of HTTP caching, CDNs and debugging tools. Fits public APIs and CRUD. Downsides: over-fetching/under-fetching and many round-trips for complex screens.\n- GraphQL: a single endpoint where clients select exactly the fields they need from a typed schema. Fits multiple clients (web, mobile) needing different data, or a BFF aggregating several services. Downsides: HTTP caching is harder, resolvers easily cause N+1 (needs DataLoader), you must limit query depth/complexity to prevent abuse, and field-level authorization is more complex.\n- gRPC: contracts in Protocol Buffers over HTTP/2, binary so small and fast, generated client/server code, supports bidirectional streaming. Fits internal service-to-service calls. Downsides: browsers cannot call it directly (needs gRPC-Web or a proxy), and it is harder to read while debugging.\n\nIn practice many systems combine them: gRPC internally, REST or GraphQL for external clients."
+    },
+    "tip": {
+      "vi": "Đừng nói cái nào \"tốt nhất\"; hãy gắn mỗi lựa chọn với loại client và nhắc rủi ro N+1 của GraphQL.",
+      "en": "Do not crown a winner; tie each option to the kind of client and mention GraphQL's N+1 risk."
+    },
+    "followUps": [
+      {
+        "vi": "Bạn chống query GraphQL quá nặng thế nào?",
+        "en": "How do you protect against overly expensive GraphQL queries?"
+      },
+      {
+        "vi": "Làm sao thay đổi file .proto mà không phá vỡ client cũ?",
+        "en": "How do you change a .proto file without breaking old clients?"
+      }
+    ],
+    "source": "https://grpc.io/docs/what-is-grpc/introduction/"
+  },
+  {
+    "id": "backend-auth-authn-authz-sessions",
+    "level": "intern",
+    "topic": "Auth",
+    "q": {
+      "vi": "Authentication và authorization khác nhau thế nào? So sánh session-based và token-based authentication.",
+      "en": "What is the difference between authentication and authorization? Compare session-based and token-based authentication."
+    },
+    "a": {
+      "vi": "Authentication trả lời \"bạn là ai\" (đăng nhập, kiểm tra mật khẩu, OTP), còn authorization trả lời \"bạn được làm gì\" (quyền đọc, sửa, xoá resource). Luôn xác thực trước rồi mới phân quyền.\n\nSession-based:\n- Sau khi đăng nhập, server tạo session lưu ở server (memory, Redis, DB) và gửi session id qua cookie HttpOnly.\n- Ưu: thu hồi dễ (xoá session là xong), cookie nhỏ. Nhược: phải lưu trạng thái, khi scale nhiều server cần session store dùng chung.\n\nToken-based (thường là JWT):\n- Server ký một token chứa thông tin user; mỗi request gửi kèm token (header Authorization: Bearer ...), server chỉ cần kiểm tra chữ ký.\n- Ưu: stateless, tiện cho mobile, nhiều service cùng kiểm tra được. Nhược: khó thu hồi trước khi hết hạn, token to hơn, lộ token là bị dùng tới khi hết hạn.\n\nWeb app truyền thống dùng session vẫn rất ổn; token hợp với API cho mobile, SPA đa domain hoặc microservices.",
+      "en": "Authentication answers \"who are you\" (login, password check, OTP), while authorization answers \"what are you allowed to do\" (read, edit, delete a resource). You always authenticate first, then authorize.\n\nSession-based:\n- After login, the server creates a session stored server-side (memory, Redis, DB) and sends the session id in an HttpOnly cookie.\n- Pros: easy revocation (delete the session), small cookie. Cons: server keeps state; scaling to many servers needs a shared session store.\n\nToken-based (usually JWT):\n- The server signs a token containing user info; each request sends it (Authorization: Bearer ...), and the server only verifies the signature.\n- Pros: stateless, convenient for mobile, multiple services can verify it. Cons: hard to revoke before expiry, larger, and a leaked token works until it expires.\n\nClassic web apps are perfectly fine with sessions; tokens suit APIs for mobile, cross-domain SPAs or microservices."
+    },
+    "tip": {
+      "vi": "Đưa ví dụ đời thường (thẻ ra vào = authentication, tầng được vào = authorization) rồi nói trade-off thu hồi token.",
+      "en": "Use an everyday analogy (badge = authentication, which floors you can enter = authorization), then the revocation trade-off."
+    },
+    "followUps": [
+      {
+        "vi": "Khi scale lên nhiều server, session lưu ở đâu?",
+        "en": "Where do you store sessions when scaling to many servers?"
+      },
+      {
+        "vi": "Mật khẩu nên được lưu trong DB như thế nào?",
+        "en": "How should passwords be stored in the database?"
+      }
+    ],
+    "source": "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html"
+  },
+  {
+    "id": "backend-jwt-storage",
+    "level": "junior",
+    "topic": "Auth",
+    "q": {
+      "vi": "JWT hoạt động thế nào? Nên lưu token ở đâu phía client cho an toàn?",
+      "en": "How does JWT work? Where should the client store the token safely?"
+    },
+    "a": {
+      "vi": "JWT gồm 3 phần header.payload.signature (base64url). Server ký payload bằng secret (HS256) hoặc private key (RS256/ES256); khi nhận lại chỉ cần kiểm tra chữ ký và các claim như exp, iss, aud là tin được nội dung, không cần tra session trong DB. Payload KHÔNG được mã hoá, ai cũng đọc được, nên không đặt dữ liệu nhạy cảm vào đó.\n\nLưu trữ phía client:\n- localStorage: dễ dùng nhưng bất kỳ script nào chạy trên trang cũng đọc được, nên lộ token nếu dính XSS.\n- Cookie HttpOnly + Secure + SameSite: JavaScript không đọc được, an toàn hơn trước XSS; nhưng cookie tự gửi kèm nên cần chống CSRF (SameSite=Lax/Strict, CSRF token).\n\nThực tế: access token ngắn hạn (5-15 phút) + refresh token trong cookie HttpOnly, có rotation (mỗi lần refresh cấp token mới, token cũ bị vô hiệu) và danh sách thu hồi khi logout hoặc nghi lộ. Khi verify phải cố định thuật toán cho phép, không tin trường alg trong header.",
+      "en": "A JWT is header.payload.signature (base64url). The server signs the payload with a secret (HS256) or a private key (RS256/ES256); on return it only verifies the signature and claims such as exp, iss and aud to trust the content, with no session lookup. The payload is NOT encrypted, anyone can read it, so never put sensitive data in it.\n\nClient-side storage:\n- localStorage: easy, but any script running on the page can read it, so the token leaks on XSS.\n- HttpOnly + Secure + SameSite cookie: unreadable from JavaScript, safer against XSS; but cookies are sent automatically, so you need CSRF protection (SameSite=Lax/Strict, CSRF token).\n\nIn practice: a short-lived access token (5-15 min) + a refresh token in an HttpOnly cookie, with rotation (each refresh issues a new token and invalidates the old one) and a revocation list for logout or suspected leaks. When verifying, pin the allowed algorithms instead of trusting the alg field in the header."
+    },
+    "tip": {
+      "vi": "Nói rõ \"JWT được ký chứ không được mã hoá\" và nêu được refresh token rotation.",
+      "en": "State clearly that a JWT is signed, not encrypted, and mention refresh token rotation."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao logout ngay lập tức khi dùng JWT stateless?",
+        "en": "How do you log a user out immediately with stateless JWTs?"
+      },
+      {
+        "vi": "Khi nào chọn RS256 thay vì HS256?",
+        "en": "When would you choose RS256 over HS256?"
+      }
+    ],
+    "source": "https://www.rfc-editor.org/rfc/rfc7519"
+  },
+  {
+    "id": "backend-auth-oauth2-oidc",
+    "level": "mid",
+    "topic": "Auth",
+    "q": {
+      "vi": "OAuth2 và OpenID Connect khác nhau thế nào? Mô tả luồng Authorization Code với PKCE.",
+      "en": "How do OAuth2 and OpenID Connect differ? Walk through the Authorization Code flow with PKCE."
+    },
+    "a": {
+      "vi": "OAuth2 là giao thức uỷ quyền: cho một app truy cập tài nguyên thay mặt user bằng access token, không cần biết mật khẩu. OpenID Connect (OIDC) là lớp xác thực xây trên OAuth2, thêm ID token (một JWT) cho biết user là ai.\n\nLuồng Authorization Code + PKCE:\n1. App tạo code_verifier ngẫu nhiên, tính code_challenge = SHA256(verifier), rồi redirect user tới authorization server kèm client_id, redirect_uri, scope, state và code_challenge.\n2. User đăng nhập và đồng ý; server redirect về redirect_uri với authorization code.\n3. App kiểm tra state (chống CSRF), rồi đổi code + code_verifier lấy access token (và ID token, refresh token) qua back-channel.\n4. App gọi API bằng access token; resource server kiểm tra chữ ký, hạn, audience và scope.\n\nPKCE chống việc kẻ gian chặn được code rồi tự đổi lấy token. Theo khuyến nghị hiện tại (OAuth 2.1, Security BCP), mọi client kể cả server-side nên dùng PKCE; implicit flow và password grant đã bị loại bỏ. Service-to-service dùng client credentials.",
+      "en": "OAuth2 is a delegation protocol: it lets an app access resources on a user's behalf using an access token, without knowing the password. OpenID Connect (OIDC) is an authentication layer on top of OAuth2 that adds an ID token (a JWT) saying who the user is.\n\nAuthorization Code + PKCE flow:\n1. The app creates a random code_verifier, computes code_challenge = SHA256(verifier), and redirects the user to the authorization server with client_id, redirect_uri, scope, state and code_challenge.\n2. The user logs in and consents; the server redirects back to redirect_uri with an authorization code.\n3. The app checks state (CSRF protection), then exchanges the code + code_verifier for an access token (plus ID token, refresh token) over the back channel.\n4. The app calls the API with the access token; the resource server checks signature, expiry, audience and scope.\n\nPKCE stops an attacker who intercepts the code from redeeming it. Current guidance (OAuth 2.1, the Security BCP) is PKCE for all clients, including server-side ones; the implicit and password grants are deprecated. Service-to-service uses client credentials."
+    },
+    "tip": {
+      "vi": "Câu \"OAuth2 là authorization, OIDC thêm authentication\" và việc implicit flow đã lỗi thời là hai điểm interviewer chờ nghe.",
+      "en": "\"OAuth2 is authorization, OIDC adds authentication\" and knowing the implicit flow is obsolete are the two points interviewers wait for."
+    },
+    "followUps": [
+      {
+        "vi": "Vì sao không nên dùng access token để xác định danh tính user ở phía client?",
+        "en": "Why should the client not use the access token to identify the user?"
+      },
+      {
+        "vi": "Scope khác role thế nào?",
+        "en": "How do scopes differ from roles?"
+      }
+    ],
+    "source": "https://openid.net/specs/openid-connect-core-1_0.html"
+  },
+  {
+    "id": "backend-auth-rbac-abac",
+    "level": "mid",
+    "topic": "Auth",
+    "q": {
+      "vi": "RBAC và ABAC là gì? Bạn triển khai phân quyền trong backend như thế nào?",
+      "en": "What are RBAC and ABAC? How do you implement authorization in a backend?"
+    },
+    "a": {
+      "vi": "RBAC gán quyền cho role rồi gán role cho user; ABAC quyết định dựa trên thuộc tính của user, resource và ngữ cảnh. Hệ thống thực tế thường kết hợp cả hai.\n\n- RBAC: vd role \"editor\" có quyền post:update. Dễ hiểu, dễ audit, nhưng dễ \"bùng nổ role\" khi quy tắc chi tiết.\n- ABAC/policy-based: vd \"user được sửa document nếu là owner hoặc cùng department và document chưa khoá\". Linh hoạt hơn, cần policy engine hoặc code policy rõ ràng (OPA, Cedar, Casbin).\n- ReBAC (kiểu Google Zanzibar, OpenFGA): quyền dựa trên quan hệ, hợp cho chia sẻ tài liệu, thư mục.\n\nTriển khai:\n- Kiểm tra ở server cho MỌI request, kể cả khi UI đã ẩn nút. Mặc định từ chối (deny by default).\n- Kiểm tra cả cấp hành động lẫn cấp object: lỗi phổ biến nhất (IDOR) là chỉ kiểm tra đã đăng nhập mà không kiểm tra order 42 có thuộc user này không.\n- Tập trung logic vào một lớp policy/middleware thay vì rải if khắp controller; ghi log các lần bị từ chối và viết test cho ma trận quyền.",
+      "en": "RBAC assigns permissions to roles and roles to users; ABAC decides based on attributes of the user, the resource and the context. Real systems usually combine both.\n\n- RBAC: e.g. the \"editor\" role has post:update. Easy to understand and audit, but suffers \"role explosion\" when rules get fine-grained.\n- ABAC/policy-based: e.g. \"a user may edit a document if they own it, or are in the same department and it is not locked\". More flexible, needs a policy engine or clearly structured policy code (OPA, Cedar, Casbin).\n- ReBAC (Google Zanzibar style, OpenFGA): permissions derived from relationships, good for sharing documents and folders.\n\nImplementation:\n- Check on the server for EVERY request, even if the UI hides the button. Deny by default.\n- Check both the action and the specific object: the most common bug (IDOR) is checking that the user is logged in but not that order 42 belongs to them.\n- Centralize logic in a policy layer/middleware instead of scattering ifs across controllers; log denials and test the permission matrix."
+    },
+    "tip": {
+      "vi": "Nhắc IDOR / Broken Access Control (rủi ro số 1 của OWASP) cho thấy bạn hiểu phân quyền ở cấp object.",
+      "en": "Mentioning IDOR / Broken Access Control (OWASP's top risk) shows you understand object-level authorization."
+    },
+    "followUps": [
+      {
+        "vi": "Trong microservices, việc phân quyền đặt ở gateway hay từng service?",
+        "en": "In microservices, does authorization live in the gateway or in each service?"
+      },
+      {
+        "vi": "Làm sao hỗ trợ multi-tenant để tenant này không thấy dữ liệu tenant khác?",
+        "en": "How do you support multi-tenancy so one tenant never sees another's data?"
+      }
+    ],
+    "source": "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html"
+  },
+  {
+    "id": "backend-db-sql-joins",
+    "level": "intern",
+    "topic": "Database",
+    "q": {
+      "vi": "Giải thích các loại JOIN trong SQL. WHERE và HAVING khác nhau thế nào?",
+      "en": "Explain the types of SQL JOIN. How does WHERE differ from HAVING?"
+    },
+    "a": {
+      "vi": "JOIN ghép dòng từ nhiều bảng theo điều kiện; loại JOIN quyết định giữ lại những dòng không khớp hay không.\n\n- INNER JOIN: chỉ giữ dòng khớp ở cả hai bảng.\n- LEFT JOIN: giữ mọi dòng bảng trái, cột bảng phải là NULL nếu không khớp. Dùng để tìm \"user chưa có đơn hàng\" bằng WHERE o.id IS NULL.\n- RIGHT JOIN: ngược lại, ít dùng vì có thể viết lại bằng LEFT JOIN.\n- FULL OUTER JOIN: giữ mọi dòng của cả hai bên.\n- CROSS JOIN: tích Descartes, mọi tổ hợp.\n- Self join: bảng join với chính nó, vd nhân viên và người quản lý.\n\nWHERE lọc từng dòng trước khi GROUP BY; HAVING lọc nhóm sau khi gom, nên dùng được hàm tổng hợp như COUNT, SUM.\n\nBẫy hay gặp: đặt điều kiện của bảng phải trong WHERE sau LEFT JOIN sẽ biến nó thành INNER JOIN; muốn giữ dòng trái thì đặt điều kiện trong ON. Ngoài ra join one-to-many làm nhân bản dòng, dễ khiến SUM bị đếm trùng.",
+      "en": "A JOIN combines rows from several tables on a condition; the join type decides whether non-matching rows are kept.\n\n- INNER JOIN: keeps only rows that match in both tables.\n- LEFT JOIN: keeps every row of the left table, with NULLs for right columns when there is no match. Used to find \"users with no orders\" via WHERE o.id IS NULL.\n- RIGHT JOIN: the mirror image, rarely used since it can be rewritten as a LEFT JOIN.\n- FULL OUTER JOIN: keeps all rows from both sides.\n- CROSS JOIN: Cartesian product, every combination.\n- Self join: a table joined to itself, e.g. employees and their managers.\n\nWHERE filters individual rows before GROUP BY; HAVING filters groups after aggregation, so it can use aggregates such as COUNT and SUM.\n\nCommon trap: putting a right-table condition in WHERE after a LEFT JOIN turns it into an INNER JOIN; to keep left rows, put the condition in ON. Also, joining one-to-many duplicates rows, which easily double-counts SUMs."
+    },
+    "code": "-- users with no orders in 2026\nSELECT u.id, u.name\nFROM users u\nLEFT JOIN orders o\n  ON o.user_id = u.id AND o.created_at >= '2026-01-01'\nWHERE o.id IS NULL;\n\n-- customers with more than 5 orders\nSELECT user_id, COUNT(*) FROM orders\nGROUP BY user_id HAVING COUNT(*) > 5;",
+    "tip": {
+      "vi": "Nêu được bẫy \"điều kiện trong WHERE sau LEFT JOIN\" sẽ khiến bạn nổi bật so với ứng viên intern khác.",
+      "en": "Pointing out the \"condition in WHERE after a LEFT JOIN\" trap sets you apart from other intern candidates."
+    },
+    "followUps": [
+      {
+        "vi": "Viết query lấy top 3 sản phẩm bán chạy nhất mỗi danh mục.",
+        "en": "Write a query for the top 3 best-selling products per category."
+      },
+      {
+        "vi": "Subquery và JOIN, cái nào nhanh hơn?",
+        "en": "Which is faster, a subquery or a JOIN?"
+      }
+    ],
+    "source": "https://www.postgresql.org/docs/current/tutorial-join.html"
+  },
+  {
+    "id": "backend-db-normalization",
+    "level": "junior",
+    "topic": "Database",
+    "q": {
+      "vi": "Normalization là gì? Khi nào nên denormalize?",
+      "en": "What is normalization? When should you denormalize?"
+    },
+    "a": {
+      "vi": "Normalization là tổ chức bảng sao cho mỗi dữ kiện chỉ lưu ở một nơi, để tránh dư thừa và bất thường khi cập nhật.\n\nCác dạng chuẩn hay được hỏi:\n- 1NF: mỗi ô chỉ chứa một giá trị nguyên tử, không có nhóm lặp (không lưu \"tag1,tag2\" trong một cột).\n- 2NF: đạt 1NF và mọi cột không phải khoá phụ thuộc vào TOÀN BỘ khoá chính (quan trọng khi khoá ghép).\n- 3NF: đạt 2NF và không có phụ thuộc bắc cầu, vd orders không nên lưu customer_city vì nó phụ thuộc vào customer chứ không phải order.\n\nLợi ích: sửa một chỗ là đúng mọi nơi, dữ liệu nhất quán, ràng buộc dễ áp dụng.\n\nDenormalize khi đọc nhiều hơn ghi rất nhiều và join trở thành nút thắt đã được đo đạc: lưu sẵn số comment trong posts, bảng báo cáo/read model, hoặc snapshot dữ liệu lịch sử (giá sản phẩm tại thời điểm đặt hàng phải lưu trong order_items, đây là đúng nghiệp vụ chứ không phải dư thừa). Đổi lại phải tự đồng bộ dữ liệu bằng transaction, trigger hoặc event.",
+      "en": "Normalization organizes tables so each fact is stored in exactly one place, avoiding redundancy and update anomalies.\n\nThe normal forms usually asked about:\n- 1NF: each cell holds one atomic value, no repeating groups (do not store \"tag1,tag2\" in one column).\n- 2NF: in 1NF and every non-key column depends on the WHOLE primary key (matters with composite keys).\n- 3NF: in 2NF with no transitive dependencies, e.g. orders should not store customer_city because it depends on the customer, not the order.\n\nBenefits: change it in one place and it is right everywhere, data stays consistent, constraints are easy to enforce.\n\nDenormalize when reads vastly outnumber writes and joins are a measured bottleneck: a cached comment count on posts, reporting tables/read models, or snapshots of historical data (the product price at order time belongs in order_items; that is a business requirement, not redundancy). The cost is keeping copies in sync yourself via transactions, triggers or events."
+    },
+    "tip": {
+      "vi": "Ví dụ \"giá tại thời điểm đặt hàng\" cho thấy bạn phân biệt được dư thừa với snapshot nghiệp vụ.",
+      "en": "The \"price at order time\" example shows you can tell redundancy apart from a business snapshot."
+    },
+    "followUps": [
+      {
+        "vi": "Bạn sẽ thiết kế schema cho quan hệ many-to-many như thế nào?",
+        "en": "How would you design a schema for a many-to-many relationship?"
+      },
+      {
+        "vi": "Khi nào dùng cột JSONB thay vì tách bảng?",
+        "en": "When would you use a JSONB column instead of a separate table?"
+      }
+    ]
+  },
+  {
+    "id": "backend-db-acid-transactions",
+    "level": "junior",
+    "topic": "Database",
+    "q": {
+      "vi": "Transaction là gì? Giải thích ACID.",
+      "en": "What is a transaction? Explain ACID."
+    },
+    "a": {
+      "vi": "Transaction là một nhóm thao tác được xử lý như một đơn vị: hoặc tất cả thành công (COMMIT), hoặc không có gì xảy ra (ROLLBACK).\n\nACID:\n- Atomicity: tất cả hoặc không gì cả. Chuyển tiền thì trừ tài khoản A và cộng tài khoản B phải cùng thành công hoặc cùng huỷ.\n- Consistency: transaction đưa DB từ trạng thái hợp lệ này sang trạng thái hợp lệ khác, tôn trọng mọi ràng buộc (foreign key, unique, check).\n- Isolation: các transaction chạy đồng thời không thấy trạng thái dở dang của nhau; mức độ cụ thể tuỳ isolation level.\n- Durability: đã commit thì không mất dù server sập ngay sau đó, nhờ write-ahead log ghi xuống đĩa.\n\nLưu ý thực tế:\n- Giữ transaction ngắn; không gọi HTTP sang service khác hay chờ người dùng bên trong transaction vì sẽ giữ lock lâu.\n- Transaction chỉ có hiệu lực trong một database; gửi email hay publish message không rollback được, cần pattern như outbox.\n- Nhớ xử lý lỗi để luôn rollback, thường framework làm qua decorator hoặc block.",
+      "en": "A transaction is a group of operations treated as one unit: either everything succeeds (COMMIT) or nothing happens (ROLLBACK).\n\nACID:\n- Atomicity: all or nothing. In a money transfer, debiting account A and crediting account B both succeed or both are undone.\n- Consistency: a transaction moves the DB from one valid state to another, respecting all constraints (foreign keys, unique, check).\n- Isolation: concurrent transactions do not see each other's half-done state; the exact guarantee depends on the isolation level.\n- Durability: once committed, data survives even if the server crashes right after, thanks to the write-ahead log flushed to disk.\n\nPractical notes:\n- Keep transactions short; do not call other services over HTTP or wait for users inside a transaction, as it holds locks for long.\n- A transaction only covers one database; sending an email or publishing a message cannot be rolled back, which needs patterns like the outbox.\n- Always handle errors so you roll back; frameworks usually do this via a decorator or block."
+    },
+    "code": "BEGIN;\nUPDATE accounts SET balance = balance - 100 WHERE id = 1 AND balance >= 100;\nUPDATE accounts SET balance = balance + 100 WHERE id = 2;\nCOMMIT; -- or ROLLBACK on any error",
+    "tip": {
+      "vi": "Lấy ví dụ chuyển tiền và nói thêm \"không gọi API ngoài trong transaction\" để thể hiện kinh nghiệm thực tế.",
+      "en": "Use the money-transfer example and add \"no external API calls inside a transaction\" to show real experience."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu UPDATE đầu tiên không ảnh hưởng dòng nào (số dư không đủ) thì code xử lý thế nào?",
+        "en": "If the first UPDATE affects no rows (insufficient balance), how should the code handle it?"
+      },
+      {
+        "vi": "Nested transaction và savepoint là gì?",
+        "en": "What are nested transactions and savepoints?"
+      }
+    ],
+    "source": "https://www.postgresql.org/docs/current/tutorial-transactions.html"
+  },
+  {
+    "id": "backend-db-index",
+    "level": "mid",
+    "topic": "Database",
+    "q": {
+      "vi": "Index trong database là gì? Khi nào index làm chậm hệ thống?",
+      "en": "What is a database index? When can an index slow the system down?"
+    },
+    "a": {
+      "vi": "Index là cấu trúc dữ liệu phụ (thường là B+Tree) giúp tìm bản ghi mà không phải quét toàn bảng, đổi lại tốn bộ nhớ và làm chậm thao tác ghi.\n\nDùng hiệu quả:\n- Composite index theo quy tắc leftmost prefix: index (user_id, created_at) phục vụ WHERE user_id = ? và WHERE user_id = ? AND created_at > ?, nhưng không phục vụ khi chỉ lọc created_at. Thường đặt cột so sánh bằng trước, cột range sau.\n- Covering index (INCLUDE trong PostgreSQL) cho phép trả kết quả chỉ từ index, không cần đọc bảng.\n- Bọc cột trong hàm (WHERE LOWER(email) = ?) hoặc LIKE '%abc' làm index thường không dùng được.\n\nIndex làm chậm khi:\n- Bảng ghi nhiều (INSERT/UPDATE liên tục): mỗi lần ghi phải cập nhật mọi index.\n- Cột có cardinality thấp (vd giới tính): optimizer vẫn chọn full scan, index chỉ tốn chỗ.\n- Index thừa/trùng, hoặc composite index sai thứ tự cột.\n\nLuôn kiểm chứng bằng EXPLAIN ANALYZE thay vì đoán.",
+      "en": "An index is an auxiliary data structure (usually a B+Tree) that finds rows without scanning the whole table, at the cost of storage and slower writes.\n\nUsing them well:\n- Composite indexes follow the leftmost-prefix rule: an index on (user_id, created_at) serves WHERE user_id = ? and WHERE user_id = ? AND created_at > ?, but not a filter on created_at alone. Usually equality columns go first, range columns last.\n- A covering index (INCLUDE in PostgreSQL) lets the query be answered from the index alone, without reading the table.\n- Wrapping the column in a function (WHERE LOWER(email) = ?) or using LIKE '%abc' prevents a normal index from being used.\n\nIndexes hurt when:\n- The table is write-heavy (constant INSERT/UPDATE): every write must update every index.\n- The column has low cardinality (e.g. gender): the optimizer still picks a full scan, so the index only wastes space.\n- Indexes are redundant, or a composite index has the wrong column order.\n\nAlways verify with EXPLAIN ANALYZE instead of guessing."
+    },
+    "code": "CREATE INDEX idx_orders_user_date ON orders(user_id, created_at);\n\n-- uses the index (leftmost prefix)\nSELECT * FROM orders WHERE user_id = 42 AND created_at > '2026-01-01';\n-- cannot use it (missing first column)\nSELECT * FROM orders WHERE created_at > '2026-01-01';\n\nEXPLAIN ANALYZE SELECT * FROM orders WHERE user_id = 42;",
+    "tip": {
+      "vi": "Kể lần bạn dùng EXPLAIN để tối ưu một query thật, kèm con số trước và sau.",
+      "en": "Describe a time you used EXPLAIN to optimize a real query, with before and after numbers."
+    },
+    "followUps": [
+      {
+        "vi": "Clustered index và non-clustered index khác nhau thế nào?",
+        "en": "What is the difference between a clustered and a non-clustered index?"
+      },
+      {
+        "vi": "Tạo index trên bảng production lớn mà không khoá ghi bằng cách nào?",
+        "en": "How do you create an index on a large production table without blocking writes?"
+      }
+    ],
+    "source": "https://www.postgresql.org/docs/current/indexes.html"
+  },
+  {
+    "id": "backend-db-n-plus-one",
+    "level": "junior",
+    "topic": "Database",
+    "q": {
+      "vi": "Vấn đề N+1 query là gì? Phát hiện và khắc phục thế nào?",
+      "en": "What is the N+1 query problem? How do you detect and fix it?"
+    },
+    "a": {
+      "vi": "N+1 xảy ra khi bạn chạy 1 query lấy danh sách N bản ghi, rồi lại chạy thêm 1 query cho mỗi bản ghi để lấy dữ liệu liên quan, tổng cộng N+1 lần đi tới DB.\n\nVí dụ: lấy 100 bài viết, rồi trong vòng lặp truy cập post.author khiến ORM lazy-load 100 query tác giả. Mỗi query nhanh nhưng độ trễ mạng cộng dồn khiến API chậm hẳn khi dữ liệu tăng.\n\nPhát hiện:\n- Bật log SQL ở môi trường dev, hoặc dùng công cụ như Bullet (Rails), Django Debug Toolbar, Hibernate statistics.\n- APM/tracing cho thấy một request sinh ra hàng trăm span DB giống nhau.\n- Viết test đếm số query của endpoint.\n\nKhắc phục:\n- Eager loading: JOIN (JOIN FETCH, include, select_related) cho quan hệ to-one.\n- Batch loading: một query WHERE author_id IN (...) (prefetch_related, DataLoader trong GraphQL) cho to-many, tránh join làm nhân bản dòng.\n- Chỉ lấy cột cần thiết, hoặc viết query/projection riêng cho màn hình phức tạp.",
+      "en": "N+1 happens when you run 1 query to fetch a list of N records, then one more query per record to fetch related data, for N+1 round-trips to the DB.\n\nExample: load 100 posts, then access post.author in a loop, so the ORM lazy-loads 100 author queries. Each query is fast, but the accumulated network latency makes the API much slower as data grows.\n\nDetection:\n- Turn on SQL logging in dev, or use tools like Bullet (Rails), Django Debug Toolbar, Hibernate statistics.\n- APM/tracing shows one request producing hundreds of identical DB spans.\n- Write tests that assert the query count of an endpoint.\n\nFixes:\n- Eager loading via JOIN (JOIN FETCH, include, select_related) for to-one relations.\n- Batch loading with one WHERE author_id IN (...) query (prefetch_related, DataLoader in GraphQL) for to-many relations, avoiding row duplication from joins.\n- Select only the needed columns, or write a dedicated query/projection for complex screens."
+    },
+    "code": "# N+1\nposts = Post.objects.all()[:100]\nfor p in posts:\n    print(p.author.name)   # 1 query per post\n\n# fixed: 2 queries total\nposts = Post.objects.select_related(\"author\")[:100]",
+    "tip": {
+      "vi": "Phân biệt khi nào dùng JOIN và khi nào dùng IN (...) batch cho thấy bạn hiểu sâu hơn mức \"bật eager loading\".",
+      "en": "Explaining when to JOIN versus batch with IN (...) shows deeper understanding than \"turn on eager loading\"."
+    },
+    "followUps": [
+      {
+        "vi": "Eager load quá nhiều thì gặp vấn đề gì?",
+        "en": "What goes wrong when you eager-load too much?"
+      },
+      {
+        "vi": "Trong GraphQL, DataLoader giải quyết N+1 thế nào?",
+        "en": "How does DataLoader solve N+1 in GraphQL?"
+      }
+    ]
+  },
+  {
+    "id": "backend-db-isolation-levels",
+    "level": "mid",
+    "topic": "Database",
+    "q": {
+      "vi": "Các isolation level trong SQL là gì? Mỗi mức ngăn được những hiện tượng nào?",
+      "en": "What are the SQL isolation levels? Which anomalies does each prevent?"
+    },
+    "a": {
+      "vi": "Isolation level quyết định một transaction thấy được bao nhiêu thay đổi của transaction khác đang chạy đồng thời; mức càng cao càng an toàn nhưng càng nhiều chờ đợi hoặc lỗi phải retry.\n\nCác hiện tượng:\n- Dirty read: đọc dữ liệu chưa commit.\n- Non-repeatable read: đọc lại cùng một dòng thấy giá trị khác.\n- Phantom read: chạy lại cùng điều kiện thấy thêm/bớt dòng.\n- Lost update / write skew: hai transaction đọc rồi ghi dựa trên dữ liệu cũ, ghi đè lẫn nhau.\n\nCác mức theo chuẩn SQL:\n- Read Uncommitted: cho phép dirty read (PostgreSQL thực tế xử lý như Read Committed).\n- Read Committed: chặn dirty read. Mặc định của PostgreSQL, Oracle, SQL Server.\n- Repeatable Read: thêm chặn non-repeatable read. Mặc định của MySQL InnoDB. PostgreSQL dùng snapshot nên cũng chặn phantom ở mức này.\n- Serializable: kết quả như chạy tuần tự; PostgreSQL dùng SSI và có thể trả lỗi serialization failure, app phải retry.\n\nThực tế hay giữ Read Committed và xử lý điểm nóng bằng SELECT ... FOR UPDATE, optimistic locking hoặc ràng buộc unique.",
+      "en": "The isolation level decides how much of other concurrent transactions' changes a transaction can see; higher levels are safer but cause more waiting or errors that need retries.\n\nAnomalies:\n- Dirty read: reading uncommitted data.\n- Non-repeatable read: re-reading the same row returns a different value.\n- Phantom read: re-running the same filter returns extra or missing rows.\n- Lost update / write skew: two transactions read and then write based on stale data, overwriting each other.\n\nThe SQL-standard levels:\n- Read Uncommitted: allows dirty reads (PostgreSQL actually treats it as Read Committed).\n- Read Committed: prevents dirty reads. Default in PostgreSQL, Oracle, SQL Server.\n- Repeatable Read: also prevents non-repeatable reads. Default in MySQL InnoDB. PostgreSQL uses snapshots, so it also prevents phantoms at this level.\n- Serializable: results as if run one by one; PostgreSQL uses SSI and may raise a serialization failure that the app must retry.\n\nIn practice teams often stay on Read Committed and protect hot spots with SELECT ... FOR UPDATE, optimistic locking or unique constraints."
+    },
+    "tip": {
+      "vi": "Biết mặc định của DB bạn đang dùng (PostgreSQL vs MySQL khác nhau) và nhắc rằng Serializable cần retry ở tầng ứng dụng.",
+      "en": "Know your database's default (PostgreSQL and MySQL differ) and mention that Serializable requires application-level retries."
+    },
+    "followUps": [
+      {
+        "vi": "Write skew là gì? Cho ví dụ với lịch trực của bác sĩ.",
+        "en": "What is write skew? Give the doctors-on-call example."
+      },
+      {
+        "vi": "MVCC hoạt động thế nào?",
+        "en": "How does MVCC work?"
+      }
+    ],
+    "source": "https://www.postgresql.org/docs/current/transaction-iso.html"
+  },
+  {
+    "id": "backend-db-locking",
+    "level": "mid",
+    "topic": "Database",
+    "q": {
+      "vi": "Optimistic locking và pessimistic locking khác nhau thế nào? Khi nào dùng cái nào?",
+      "en": "How does optimistic locking differ from pessimistic locking? When do you use each?"
+    },
+    "a": {
+      "vi": "Pessimistic locking khoá dữ liệu trước khi sửa để người khác phải chờ; optimistic locking không khoá mà kiểm tra lúc ghi xem dữ liệu đã bị ai đổi chưa.\n\nPessimistic:\n- SELECT ... FOR UPDATE trong transaction, dòng bị khoá tới khi commit.\n- Hợp khi tranh chấp cao và xung đột tốn kém: trừ tồn kho flash sale, giữ ghế, trừ số dư.\n- Rủi ro: giảm throughput, deadlock, lock lâu nếu transaction dài. Có thể dùng NOWAIT hoặc SKIP LOCKED.\n\nOptimistic:\n- Thêm cột version; UPDATE ... SET ..., version = version + 1 WHERE id = ? AND version = ?. Nếu 0 dòng bị ảnh hưởng nghĩa là có người sửa trước, báo 409 hoặc đọc lại rồi retry.\n- Hợp khi xung đột hiếm và có \"think time\" dài, như người dùng mở form sửa vài phút. Không giữ lock trong DB.\n- Nhiều ORM hỗ trợ sẵn (JPA @Version, ActiveRecord lock_version).\n\nĐôi khi không cần lock: một câu UPDATE nguyên tử như SET stock = stock - 1 WHERE id = ? AND stock > 0 đã đủ an toàn.",
+      "en": "Pessimistic locking locks the data before changing it so others must wait; optimistic locking takes no lock and instead checks at write time whether someone else changed the data.\n\nPessimistic:\n- SELECT ... FOR UPDATE inside a transaction; the row stays locked until commit.\n- Fits high contention where conflicts are costly: flash-sale stock, seat holds, balance debits.\n- Risks: lower throughput, deadlocks, long-held locks if the transaction is long. NOWAIT or SKIP LOCKED help.\n\nOptimistic:\n- Add a version column; UPDATE ... SET ..., version = version + 1 WHERE id = ? AND version = ?. If 0 rows are affected, someone changed it first, so return 409 or re-read and retry.\n- Fits rare conflicts with long \"think time\", such as a user editing a form for minutes. No lock is held in the DB.\n- Many ORMs support it (JPA @Version, ActiveRecord lock_version).\n\nSometimes no lock is needed: an atomic UPDATE like SET stock = stock - 1 WHERE id = ? AND stock > 0 is already safe."
+    },
+    "code": "-- optimistic\nUPDATE products\nSET price = 120, version = version + 1\nWHERE id = 7 AND version = 3;\n-- 0 rows updated => conflict, return 409 or retry\n\n-- pessimistic\nBEGIN;\nSELECT stock FROM products WHERE id = 7 FOR UPDATE;\nUPDATE products SET stock = stock - 1 WHERE id = 7;\nCOMMIT;",
+    "tip": {
+      "vi": "Kết thúc bằng phương án UPDATE nguyên tử không cần lock cho thấy bạn chọn giải pháp đơn giản nhất trước.",
+      "en": "Ending with the lock-free atomic UPDATE shows you reach for the simplest solution first."
+    },
+    "followUps": [
+      {
+        "vi": "Khi cần lock trải qua nhiều service thì làm thế nào?",
+        "en": "What do you do when a lock must span several services?"
+      },
+      {
+        "vi": "SKIP LOCKED giúp xây job queue trên PostgreSQL ra sao?",
+        "en": "How does SKIP LOCKED help build a job queue on PostgreSQL?"
+      }
+    ],
+    "source": "https://www.postgresql.org/docs/current/explicit-locking.html"
+  },
+  {
+    "id": "backend-db-migrations-zero-downtime",
+    "level": "senior",
+    "topic": "Database",
+    "q": {
+      "vi": "Làm sao chạy database migration trên production mà không downtime?",
+      "en": "How do you run database migrations in production with zero downtime?"
+    },
+    "a": {
+      "vi": "Nguyên tắc là mọi migration phải tương thích với cả phiên bản code cũ lẫn mới đang chạy song song, nên thay đổi lớn được chia thành nhiều bước nhỏ (expand/contract).\n\nVí dụ đổi tên cột name thành full_name:\n1. Expand: thêm cột full_name cho phép NULL. Deploy code ghi vào cả hai cột.\n2. Backfill dữ liệu cũ theo batch nhỏ (vd 5.000 dòng mỗi lần) để không khoá bảng lâu và không làm replica bị trễ.\n3. Chuyển code sang đọc full_name; sau đó thêm ràng buộc NOT NULL nếu cần.\n4. Contract: khi không còn code nào dùng cột cũ, xoá cột name ở một release sau.\n\nLưu ý:\n- Biết thao tác nào khoá bảng: thêm index nên dùng CREATE INDEX CONCURRENTLY (PostgreSQL) hoặc online DDL/gh-ost (MySQL); đổi kiểu cột thường rewrite cả bảng.\n- Đặt lock_timeout ngắn để migration không xếp hàng chặn mọi query khác.\n- Migration được version hoá trong repo (Flyway, Liquibase, Alembic, Prisma Migrate), chạy tự động trong pipeline, và có kế hoạch rollback hoặc roll-forward.\n- Tách migration khỏi lúc khởi động app khi có nhiều instance.",
+      "en": "The principle is that every migration must work with both the old and new code versions running side by side, so big changes are split into small steps (expand/contract).\n\nExample, renaming column name to full_name:\n1. Expand: add a nullable full_name column. Deploy code that writes both columns.\n2. Backfill old rows in small batches (e.g. 5,000 rows at a time) so you neither lock the table for long nor make replicas lag.\n3. Switch code to read full_name; then add NOT NULL if needed.\n4. Contract: once no code uses the old column, drop name in a later release.\n\nNotes:\n- Know which operations lock tables: add indexes with CREATE INDEX CONCURRENTLY (PostgreSQL) or online DDL/gh-ost (MySQL); changing a column type often rewrites the whole table.\n- Set a short lock_timeout so a migration does not queue up and block every other query.\n- Version migrations in the repo (Flyway, Liquibase, Alembic, Prisma Migrate), run them automatically in the pipeline, and have a rollback or roll-forward plan.\n- Decouple migrations from app startup when you run many instances."
+    },
+    "tip": {
+      "vi": "Gọi tên pattern expand/contract và nhắc lock_timeout, đó là kinh nghiệm chỉ người từng làm production mới có.",
+      "en": "Name the expand/contract pattern and mention lock_timeout; that is experience only people who ran production have."
+    },
+    "followUps": [
+      {
+        "vi": "Rollback một migration đã xoá cột thế nào?",
+        "en": "How do you roll back a migration that dropped a column?"
+      },
+      {
+        "vi": "Backfill hàng trăm triệu dòng thì bạn theo dõi và dừng an toàn ra sao?",
+        "en": "How do you monitor and safely pause a backfill of hundreds of millions of rows?"
+      }
+    ]
+  },
+  {
+    "id": "backend-nosql-when",
+    "level": "junior",
+    "topic": "NoSQL",
+    "q": {
+      "vi": "Khi nào nên chọn NoSQL thay vì SQL? Kể các loại NoSQL và use case.",
+      "en": "When should you choose NoSQL over SQL? Name the NoSQL types and their use cases."
+    },
+    "a": {
+      "vi": "Mặc định hãy bắt đầu với một relational DB như PostgreSQL; chọn NoSQL khi mô hình dữ liệu hoặc yêu cầu scale thực sự không khớp với bảng và join.\n\nCác loại chính:\n- Key-value (Redis, DynamoDB): tra cứu theo key cực nhanh; cache, session, rate limit, giỏ hàng.\n- Document (MongoDB, Firestore): lưu JSON lồng nhau, schema linh hoạt; catalog sản phẩm, CMS, dữ liệu thường đọc theo từng \"aggregate\".\n- Wide-column (Cassandra, ScyllaDB, Bigtable): ghi khối lượng rất lớn, scale ngang; time-series, log, event, IoT. Phải thiết kế bảng theo query trước.\n- Graph (Neo4j): quan hệ nhiều tầng; mạng xã hội, gợi ý, phát hiện gian lận.\n- Search engine (Elasticsearch, OpenSearch): full-text search, lọc, aggregation.\n\nTrade-off: NoSQL thường đổi join, transaction đa bản ghi và ràng buộc chặt lấy khả năng scale và linh hoạt; nhiều hệ thống chỉ đảm bảo eventual consistency. Ranh giới đang mờ dần: PostgreSQL có JSONB, MongoDB có multi-document transaction. Hệ thống thật thường kết hợp nhiều loại (polyglot persistence).",
+      "en": "By default start with a relational DB such as PostgreSQL; choose NoSQL when the data model or scaling needs genuinely do not fit tables and joins.\n\nMain types:\n- Key-value (Redis, DynamoDB): extremely fast lookup by key; cache, sessions, rate limiting, shopping carts.\n- Document (MongoDB, Firestore): nested JSON, flexible schema; product catalogs, CMS, data read as whole \"aggregates\".\n- Wide-column (Cassandra, ScyllaDB, Bigtable): massive write volume, horizontal scale; time series, logs, events, IoT. Tables must be designed around queries up front.\n- Graph (Neo4j): multi-hop relationships; social networks, recommendations, fraud detection.\n- Search engines (Elasticsearch, OpenSearch): full-text search, filtering, aggregations.\n\nTrade-off: NoSQL often gives up joins, multi-record transactions and strict constraints in exchange for scale and flexibility; many systems only guarantee eventual consistency. The line is blurring: PostgreSQL has JSONB and MongoDB has multi-document transactions. Real systems often combine several (polyglot persistence)."
+    },
+    "tip": {
+      "vi": "Lý do chọn phải xuất phát từ access pattern và quy mô, không phải \"NoSQL nhanh hơn\" hay \"không cần schema\".",
+      "en": "Justify the choice with access patterns and scale, not \"NoSQL is faster\" or \"no schema needed\"."
+    },
+    "followUps": [
+      {
+        "vi": "Định lý CAP nói gì và áp dụng thế nào khi chọn DB?",
+        "en": "What does the CAP theorem say, and how does it apply to choosing a database?"
+      },
+      {
+        "vi": "Thiết kế partition key trong DynamoDB/Cassandra cần chú ý gì?",
+        "en": "What matters when designing a partition key in DynamoDB/Cassandra?"
+      }
+    ]
+  },
+  {
+    "id": "backend-cache-strategies",
+    "level": "junior",
+    "topic": "Caching",
+    "q": {
+      "vi": "Các chiến lược caching phổ biến là gì? Invalidate cache thế nào?",
+      "en": "What are the common caching strategies? How do you invalidate a cache?"
+    },
+    "a": {
+      "vi": "Cache lưu kết quả tốn kém ở nơi đọc nhanh hơn (thường là Redis hoặc memory); khó nhất không phải lưu mà là giữ dữ liệu đủ mới.\n\nChiến lược:\n- Cache-aside (lazy loading), phổ biến nhất: đọc cache, miss thì đọc DB rồi ghi vào cache với TTL. Khi ghi thì cập nhật DB rồi XOÁ key cache (xoá an toàn hơn ghi đè vì tránh race giữa hai lần ghi).\n- Read-through / write-through: tầng cache tự đọc/ghi DB; dữ liệu luôn đồng bộ nhưng mỗi lần ghi chậm hơn.\n- Write-behind (write-back): ghi vào cache trước, đẩy xuống DB bất đồng bộ; nhanh nhưng có thể mất dữ liệu nếu cache sập.\n\nInvalidation:\n- TTL là lưới an toàn: kể cả khi quên xoá, dữ liệu sai cũng tự hết hạn.\n- Xoá chủ động theo key khi dữ liệu đổi, hoặc lắng nghe event/CDC để xoá.\n\nKhi bộ nhớ đầy, Redis loại key theo eviction policy (vd allkeys-lru). Đừng cache mọi thứ: chỉ cache dữ liệu đọc nhiều, chịu được hơi cũ, và đo hit rate.",
+      "en": "A cache stores expensive results somewhere faster to read (usually Redis or memory); the hard part is not storing but keeping data fresh enough.\n\nStrategies:\n- Cache-aside (lazy loading), the most common: read the cache; on a miss read the DB and write to the cache with a TTL. On writes, update the DB and then DELETE the cache key (deleting is safer than overwriting because it avoids races between two writers).\n- Read-through / write-through: the cache layer reads/writes the DB itself; data stays in sync but each write is slower.\n- Write-behind (write-back): write to the cache first and flush to the DB asynchronously; fast, but data can be lost if the cache dies.\n\nInvalidation:\n- TTL is the safety net: even if you forget to delete, wrong data eventually expires.\n- Actively delete by key when data changes, or listen to events/CDC to delete.\n\nWhen memory is full, Redis evicts keys per its eviction policy (e.g. allkeys-lru). Do not cache everything: cache read-heavy data that tolerates slight staleness, and measure the hit rate."
+    },
+    "code": "def get_product(id):\n    key = f\"product:{id}\"\n    if (cached := redis.get(key)) is not None:\n        return json.loads(cached)\n    product = db.fetch_product(id)\n    redis.set(key, json.dumps(product), ex=300)  # TTL 5 min\n    return product\n\ndef update_product(id, data):\n    db.update_product(id, data)\n    redis.delete(f\"product:{id}\")",
+    "tip": {
+      "vi": "Giải thích vì sao \"update DB rồi delete cache\" an toàn hơn \"update cache\", đó là câu hỏi đào sâu hay gặp.",
+      "en": "Explain why \"update DB then delete cache\" beats \"update cache\"; it is a frequent deep-dive question."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu xoá cache thất bại sau khi DB đã commit thì sao?",
+        "en": "What if deleting the cache fails after the DB commit?"
+      },
+      {
+        "vi": "Cache penetration (query key không tồn tại liên tục) xử lý thế nào?",
+        "en": "How do you handle cache penetration (repeated lookups of non-existent keys)?"
+      }
+    ],
+    "source": "https://redis.io/docs/latest/develop/reference/eviction/"
+  },
+  {
+    "id": "backend-cache-stampede",
+    "level": "senior",
+    "topic": "Caching",
+    "q": {
+      "vi": "Cache stampede là gì? Cách phòng tránh khi dùng Redis?",
+      "en": "What is a cache stampede? How do you prevent it with Redis?"
+    },
+    "a": {
+      "vi": "Cache stampede (thundering herd) xảy ra khi một key nóng hết hạn, hàng nghìn request cùng miss cache và cùng đổ xuống DB để tính lại một giá trị, khiến DB quá tải và có thể kéo sập dây chuyền.\n\nCách xử lý:\n- Lock/single-flight: chỉ 1 request được rebuild cache (SET lock:key token NX EX 10), các request khác chờ ngắn rồi đọc lại hoặc trả dữ liệu cũ. Giới hạn số lần retry và đặt hạn cho lock để tiến trình chết không giữ lock mãi.\n- Trong một instance, gộp các request trùng bằng single-flight in-process để giảm số lần tranh lock.\n- TTL ngẫu nhiên (jitter), vd 300 giây cộng trừ 10%, để các key không hết hạn cùng lúc.\n- Refresh sớm (stale-while-revalidate hoặc probabilistic early expiration): làm mới ở background trước khi hết hạn, request vẫn nhận bản cũ.\n- Với dữ liệu cực nóng: không đặt TTL, chủ động cập nhật khi dữ liệu đổi, và warm cache trước khi deploy hoặc mở bán.\n\nKèm theo nên có circuit breaker hoặc giới hạn concurrency xuống DB làm lớp bảo vệ cuối.",
+      "en": "A cache stampede (thundering herd) happens when a hot key expires and thousands of requests miss at once and all hit the DB to recompute the same value, overloading it and possibly causing cascading failure.\n\nFixes:\n- Lock / single-flight: only one request rebuilds the cache (SET lock:key token NX EX 10); others wait briefly and re-read, or serve stale data. Bound the retries and give the lock an expiry so a dead process cannot hold it forever.\n- Within one instance, coalesce duplicate requests with in-process single-flight to reduce lock contention.\n- Random TTL (jitter), e.g. 300 seconds plus or minus 10%, so keys do not expire together.\n- Early refresh (stale-while-revalidate or probabilistic early expiration): refresh in the background before expiry while requests still get the old value.\n- For extremely hot data: no TTL, update the cache when the data changes, and warm the cache before deploys or sales launches.\n\nAdd a circuit breaker or a concurrency limit toward the DB as the last line of defense."
+    },
+    "tip": {
+      "vi": "Kết hợp nhiều lớp (jitter + lock + stale data) và nêu cách xử lý khi tiến trình giữ lock bị chết.",
+      "en": "Combine layers (jitter + lock + stale data) and explain what happens when the lock holder dies."
+    },
+    "followUps": [
+      {
+        "vi": "Khi Redis cluster sập hoàn toàn thì hệ thống nên phản ứng thế nào?",
+        "en": "How should the system react if the whole Redis cluster goes down?"
+      },
+      {
+        "vi": "Hot key quá tải một node Redis thì xử lý ra sao?",
+        "en": "How do you handle a hot key overloading a single Redis node?"
+      }
+    ],
+    "source": "https://redis.io/docs/latest/commands/set/"
+  },
+  {
+    "id": "backend-mq-kafka-rabbitmq",
+    "level": "junior",
+    "topic": "Messaging",
+    "q": {
+      "vi": "Vì sao dùng message queue? Kafka và RabbitMQ khác nhau thế nào?",
+      "en": "Why use a message queue? How do Kafka and RabbitMQ differ?"
+    },
+    "a": {
+      "vi": "Message queue tách producer và consumer về thời gian: bên gửi không cần chờ bên nhận, giúp xử lý bất đồng bộ, hấp thụ đột biến traffic và giảm phụ thuộc trực tiếp giữa các service.\n\nUse case: gửi email, xử lý ảnh/video, đồng bộ dữ liệu giữa service, event-driven architecture, xử lý stream.\n\nRabbitMQ (message broker truyền thống):\n- Message được đẩy tới consumer qua exchange và routing linh hoạt (direct, topic, fanout); consumer ack xong là message bị xoá.\n- Hợp cho task queue, routing phức tạp, ưu tiên, độ trễ thấp ở quy mô vừa.\n\nKafka (distributed commit log):\n- Message được ghi nối tiếp vào partition và giữ lại theo thời gian retention; consumer tự quản lý offset và có thể đọc lại (replay).\n- Thứ tự chỉ đảm bảo trong một partition; scale bằng cách tăng partition, mỗi partition chỉ một consumer trong cùng consumer group xử lý.\n- Hợp cho throughput rất cao, event sourcing, nhiều team cùng đọc một luồng sự kiện, analytics.\n\nĐổi lại, queue thêm độ phức tạp vận hành và eventual consistency, nên chỉ dùng khi thật sự cần bất đồng bộ.",
+      "en": "A message queue decouples producers and consumers in time: the sender does not wait for the receiver, enabling async processing, absorbing traffic spikes and reducing direct coupling between services.\n\nUse cases: sending emails, image/video processing, syncing data between services, event-driven architecture, stream processing.\n\nRabbitMQ (traditional message broker):\n- Messages are pushed to consumers via exchanges with flexible routing (direct, topic, fanout); once the consumer acks, the message is removed.\n- Fits task queues, complex routing, priorities, and low latency at moderate scale.\n\nKafka (distributed commit log):\n- Messages are appended to partitions and retained for a retention period; consumers manage their own offsets and can replay.\n- Ordering is only guaranteed within a partition; you scale by adding partitions, and each partition is handled by one consumer per consumer group.\n- Fits very high throughput, event sourcing, many teams reading the same event stream, and analytics.\n\nIn return, queues add operational complexity and eventual consistency, so use them only when you truly need async."
+    },
+    "tip": {
+      "vi": "Câu \"RabbitMQ là queue, message bị xoá sau ack; Kafka là log, message được giữ và replay được\" tóm gọn khác biệt cốt lõi.",
+      "en": "\"RabbitMQ is a queue where messages are deleted after ack; Kafka is a log where messages are retained and replayable\" sums up the core difference."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao đảm bảo thứ tự xử lý các event của cùng một đơn hàng trong Kafka?",
+        "en": "How do you keep events of the same order processed in order in Kafka?"
+      },
+      {
+        "vi": "Dead letter queue là gì và khi nào cần?",
+        "en": "What is a dead letter queue and when do you need one?"
+      }
+    ],
+    "source": "https://kafka.apache.org/documentation/"
+  },
+  {
+    "id": "backend-mq-delivery-guarantees",
+    "level": "mid",
+    "topic": "Messaging",
+    "q": {
+      "vi": "At-most-once, at-least-once và exactly-once khác nhau thế nào? Viết consumer idempotent ra sao?",
+      "en": "How do at-most-once, at-least-once and exactly-once differ? How do you write an idempotent consumer?"
+    },
+    "a": {
+      "vi": "Đây là mức đảm bảo message được xử lý bao nhiêu lần khi có lỗi; trong thực tế hãy giả định at-least-once và làm consumer idempotent.\n\n- At-most-once: commit offset/ack trước khi xử lý; lỗi giữa chừng thì mất message. Chỉ hợp với dữ liệu không quan trọng như metric.\n- At-least-once: xử lý xong mới ack; lỗi trước khi ack thì message được gửi lại, nên có thể bị xử lý trùng. Đây là mặc định hợp lý.\n- Exactly-once: Kafka hỗ trợ trong phạm vi Kafka (idempotent producer + transactions, đọc-xử lý-ghi lại Kafka). Khi có side effect ra ngoài (ghi DB khác, gọi API thanh toán), không có exactly-once thật, chỉ có at-least-once cộng idempotency.\n\nConsumer idempotent:\n- Mỗi message có id duy nhất (event_id). Trong cùng transaction với thay đổi nghiệp vụ, INSERT vào bảng processed_messages có unique key; nếu vi phạm unique thì bỏ qua.\n- Hoặc thiết kế thao tác tự idempotent: upsert, SET status = 'paid' thay vì cộng dồn, kiểm tra version.\n- Message lỗi nhiều lần chuyển sang dead letter queue để không chặn cả partition.",
+      "en": "These are guarantees about how many times a message is processed when failures happen; in practice assume at-least-once and make consumers idempotent.\n\n- At-most-once: commit the offset/ack before processing; a crash mid-way loses the message. Only fine for unimportant data like metrics.\n- At-least-once: ack only after processing; a crash before the ack causes redelivery, so duplicates are possible. This is the sensible default.\n- Exactly-once: Kafka supports it within Kafka (idempotent producer + transactions for read-process-write back to Kafka). With external side effects (writing another DB, calling a payment API) there is no true exactly-once, only at-least-once plus idempotency.\n\nIdempotent consumer:\n- Each message has a unique id (event_id). In the same transaction as the business change, INSERT into a processed_messages table with a unique key; on a unique violation, skip.\n- Or make the operation naturally idempotent: upsert, SET status = 'paid' instead of incrementing, version checks.\n- Messages that keep failing go to a dead letter queue so they do not block the whole partition."
+    },
+    "code": "BEGIN;\nINSERT INTO processed_messages(event_id) VALUES ($1)\n  ON CONFLICT DO NOTHING;   -- 0 rows => duplicate, rollback and ack\nUPDATE orders SET status = 'paid' WHERE id = $2;\nCOMMIT;\n-- ack / commit offset only after COMMIT",
+    "tip": {
+      "vi": "Nói thẳng \"exactly-once end-to-end là ảo tưởng khi có side effect ngoài\" rồi đưa giải pháp idempotency sẽ được đánh giá cao.",
+      "en": "Saying plainly that end-to-end exactly-once is an illusion with external side effects, then giving the idempotency fix, scores well."
+    },
+    "followUps": [
+      {
+        "vi": "Bảng processed_messages lớn dần thì dọn dẹp thế nào?",
+        "en": "How do you clean up a growing processed_messages table?"
+      },
+      {
+        "vi": "Retry với backoff và poison message xử lý thế nào trong Kafka?",
+        "en": "How do you handle retries with backoff and poison messages in Kafka?"
+      }
+    ],
+    "source": "https://kafka.apache.org/documentation/"
+  },
+  {
+    "id": "backend-mq-outbox",
+    "level": "senior",
+    "topic": "Messaging",
+    "q": {
+      "vi": "Transactional outbox pattern giải quyết vấn đề gì? Triển khai thế nào?",
+      "en": "What problem does the transactional outbox pattern solve? How do you implement it?"
+    },
+    "a": {
+      "vi": "Outbox giải quyết bài toán dual write: cần vừa cập nhật DB vừa publish event, nhưng hai hệ thống khác nhau không cùng một transaction, nên dễ xảy ra DB commit mà event không gửi được, hoặc event gửi đi mà DB rollback.\n\nCách làm:\n1. Trong CÙNG transaction với thay đổi nghiệp vụ, INSERT một dòng vào bảng outbox (id, aggregate_id, type, payload, created_at).\n2. Một relay riêng đọc outbox và publish lên Kafka/RabbitMQ, rồi đánh dấu đã gửi hoặc xoá. Có hai kiểu: polling (SELECT ... FOR UPDATE SKIP LOCKED theo batch) hoặc CDC đọc transaction log (Debezium).\n3. Vì relay có thể publish rồi chết trước khi đánh dấu, event có thể bị gửi trùng: đảm bảo at-least-once, consumer phải idempotent theo event id.\n\nLưu ý:\n- Giữ thứ tự theo aggregate bằng cách dùng aggregate_id làm partition key.\n- Theo dõi độ trễ outbox (dòng chưa gửi lâu nhất) và dọn bảng định kỳ.\n- Phía nhận có pattern đối xứng là inbox (bảng processed message). Outbox cũng là nền tảng để làm saga giữa các service.",
+      "en": "The outbox solves the dual-write problem: you must both update the DB and publish an event, but two different systems cannot share one transaction, so the DB may commit while the event fails, or the event goes out while the DB rolls back.\n\nHow:\n1. In the SAME transaction as the business change, INSERT a row into an outbox table (id, aggregate_id, type, payload, created_at).\n2. A separate relay reads the outbox and publishes to Kafka/RabbitMQ, then marks rows as sent or deletes them. Two styles: polling (SELECT ... FOR UPDATE SKIP LOCKED in batches) or CDC reading the transaction log (Debezium).\n3. Since the relay can publish and then crash before marking, events may be duplicated: delivery is at-least-once, so consumers must be idempotent on the event id.\n\nNotes:\n- Preserve per-aggregate ordering by using aggregate_id as the partition key.\n- Monitor outbox lag (oldest unsent row) and clean the table periodically.\n- The receiving side has the mirror pattern, the inbox (processed-messages table). The outbox is also the foundation for sagas across services."
+    },
+    "code": "BEGIN;\nINSERT INTO orders(id, user_id, total) VALUES ($1, $2, $3);\nINSERT INTO outbox(id, aggregate_id, type, payload)\nVALUES (gen_random_uuid(), $1, 'OrderCreated', $4);\nCOMMIT;\n-- relay / Debezium publishes outbox rows to Kafka",
+    "tip": {
+      "vi": "Bắt đầu bằng việc gọi tên \"dual write problem\" và kết thúc bằng \"consumer vẫn phải idempotent\" để cho thấy bạn hiểu trọn vẹn.",
+      "en": "Open by naming the \"dual write problem\" and close with \"consumers must still be idempotent\" to show full understanding."
+    },
+    "followUps": [
+      {
+        "vi": "Polling và CDC, bạn chọn cái nào và vì sao?",
+        "en": "Polling or CDC: which would you choose and why?"
+      },
+      {
+        "vi": "Có nhiều relay instance chạy song song thì giữ thứ tự event thế nào?",
+        "en": "With several relay instances running in parallel, how do you preserve event order?"
+      }
+    ]
+  },
+  {
+    "id": "backend-concurrency-threads-async",
+    "level": "junior",
+    "topic": "Concurrency",
+    "q": {
+      "vi": "Thread, process và async I/O khác nhau thế nào? Khi nào dùng mô hình nào?",
+      "en": "How do threads, processes and async I/O differ? When do you use each model?"
+    },
+    "a": {
+      "vi": "Process có vùng nhớ riêng, thread chia sẻ bộ nhớ trong một process, còn async I/O dùng ít thread với event loop để chờ nhiều I/O cùng lúc mà không block.\n\n- Process: cô lập tốt, một process chết không kéo theo process khác, nhưng tốn bộ nhớ và giao tiếp qua IPC. Python dùng multiprocessing để tận dụng nhiều core vì GIL (từ 3.13 có bản free-threaded thử nghiệm).\n- Thread: chia sẻ bộ nhớ nên giao tiếp nhanh nhưng phải đồng bộ (lock) để tránh race condition. Mỗi OS thread tốn vài trăm KB đến vài MB stack, nên mô hình thread-per-request khó lên hàng chục nghìn kết nối.\n- Async/event loop (Node.js, Python asyncio, Netty): một thread phục vụ hàng nghìn kết nối vì khi chờ DB/HTTP thì nhường cho việc khác. Nhược điểm: một tác vụ nặng CPU hay một lời gọi blocking sẽ làm treo cả event loop.\n- Lightweight thread: goroutine (Go), virtual thread (Java 21+) cho viết code tuần tự dễ đọc mà vẫn scale như async.\n\nChọn: I/O-bound thì async hoặc lightweight thread; CPU-bound thì nhiều process/worker hoặc thread pool cỡ bằng số core.",
+      "en": "A process has its own memory, threads share memory within a process, and async I/O uses few threads with an event loop to wait on many I/O operations without blocking.\n\n- Process: strong isolation, one crashing does not take others down, but costs more memory and communicates via IPC. Python uses multiprocessing to use multiple cores because of the GIL (3.13+ has an experimental free-threaded build).\n- Thread: shared memory makes communication fast but needs synchronization (locks) to avoid race conditions. Each OS thread costs hundreds of KB to a few MB of stack, so thread-per-request struggles at tens of thousands of connections.\n- Async/event loop (Node.js, Python asyncio, Netty): one thread serves thousands of connections because it yields while waiting on the DB/HTTP. Downside: one CPU-heavy task or blocking call freezes the whole event loop.\n- Lightweight threads: goroutines (Go) and virtual threads (Java 21+) let you write readable sequential code that still scales like async.\n\nChoice: I/O-bound means async or lightweight threads; CPU-bound means multiple processes/workers or a thread pool sized to the core count."
+    },
+    "tip": {
+      "vi": "Phân loại workload thành I/O-bound và CPU-bound trước rồi mới chọn mô hình, đó là cách trả lời có cấu trúc.",
+      "en": "Classify the workload as I/O-bound or CPU-bound first, then pick the model; that is the structured answer."
+    },
+    "followUps": [
+      {
+        "vi": "Điều gì xảy ra nếu gọi một hàm blocking trong Node.js event loop?",
+        "en": "What happens if you call a blocking function inside the Node.js event loop?"
+      },
+      {
+        "vi": "Concurrency và parallelism khác nhau thế nào?",
+        "en": "What is the difference between concurrency and parallelism?"
+      }
+    ]
+  },
+  {
+    "id": "backend-concurrency-race-condition",
+    "level": "mid",
+    "topic": "Concurrency",
+    "q": {
+      "vi": "Race condition là gì? Cho ví dụ trong backend và cách khắc phục.",
+      "en": "What is a race condition? Give a backend example and how to fix it."
+    },
+    "a": {
+      "vi": "Race condition xảy ra khi kết quả phụ thuộc vào thứ tự xen kẽ của nhiều luồng hoặc request truy cập cùng dữ liệu, thường ở mẫu \"đọc, kiểm tra, rồi ghi\" (check-then-act).\n\nVí dụ: hai request mua sản phẩm cuối cùng cùng đọc stock = 1, cùng thấy đủ hàng, cùng trừ, kết quả bán 2 cái và stock = -1. Hoặc hai request đăng ký cùng email cùng kiểm tra \"chưa tồn tại\" rồi cùng INSERT.\n\nKhắc phục, ưu tiên từ đơn giản đến phức tạp:\n- Để DB làm nguyên tử: UPDATE products SET stock = stock - 1 WHERE id = ? AND stock > 0 rồi kiểm tra số dòng bị ảnh hưởng.\n- Dùng ràng buộc: UNIQUE(email) và bắt lỗi vi phạm, thay vì kiểm tra trước.\n- Lock: SELECT ... FOR UPDATE, optimistic locking với version, hoặc mutex/atomic trong cùng process.\n- Distributed lock (Redis SET NX PX, hoặc advisory lock của PostgreSQL) khi nhiều instance cùng tranh một tài nguyên ngoài DB; cần TTL và fencing token vì lock có thể hết hạn khi tiến trình còn đang chạy.",
+      "en": "A race condition happens when the outcome depends on the interleaving of multiple threads or requests touching the same data, typically in a \"read, check, then write\" (check-then-act) pattern.\n\nExample: two requests buying the last item both read stock = 1, both see enough stock, both decrement, so two items are sold and stock = -1. Or two sign-ups with the same email both check \"does not exist\" and both INSERT.\n\nFixes, from simplest to most complex:\n- Let the DB do it atomically: UPDATE products SET stock = stock - 1 WHERE id = ? AND stock > 0, then check affected rows.\n- Use constraints: UNIQUE(email) and handle the violation, instead of checking first.\n- Locks: SELECT ... FOR UPDATE, optimistic locking with a version, or a mutex/atomic within one process.\n- Distributed locks (Redis SET NX PX, or PostgreSQL advisory locks) when many instances contend for a resource outside the DB; they need a TTL and a fencing token because a lock can expire while its holder is still running."
+    },
+    "tip": {
+      "vi": "Đưa giải pháp ràng buộc/UPDATE nguyên tử trước distributed lock cho thấy bạn không over-engineer.",
+      "en": "Offering the constraint/atomic UPDATE before distributed locks shows you do not over-engineer."
+    },
+    "followUps": [
+      {
+        "vi": "Fencing token là gì và vì sao Redis lock cần nó?",
+        "en": "What is a fencing token and why does a Redis lock need one?"
+      },
+      {
+        "vi": "Bạn viết test để tái hiện race condition thế nào?",
+        "en": "How would you write a test that reproduces a race condition?"
+      }
+    ]
+  },
+  {
+    "id": "backend-concurrency-deadlock",
+    "level": "mid",
+    "topic": "Concurrency",
+    "q": {
+      "vi": "Deadlock là gì? Làm sao phòng tránh và xử lý deadlock trong database?",
+      "en": "What is a deadlock? How do you prevent and handle deadlocks in a database?"
+    },
+    "a": {
+      "vi": "Deadlock là khi hai (hoặc nhiều) transaction/thread chờ nhau vòng tròn: A giữ lock X chờ Y, B giữ lock Y chờ X, không ai tiến được.\n\nBốn điều kiện cùng lúc: loại trừ lẫn nhau, giữ và chờ, không thể cướp lock, và chờ vòng tròn. Phá một điều kiện là hết deadlock, thực tế dễ nhất là phá chờ vòng tròn.\n\nVí dụ kinh điển: chuyển tiền A sang B và B sang A cùng lúc, mỗi transaction khoá tài khoản nguồn trước.\n\nPhòng tránh:\n- Luôn khoá theo một thứ tự cố định, vd theo id tăng dần: khoá min(a, b) trước rồi max(a, b).\n- Giữ transaction ngắn, không chờ I/O bên ngoài khi đang giữ lock.\n- Có index phù hợp để UPDATE/DELETE không khoá quá nhiều dòng.\n- Dùng lock timeout (lock_timeout, NOWAIT) để không chờ vô hạn.\n\nXử lý: PostgreSQL và MySQL tự phát hiện deadlock và huỷ một transaction (lỗi 40P01 ở PostgreSQL, 1213 ở MySQL). Ứng dụng nên bắt lỗi này và retry toàn bộ transaction với backoff, đồng thời log để tìm query gây ra.",
+      "en": "A deadlock is when two (or more) transactions/threads wait on each other in a cycle: A holds lock X and waits for Y, B holds Y and waits for X, and neither can proceed.\n\nFour conditions must hold together: mutual exclusion, hold and wait, no preemption, and circular wait. Break any one and deadlock disappears; in practice the easiest is breaking circular wait.\n\nClassic example: transferring A to B and B to A at the same time, each transaction locking its source account first.\n\nPrevention:\n- Always lock in a fixed order, e.g. ascending id: lock min(a, b) first, then max(a, b).\n- Keep transactions short and never wait on external I/O while holding locks.\n- Have proper indexes so UPDATE/DELETE do not lock more rows than needed.\n- Use lock timeouts (lock_timeout, NOWAIT) to avoid waiting forever.\n\nHandling: PostgreSQL and MySQL detect deadlocks and abort one transaction (error 40P01 in PostgreSQL, 1213 in MySQL). The application should catch it and retry the whole transaction with backoff, and log it to find the offending queries."
+    },
+    "tip": {
+      "vi": "Nêu giải pháp \"khoá theo thứ tự id\" bằng ví dụ chuyển tiền hai chiều và nhắc retry khi DB báo deadlock.",
+      "en": "Give the \"lock in id order\" fix with the two-way transfer example and mention retrying when the DB reports a deadlock."
+    },
+    "followUps": [
+      {
+        "vi": "Deadlock khác livelock và starvation thế nào?",
+        "en": "How does a deadlock differ from livelock and starvation?"
+      },
+      {
+        "vi": "Bạn tìm query gây deadlock trên production bằng cách nào?",
+        "en": "How do you find the queries causing deadlocks in production?"
+      }
+    ],
+    "source": "https://www.postgresql.org/docs/current/explicit-locking.html"
+  },
+  {
+    "id": "backend-oop-solid",
+    "level": "junior",
+    "topic": "OOP & Design",
+    "q": {
+      "vi": "Giải thích nguyên lý SOLID kèm ví dụ thực tế.",
+      "en": "Explain the SOLID principles with practical examples."
+    },
+    "a": {
+      "vi": "SOLID là 5 nguyên lý giúp code dễ thay đổi và dễ test bằng cách giảm phụ thuộc giữa các phần.\n\n- S, Single Responsibility: một class chỉ có một lý do để thay đổi. OrderService không nên vừa tính giá, vừa gửi email, vừa xuất PDF.\n- O, Open/Closed: mở để mở rộng, đóng để sửa đổi. Thêm phương thức thanh toán mới bằng cách thêm class MomoPayment implement PaymentMethod, không sửa chuỗi if/else cũ.\n- L, Liskov Substitution: class con thay được class cha mà không làm sai hành vi. Ví dụ kinh điển: Square kế thừa Rectangle nhưng đổi width làm đổi height là vi phạm.\n- I, Interface Segregation: nhiều interface nhỏ tốt hơn một interface to; client không bị buộc implement method không dùng.\n- D, Dependency Inversion: module cấp cao phụ thuộc vào abstraction, không phụ thuộc chi tiết. Service nhận PaymentGateway qua constructor (dependency injection) nên khi test có thể truyền fake.\n\nĐừng áp dụng máy móc: tạo interface cho thứ chỉ có một implementation và không cần thay thế chỉ làm code rối hơn.",
+      "en": "SOLID is five principles that make code easier to change and test by reducing coupling between parts.\n\n- S, Single Responsibility: a class has one reason to change. OrderService should not compute prices, send emails and export PDFs all at once.\n- O, Open/Closed: open for extension, closed for modification. Add a new payment method by adding a MomoPayment class implementing PaymentMethod, not by editing an old if/else chain.\n- L, Liskov Substitution: a subclass must be usable wherever its parent is without breaking behavior. Classic example: Square extending Rectangle, where setting width also changes height, violates it.\n- I, Interface Segregation: many small interfaces beat one big one; clients are not forced to implement methods they do not use.\n- D, Dependency Inversion: high-level modules depend on abstractions, not details. A service receives a PaymentGateway through its constructor (dependency injection), so tests can pass a fake.\n\nDo not apply them mechanically: an interface for something with one implementation and no need to swap just adds noise."
+    },
+    "tip": {
+      "vi": "Mỗi chữ cái nên kèm một ví dụ từ dự án của bạn, và biết lúc nào không nên áp dụng.",
+      "en": "Pair each letter with an example from your own projects, and know when not to apply it."
+    },
+    "followUps": [
+      {
+        "vi": "Composition over inheritance nghĩa là gì?",
+        "en": "What does composition over inheritance mean?"
+      },
+      {
+        "vi": "Dependency Inversion và Dependency Injection khác nhau thế nào?",
+        "en": "How does Dependency Inversion differ from Dependency Injection?"
+      }
+    ]
+  },
+  {
+    "id": "backend-design-patterns",
+    "level": "mid",
+    "topic": "OOP & Design",
+    "q": {
+      "vi": "Bạn hay dùng những design pattern nào trong backend? Cho ví dụ cụ thể.",
+      "en": "Which design patterns do you use most in backend work? Give concrete examples."
+    },
+    "a": {
+      "vi": "Pattern là lời giải đã được đặt tên cho vấn đề lặp lại; trong backend hiện đại, vài pattern xuất hiện gần như mỗi ngày.\n\n- Strategy: đóng gói các thuật toán thay thế được, vd tính phí vận chuyển theo nhà vận chuyển, chọn theo cấu hình thay vì switch lớn.\n- Factory: tạo đối tượng phù hợp theo input, vd tạo PaymentProvider theo quốc gia.\n- Adapter: bọc SDK bên thứ ba (Stripe, S3) sau interface của mình, để đổi nhà cung cấp hoặc mock khi test mà không đụng business logic.\n- Decorator / middleware: thêm logging, caching, retry, auth quanh một handler mà không sửa nó. Middleware của Express hay interceptor của Spring là ví dụ.\n- Repository: tách truy cập dữ liệu khỏi domain logic.\n- Observer / pub-sub: phát event \"OrderPaid\" để các module khác phản ứng, giảm phụ thuộc trực tiếp.\n- Singleton: chỉ hợp cho tài nguyên dùng chung như connection pool; nên để DI container quản lý thay vì biến global vì khó test.\n\nBẫy cần tránh: dùng pattern trước khi có vấn đề, sinh ra nhiều lớp abstraction chỉ có một implementation.",
+      "en": "A pattern is a named solution to a recurring problem; in modern backends a few of them show up almost daily.\n\n- Strategy: encapsulate interchangeable algorithms, e.g. shipping fee calculation per carrier, chosen by configuration instead of a big switch.\n- Factory: create the right object for the input, e.g. a PaymentProvider per country.\n- Adapter: wrap third-party SDKs (Stripe, S3) behind your own interface so you can switch vendors or mock in tests without touching business logic.\n- Decorator / middleware: add logging, caching, retries or auth around a handler without changing it. Express middleware and Spring interceptors are examples.\n- Repository: separate data access from domain logic.\n- Observer / pub-sub: emit an \"OrderPaid\" event so other modules react, reducing direct coupling.\n- Singleton: only fits shared resources like a connection pool; let a DI container manage it rather than a global, which is hard to test.\n\nTrap to avoid: applying patterns before the problem exists, producing layers of abstraction with a single implementation."
+    },
+    "tip": {
+      "vi": "Chọn 2-3 pattern bạn thật sự đã dùng và kể bối cảnh, tốt hơn liệt kê cả 23 pattern GoF.",
+      "en": "Pick 2-3 patterns you actually used and describe the context; that beats reciting all 23 GoF patterns."
+    },
+    "followUps": [
+      {
+        "vi": "Vì sao Singleton bị coi là anti-pattern trong nhiều trường hợp?",
+        "en": "Why is Singleton considered an anti-pattern in many cases?"
+      },
+      {
+        "vi": "Circuit breaker là pattern gì và dùng khi nào?",
+        "en": "What is the circuit breaker pattern and when do you use it?"
+      }
+    ]
+  },
+  {
+    "id": "backend-arch-clean-layering",
+    "level": "mid",
+    "topic": "OOP & Design",
+    "q": {
+      "vi": "Bạn tổ chức các layer trong một backend service thế nào? Clean architecture là gì?",
+      "en": "How do you organize the layers of a backend service? What is clean architecture?"
+    },
+    "a": {
+      "vi": "Ý tưởng chung là tách business logic khỏi chi tiết kỹ thuật (HTTP, DB, framework) và để phụ thuộc chỉ hướng vào trong, về phía domain.\n\nCấu trúc phổ biến:\n- Controller/handler: nhận request, validate input, map DTO, gọi use case, trả response. Không chứa nghiệp vụ.\n- Service/use case: điều phối nghiệp vụ, quản lý transaction.\n- Domain: entity và quy tắc nghiệp vụ thuần, không phụ thuộc framework.\n- Repository/infrastructure: truy cập DB, gọi API ngoài, gửi message; implement interface do tầng trong định nghĩa.\n\nClean architecture (và hexagonal / ports and adapters) đẩy ý này xa hơn: tầng trong định nghĩa \"port\" (interface), tầng ngoài cung cấp \"adapter\". Nhờ đó đổi DB hay thêm giao diện gRPC bên cạnh REST mà không sửa nghiệp vụ, và unit test domain không cần DB.\n\nTrade-off: nhiều lớp và mapping hơn. Với CRUD đơn giản, ba tầng controller-service-repository là đủ. Lỗi hay gặp: \"anemic\" service chỉ chuyển tiếp, hoặc để entity ORM rò rỉ ra tận API response. Tổ chức theo feature/module (orders, payments) thường dễ bảo trì hơn chỉ chia theo tầng kỹ thuật.",
+      "en": "The general idea is to separate business logic from technical details (HTTP, DB, frameworks) and make dependencies point only inward, toward the domain.\n\nA common structure:\n- Controller/handler: receives the request, validates input, maps DTOs, calls the use case, returns a response. No business logic.\n- Service/use case: orchestrates business operations and manages transactions.\n- Domain: entities and pure business rules, independent of frameworks.\n- Repository/infrastructure: DB access, external API calls, messaging; implements interfaces defined by inner layers.\n\nClean architecture (and hexagonal / ports and adapters) push this further: inner layers define \"ports\" (interfaces), outer layers provide \"adapters\". So you can swap the DB or add a gRPC interface next to REST without touching business logic, and unit-test the domain without a DB.\n\nTrade-off: more layers and mapping. For simple CRUD, three layers (controller-service-repository) are enough. Common mistakes: \"anemic\" services that only forward calls, or ORM entities leaking all the way into API responses. Organizing by feature/module (orders, payments) is often more maintainable than splitting only by technical layer."
+    },
+    "tip": {
+      "vi": "Nhấn mạnh \"dependency hướng vào trong\" và thừa nhận chi phí của nhiều lớp để thể hiện tư duy cân bằng.",
+      "en": "Stress \"dependencies point inward\" and admit the cost of extra layers to show balanced judgment."
+    },
+    "followUps": [
+      {
+        "vi": "Transaction nên được quản lý ở tầng nào và vì sao?",
+        "en": "Which layer should manage transactions, and why?"
+      },
+      {
+        "vi": "Domain-Driven Design có liên quan gì đến clean architecture?",
+        "en": "How does Domain-Driven Design relate to clean architecture?"
+      }
+    ]
+  },
+  {
+    "id": "backend-testing-unit-integration-mocks",
+    "level": "junior",
+    "topic": "Testing",
+    "q": {
+      "vi": "Unit test, integration test và end-to-end test khác nhau thế nào? Khi nào nên dùng mock?",
+      "en": "How do unit, integration and end-to-end tests differ? When should you use mocks?"
+    },
+    "a": {
+      "vi": "Ba loại test khác nhau ở phạm vi: unit test kiểm tra một đơn vị logic tách biệt, integration test kiểm tra các thành phần thật chạy cùng nhau, còn E2E kiểm tra cả luồng như người dùng thật.\n\n- Unit test: nhanh (mili giây), chạy hàng nghìn cái, phù hợp cho business logic, tính toán, validate. Phụ thuộc bên ngoài được thay bằng test double.\n- Integration test: chạy với DB, Redis, queue thật (thường dùng Testcontainers trong Docker) để bắt lỗi SQL, migration, mapping ORM, serialization mà mock không bắt được.\n- E2E: gọi API hoặc UI như client thật qua toàn hệ thống; tin cậy cao nhưng chậm và dễ flaky, chỉ nên giữ cho vài luồng quan trọng như đăng ký, thanh toán.\n\nMock nên dùng cho thứ chậm, không kiểm soát được hoặc có side effect: payment gateway, email, API bên thứ ba, thời gian hiện tại. Không nên mock chính DB của mình hoặc mock quá chi tiết từng lời gọi nội bộ, vì test sẽ gắn chặt vào cách triển khai và vỡ khi refactor dù hành vi không đổi.",
+      "en": "The three differ in scope: unit tests check one isolated unit of logic, integration tests check real components working together, and E2E tests check a whole flow as a real user would.\n\n- Unit tests: fast (milliseconds), thousands of them, suited to business logic, calculations, validation. External dependencies are replaced by test doubles.\n- Integration tests: run against a real DB, Redis, queue (often via Testcontainers in Docker) to catch SQL, migration, ORM mapping and serialization bugs that mocks cannot.\n- E2E: call the API or UI like a real client through the whole system; high confidence but slow and prone to flakiness, so keep them for a few critical flows like sign-up and checkout.\n\nUse mocks for things that are slow, out of your control or have side effects: payment gateways, email, third-party APIs, the current time. Avoid mocking your own DB or mocking every internal call in detail, because tests become tied to the implementation and break on refactors even when behavior is unchanged."
+    },
+    "tip": {
+      "vi": "Nhắc Testcontainers và nói rõ \"không mock thứ mình sở hữu\" cho thấy bạn có kinh nghiệm viết test thật.",
+      "en": "Mentioning Testcontainers and \"don't mock what you own\" shows hands-on testing experience."
+    },
+    "followUps": [
+      {
+        "vi": "Mock, stub và fake khác nhau thế nào?",
+        "en": "How do mocks, stubs and fakes differ?"
+      },
+      {
+        "vi": "Bạn xử lý test flaky trong CI ra sao?",
+        "en": "How do you deal with flaky tests in CI?"
+      }
+    ]
+  },
+  {
+    "id": "backend-security-sql-injection",
+    "level": "intern",
+    "topic": "Security",
+    "q": {
+      "vi": "SQL injection là gì? Phòng chống thế nào?",
+      "en": "What is SQL injection? How do you prevent it?"
+    },
+    "a": {
+      "vi": "SQL injection xảy ra khi dữ liệu người dùng được nối thẳng vào câu SQL, khiến kẻ tấn công thay đổi được ý nghĩa câu lệnh để đọc, sửa hoặc xoá dữ liệu.\n\nVí dụ: \"SELECT * FROM users WHERE email = '\" + email + \"'\" với email là ' OR '1'='1 sẽ trả về mọi user; nặng hơn có thể dùng UNION để đọc bảng khác.\n\nPhòng chống:\n- Luôn dùng parameterized query / prepared statement: DB nhận câu lệnh và dữ liệu tách biệt, dữ liệu không bao giờ được hiểu là code. ORM và query builder làm việc này mặc định, trừ khi bạn dùng hàm raw và tự nối chuỗi.\n- Những phần không tham số hoá được như tên cột trong ORDER BY thì dùng whitelist các giá trị cho phép.\n- Tài khoản DB của app chỉ có quyền tối thiểu cần thiết, không dùng quyền superuser.\n- Validate input theo kiểu và độ dài, nhưng đây chỉ là lớp phụ, không thay thế parameterized query.\n- Không trả lỗi SQL chi tiết ra client.\n\nÝ tưởng tương tự áp dụng cho NoSQL injection, command injection và LDAP injection.",
+      "en": "SQL injection happens when user input is concatenated directly into a SQL statement, letting an attacker change its meaning to read, modify or delete data.\n\nExample: \"SELECT * FROM users WHERE email = '\" + email + \"'\" with email set to ' OR '1'='1 returns every user; worse, UNION can be used to read other tables.\n\nPrevention:\n- Always use parameterized queries / prepared statements: the DB receives the statement and the data separately, so data is never interpreted as code. ORMs and query builders do this by default, unless you use raw functions and concatenate strings yourself.\n- For parts that cannot be parameterized, such as column names in ORDER BY, use a whitelist of allowed values.\n- The app's DB account has only the minimum privileges it needs, never superuser.\n- Validate input type and length, but only as an extra layer, never a replacement for parameterized queries.\n- Never return detailed SQL errors to the client.\n\nThe same idea applies to NoSQL injection, command injection and LDAP injection."
+    },
+    "code": "// vulnerable\ndb.query(\"SELECT * FROM users WHERE email = '\" + email + \"'\");\n\n// safe: parameterized\ndb.query(\"SELECT * FROM users WHERE email = $1\", [email]);",
+    "tip": {
+      "vi": "Nói được trường hợp ORDER BY không tham số hoá được và cần whitelist sẽ thể hiện bạn hiểu sâu hơn.",
+      "en": "Mentioning that ORDER BY cannot be parameterized and needs a whitelist shows deeper understanding."
+    },
+    "followUps": [
+      {
+        "vi": "Escape chuỗi thủ công có đủ an toàn không?",
+        "en": "Is manually escaping strings safe enough?"
+      },
+      {
+        "vi": "XSS khác SQL injection thế nào?",
+        "en": "How does XSS differ from SQL injection?"
+      }
+    ],
+    "source": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html"
+  },
+  {
+    "id": "backend-security-secrets",
+    "level": "junior",
+    "topic": "Security",
+    "q": {
+      "vi": "Bạn quản lý secret (mật khẩu DB, API key) trong ứng dụng thế nào? Lưu mật khẩu người dùng ra sao?",
+      "en": "How do you manage secrets (DB passwords, API keys) in an application? How do you store user passwords?"
+    },
+    "a": {
+      "vi": "Secret không bao giờ nằm trong source code hay Git; ứng dụng nhận secret lúc chạy từ môi trường hoặc một secret manager, và mật khẩu người dùng chỉ được lưu dưới dạng hash chậm có salt.\n\nSecret của ứng dụng:\n- Đọc từ biến môi trường hoặc file được mount; nguồn gốc là secret manager như AWS Secrets Manager, GCP Secret Manager, HashiCorp Vault, hoặc Kubernetes Secret (nên bật mã hoá at rest).\n- .env chỉ dùng ở local và phải có trong .gitignore; bật secret scanning (GitHub, gitleaks) trong CI.\n- Phân quyền tối thiểu, mỗi môi trường một secret riêng, có rotation định kỳ; ưu tiên credential ngắn hạn (IAM role, workload identity) thay vì key tĩnh.\n- Không log secret, token hay header Authorization.\n- Nếu lỡ commit secret: coi như đã lộ, thu hồi và tạo mới ngay; xoá khỏi lịch sử Git là chưa đủ.\n\nMật khẩu người dùng: hash bằng Argon2id, bcrypt hoặc scrypt (có salt riêng và cost factor), không dùng MD5/SHA-256 trần vì quá nhanh để brute force, và không bao giờ mã hoá hai chiều.",
+      "en": "Secrets never live in source code or Git; the app receives them at runtime from the environment or a secret manager, and user passwords are only stored as slow, salted hashes.\n\nApplication secrets:\n- Read from environment variables or mounted files, sourced from a secret manager such as AWS Secrets Manager, GCP Secret Manager, HashiCorp Vault, or Kubernetes Secrets (with encryption at rest enabled).\n- .env is for local use only and must be in .gitignore; enable secret scanning (GitHub, gitleaks) in CI.\n- Least privilege, separate secrets per environment, periodic rotation; prefer short-lived credentials (IAM roles, workload identity) over static keys.\n- Never log secrets, tokens or the Authorization header.\n- If a secret gets committed: treat it as leaked, revoke and reissue immediately; scrubbing Git history is not enough.\n\nUser passwords: hash with Argon2id, bcrypt or scrypt (per-user salt and a cost factor), never plain MD5/SHA-256 because they are fast to brute force, and never reversible encryption."
+    },
+    "tip": {
+      "vi": "Câu \"lỡ commit secret thì rotate ngay, xoá history là chưa đủ\" là điểm cộng lớn.",
+      "en": "\"If a secret is committed, rotate it immediately; rewriting history is not enough\" is a big plus."
+    },
+    "followUps": [
+      {
+        "vi": "Vì sao bcrypt chậm lại là ưu điểm?",
+        "en": "Why is bcrypt being slow an advantage?"
+      },
+      {
+        "vi": "Bạn rotate mật khẩu DB mà không làm downtime ra sao?",
+        "en": "How do you rotate a DB password without downtime?"
+      }
+    ],
+    "source": "https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html"
+  },
+  {
+    "id": "backend-security-owasp",
+    "level": "mid",
+    "topic": "Security",
+    "q": {
+      "vi": "Kể một số rủi ro trong OWASP Top 10 và cách backend phòng chống.",
+      "en": "Name some OWASP Top 10 risks and how a backend defends against them."
+    },
+    "a": {
+      "vi": "OWASP Top 10 là danh sách các nhóm rủi ro bảo mật web phổ biến nhất, được cập nhật định kỳ (bản 2021, và bản mới 2025); Broken Access Control luôn đứng đầu.\n\n- Broken Access Control: user truy cập dữ liệu người khác (IDOR), leo quyền. Kiểm tra quyền ở server cho từng object, deny by default.\n- Injection (SQL, NoSQL, command): dùng parameterized query, không ghép chuỗi lệnh.\n- Cryptographic Failures: dữ liệu nhạy cảm không mã hoá. Bắt buộc TLS, mã hoá at rest, hash mật khẩu bằng Argon2id/bcrypt.\n- Security Misconfiguration: để debug mode, thông báo lỗi chi tiết, bucket public, CORS mở toang. Dùng cấu hình chuẩn hoá và review hạ tầng.\n- Vulnerable components / supply chain: thư viện có CVE. Dùng lockfile, Dependabot/Renovate, quét SCA trong CI.\n- Authentication Failures: không giới hạn đăng nhập sai, session không hết hạn. Thêm rate limit, MFA, rotate session sau login.\n- SSRF: server fetch URL do user cung cấp và chạm vào mạng nội bộ hoặc metadata cloud. Whitelist domain, chặn dải IP nội bộ.\n- Logging and monitoring failures: không phát hiện được tấn công. Ghi log sự kiện bảo mật và cảnh báo.\n\nNguyên tắc chung: defense in depth và least privilege.",
+      "en": "The OWASP Top 10 lists the most common web security risk categories and is updated periodically (the 2021 edition, and the newer 2025 edition); Broken Access Control stays at number one.\n\n- Broken Access Control: users reaching others' data (IDOR) or escalating privileges. Check permissions server-side per object, deny by default.\n- Injection (SQL, NoSQL, command): use parameterized queries, never build commands by string concatenation.\n- Cryptographic Failures: sensitive data left unencrypted. Enforce TLS, encrypt at rest, hash passwords with Argon2id/bcrypt.\n- Security Misconfiguration: debug mode on, detailed error messages, public buckets, wide-open CORS. Use standardized config and review infrastructure.\n- Vulnerable components / supply chain: libraries with CVEs. Use lockfiles, Dependabot/Renovate, SCA scanning in CI.\n- Authentication Failures: unlimited failed logins, sessions that never expire. Add rate limiting, MFA, rotate the session after login.\n- SSRF: the server fetches a user-supplied URL and reaches the internal network or cloud metadata. Allowlist domains, block internal IP ranges.\n- Logging and monitoring failures: attacks go unnoticed. Log security events and alert on them.\n\nGeneral principles: defense in depth and least privilege."
+    },
+    "tip": {
+      "vi": "Không cần thuộc đúng thứ tự; hãy chọn 3-4 rủi ro và kể bạn đã phòng chống chúng trong dự án thế nào.",
+      "en": "You do not need the exact order; pick 3-4 risks and explain how you mitigated them in a project."
+    },
+    "followUps": [
+      {
+        "vi": "SSRF nguy hiểm thế nào trên môi trường cloud?",
+        "en": "Why is SSRF especially dangerous in cloud environments?"
+      },
+      {
+        "vi": "CSRF là gì, khi nào API của bạn cần lo về nó?",
+        "en": "What is CSRF, and when does your API need to worry about it?"
+      }
+    ],
+    "source": "https://owasp.org/www-project-top-ten/"
+  },
+  {
+    "id": "backend-observability-logs-metrics-traces",
+    "level": "mid",
+    "topic": "Observability",
+    "q": {
+      "vi": "Logging, metrics và tracing khác nhau thế nào? Bạn làm observability cho một service ra sao?",
+      "en": "How do logging, metrics and tracing differ? How do you make a service observable?"
+    },
+    "a": {
+      "vi": "Observability là khả năng hiểu hệ thống đang làm gì từ dữ liệu nó phát ra, dựa trên ba loại tín hiệu bổ sung cho nhau.\n\n- Metrics: số liệu tổng hợp theo thời gian, rẻ để lưu, dùng cho dashboard và alert. Theo dõi RED cho service (Rate, Errors, Duration với p95/p99, không chỉ trung bình) và USE cho tài nguyên. Tránh label có cardinality cao như user_id.\n- Logs: sự kiện chi tiết. Dùng structured log (JSON) có level, timestamp, request_id/trace_id; không log mật khẩu, token, dữ liệu cá nhân.\n- Traces: theo một request đi qua nhiều service, mỗi bước là một span, cho thấy chậm ở đâu. Trace context được truyền qua header (W3C traceparent).\n\nTriển khai thực tế:\n- Instrument bằng OpenTelemetry (chuẩn trung lập), gửi về backend như Prometheus/Grafana, Loki, Tempo, Jaeger, Datadog.\n- Gắn trace_id vào log để từ một alert nhảy sang trace rồi sang log liên quan.\n- Alert theo SLO và triệu chứng người dùng thấy (tỷ lệ lỗi, độ trễ), không alert theo CPU vô nghĩa.\n- Health check: liveness và readiness tách riêng.",
+      "en": "Observability is the ability to understand what a system is doing from the data it emits, based on three complementary signals.\n\n- Metrics: aggregated numbers over time, cheap to store, used for dashboards and alerts. Track RED for services (Rate, Errors, Duration with p95/p99, not just averages) and USE for resources. Avoid high-cardinality labels such as user_id.\n- Logs: detailed events. Use structured logs (JSON) with level, timestamp, request_id/trace_id; never log passwords, tokens or personal data.\n- Traces: follow one request across services, each step a span, showing where time is spent. Trace context is propagated via headers (W3C traceparent).\n\nIn practice:\n- Instrument with OpenTelemetry (a vendor-neutral standard) and export to backends such as Prometheus/Grafana, Loki, Tempo, Jaeger, Datadog.\n- Put the trace_id in logs so you can jump from an alert to a trace to the related logs.\n- Alert on SLOs and user-visible symptoms (error rate, latency), not on meaningless CPU thresholds.\n- Health checks: separate liveness and readiness."
+    },
+    "tip": {
+      "vi": "Nhắc percentile thay cho trung bình và việc nối trace_id vào log cho thấy bạn từng debug sự cố thật.",
+      "en": "Mentioning percentiles instead of averages and linking trace_id into logs shows you have debugged real incidents."
+    },
+    "followUps": [
+      {
+        "vi": "Bạn điều tra một API đột nhiên chậm p99 thế nào?",
+        "en": "How would you investigate a sudden p99 latency spike on an API?"
+      },
+      {
+        "vi": "Sampling trace hoạt động thế nào và đánh đổi gì?",
+        "en": "How does trace sampling work, and what does it trade off?"
+      }
+    ],
+    "source": "https://opentelemetry.io/docs/concepts/observability-primer/"
+  },
+  {
+    "id": "backend-scaling-horizontal-stateless",
+    "level": "junior",
+    "topic": "Scaling",
+    "q": {
+      "vi": "Vertical scaling và horizontal scaling khác nhau thế nào? Vì sao service nên stateless?",
+      "en": "How does vertical scaling differ from horizontal scaling? Why should services be stateless?"
+    },
+    "a": {
+      "vi": "Vertical scaling là nâng cấp một máy mạnh hơn (thêm CPU, RAM), còn horizontal scaling là thêm nhiều máy chạy song song sau load balancer.\n\n- Vertical: đơn giản, không đổi code, nhưng có giới hạn phần cứng, giá tăng nhanh và vẫn là single point of failure.\n- Horizontal: gần như không giới hạn, chịu lỗi tốt hơn (một instance chết, các instance khác gánh), hợp với autoscaling; đổi lại cần thiết kế phù hợp.\n\nĐể scale ngang, service nên stateless: mọi instance giống hệt nhau và request nào tới instance nào cũng được.\n- Session lưu ở Redis/DB hoặc dùng token, không lưu trong memory của instance.\n- File upload lưu ở object storage (S3), không lưu ở ổ đĩa local.\n- Cron job và tác vụ nền cần cơ chế để chỉ một instance chạy (lock hoặc scheduler riêng).\n\nLưu ý: tầng web stateless thì dễ scale, nhưng nút thắt thường chuyển sang database, nên cần thêm connection pooling, cache, read replica. Sticky session là giải pháp tạm, làm phân tải không đều và mất session khi instance chết.",
+      "en": "Vertical scaling means upgrading to a bigger machine (more CPU, RAM), while horizontal scaling means adding more machines running in parallel behind a load balancer.\n\n- Vertical: simple, no code changes, but hits hardware limits, costs grow quickly and it remains a single point of failure.\n- Horizontal: nearly unlimited, more fault tolerant (one instance dies, the others carry the load), suits autoscaling; in exchange it needs the right design.\n\nTo scale horizontally, services should be stateless: every instance is identical and any request can go to any instance.\n- Sessions live in Redis/DB or in tokens, not in instance memory.\n- File uploads go to object storage (S3), not the local disk.\n- Cron jobs and background tasks need a mechanism so only one instance runs them (a lock or a separate scheduler).\n\nNote: a stateless web tier scales easily, but the bottleneck usually moves to the database, which then needs connection pooling, caching and read replicas. Sticky sessions are a stopgap that unbalances load and loses sessions when an instance dies."
+    },
+    "tip": {
+      "vi": "Nói thêm \"nút thắt sẽ chuyển sang database\" cho thấy bạn nghĩ tới bước tiếp theo.",
+      "en": "Adding \"the bottleneck then moves to the database\" shows you think one step ahead."
+    },
+    "followUps": [
+      {
+        "vi": "Load balancer L4 và L7 khác nhau thế nào?",
+        "en": "What is the difference between L4 and L7 load balancers?"
+      },
+      {
+        "vi": "Graceful shutdown khi scale down cần làm gì?",
+        "en": "What does graceful shutdown need to handle when scaling down?"
+      }
+    ],
+    "source": "https://12factor.net/processes"
+  },
+  {
+    "id": "backend-scaling-connection-pooling",
+    "level": "mid",
+    "topic": "Scaling",
+    "q": {
+      "vi": "Connection pooling là gì? Chọn kích thước pool thế nào?",
+      "en": "What is connection pooling? How do you size a pool?"
+    },
+    "a": {
+      "vi": "Connection pool giữ sẵn một nhóm kết nối DB đã mở để tái sử dụng, vì mở kết nối mới (TCP, TLS, xác thực, và với PostgreSQL là cả một process) tốn hàng chục mili giây và tài nguyên server.\n\nChọn kích thước:\n- Pool to hơn không có nghĩa là nhanh hơn. DB chỉ xử lý song song hiệu quả khoảng vài lần số core; quá nhiều kết nối gây tranh chấp lock, context switch và tốn RAM. Một điểm xuất phát hay được nhắc là khoảng (số core x 2) + số ổ đĩa, rồi tinh chỉnh bằng load test.\n- Tính tổng: số instance x pool mỗi instance phải nhỏ hơn max_connections của DB. Khi autoscale lên 50 pod, mỗi pod 20 kết nối là 1000 kết nối.\n- Với nhiều instance hoặc serverless, đặt PgBouncer/RDS Proxy ở giữa (transaction pooling mode, chú ý giới hạn với prepared statement và session state).\n\nPitfalls: giữ connection trong lúc gọi API ngoài, transaction treo, connection leak do không trả về. Theo dõi metric thời gian chờ lấy connection, active/idle, và đặt timeout cho cả lấy kết nối lẫn query.",
+      "en": "A connection pool keeps a set of open DB connections for reuse, because opening a new one (TCP, TLS, auth, and with PostgreSQL a whole backend process) costs tens of milliseconds and server resources.\n\nSizing:\n- A bigger pool is not faster. A DB only executes efficiently at a small multiple of its core count; too many connections cause lock contention, context switching and memory use. A commonly cited starting point is about (cores x 2) + disks, then tune with load tests.\n- Do the math: instances x pool size per instance must stay below the DB's max_connections. Autoscaling to 50 pods at 20 connections each means 1000 connections.\n- With many instances or serverless, put PgBouncer/RDS Proxy in between (transaction pooling mode, minding its limits with prepared statements and session state).\n\nPitfalls: holding a connection while calling external APIs, stuck transactions, and leaks from connections never returned. Monitor connection wait time and active/idle counts, and set timeouts for both acquiring connections and queries."
+    },
+    "tip": {
+      "vi": "Phép tính \"số pod x pool size so với max_connections\" là chi tiết thực tế mà interviewer rất thích nghe.",
+      "en": "The \"pods x pool size versus max_connections\" calculation is a practical detail interviewers love to hear."
+    },
+    "followUps": [
+      {
+        "vi": "Transaction pooling của PgBouncer gây vấn đề gì với prepared statement?",
+        "en": "What problems does PgBouncer transaction pooling cause with prepared statements?"
+      },
+      {
+        "vi": "Bạn phát hiện connection leak thế nào?",
+        "en": "How do you detect a connection leak?"
+      }
+    ],
+    "source": "https://www.pgbouncer.org/"
+  },
+  {
+    "id": "backend-scaling-rate-limiting",
+    "level": "senior",
+    "topic": "Scaling",
+    "q": {
+      "vi": "Thiết kế rate limiting cho API chạy trên nhiều instance như thế nào? So sánh các thuật toán.",
+      "en": "How do you design rate limiting for an API running on many instances? Compare the algorithms."
+    },
+    "a": {
+      "vi": "Rate limiting giới hạn số request theo một khoá (user, API key, IP) trong khoảng thời gian, để bảo vệ hệ thống khỏi lạm dụng và chia tài nguyên công bằng.\n\nThuật toán:\n- Fixed window: đếm theo phút cố định. Đơn giản nhưng cho phép dồn gấp đôi ở ranh giới hai cửa sổ.\n- Sliding window log/counter: chính xác hơn; bản log tốn bộ nhớ, bản counter ước lượng theo trọng số hai cửa sổ, rẻ và đủ tốt.\n- Token bucket: bucket nạp token đều đặn, mỗi request tiêu một token; cho phép burst ngắn mà vẫn giữ tốc độ trung bình. Phổ biến nhất (API gateway, Envoy, AWS).\n- Leaky bucket: xếp hàng và xả đều, làm mượt traffic ra phía sau.\n\nNhiều instance:\n- Lưu trạng thái chung ở Redis, cập nhật nguyên tử bằng Lua script hoặc INCR + EXPIRE để tránh race.\n- Hoặc đặt ở edge/gateway (Nginx, Envoy, API gateway, Cloudflare).\n- Quyết định khi Redis lỗi: fail-open (cho qua) hay fail-closed.\n\nPhản hồi 429 Too Many Requests kèm Retry-After và header quota còn lại; client nên retry với exponential backoff và jitter.",
+      "en": "Rate limiting caps the number of requests per key (user, API key, IP) over a time window, protecting the system from abuse and sharing resources fairly.\n\nAlgorithms:\n- Fixed window: count per fixed minute. Simple, but allows double bursts at window boundaries.\n- Sliding window log/counter: more accurate; the log version costs memory, the counter version estimates by weighting two windows, cheap and good enough.\n- Token bucket: tokens refill at a steady rate and each request spends one; allows short bursts while keeping the average rate. The most common (API gateways, Envoy, AWS).\n- Leaky bucket: queues requests and drains at a constant rate, smoothing traffic to downstream systems.\n\nMany instances:\n- Keep shared state in Redis, updated atomically with a Lua script or INCR + EXPIRE to avoid races.\n- Or enforce at the edge/gateway (Nginx, Envoy, API gateway, Cloudflare).\n- Decide what happens when Redis fails: fail-open (allow) or fail-closed.\n\nRespond with 429 Too Many Requests plus Retry-After and remaining-quota headers; clients should retry with exponential backoff and jitter."
+    },
+    "code": "-- fixed-window limiter in Redis (atomic via Lua)\nlocal n = redis.call('INCR', KEYS[1])\nif n == 1 then redis.call('EXPIRE', KEYS[1], ARGV[1]) end\nreturn n  -- caller rejects with 429 if n > limit",
+    "tip": {
+      "vi": "Nêu rõ quyết định fail-open hay fail-closed khi Redis sập, đây là câu hỏi đào sâu ở mức senior.",
+      "en": "State your fail-open versus fail-closed decision for a Redis outage; it is a typical senior-level probe."
+    },
+    "followUps": [
+      {
+        "vi": "Rate limit theo IP gặp vấn đề gì với NAT hoặc proxy?",
+        "en": "What problems does per-IP rate limiting have with NAT or proxies?"
+      },
+      {
+        "vi": "Rate limiting khác load shedding và backpressure thế nào?",
+        "en": "How does rate limiting differ from load shedding and backpressure?"
+      }
+    ]
+  },
+  {
+    "id": "backend-scaling-replication-sharding",
+    "level": "senior",
+    "topic": "Scaling",
+    "q": {
+      "vi": "Khi database trở thành nút thắt, bạn scale nó thế nào? So sánh replication và sharding.",
+      "en": "When the database becomes the bottleneck, how do you scale it? Compare replication and sharding."
+    },
+    "a": {
+      "vi": "Trước hết tối ưu những thứ rẻ (query, index, cache, connection pool, nâng cấp máy), sau đó mới dùng replication để scale đọc và sharding để scale ghi, vì độ phức tạp tăng rất nhanh.\n\nReplication:\n- Một primary nhận ghi, các read replica nhận bản sao để phục vụ đọc; cũng dùng cho failover và high availability.\n- Thường là asynchronous nên có replication lag: user vừa sửa xong đọc từ replica có thể thấy dữ liệu cũ. Xử lý bằng read-your-writes (đọc primary ngay sau khi ghi, hoặc theo session) và theo dõi lag.\n\nSharding (partition ngang):\n- Chia dữ liệu theo shard key (user_id, tenant_id) ra nhiều DB, mỗi DB giữ một phần, nhờ đó scale cả ghi và dung lượng.\n- Shard key quyết định tất cả: phải phân tán đều, tránh hot shard, và đa số query nằm gọn trong một shard.\n- Cái giá: query và transaction xuyên shard khó, unique toàn cục và join phải xử lý ở app, resharding phức tạp (consistent hashing giúp giảm di chuyển dữ liệu).\n\nGiải pháp có sẵn như Vitess, Citus hay distributed SQL (CockroachDB, Spanner) giảm bớt gánh nặng tự làm.",
+      "en": "First optimize the cheap things (queries, indexes, caching, connection pooling, a bigger machine), then use replication to scale reads and sharding to scale writes, because complexity grows very fast.\n\nReplication:\n- One primary takes writes, read replicas receive copies and serve reads; also used for failover and high availability.\n- Usually asynchronous, so there is replication lag: a user who just saved may read stale data from a replica. Handle it with read-your-writes (read from the primary right after writing, or per session) and monitor lag.\n\nSharding (horizontal partitioning):\n- Split data by a shard key (user_id, tenant_id) across multiple DBs, each holding a subset, scaling both writes and storage.\n- The shard key decides everything: it must distribute evenly, avoid hot shards, and keep most queries within one shard.\n- The cost: cross-shard queries and transactions are hard, global uniqueness and joins move into the app, and resharding is complex (consistent hashing reduces data movement).\n\nOff-the-shelf options like Vitess, Citus or distributed SQL (CockroachDB, Spanner) take away much of the DIY burden."
+    },
+    "tip": {
+      "vi": "Mở đầu bằng \"tối ưu rẻ trước, shard là phương án cuối\" và nhắc replication lag với read-your-writes.",
+      "en": "Open with \"cheap optimizations first, sharding last\" and mention replication lag with read-your-writes."
+    },
+    "followUps": [
+      {
+        "vi": "Bạn chọn shard key cho một hệ thống SaaS multi-tenant thế nào?",
+        "en": "How would you choose a shard key for a multi-tenant SaaS system?"
+      },
+      {
+        "vi": "Partitioning trong một DB (vd PostgreSQL declarative partitioning) khác sharding ra sao?",
+        "en": "How does partitioning within one DB (e.g. PostgreSQL declarative partitioning) differ from sharding?"
+      }
+    ],
+    "source": "https://www.postgresql.org/docs/current/high-availability.html"
+  },
+  {
+    "id": "backend-arch-monolith-microservices",
+    "level": "senior",
+    "topic": "Architecture",
+    "q": {
+      "vi": "Monolith và microservices: khi nào nên tách? Những thách thức của microservices là gì?",
+      "en": "Monolith versus microservices: when should you split? What are the challenges of microservices?"
+    },
+    "a": {
+      "vi": "Microservices là lựa chọn tổ chức nhiều hơn là kỹ thuật: tách khi nhiều team cần deploy độc lập và các phần có nhu cầu scale khác nhau rõ rệt; còn lại một modular monolith tốt thường là điểm xuất phát đúng.\n\nMonolith: một codebase, một deploy, gọi hàm trong process, transaction ACID dễ dàng, debug đơn giản. Vấn đề khi lớn: build/deploy chậm, các team dẫm chân nhau, một lỗi kéo sập cả hệ thống.\n\nMicroservices mang lại deploy độc lập, scale riêng, cô lập lỗi, tự do công nghệ, nhưng thách thức:\n- Mạng không tin cậy: cần timeout, retry có backoff, circuit breaker, idempotency.\n- Dữ liệu phân tán: mỗi service sở hữu DB riêng, không còn transaction chung; dùng saga, outbox và chấp nhận eventual consistency.\n- Vận hành: service discovery, CI/CD cho từng service, observability với distributed tracing là bắt buộc.\n- Versioning contract giữa các service, test tích hợp khó hơn.\n\nDấu hiệu tách sai: \"distributed monolith\", các service phải deploy cùng nhau hoặc gọi nhau đồng bộ thành chuỗi dài. Ranh giới nên theo bounded context của domain (DDD), và có thể tách dần bằng strangler fig pattern.",
+      "en": "Microservices are more an organizational choice than a technical one: split when many teams need independent deploys and parts have clearly different scaling needs; otherwise a good modular monolith is usually the right starting point.\n\nMonolith: one codebase, one deploy, in-process calls, easy ACID transactions, simple debugging. Problems at size: slow builds/deploys, teams stepping on each other, one bug taking down everything.\n\nMicroservices bring independent deploys, separate scaling, fault isolation and technology freedom, but the challenges are:\n- An unreliable network: you need timeouts, retries with backoff, circuit breakers, idempotency.\n- Distributed data: each service owns its DB, with no shared transaction; use sagas and the outbox and accept eventual consistency.\n- Operations: service discovery, CI/CD per service, and observability with distributed tracing become mandatory.\n- Contract versioning between services and harder integration testing.\n\nSigns of a bad split: a \"distributed monolith\", where services must be deployed together or call each other synchronously in long chains. Boundaries should follow the domain's bounded contexts (DDD), and you can migrate gradually with the strangler fig pattern."
+    },
+    "tip": {
+      "vi": "Không bênh vực tuyệt đối bên nào; nhắc Conway's law, modular monolith và \"distributed monolith\" thể hiện tư duy senior.",
+      "en": "Do not argue for either side absolutely; mentioning Conway's law, modular monoliths and the \"distributed monolith\" shows senior thinking."
+    },
+    "followUps": [
+      {
+        "vi": "Saga orchestration và choreography khác nhau thế nào?",
+        "en": "How do saga orchestration and choreography differ?"
+      },
+      {
+        "vi": "Bạn sẽ tách service đầu tiên ra khỏi monolith như thế nào?",
+        "en": "How would you extract the first service from a monolith?"
+      }
+    ]
+  }
+]
