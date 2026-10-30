@@ -23,7 +23,7 @@ export default async function TrackRoadmap({ params }: PageProps<"/[lang]/roadma
       <PageHeader
         title={`${t.nav.roadmap} · ${t.tracks[track]}`}
         sub={
-          <Link href={`/${lang}/roadmap`} className="hover:text-white">
+          <Link href={`/${lang}/roadmap`} className="hover:text-fg">
             {t.roadmap.back}
           </Link>
         }

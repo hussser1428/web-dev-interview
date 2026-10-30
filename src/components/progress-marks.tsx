@@ -21,6 +21,6 @@ export function GroupProgress({ ids, label }: { ids: string[]; label: string }) 
 export function DoneMark({ id }: { id: string }) {
   const done = isDone(useProgress()?.q[id]);
   return (
-    <span className={`size-4 shrink-0 rounded-[4px] border-[1.5px] ${done ? "border-green-500 bg-green-500" : "border-[#3a4560]"}`} />
+    <span className={`size-4 shrink-0 rounded-[4px] border-[1.5px] ${done ? "border-green-500 bg-green-500" : "border-line2"}`} />
   );
 }

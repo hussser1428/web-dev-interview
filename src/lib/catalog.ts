@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 // Danh sách mảng & level. Tên hiển thị nằm trong dictionaries/*.json (tracks.*, levels.*).
 export const tracks = ["frontend", "backend", "ai", "devops", "mobile", "data", "dsa", "system-design", "behavioral"] as const;
 export const levels = ["intern", "junior", "mid", "senior"] as const;
@@ -15,15 +17,28 @@ export const isStyle = (v: unknown): v is Style => styles.includes(v as Style);
 /** Bản gọn của câu hỏi (đã chọn ngôn ngữ) để gửi xuống client. */
 export type QuestionItem = { id: string; track: Track; level: Level; topic: string; title: string };
 
-// Màu tag cho từng mảng (viết đầy đủ class để Tailwind nhận ra).
-export const trackColor: Record<Track, string> = {
-  frontend: "border-cyan-800 bg-cyan-950/60 text-cyan-300",
-  backend: "border-violet-800 bg-violet-950/60 text-violet-300",
-  ai: "border-amber-800 bg-amber-950/60 text-amber-300",
-  devops: "border-green-800 bg-green-950/60 text-green-300",
-  mobile: "border-pink-800 bg-pink-950/60 text-pink-300",
-  data: "border-blue-800 bg-blue-950/60 text-blue-300",
-  dsa: "border-orange-800 bg-orange-950/60 text-orange-300",
-  "system-design": "border-red-800 bg-red-950/60 text-red-300",
-  behavioral: "border-slate-700 bg-slate-900 text-slate-300",
+// Màu cho từng mảng / level: [màu chữ/icon — sắc 700, đạt tương phản 4.5:1 trên nền trắng, màu cuối gradient] -> CSS var --c / --c2 (xem .tagc, .chipi trong globals.css).
+export const trackColor: Record<Track, [string, string]> = {
+  frontend: ["#0e7490", "#3b82f6"],
+  backend: ["#6d28d9", "#c026d3"],
+  ai: ["#b45309", "#f97316"],
+  devops: ["#047857", "#0891b2"],
+  mobile: ["#be185d", "#9333ea"],
+  data: ["#1d4ed8", "#6366f1"],
+  dsa: ["#c2410c", "#e11d48"],
+  "system-design": ["#b91c1c", "#db2777"],
+  behavioral: ["#475569", "#64748b"],
 };
+export const levelColor: Record<Level, [string, string]> = {
+  intern: ["#047857", "#0e7490"],
+  junior: ["#1d4ed8", "#6366f1"],
+  mid: ["#b45309", "#ea580c"],
+  senior: ["#b91c1c", "#be123c"],
+};
+
+// Nút tự chấm Khó / Vừa / Dễ (srs Rating 1/2/3).
+export const ratingColor: Record<1 | 2 | 3, [string, string]> = { 1: ["#b91c1c", "#b91c1c"], 2: ["#b45309", "#b45309"], 3: ["#047857", "#047857"] };
+export const dueColor: [string, string] = ["#b45309", "#ea580c"];
+
+/** style={hue(trackColor[t])} để đặt --c / --c2. */
+export const hue = ([c, c2]: [string, string]) => ({ "--c": c, "--c2": c2 }) as CSSProperties;

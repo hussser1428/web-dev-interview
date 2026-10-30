@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import type { ReactNode } from "react";
-import Bar from "@/components/bar";
+import { useRef, type ReactNode } from "react";
+import Icon, { trackIcon, type IconName } from "@/components/icon";
 import type { Dict } from "@/i18n";
-import { trackColor, tracks, type QuestionItem } from "@/lib/catalog";
-import { useProgress } from "@/lib/progress";
-import { addDays, emptyProgress, isDone, isDue, streak, today } from "@/lib/srs";
+import { hue, levelColor, trackColor, tracks, type QuestionItem } from "@/lib/catalog";
+import { updateProgress, useProgress } from "@/lib/progress";
+import { addDays, bestStreak, daysBetween, emptyProgress, isDone, isDue, streak, today } from "@/lib/srs";
 import { fmt, type Locale } from "@/locales";
 
 const DAILY_GOAL = 5;
@@ -20,6 +20,10 @@ type Props = {
   items: QuestionItem[];
 };
 
+/** fmt nhưng chèn được ReactNode: rich("Có {n} thẻ", { n: <b>3</b> }) */
+const rich = (s: string, vars: Record<string, ReactNode>) =>
+  s.split(/\{(\w+)\}/).map((part, i) => (i % 2 ? <span key={i}>{vars[part]}</span> : part));
+
 export default function Dashboard({ lang, t, trackNames, levelNames, items }: Props) {
   const loaded = useProgress();
   const p = loaded ?? emptyProgress;
@@ -27,136 +31,286 @@ export default function Dashboard({ lang, t, trackNames, levelNames, items }: Pr
   const s = (id: string) => p.q[id];
 
   const done = items.filter((q) => isDone(s(q.id)));
-  const due = items.filter((q) => isDue(s(q.id), now)).length;
+  const dueItems = items.filter((q) => isDue(s(q.id), now));
+  const dueHard = dueItems.filter((q) => s(q.id)?.rating === 1).length;
+  const dueMedium = dueItems.filter((q) => s(q.id)?.rating === 2).length;
   const saved = items.filter((q) => s(q.id)?.saved).length;
-  const week = loaded ? Array.from({ length: 7 }, (_, i) => p.days[addDays(now, -i)] ?? 0).reduce((a, b) => a + b, 0) : 0;
   const streakDays = loaded ? streak(p.days, now) : 0;
   const todayCount = p.days[now] ?? 0;
+  const fresh = Math.max(0, DAILY_GOAL - todayCount);
 
   // Mảng đang học = mảng của câu luyện gần nhất.
   const focus = items.find((q) => q.id === p.last)?.track;
-  const nextInFocus = focus && items.find((q) => q.track === focus && !isDone(s(q.id)));
   const suggestions = (
     focus
       ? items.filter((q) => q.track === focus && !isDone(s(q.id)))
       : tracks.map((tr) => items.find((q) => q.track === tr && !isDone(s(q.id)))).filter((q) => !!q)
-  ).slice(0, 5);
+  ).slice(0, 3);
+  const next = suggestions[0];
+  const interviewTrack = focus ?? "backend";
+  const paceTrack = focus ?? next?.track;
 
-  const value = (v: ReactNode) => (loaded ? v : "–");
+  // Giờ của trình duyệt chỉ đọc sau khi hydrate (loaded) để HTML server/client khớp nhau.
+  const hour = loaded ? new Date().getHours() : 0;
+  const greeting = hour < 11 ? t.greetMorning : hour < 18 ? t.greetAfternoon : t.greetEvening;
+
+  // Kế hoạch hôm nay: việc chưa xong đầu tiên tô cam (ưu tiên), xong thì gạch ngang.
+  const tasks = [
+    {
+      done: todayCount >= DAILY_GOAL,
+      title: fmt(t.planGoal, { goal: DAILY_GOAL, done: Math.min(todayCount, DAILY_GOAL) }),
+      meta: next ? [trackNames[next.track], next.topic] : [],
+      href: next ? `/${lang}/questions/${next.id}` : `/${lang}/questions`,
+    },
+    {
+      done: loaded !== null && dueItems.length === 0,
+      title: dueItems.length ? fmt(t.planReview, { n: dueItems.length }) : t.planNoReview,
+      meta: dueItems.length ? [fmt(t.planReviewMeta, { min: Math.ceil(dueItems.length * 0.75), hard: dueHard, medium: dueMedium })] : [],
+      href: `/${lang}/flashcards`,
+    },
+    {
+      done: false,
+      title: t.planInterview,
+      meta: [trackNames[interviewTrack], t.planInterviewMeta],
+      href: `/${lang}/interview?track=${interviewTrack}`,
+    },
+  ];
+  const firstOpen = tasks.findIndex((x) => !x.done);
 
   return (
     <>
+      <header className="flex flex-wrap items-end gap-3">
+        <div className="min-w-0 flex-1">
+          <h1 className={`text-[28px] font-bold tracking-tight ${loaded ? "" : "invisible"}`}>{greeting}</h1>
+          <p className={`mt-0.5 text-[17px] text-muted ${loaded ? "" : "invisible"}`}>
+            {rich(t.todayLine, {
+              due: <b className="text-[#c2410c]">{fmt(t.dueCards, { n: dueItems.length })}</b>,
+              fresh: <b className="text-brand">{fmt(t.newQs, { n: fresh })}</b>,
+            })}
+          </p>
+        </div>
+        <Link href={`/${lang}/flashcards`} className="btn-ghost h-11">
+          <Icon name="layers" className="text-brand" /> {t.flashBtn}
+        </Link>
+        <Link href={`/${lang}/interview`} className="btn h-11 px-5">
+          <Icon name="play" /> {t.interviewBtn}
+        </Link>
+      </header>
+
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <Stat label={t.streak} value={value(`🔥 ${fmt(t.days, { n: streakDays })}`)} hint={t.streakHint} />
-        <Stat label={t.practiced} value={value(done.length)} hint={fmt(t.thisWeek, { n: week })} hintClass="text-green-400" />
-        <Stat label={t.due} value={value(due)} hint={t.dueHint} valueClass="text-brand2" />
-        <Stat label={t.saved} value={value(saved)} hint={t.savedHint} />
+        <Stat cls="g-warm" label={t.streak} icon="flame" num={streakDays} unit={t.daysUnit} pill={loaded && fmt(t.record, { n: bestStreak(p.days) })}>
+          <Week days={p.days} now={now} names={t.weekdays} />
+        </Stat>
+        <Stat cls="g-teal" label={t.practiced} icon="check" num={done.length} unit={fmt(t.ofTotal, { n: items.length })}>
+          <div className="bar flex-1 bg-black/25!">
+            <span className="bg-white!" style={{ width: `${(done.length / items.length) * 100}%` }} />
+          </div>
+          <b>{Math.round((done.length / items.length) * 100)}%</b>
+        </Stat>
+        <Stat cls="g-ocean" label={t.due} icon="rotate" num={dueItems.length} unit={t.cardsUnit}>
+          <Pill>{fmt(t.hardN, { n: dueHard })}</Pill>
+          <Pill>{fmt(t.mediumN, { n: dueMedium })}</Pill>
+          <Link href={`/${lang}/flashcards`} className="ml-auto inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-0.5 text-xs font-semibold text-indigo-700">
+            {t.reviewNow} <Icon name="arrow" size={12} strokeWidth={2.4} />
+          </Link>
+        </Stat>
+        <Stat cls="g-berry" label={t.saved} icon="bookmark" num={saved} unit={t.qUnit}>
+          <Link href={`/${lang}/questions?status=saved`} className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-0.5 text-xs font-semibold text-fuchsia-700">
+            {t.viewSaved} <Icon name="arrow" size={12} strokeWidth={2.4} />
+          </Link>
+        </Stat>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[1.35fr_1fr]">
-        <div className="flex flex-col gap-4">
-          <div className="card">
-            <h3 className="mb-2 font-semibold">{t.planTitle}</h3>
-            <PlanRow checked={due === 0} href={`/${lang}/flashcards`} action={due > 0 ? t.start : undefined}>
-              {due > 0 ? fmt(t.planReview, { n: due }) : t.planNoReview}
-            </PlanRow>
-            <PlanRow
-              checked={todayCount >= DAILY_GOAL}
-              href={suggestions[0] ? `/${lang}/questions/${suggestions[0].id}` : `/${lang}/questions`}
-              action={todayCount < DAILY_GOAL ? t.start : undefined}
-            >
-              {fmt(t.planGoal, { goal: DAILY_GOAL, done: Math.min(todayCount, DAILY_GOAL) })}
-            </PlanRow>
-            <PlanRow
-              checked={!!focus && !nextInFocus}
-              href={focus ? `/${lang}/roadmap/${focus}` : `/${lang}/roadmap`}
-              action={t.start}
-            >
-              {focus
-                ? nextInFocus
-                  ? fmt(t.planNext, { topic: nextInFocus.topic, track: trackNames[focus] })
-                  : t.allDone
-                : t.planPick}
-            </PlanRow>
-          </div>
+      <div className="grid gap-5 lg:grid-cols-[1fr_380px]">
+        <div className="flex flex-col gap-5">
+          <section className="card overflow-hidden p-0">
+            <div className="card-h">
+              <span className="chipi sm"><Icon name="target" size={15} /></span>
+              <h2 className="font-semibold">{t.planTitle}</h2>
+              <span className="tagc" style={hue(levelColor.intern)}>{fmt(t.planDone, { n: tasks.filter((x) => x.done).length })}</span>
+              <div className="bar ml-auto w-32">
+                <span style={{ width: `${(tasks.filter((x) => x.done).length / 3) * 100}%` }} />
+              </div>
+            </div>
+            <div className="flex flex-col">
+              {tasks.map((x, i) => {
+                const kind = x.done ? "done" : i === firstOpen ? "hot" : "next";
+                return (
+                  <Link
+                    key={i}
+                    href={x.href}
+                    className={`flex items-center gap-3.5 border-b border-line px-5 py-3.25 last:border-0 hover:bg-panel2 ${
+                      kind === "hot" ? "bg-[#fffbf5] shadow-[inset_3px_0_0_#f97316]" : ""
+                    }`}
+                  >
+                    <span
+                      className={`grid size-5 shrink-0 place-items-center rounded-full border-[1.5px] ${
+                        kind === "done" ? "border-[#059669] bg-[#059669] text-white" : kind === "hot" ? "border-[#f97316]" : "border-line2"
+                      }`}
+                    >
+                      {x.done && <Icon name="check" size={12} strokeWidth={3} />}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <div className={`font-semibold ${x.done ? "text-subtle" : ""}`}>{x.title}</div>
+                      {x.meta.length > 0 && <div className="text-xs text-subtle">{x.meta.join(" · ")}</div>}
+                    </div>
+                    {kind === "done" ? (
+                      <Icon name="chev" className="text-subtle" />
+                    ) : (
+                      <span className={`${kind === "hot" ? "btn" : "btn-ghost"} h-8 px-3 text-xs`}>
+                        {t.start} {kind === "hot" && <Icon name="arrow" size={14} />}
+                      </span>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
 
-          <div className="card flex-1">
-            <h3 className="mb-1 flex items-center font-semibold">
-              {t.suggestTitle}
-              <Link href={`/${lang}/questions`} className="ml-auto text-xs font-normal text-brand2">{t.seeAll}</Link>
-            </h3>
-            {suggestions.map((q) => (
-              <Link key={q.id} href={`/${lang}/questions/${q.id}`} className="flex items-center gap-2 border-t border-line py-3 first-of-type:border-0 hover:text-brand2">
-                <span className="flex-1 text-sm">{q.title}</span>
-                <span className={`tag ${trackColor[q.track]}`}>{trackNames[q.track]}</span>
-                <span className="tag">{levelNames[q.level]}</span>
+          <section className="card overflow-hidden p-0">
+            <div className="card-h">
+              <span className="chipi sm"><Icon name="map" size={15} /></span>
+              <h2 className="font-semibold">{t.masteryTitle}</h2>
+              <Link href={`/${lang}/roadmap`} className="ml-auto flex items-center gap-1 text-xs font-medium text-brand hover:underline">
+                {t.roadmapLink} <Icon name="chev" size={14} />
               </Link>
-            ))}
-          </div>
+            </div>
+            <div className="grid gap-3 p-4 sm:grid-cols-2 xl:grid-cols-3">
+              {tracks.map((tr) => {
+                const total = items.filter((q) => q.track === tr).length;
+                const d = done.filter((q) => q.track === tr).length;
+                const pct = total ? Math.round((d / total) * 100) : 0;
+                return (
+                  <Link key={tr} href={`/${lang}/roadmap/${tr}`} style={hue(trackColor[tr])} className="tint flex flex-col gap-2.5 rounded-xl px-3.5 py-3 hover:border-line2">
+                    <div className="flex items-center gap-2.5">
+                      <span className="chipi"><Icon name={trackIcon[tr]} /></span>
+                      <div className="min-w-0">
+                        <div className="truncate text-sm font-semibold">{trackNames[tr]}</div>
+                        <div className="text-xs text-subtle">{fmt(t.qCount, { done: d, total })}</div>
+                      </div>
+                      <span className={`ml-auto ${d ? "text-[15px] font-bold text-(--c)" : "text-xs font-semibold text-subtle"}`}>
+                        {d ? `${pct}%` : t.notStarted}
+                      </span>
+                    </div>
+                    <div className="bar">
+                      <span style={{ width: `${pct}%` }} />
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
         </div>
 
-        <div className="flex flex-col gap-4">
-          <div className="card">
-            <h3 className="mb-3 font-semibold">{t.masteryTitle}</h3>
-            <div className="flex flex-col gap-2.5">
-              {tracks.map((tr) => (
-                <Mastery key={tr} name={trackNames[tr]} href={`/${lang}/roadmap/${tr}`} total={items.filter((q) => q.track === tr).length} done={done.filter((q) => q.track === tr).length} />
-              ))}
+        <div className="flex flex-col gap-5">
+          <Countdown t={t} date={loaded ? p.interviewDate : undefined} loaded={!!loaded} remaining={paceTrack ? items.filter((q) => q.track === paceTrack && !isDone(s(q.id))).length : 0} trackName={paceTrack ? trackNames[paceTrack] : ""} />
+
+          <section className="card overflow-hidden p-0">
+            <div className="card-h">
+              <span className="chipi sm"><Icon name="cal" size={15} /></span>
+              <h2 className="font-semibold">{t.activityTitle}</h2>
+              <span className="ml-auto text-xs text-subtle">
+                {fmt(t.activeDays, { n: loaded ? Object.keys(p.days).filter((d) => d > addDays(now, -WEEKS * 7)).length : 0 })}
+              </span>
             </div>
-          </div>
-
-          <div className="card">
-            <h3 className="mb-3 font-semibold">{t.activityTitle}</h3>
             <Heatmap days={p.days} now={now} />
-          </div>
+          </section>
 
-          <div className="card bg-gradient-to-br from-[#1d1840] to-[#0c2a33]">
-            <h3 className="mb-2 font-semibold">🧭 {t.continueTitle}</h3>
-            <p className="text-sm text-muted">
-              {focus && nextInFocus ? fmt(t.continueText, { track: trackNames[focus], topic: nextInFocus.topic }) : t.continueEmpty}
-            </p>
-            <Link href={focus ? `/${lang}/roadmap/${focus}` : `/${lang}/roadmap`} className="btn mt-3">
-              {t.continueBtn}
-            </Link>
-          </div>
+          <section className="card overflow-hidden p-0">
+            <div className="card-h">
+              <span className="chipi sm"><Icon name="spark" size={15} /></span>
+              <h2 className="font-semibold">{t.suggestTitle}</h2>
+              <Link href={`/${lang}/questions`} className="ml-auto flex items-center gap-1 text-xs font-medium text-brand hover:underline">
+                {t.seeAll} <Icon name="chev" size={14} />
+              </Link>
+            </div>
+            {suggestions.map((q) => (
+              <Link key={q.id} href={`/${lang}/questions/${q.id}`} className="flex items-center gap-3 border-b border-line px-4 py-3 last:border-0 hover:bg-panel2">
+                <span className="chipi" style={hue(trackColor[q.track])}><Icon name={trackIcon[q.track]} /></span>
+                <div className="min-w-0 flex-1">
+                  <div className="truncate font-semibold">{q.title}</div>
+                  <div className="text-xs text-subtle">
+                    {trackNames[q.track]} · <span className="font-semibold" style={{ color: levelColor[q.level][0] }}>{levelNames[q.level]}</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </section>
         </div>
       </div>
     </>
   );
 }
 
-function Stat({ label, value, hint, valueClass = "", hintClass = "text-muted" }: { label: string; value: ReactNode; hint: string; valueClass?: string; hintClass?: string }) {
+function Stat({ cls, label, icon, num, unit, pill, children }: { cls: string; label: string; icon: IconName; num: number; unit: string; pill?: ReactNode; children: ReactNode }) {
   return (
-    <div className="card">
-      <div className="text-sm text-muted">{label}</div>
-      <div className={`my-1 text-2xl font-bold ${valueClass}`}>{value}</div>
-      <div className={`text-xs ${hintClass}`}>{hint}</div>
-    </div>
-  );
-}
-
-function PlanRow({ checked, href, action, children }: { checked: boolean; href: string; action?: string; children: ReactNode }) {
-  return (
-    <div className="flex items-center gap-3 border-t border-line py-3 first-of-type:border-0">
-      <span className={`size-4.5 shrink-0 rounded-[5px] border-[1.5px] ${checked ? "border-green-500 bg-green-500" : "border-[#3a4560]"}`} />
-      <span className="flex-1 text-sm">{children}</span>
-      {action && !checked && (
-        <Link href={href} className="btn px-3 py-1.5 text-xs">{action}</Link>
-      )}
-    </div>
-  );
-}
-
-function Mastery({ name, href, done, total }: { name: string; href: string; done: number; total: number }) {
-  const ratio = total ? done / total : 0;
-  return (
-    <Link href={href} className="group">
-      <div className="flex justify-between text-sm">
-        <span className="group-hover:text-brand2">{name}</span>
-        <span className="text-muted">{Math.round(ratio * 100)}% · {done}/{total}</span>
+    <div className={`vivid ${cls} flex flex-col gap-2 rounded-2xl px-4.5 py-4`}>
+      <div className="flex items-center gap-2 text-sm font-semibold">
+        <span className="grid size-8 place-items-center rounded-xl bg-white text-(--c) shadow-[0_4px_10px_-4px_rgb(0_0_0/0.35)]">
+          <Icon name={icon} size={17} strokeWidth={2.2} />
+        </span>
+        {label}
       </div>
-      <Bar value={ratio} className="mt-1 h-1.5" />
-    </Link>
+      <div className="flex items-baseline gap-1.5">
+        <span className="text-[34px] font-extrabold leading-tight tracking-tight">{num}</span>
+        <span className="text-sm font-semibold opacity-90">{unit}</span>
+        {pill && <span className="ml-auto self-center rounded-full bg-black/22 px-2.5 py-0.5 text-xs font-semibold">{pill}</span>}
+      </div>
+      <div className="mt-auto flex items-center gap-2 text-xs font-medium">{children}</div>
+    </div>
+  );
+}
+
+const Pill = ({ children }: { children: ReactNode }) => <span className="rounded-full bg-black/22 px-2.5 py-0.5 font-semibold">{children}</span>;
+
+/** 7 ô của tuần hiện tại (T2 → CN), hôm nay viền trắng. */
+function Week({ days, now, names }: { days: Record<string, number>; now: string; names: string[] }) {
+  const monday = now ? addDays(now, -((new Date(`${now}T00:00`).getDay() + 6) % 7)) : "";
+  return (
+    <div className="flex flex-1 gap-1">
+      {names.map((n, i) => {
+        const d = monday && addDays(monday, i);
+        const cls = d === now ? "shadow-[inset_0_0_0_2px_#fff] text-white" : d && days[d] ? "bg-white/95 text-(--c)" : "bg-black/22 text-white/75";
+        return (
+          <i key={n} className={`h-6 flex-1 rounded-md text-center text-[10px] font-semibold not-italic leading-6 ${cls}`}>{n}</i>
+        );
+      })}
+    </div>
+  );
+}
+
+function Countdown({ t, date, loaded, remaining, trackName }: { t: Dict["dashboard"]; date?: string; loaded: boolean; remaining: number; trackName: string }) {
+  const input = useRef<HTMLInputElement>(null);
+  const n = date ? daysBetween(today(), date) : -1;
+  return (
+    <section className="vivid g-hero relative rounded-2xl p-5">
+      <span className="pointer-events-none absolute -bottom-24 -right-16 size-48 rounded-full border border-white/18" />
+      <span className="pointer-events-none absolute -bottom-32 -right-24 size-64 rounded-full border border-white/18" />
+      <div className="flex items-center gap-2 text-sm text-white/92">
+        <Icon name="cal" /> {date ? fmt(t.interviewDay, { date: new Date(`${date}T00:00`).toLocaleDateString(undefined, { day: "numeric", month: "numeric" }) }) : t.noDateTitle}
+      </div>
+      <div className={`mt-2 text-[44px] font-extrabold leading-tight tracking-tighter ${loaded ? "" : "invisible"}`}>
+        {n < 0 ? "—" : n === 0 ? "🎯" : fmt(t.daysBig, { n })}
+      </div>
+      <p className="max-w-64 text-sm text-white/92">
+        {n < 0 ? t.noDateHint : n === 0 ? t.countdownToday : remaining && trackName ? fmt(t.paceHint, { n: Math.ceil(remaining / n), track: trackName }) : ""}
+      </p>
+      <div className="relative mt-4">
+        <button className="btn-white h-8 px-3.5 text-xs" onClick={() => input.current?.showPicker()}>
+          {date ? t.changeDate : t.setDate}
+        </button>
+        <input
+          ref={input}
+          type="date"
+          tabIndex={-1}
+          aria-label={t.changeDate}
+          value={date ?? ""}
+          min={loaded ? today() : undefined}
+          onChange={(e) => updateProgress((p) => ({ ...p, interviewDate: e.target.value || undefined }))}
+          className="pointer-events-none absolute left-0 top-0 h-8 w-0 opacity-0"
+        />
+      </div>
+    </section>
   );
 }
 
@@ -165,13 +319,19 @@ function Heatmap({ days, now }: { days: Record<string, number>; now: string }) {
   const cells = now
     ? Array.from({ length: WEEKS * 7 }, (_, i) => days[addDays(now, i - (WEEKS * 7 - 1))] ?? 0)
     : Array<number>(WEEKS * 7).fill(0);
-  const color = (n: number) => (n === 0 ? "bg-panel2" : n < 3 ? "bg-[#2b2466]" : n < 6 ? "bg-[#4c3bb8]" : "bg-brand");
+  const color = (n: number) =>
+    n === 0
+      ? "bg-[#eef0f5]"
+      : n < 3
+        ? "bg-[#ddd6fe]"
+        : n < 6
+          ? "bg-[#a78bfa]"
+          : "bg-[#6d28d9]";
   return (
-    <div className="grid grid-flow-col grid-rows-7 gap-1">
+    <div className="grid grid-flow-col grid-rows-7 gap-[3px] p-4">
       {cells.map((n, i) => (
         <span key={i} className={`aspect-square rounded-[3px] ${color(n)}`} title={n ? String(n) : undefined} />
       ))}
     </div>
   );
 }
-

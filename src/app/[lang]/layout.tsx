@@ -1,10 +1,18 @@
 import type { Metadata } from "next";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import Link from "next/link";
+import { Suspense } from "react";
+import Icon from "@/components/icon";
 import Nav from "@/components/nav";
+import TopBar from "@/components/topbar";
 import { getDictionary, getLocale } from "@/i18n";
+import { questions } from "@/lib/questions";
 import { locales } from "@/locales";
 import LangSwitch from "./lang-switch";
 import "./globals.css";
+
+const inter = Inter({ subsets: ["latin", "vietnamese"], variable: "--font-inter" });
+const mono = JetBrains_Mono({ subsets: ["latin", "vietnamese"], variable: "--font-jb" });
 
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
@@ -17,33 +25,51 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
   const lang = await getLocale();
-  const { nav } = await getDictionary();
+  const t = await getDictionary();
+  const { nav } = t;
+  const learn = [
+    { href: `/${lang}`, label: nav.home, icon: "dash", exact: true },
+    { href: `/${lang}/questions`, label: nav.questions, icon: "book", count: questions.length },
+    { href: `/${lang}/roadmap`, label: nav.roadmap, icon: "map" },
+    { href: `/${lang}/flashcards`, label: nav.flashcards, icon: "layers", due: true },
+  ] as const;
+  const ai = [
+    { href: `/${lang}/interview`, label: nav.interview, icon: "chat" },
+    { href: `/${lang}/project`, label: nav.project, icon: "git" },
+  ] as const;
 
   return (
-    <html lang={lang}>
+    <html lang={lang} className={`${inter.variable} ${mono.variable}`}>
       <body className="flex min-h-screen font-sans antialiased max-md:flex-col">
-        <aside className="flex shrink-0 gap-1 border-line bg-panel px-3.5 max-md:items-center max-md:overflow-x-auto max-md:border-b max-md:py-2 md:sticky md:top-0 md:h-screen md:w-58 md:flex-col md:border-r md:py-5">
-          <Link href={`/${lang}`} className="flex shrink-0 items-center gap-2.5 px-1.5 text-lg font-bold md:mb-5">
-            <span className="grid size-8 place-items-center rounded-lg bg-gradient-to-br from-brand to-brand2 text-sm">
-              &lt;/&gt;
+        <aside className="flex shrink-0 gap-1 border-line bg-side px-3 max-md:items-center max-md:overflow-x-auto max-md:border-b max-md:py-2 md:sticky md:top-0 md:h-screen md:w-59 md:flex-col md:border-r md:py-4">
+          <Link href={`/${lang}`} className="flex shrink-0 items-center gap-2.5 px-2 text-[15px] font-bold md:pb-3.5 md:pt-1">
+            <span className="grid size-7.5 place-items-center rounded-[9px] bg-[image:var(--grad)] text-white shadow-[0_4px_12px_-4px_rgb(109_40_217/0.6)]">
+              <Icon name="code" size={15} strokeWidth={2.2} />
             </span>
             DevInterview
           </Link>
           <Nav
-            items={[
-              { href: `/${lang}`, label: nav.home, icon: "◧", exact: true },
-              { href: `/${lang}/questions`, label: nav.questions, icon: "☰" },
-              { href: `/${lang}/roadmap`, label: nav.roadmap, icon: "◎" },
-              { href: `/${lang}/flashcards`, label: nav.flashcards, icon: "▤" },
-              { href: `/${lang}/interview`, label: nav.interview, icon: "▶", badge: nav.beta },
-              { href: `/${lang}/project`, label: nav.project, icon: "⌘" },
+            groups={[
+              { label: nav.learn, items: [...learn] },
+              { label: nav.ai, items: [...ai] },
             ]}
+            t={nav}
           />
-          <div className="shrink-0 md:mt-auto">
+          <div className="mt-2.5 shrink-0">
             <LangSwitch current={lang} />
           </div>
         </aside>
-        <main className="min-w-0 flex-1">{children}</main>
+        <main className="flex min-w-0 flex-1 flex-col bg-[radial-gradient(900px_320px_at_15%_-10%,rgb(124_58_237/0.07),transparent_70%)]">
+          <Suspense>
+            <TopBar
+              lang={lang}
+              search={t.header.search}
+              trackNames={t.tracks}
+              sections={[...learn, ...ai].map((i) => [i.href, i.label])}
+            />
+          </Suspense>
+          {children}
+        </main>
       </body>
     </html>
   );

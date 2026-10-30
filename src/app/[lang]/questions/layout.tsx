@@ -8,7 +8,7 @@ export default async function QuestionsLayout({ children }: LayoutProps<"/[lang]
   const lang = await getLocale();
   const t = await getDictionary();
   return (
-    <div className="flex md:h-screen">
+    <div className="flex md:h-[calc(100vh-3.5rem)]">
       {/* Bộ lọc đọc từ URL (useSearchParams) nên cần Suspense. */}
       <Suspense>
         <QuestionList
@@ -19,7 +19,7 @@ export default async function QuestionsLayout({ children }: LayoutProps<"/[lang]
           items={questions.map((q) => toItem(q, lang))}
         />
       </Suspense>
-      <section className="min-w-0 flex-1 md:overflow-y-auto">{children}</section>
+      <section className="flex min-w-0 flex-1 flex-col overflow-hidden">{children}</section>
     </div>
   );
 }

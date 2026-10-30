@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Layout
 
 - `IDEA.md` — product vision (Vietnamese): question bank, AI mock interview, project deep-dive, dashboard. `PLAN.md` — current phase status.
-- `mockups/` — target UI. `mockups/index.html?s=dashboard|bank|interview|project|report` plus PNGs. New screens should match these.
+- `mockups/v2/index-light.html?s=dashboard|bank|setup|room|report` — **current** target UI (light theme, Inter). Palette tokens in `globals.css` `@theme` mirror its `:root`. New screens should match it. `mockups/v2/index.html` + PNGs are the dark variant, `mockups/index.html` the old v1 — reference only.
 - `web/` — the app (Next.js 16, React 19, Tailwind 4, TypeScript). All commands run from `web/`.
 
 ## Commands (in `web/`)
@@ -37,7 +37,7 @@ Read `web/node_modules/next/dist/docs/` before using unfamiliar APIs — this ve
 
 **No database, no auth.** Content is static JSON; user progress lives in `localStorage`.
 
-- **Content**: `src/data/questions/<track>.json`, one file per track. **Array order = learning-roadmap order**; topics are grouped by first appearance (`roadmap()` in `src/lib/questions.ts`). Each question is bilingual (`q`, `a`, optional `tip`, `followUps` as `{vi, en}`). Schema and how to add questions are in `web/README.md`. `src/lib/questions.ts` is `server-only` and statically imports every track file — adding a track means updating `tracks` in `src/lib/catalog.ts`, the import map in `questions.ts`, `trackColor`, and `tracks.*` in both dictionaries. `check-questions.mjs` regex-parses `tracks`/`levels` out of `catalog.ts`, so keep those as single-line array literals.
+- **Content**: `src/data/questions/<track>.json`, one file per track. **Array order = learning-roadmap order**; topics are grouped by first appearance (`roadmap()` in `src/lib/questions.ts`). Each question is bilingual (`q`, `a`, optional `tip`, `followUps` as `{vi, en}`). Schema and how to add questions are in `web/README.md`. `src/lib/questions.ts` is `server-only` and statically imports every track file — adding a track means updating `tracks` in `src/lib/catalog.ts`, the import map in `questions.ts`, `trackColor` (hex pair), `trackIcon` in `src/components/icon.tsx`, and `tracks.*` in both dictionaries. `check-questions.mjs` regex-parses `tracks`/`levels` out of `catalog.ts`, so keep those as single-line array literals.
 - **Server → client boundary**: server pages pick the locale and send slim `QuestionItem`s (`toItem()`) plus the relevant dictionary slice (`t.questions`, etc.) as props. Client components never import question JSON or `i18n.ts`.
 - **i18n**: `src/locales.ts` (locale list, `pick()` fallback to en→vi, `fmt()` for `{var}` interpolation; safe for server/client/proxy). `src/i18n.ts` loads `src/dictionaries/<lang>.json`; `vi.json` defines the `Dict` type, so every dictionary must have the same keys. Steps to add a language are in `web/README.md`.
 - **Progress / spaced repetition**: `src/lib/srs.ts` is pure logic (dates as local `YYYY-MM-DD` strings, Leitner-style intervals: hard=1 day, medium ×1.5, easy ×2.5, streaks, flashcard queue) — tested by `scripts/test-srs.ts`. `src/lib/progress.ts` is the client store (`useSyncExternalStore` over localStorage key `devinterview:progress:v1`). `useProgress()` returns `null` on the server/during hydration — handle `null` to avoid hydration mismatches. Mutate only via `updateProgress(p => srsFn(p, ...))`.
@@ -48,5 +48,5 @@ Read `web/node_modules/next/dist/docs/` before using unfamiliar APIs — this ve
 
 - Code comments and user-facing docs are in Vietnamese; keep that.
 - Deliberate shortcuts are marked with `// ponytail:` comments naming the limit and upgrade path (e.g. localStorage → DB, Leitner → SM-2/FSRS).
-- Tailwind classes for track colors are written out in full in `catalog.ts` so Tailwind can detect them — don't build them dynamically.
+- Track/level colors are hex pairs in `catalog.ts`, applied as CSS vars via `style={hue(...)}` and consumed by `.tagc`/`.chipi`/`.tint`/`.g-hue` in `globals.css` (so no dynamic Tailwind class names). Light theme: text is `text-fg` (not `text-white`); gradient `.vivid` + `g-warm|g-teal|g-ocean|g-berry|g-grad|g-hero` only for stat cards / one hero per screen; tinted boxes use `.soft` + `hue(...)`; code blocks stay dark (`bg-code`). Icons: `<Icon name=…>` in `src/components/icon.tsx` (Lucide paths, no icon dependency).
 - Question answers must be original writing, not copied verbatim from copyrighted sources.

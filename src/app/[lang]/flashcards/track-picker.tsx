@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import type { Dict } from "@/i18n";
-import { trackColor, type Track } from "@/lib/catalog";
+import Icon, { trackIcon } from "@/components/icon";
+import { dueColor, hue, trackColor, type Track } from "@/lib/catalog";
 import { useProgress } from "@/lib/progress";
 import { isDone, isDue, today } from "@/lib/srs";
 import { fmt, type Locale } from "@/locales";
@@ -19,13 +20,13 @@ export default function TrackPicker({ lang, t, tracks }: Props) {
         const fresh = p ? ids.filter((id) => !isDone(p.q[id])).length : ids.length;
         return (
           <Link key={track} href={`/${lang}/flashcards/${track}`} className="card flex flex-col gap-3 hover:border-brand">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">▤</span>
+            <div className="flex items-center gap-3" style={hue(trackColor[track])}>
+              <span className="chipi solid"><Icon name={trackIcon[track]} /></span>
               <span className="font-semibold">{name}</span>
             </div>
-            <div className="flex gap-2">
-              <span className={`tag ${due ? "border-cyan-800 bg-cyan-950/60 text-cyan-300" : ""}`}>{fmt(t.due, { n: due })}</span>
-              <span className={`tag ${trackColor[track]}`}>{fmt(t.fresh, { n: fresh })}</span>
+            <div className="flex gap-2" style={hue(trackColor[track])}>
+              <span className="tagc" style={hue(due ? dueColor : ["#5b6576", "#5b6576"])}>{fmt(t.due, { n: due })}</span>
+              <span className="tagc">{fmt(t.fresh, { n: fresh })}</span>
             </div>
           </Link>
         );

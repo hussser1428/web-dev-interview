@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DevInterview – Mobile v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Mockup mobile – mobile.html?s=home|bank|detail|flash|interview|report ; không có ?s = bảng tổng hợp */
+:root{
+  --bg:#09090b; --surface:#111113; --surface2:#18181b; --hover:#1f1f23;
+  --line:#232327; --line2:#2e2e33;
+  --text:#ededef; --muted:#a1a1aa; --subtle:#71717a;
+  --brand:#7c5cff; --brand-soft:rgba(124,92,255,.14); --brand-line:rgba(124,92,255,.38);
+  --green:#22c55e; --amber:#f59e0b; --red:#ef4444;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font:15px/1.5 Inter,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+svg.i{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.mono{font-family:"JetBrains Mono",Consolas,monospace}
+.screen{display:none;width:390px;height:844px;flex-direction:column;position:relative;overflow:hidden;background:var(--bg)}
+.screen.on{display:flex}
+
+.status{height:47px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:6px 28px 0 34px;font-weight:600;font-size:15px}
+.status .r{display:flex;gap:6px;align-items:center}
+.batt{width:25px;height:12px;border:1.5px solid var(--muted);border-radius:4px;padding:1.5px}
+.batt i{display:block;height:100%;width:75%;background:var(--text);border-radius:1px}
+.body{flex:1;overflow:hidden;padding:4px 20px 20px;display:flex;flex-direction:column;gap:16px}
+
+.tabbar{flex:none;height:84px;border-top:1px solid var(--line);background:rgba(9,9,11,.94);display:flex;padding:8px 6px 26px}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:500;color:var(--subtle);position:relative}
+.tab.on{color:var(--text)}
+.tab.on svg{color:var(--brand)}
+.tab .b{position:absolute;top:-3px;left:calc(50% + 6px);min-width:16px;height:16px;border-radius:99px;background:var(--red);color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center;padding:0 4px}
+.home-ind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:99px;background:#ededef}
+
+.nav{flex:none;height:48px;display:flex;align-items:center;gap:12px;padding:0 16px}
+.nav .t{flex:1;text-align:center;font-weight:600;font-size:16px}
+.iconbtn{width:36px;height:36px;border-radius:99px;display:grid;place-items:center;color:var(--text);background:var(--surface2);border:1px solid var(--line)}
+
+h1{font-size:26px;font-weight:700;letter-spacing:-.02em;line-height:1.2}
+h2{font-size:17px;font-weight:600}
+.sub{color:var(--muted)}
+.small{font-size:13px}
+.xs{font-size:12px}
+.row{display:flex;align-items:center;gap:10px}
+.grow{flex:1;min-width:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px}
+.pad{padding:16px}
+.dot{width:8px;height:8px;border-radius:99px;display:inline-block;flex:none}
+.bar{height:6px;border-radius:99px;background:var(--surface2);overflow:hidden}
+.bar>span{display:block;height:100%;border-radius:99px;background:var(--brand)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 18px;border-radius:12px;font:600 15px Inter,sans-serif;border:1px solid transparent}
+.btn.primary{background:var(--brand);color:#fff}
+.btn.ghost{background:var(--surface2);border-color:var(--line2);color:var(--text)}
+.btn.sm{height:34px;font-size:13px;padding:0 12px;border-radius:9px}
+.chip{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border-radius:99px;border:1px solid var(--line2);font-size:13px;font-weight:500;color:var(--muted);background:var(--surface);white-space:nowrap;flex:none}
+.chip.on{color:var(--text);border-color:var(--brand-line);background:var(--brand-soft)}
+.meta{display:flex;align-items:center;gap:6px;color:var(--subtle);font-size:12.5px}
+.meta i{font-style:normal;opacity:.6}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;border:1px solid var(--line2);color:var(--muted)}
+.c-fe{background:#22d3ee}.c-be{background:#a78bfa}.c-ai{background:#fbbf24}.c-do{background:#4ade80}.c-mo{background:#f472b6}.c-da{background:#60a5fa}.c-ds{background:#fb923c}.c-sd{background:#f87171}.c-bh{background:#94a3b8}
+.k{color:#c4b5fd}.s{color:#86efac}.c{color:#71717a}.nu{color:#fdba74}
+
+/* home */
+.hero{padding:16px 18px;border-radius:18px;background:linear-gradient(150deg,rgba(124,92,255,.32),rgba(34,211,238,.08) 70%),var(--surface);border:1px solid var(--brand-line)}
+.hero .big{font-size:40px;font-weight:700;letter-spacing:-.03em;line-height:1}
+.minis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mini{padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.mini b{font-size:20px;font-weight:700}
+.mini .ic{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;margin-bottom:6px}
+.mini .ic svg{width:16px;height:16px}
+.task{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--line)}
+.task:last-child{border:0}
+.check{width:22px;height:22px;border-radius:99px;border:1.5px solid var(--line2);display:grid;place-items:center;flex:none}
+.check.done{background:var(--green);border-color:var(--green);color:#052e12}
+.check.done svg{width:13px;height:13px;stroke-width:3}
+.task.done .t{color:var(--subtle);text-decoration:line-through}
+.hscroll{display:flex;gap:10px;margin:0 -20px;padding:0 20px;overflow:hidden}
+.trk{width:150px;flex:none;padding:14px;display:flex;flex-direction:column;gap:10px}
+.sect{display:flex;align-items:center}
+.sect a{margin-left:auto;font-size:13px;color:var(--muted)}
+
+/* bank */
+.search{display:flex;align-items:center;gap:10px;height:44px;padding:0 14px;border-radius:12px;background:var(--surface2);border:1px solid var(--line);color:var(--subtle)}
+.seg{display:flex;padding:3px;border-radius:11px;background:var(--surface2);border:1px solid var(--line)}
+.seg span{flex:1;text-align:center;padding:7px 4px;border-radius:8px;font-size:13px;font-weight:500;color:var(--muted)}
+.seg span.on{background:var(--hover);color:var(--text);box-shadow:0 0 0 1px var(--line2)}
+.seg em{font-style:normal;color:var(--subtle);font-size:11px;margin-left:3px}
+.item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.item .t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:4px;font-size:15px}
+.st{width:20px;height:20px;border-radius:99px;border:1.5px solid var(--line2);flex:none;display:grid;place-items:center;margin-top:1px}
+.st.ok{border-color:var(--green);background:rgba(34,197,94,.15);color:var(--green)}
+.st.due{border-color:var(--amber);background:rgba(245,158,11,.12);color:var(--amber)}
+.st svg{width:11px;height:11px;stroke-width:3}
+.grouph{font-size:12px;font-weight:600;color:var(--subtle);text-transform:uppercase;letter-spacing:.06em;padding-top:6px}
+
+/* detail */
+.tabs{display:flex;gap:22px;border-bottom:1px solid var(--line)}
+.tabs span{padding-bottom:10px;font-weight:500;color:var(--subtle);border-bottom:2px solid transparent;margin-bottom:-1px;font-size:14px}
+.tabs span.on{color:var(--text);border-color:var(--brand)}
+.tldr{border:1px solid var(--brand-line);background:var(--brand-soft);border-radius:14px;padding:14px;font-size:14.5px;line-height:1.6}
+.tldr .h{display:flex;align-items:center;gap:6px;font-weight:600;color:#c4b5fd;font-size:13px;margin-bottom:6px}
+.tldr .h svg{width:15px;height:15px}
+.code{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0c0c0e}
+.code-h{display:flex;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line);font-size:12px;color:var(--subtle)}
+.code pre{padding:12px 14px;font:12px/1.7 "JetBrains Mono",monospace;color:#d4d4d8;white-space:pre}
+.tip{border-left:2px solid var(--amber);background:rgba(245,158,11,.07);border-radius:0 12px 12px 0;padding:12px 14px;font-size:14px;line-height:1.6}
+.tip b{color:#fcd34d}
+.sheet{flex:none;border-top:1px solid var(--line);background:var(--surface);padding:12px 16px 30px;display:flex;flex-direction:column;gap:10px}
+.rates{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.rate{height:54px;border-radius:12px;border:1px solid var(--line2);background:var(--surface2);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:600;font-size:15px}
+.rate small{font-weight:400;font-size:11.5px;color:var(--subtle)}
+.rate.h{color:#fca5a5;border-color:rgba(239,68,68,.3)}.rate.m{color:#fcd34d;border-color:rgba(245,158,11,.3)}.rate.e{color:#86efac;border-color:rgba(34,197,94,.3)}
+
+/* flashcards */
+.prog{display:flex;gap:4px}
+.prog span{flex:1;height:4px;border-radius:2px;background:var(--line2)}
+.prog span.d{background:var(--brand)}
+.stack{flex:1;position:relative;margin-top:10px}
+.fc{position:absolute;inset:0;border-radius:24px;border:1px solid var(--line2);background:var(--surface);padding:24px;display:flex;flex-direction:column}
+.fc.b1{transform:translateY(-14px) scale(.92);opacity:.5}
+.fc.b2{transform:translateY(-7px) scale(.96);opacity:.75}
+.fc.front{background:linear-gradient(180deg,#16161a,#111113);box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.fc .q{font-size:22px;font-weight:600;line-height:1.4;letter-spacing:-.01em;margin-top:18px}
+.fc .hint{margin-top:auto;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--subtle);font-size:13px}
+.fc .flip{width:56px;height:56px;border-radius:99px;display:grid;place-items:center;background:var(--brand-soft);border:1px solid var(--brand-line);color:#c4b5fd}
+
+/* interview */
+.ihead{flex:none;padding:4px 16px 12px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line)}
+.msgs{flex:1;overflow:hidden;padding:16px;display:flex;flex-direction:column;gap:16px}
+.msg{display:flex;gap:10px;max-width:92%}
+.av{width:30px;height:30px;border-radius:99px;display:grid;place-items:center;flex:none;background:linear-gradient(135deg,#7c5cff,#22d3ee);color:#fff}
+.av svg{width:15px;height:15px}
+.bubble{background:var(--surface2);border:1px solid var(--line);border-radius:4px 18px 18px 18px;padding:11px 14px;font-size:14.5px;line-height:1.55}
+.msg.me{align-self:flex-end}
+.msg.me .bubble{background:var(--brand-soft);border-color:var(--brand-line);border-radius:18px 4px 18px 18px}
+.who{font-size:12px;color:var(--subtle);margin-bottom:4px}
+.attach{margin-top:8px;display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);border:1px solid var(--line2);border-radius:8px;padding:4px 8px;background:var(--bg)}
+.attach svg{width:13px;height:13px}
+.live{font-size:14.5px;line-height:1.55;color:var(--muted)}
+.live b{color:var(--text);font-weight:400}
+.voice{flex:none;padding:14px 20px 34px;border-top:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;align-items:center;gap:14px}
+.wave{display:flex;align-items:center;gap:3px;height:28px}
+.wave i{width:3px;border-radius:2px;background:#c4b5fd}
+.vrow{display:flex;align-items:center;justify-content:space-between;width:100%}
+.mic{width:72px;height:72px;border-radius:99px;display:grid;place-items:center;background:var(--red);color:#fff;box-shadow:0 0 0 8px rgba(239,68,68,.15),0 0 0 16px rgba(239,68,68,.07)}
+.mic svg{width:28px;height:28px}
+.side-btn{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11.5px;color:var(--muted);width:72px}
+.side-btn span{width:46px;height:46px;border-radius:99px;display:grid;place-items:center;background:var(--surface2);border:1px solid var(--line2);color:var(--text)}
+
+/* report */
+.ring{width:132px;height:132px;border-radius:99px;display:grid;place-items:center;background:conic-gradient(var(--brand) 0 72%,var(--surface2) 72% 100%);position:relative;flex:none}
+.ring:after{content:"";position:absolute;inset:9px;border-radius:99px;background:var(--surface)}
+.ring div{position:relative;z-index:1;text-align:center}
+.ring b{font-size:34px;font-weight:700;letter-spacing:-.03em}
+.crit .row span:last-child{margin-left:auto;font-weight:600}
+.score{width:42px;height:30px;border-radius:8px;display:grid;place-items:center;font-weight:700;font-size:13.5px;flex:none}
+.s-g{background:rgba(34,197,94,.12);color:#86efac}.s-a{background:rgba(245,158,11,.12);color:#fcd34d}.s-r{background:rgba(239,68,68,.12);color:#fca5a5}
+.qa{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--line);font-size:14.5px}
+.qa:last-child{border:0}
+.cta{display:flex;gap:12px;padding:14px;border:1px solid var(--brand-line);background:var(--brand-soft);border-radius:16px}
+
+/* home grid */
+.bar>.c-fe{background:#22d3ee}.bar>.c-be{background:#a78bfa}.bar>.c-ai{background:#fbbf24}.bar>.c-do{background:#4ade80}.bar>.c-mo{background:#f472b6}.bar>.c-da{background:#60a5fa}.bar>.c-ds{background:#fb923c}.bar>.c-sd{background:#f87171}.bar>.c-bh{background:#94a3b8}
+.topbar{display:flex;align-items:center;gap:10px;margin-top:4px}
+.mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#7c5cff,#22d3ee);display:grid;place-items:center;color:#fff}
+.mark svg{width:16px;height:16px}
+.streak{display:inline-flex;align-items:center;gap:5px;height:34px;padding:0 12px;border-radius:99px;background:rgba(251,146,60,.12);color:#fdba74;font-weight:600;font-size:14px}
+.streak svg{width:16px;height:16px}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.tile .ti{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:var(--surface2)}
+.tile .nm{font-weight:600;font-size:14px;line-height:1.2}
+.tile .ct{font-size:11.5px;color:var(--subtle);margin-top:-4px}
+.tile .bar{height:4px}
+.tile.cont{border-color:var(--brand-line);background:linear-gradient(160deg,rgba(124,92,255,.16),transparent 70%),var(--surface)}
+.f-fe{color:#22d3ee}.f-be{color:#a78bfa}.f-ai{color:#fbbf24}.f-do{color:#4ade80}.f-mo{color:#f472b6}.f-da{color:#60a5fa}.f-ds{color:#fb923c}.f-sd{color:#f87171}.f-bh{color:#94a3b8}
+.trow{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.trow:last-child{border:0}
+.trow .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none}
+.trow .ic svg{width:17px;height:17px}
+
+/* overview sheet */
+.sheetview{display:flex;flex-wrap:wrap;gap:40px;padding:48px 56px;background:#050506;justify-content:center}
+.phone{display:flex;flex-direction:column;align-items:center;gap:14px}
+.phone .frame{width:414px;height:868px;border-radius:58px;padding:12px;background:#1c1c1f;box-shadow:0 0 0 1px #2c2c30,0 30px 60px rgba(0,0,0,.6);position:relative}
+.phone iframe{width:390px;height:844px;border:0;border-radius:46px;display:block;background:var(--bg)}
+.phone .island{position:absolute;top:23px;left:50%;transform:translateX(-50%);width:120px;height:34px;border-radius:99px;background:#000;z-index:2}
+.phone .cap{color:var(--muted);font-size:15px;font-weight:500}
+.phone .cap b{color:var(--text)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .71-1.53l7-6a2 2 0 0 1 2.58 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="book" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol>
+  <symbol id="layers" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></symbol>
+  <symbol id="chat" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></symbol>
+  <symbol id="search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+  <symbol id="check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></symbol>
+  <symbol id="clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="cal" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="play" viewBox="0 0 24 24"><path d="M6 3l14 9-14 9z"/></symbol>
+  <symbol id="back" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+  <symbol id="chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
+  <symbol id="spark" viewBox="0 0 24 24"><path d="M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.14-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.14a.5.5 0 0 1 .96 0l1.58 6.14a2 2 0 0 0 1.44 1.44l6.14 1.58a.5.5 0 0 1 0 .96l-6.14 1.58a2 2 0 0 0-1.44 1.44l-1.58 6.14a.5.5 0 0 1-.96 0z"/></symbol>
+  <symbol id="code" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></symbol>
+  <symbol id="bulb" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4"/></symbol>
+  <symbol id="bookmark" viewBox="0 0 24 24"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="mic" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/></symbol>
+  <symbol id="kbd" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10"/></symbol>
+  <symbol id="rotate" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></symbol>
+  <symbol id="filter" viewBox="0 0 24 24"><path d="M3 6h18M7 12h10M10 18h4"/></symbol>
+  <symbol id="x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="share" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"/></symbol>
+  <symbol id="more" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></symbol>
+  <symbol id="bell" viewBox="0 0 24 24"><path d="M10.27 21a2 2 0 0 0 3.46 0M3.26 15.33A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.67C19.41 13.96 18 12.5 18 8A6 6 0 0 0 6 8c0 4.5-1.41 5.96-2.74 7.33"/></symbol>
+  <symbol id="t-fe" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+  <symbol id="t-be" viewBox="0 0 24 24"><rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/><path d="M6 6h.01M6 18h.01"/></symbol>
+  <symbol id="t-do" viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></symbol>
+  <symbol id="t-mo" viewBox="0 0 24 24"><rect width="14" height="20" x="5" y="2" rx="2"/><path d="M12 18h.01"/></symbol>
+  <symbol id="t-da" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></symbol>
+  <symbol id="t-ds" viewBox="0 0 24 24"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"/></symbol>
+  <symbol id="t-sd" viewBox="0 0 24 24"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3M12 12V8"/></symbol>
+  <symbol id="t-bh" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+</svg>
+
+<template id="status"><div class="status"><span>9:41</span><span class="r"><svg class="i" style="width:17px;height:17px" viewBox="0 0 24 24"><path d="M2 20h.01M7 20v-4M12 20v-8M17 20V8M22 4v16"/></svg><span class="batt"><i></i></span></span></div></template>
+<template id="tabbar">
+  <nav class="tabbar">
+    <a class="tab" data-k="home"><svg class="i"><use href="#i-home"/></svg>Trang chủ</a>
+    <a class="tab" data-k="bank"><svg class="i"><use href="#book"/></svg>Câu hỏi</a>
+    <a class="tab" data-k="flash"><svg class="i"><use href="#layers"/></svg>Ôn tập<span class="b">8</span></a>
+    <a class="tab" data-k="interview"><svg class="i"><use href="#chat"/></svg>Phỏng vấn</a>
+    <a class="tab" data-k="me"><svg class="i"><use href="#user"/></svg>Cá nhân</a>
+  </nav>
+</template>
+
+<!-- ============ HOME ============ -->
+<div class="screen" id="home">
+  <slot data-status></slot>
+  <div class="body" style="gap:14px">
+    <div class="topbar">
+      <span class="mark"><svg class="i"><use href="#code"/></svg></span><b style="font-size:17px" class="grow">DevInterview</b>
+      <span class="streak"><svg class="i"><use href="#flame"/></svg>7</span>
+      <span class="iconbtn"><svg class="i" style="width:18px;height:18px"><use href="#bell"/></svg></span>
+    </div>
+    <div class="search"><svg class="i" style="width:18px;height:18px"><use href="#search"/></svg>Tìm trong 296 câu hỏi…</div>
+    <div class="sect"><h2>Luyện theo mảng</h2><span class="xs sub" style="margin-left:auto">64/296 đã luyện</span></div>
+    <div class="tgrid" style="margin-top:-4px">
+      <div class="tile cont"><span class="ti f-be"><svg class="i"><use href="#t-be"/></svg></span><div><div class="nm">Backend</div></div><div class="ct">24/41 câu</div><div class="bar"><span class="c-be" style="width:59%"></span></div></div>
+      <div class="tile"><span class="ti f-fe"><svg class="i"><use href="#t-fe"/></svg></span><div><div class="nm">Frontend</div></div><div class="ct">18/43 câu</div><div class="bar"><span class="c-fe" style="width:42%"></span></div></div>
+      <div class="tile"><span class="ti f-ds"><svg class="i"><use href="#t-ds"/></svg></span><div><div class="nm">DSA</div></div><div class="ct">9/37 câu</div><div class="bar"><span class="c-ds" style="width:24%"></span></div></div>
+      <div class="tile"><span class="ti f-ai"><svg class="i"><use href="#spark"/></svg></span><div><div class="nm">AI / ML</div></div><div class="ct">3/36 câu</div><div class="bar"><span class="c-ai" style="width:8%"></span></div></div>
+      <div class="tile"><span class="ti f-do"><svg class="i"><use href="#t-do"/></svg></span><div><div class="nm">DevOps</div></div><div class="ct">6/36 câu</div><div class="bar"><span class="c-do" style="width:17%"></span></div></div>
+      <div class="tile"><span class="ti f-mo"><svg class="i"><use href="#t-mo"/></svg></span><div><div class="nm">Mobile</div></div><div class="ct">0/27 câu</div><div class="bar"><span class="c-mo" style="width:0%"></span></div></div>
+      <div class="tile"><span class="ti f-da"><svg class="i"><use href="#t-da"/></svg></span><div><div class="nm">Data</div></div><div class="ct">2/27 câu</div><div class="bar"><span class="c-da" style="width:7%"></span></div></div>
+      <div class="tile"><span class="ti f-sd"><svg class="i"><use href="#t-sd"/></svg></span><div><div class="nm">System Design</div></div><div class="ct">2/29 câu</div><div class="bar"><span class="c-sd" style="width:7%"></span></div></div>
+      <div class="tile"><span class="ti f-bh"><svg class="i"><use href="#t-bh"/></svg></span><div><div class="nm">Behavioral</div></div><div class="ct">0/20 câu</div><div class="bar"><span class="c-bh" style="width:0%"></span></div></div>
+    </div>
+    <div class="card">
+      <div class="trow"><span class="ic" style="background:rgba(245,158,11,.14);color:var(--amber)"><svg class="i"><use href="#layers"/></svg></span><div class="grow"><div style="font-weight:500">8 thẻ cần ôn</div><div class="meta">~6 phút<i>·</i>3 câu Khó</div></div><button class="btn sm primary">Ôn ngay</button></div>
+      <div class="trow"><span class="ic" style="background:var(--brand-soft);color:#c4b5fd"><svg class="i"><use href="#cal"/></svg></span><div class="grow"><div style="font-weight:500">Shopee · còn 12 ngày</div><div class="meta">Backend<i>·</i>Junior</div></div><button class="btn sm ghost">Thử</button></div>
+    </div>
+  </div>
+  <slot data-tab="home"></slot>
+  <div class="home-ind"></div>
+</div>
+
+<!-- ============ BANK ============ -->
+<div class="screen" id="bank">
+  <slot data-status></slot>
+  <div class="body" style="gap:14px">
+    <div class="search" style="margin-top:4px"><svg class="i" style="width:18px;height:18px"><use href="#search"/></svg>Tìm trong 296 câu hỏi…</div>
+    <div class="hscroll" style="gap:8px">
+      <span class="chip"><svg class="i" style="width:15px;height:15px"><use href="#filter"/></svg>Lọc</span>
+      <span class="chip on"><span class="dot c-be"></span>Backend</span>
+      <span class="chip">Junior</span>
+      <span class="chip"><span class="dot c-fe"></span>Frontend</span>
+      <span class="chip"><span class="dot c-ds"></span>DSA</span>
+    </div>
+    <div class="seg"><span class="on">Tất cả<em>41</em></span><span>Chưa làm<em>17</em></span><span>Cần ôn<em>5</em></span><span>Đã lưu<em>4</em></span></div>
+    <div>
+      <div class="grouph">HTTP & REST</div>
+      <div class="item"><span class="st ok"><svg class="i"><use href="#check"/></svg></span><div class="grow"><div class="t">Điều gì xảy ra khi gõ URL vào trình duyệt?</div><div class="meta">Intern</div></div></div>
+      <div class="item"><span class="st due"><svg class="i"><use href="#clock"/></svg></span><div class="grow"><div class="t">Các HTTP method khác nhau thế nào? "Safe" và "idempotent" là gì?</div><div class="meta">Intern<i>·</i><span style="color:#fcd34d">Đến hạn ôn</span></div></div><svg class="i" style="width:16px;height:16px;color:var(--amber);fill:var(--amber)"><use href="#star"/></svg></div>
+      <div class="item"><span class="st ok"><svg class="i"><use href="#check"/></svg></span><div class="grow"><div class="t">Khi nào trả về 400, 401, 403, 404, 409, 422?</div><div class="meta">Junior</div></div></div>
+      <div class="item"><span class="st"></span><div class="grow"><div class="t">REST và GraphQL khác nhau thế nào? Khi nào chọn GraphQL?</div><div class="meta">Mid</div></div></div>
+      <div class="grouph" style="margin-top:10px">Auth & Security</div>
+      <div class="item"><span class="st ok"><svg class="i"><use href="#check"/></svg></span><div class="grow"><div class="t">Cookie, session và JWT khác nhau thế nào?</div><div class="meta">Junior</div></div></div>
+    </div>
+  </div>
+  <slot data-tab="bank"></slot>
+  <div class="home-ind"></div>
+</div>
+
+<!-- ============ DETAIL ============ -->
+<div class="screen" id="detail">
+  <slot data-status></slot>
+  <div class="nav"><span class="iconbtn"><svg class="i"><use href="#back"/></svg></span><span class="t small sub" style="font-weight:500">2 / 41</span><span class="iconbtn" style="color:var(--amber)"><svg class="i" style="fill:var(--amber)"><use href="#star"/></svg></span></div>
+  <div class="body" style="gap:14px;padding-top:8px">
+    <div class="row" style="gap:6px;flex-wrap:wrap"><span class="badge"><span class="dot c-be"></span>Backend</span><span class="badge">HTTP & REST</span><span class="badge">Intern</span></div>
+    <h1 style="font-size:22px;line-height:1.35">Các HTTP method khác nhau thế nào? "Safe" và "idempotent" là gì?</h1>
+    <div class="tabs"><span>Tự trả lời</span><span class="on">Đáp án</span><span>Follow-up (2)</span></div>
+    <div class="tldr"><div class="h"><svg class="i"><use href="#spark"/></svg>TRẢ LỜI 30 GIÂY</div>GET đọc, POST tạo, PUT thay toàn bộ, PATCH sửa một phần, DELETE xoá. <b>Safe</b> = không đổi dữ liệu. <b>Idempotent</b> = gọi nhiều lần như một lần (GET, PUT, DELETE).</div>
+    <div class="code"><div class="code-h">http</div><pre><span class="k">PUT</span>  /users/<span class="nu">42</span>  <span class="c"># 3 lần → như nhau</span>
+<span class="k">POST</span> /orders    <span class="c"># 3 lần → 3 đơn</span></pre></div>
+    <div class="tip"><b>Mẹo ghi điểm:</b> nhắc tới <span class="mono" style="font-size:12.5px">Idempotency-Key</span> khi làm thanh toán.</div>
+  </div>
+  <div class="sheet">
+    <div class="xs sub" style="text-align:center">Bạn trả lời câu này thế nào?</div>
+    <div class="rates"><span class="rate h">Khó<small>ôn sau 1 ngày</small></span><span class="rate m">Vừa<small>4 ngày</small></span><span class="rate e">Dễ<small>9 ngày</small></span></div>
+  </div>
+  <div class="home-ind"></div>
+</div>
+
+<!-- ============ FLASHCARDS ============ -->
+<div class="screen" id="flash">
+  <slot data-status></slot>
+  <div class="nav"><span class="iconbtn"><svg class="i"><use href="#x"/></svg></span><span class="t">Ôn tập · Backend</span><span style="width:36px;text-align:right" class="small sub">3/8</span></div>
+  <div class="body" style="padding-top:6px">
+    <div class="prog"><span class="d"></span><span class="d"></span><span class="d"></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="stack">
+      <div class="fc b1"></div><div class="fc b2"></div>
+      <div class="fc front">
+        <div class="row"><span class="badge"><span class="dot c-be"></span>Database</span><span class="badge" style="color:#fca5a5;border-color:rgba(239,68,68,.3)">Lần trước: Khó</span></div>
+        <div class="q">Index trong database hoạt động ra sao? Khi nào index làm chậm hệ thống?</div>
+        <div class="small sub" style="margin-top:14px">Nghĩ hoặc nói câu trả lời của bạn trước, rồi lật thẻ để so sánh.</div>
+        <div class="hint"><span class="flip"><svg class="i"><use href="#rotate"/></svg></span>Chạm để lật thẻ</div>
+      </div>
+    </div>
+  </div>
+  <div class="sheet" style="border:0;background:transparent;padding-top:4px">
+    <div class="rates"><span class="rate h">Khó<small>1 ngày</small></span><span class="rate m">Vừa<small>4 ngày</small></span><span class="rate e">Dễ<small>9 ngày</small></span></div>
+  </div>
+  <div class="home-ind"></div>
+</div>
+
+<!-- ============ INTERVIEW ============ -->
+<div class="screen" id="interview">
+  <slot data-status></slot>
+  <div class="ihead">
+    <div class="row"><span class="iconbtn"><svg class="i"><use href="#x"/></svg></span><div class="grow" style="text-align:center"><div style="font-weight:600">Backend · Junior</div><div class="xs sub">Product · Câu 3/5 · 08:24</div></div><span class="iconbtn"><svg class="i"><use href="#more"/></svg></span></div>
+    <div class="prog"><span class="d"></span><span class="d"></span><span class="d"></span><span></span><span></span></div>
+  </div>
+  <div class="msgs">
+    <div class="msg"><span class="av"><svg class="i"><use href="#spark"/></svg></span><div><div class="who">Người phỏng vấn</div><div class="bubble">Nếu người dùng đổi mật khẩu thì các JWT cũ xử lý thế nào?</div></div></div>
+    <div class="msg me"><div><div class="bubble">Em lưu <span class="mono" style="font-size:12.5px">tokenVersion</span> trong bảng user, đổi mật khẩu thì tăng lên, middleware so với version trong token.</div></div></div>
+    <div class="msg"><span class="av"><svg class="i"><use href="#spark"/></svg></span><div><div class="who">Người phỏng vấn</div><div class="bubble">Vậy mỗi request đều query DB — có mất ưu điểm stateless của JWT không? Bạn có thể viết đoạn code ngắn.</div></div></div>
+    <div class="msg me"><div class="bubble" style="border-style:dashed"><div class="live"><b>Có ạ, nên em sẽ cache version trong Redis với TTL ngắn, khi đổi mật khẩu thì</b> xoá key…</div></div></div>
+  </div>
+  <div class="voice">
+    <div class="wave" id="wave"></div>
+    <div class="vrow">
+      <div class="side-btn"><span><svg class="i"><use href="#kbd"/></svg></span>Gõ phím</div>
+      <span class="mic"><svg class="i"><use href="#mic"/></svg></span>
+      <div class="side-btn"><span><svg class="i"><use href="#code"/></svg></span>Viết code</div>
+    </div>
+    <div class="xs sub">Đang nghe… chạm để dừng và gửi</div>
+  </div>
+  <div class="home-ind"></div>
+</div>
+
+<!-- ============ REPORT ============ -->
+<div class="screen" id="report">
+  <slot data-status></slot>
+  <div class="nav"><span class="iconbtn"><svg class="i"><use href="#x"/></svg></span><span class="t">Kết quả</span><span class="iconbtn"><svg class="i"><use href="#share"/></svg></span></div>
+  <div class="body" style="gap:14px;padding-top:8px">
+    <div class="card pad row" style="gap:18px">
+      <div class="ring"><div><b>7.2</b><div class="xs sub">/ 10</div></div></div>
+      <div class="grow" style="display:flex;flex-direction:column;gap:10px">
+        <div><div style="font-weight:600">Đạt kỳ vọng Junior</div><div class="xs sub">Backend · Product · 14 phút</div></div>
+        <div class="crit"><div class="row xs"><span>Kiến thức</span><span>7.5</span></div><div class="bar" style="height:5px"><span style="width:75%"></span></div></div>
+        <div class="crit"><div class="row xs"><span>Giải quyết vấn đề</span><span>7.8</span></div><div class="bar" style="height:5px"><span style="width:78%"></span></div></div>
+        <div class="crit"><div class="row xs"><span>Giao tiếp</span><span>6.4</span></div><div class="bar" style="height:5px"><span style="width:64%;background:var(--amber)"></span></div></div>
+      </div>
+    </div>
+    <div class="cta"><svg class="i" style="color:#c4b5fd;margin-top:2px"><use href="#layers"/></svg><div class="grow"><div style="font-weight:600">Ôn lại 2 câu trả lời yếu</div><div class="xs sub" style="margin:2px 0 10px">Thêm vào flashcards, ôn lại sau 1 ngày.</div><button class="btn sm primary">Thêm vào ôn tập</button></div></div>
+    <h2>Từng câu</h2>
+    <div class="card" style="margin-top:-4px">
+      <div class="qa"><span class="score s-g">8.5</span><span class="grow">Giới thiệu bản thân & project</span><svg class="i" style="color:var(--subtle);width:18px"><use href="#chev"/></svg></div>
+      <div class="qa"><span class="score s-g">8.0</span><span class="grow">Thu hồi JWT khi đổi mật khẩu</span><svg class="i" style="color:var(--subtle);width:18px"><use href="#chev"/></svg></div>
+      <div class="qa"><span class="score s-r">4.5</span><span class="grow">Index trong database</span><svg class="i" style="color:var(--subtle);width:18px"><use href="#chev"/></svg></div>
+      <div class="qa"><span class="score s-a">6.5</span><span class="grow">Transaction isolation level</span><svg class="i" style="color:var(--subtle);width:18px"><use href="#chev"/></svg></div>
+      <div class="qa"><span class="score s-g">8.5</span><span class="grow">API phân trang đơn hàng</span><svg class="i" style="color:var(--subtle);width:18px"><use href="#chev"/></svg></div>
+    </div>
+  </div>
+  <div class="home-ind"></div>
+</div>
+
+<div id="sheet" class="sheetview" style="display:none"></div>
+
+<script>
+  const st = document.getElementById("status"), tb = document.getElementById("tabbar");
+  document.querySelectorAll("slot[data-status]").forEach((s) => s.replaceWith(st.content.cloneNode(true)));
+  document.querySelectorAll("slot[data-tab]").forEach((s) => {
+    const n = tb.content.cloneNode(true);
+    n.querySelector(`[data-k="${s.dataset.tab}"]`).classList.add("on");
+    s.replaceWith(n);
+  });
+  const w = document.getElementById("wave");
+  for (let i = 0; i < 36; i++) w.insertAdjacentHTML("beforeend", `<i style="height:${6 + Math.abs(Math.sin(i * 1.7) * Math.cos(i * .4)) * 22}px;opacity:${i > 26 ? .35 : 1}"></i>`);
+
+  const s = new URLSearchParams(location.search).get("s");
+  if (s) document.getElementById(s).classList.add("on");
+  else {
+    const caps = { home: "Trang chủ", bank: "Ngân hàng câu hỏi", detail: "Chi tiết câu hỏi", flash: "Ôn flashcards", interview: "Phỏng vấn bằng giọng nói", report: "Báo cáo" };
+    const sh = document.getElementById("sheet");
+    sh.style.display = "flex";
+    Object.entries(caps).forEach(([k, c], i) =>
+      sh.insertAdjacentHTML("beforeend", `<div class="phone"><div class="frame"><div class="island"></div><iframe src="?s=${k}"></iframe></div><div class="cap"><b>${i + 1}.</b> ${c}</div></div>`));
+  }
+</script>
+</body>
+</html>

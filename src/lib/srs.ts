@@ -64,6 +64,18 @@ export function streak(days: Progress["days"], now = today()): number {
   return n;
 }
 
+/** Chuỗi ngày học dài nhất từng có. */
+export function bestStreak(days: Progress["days"]): number {
+  let best = 0;
+  for (const d of Object.keys(days)) {
+    if (!days[d] || days[addDays(d, -1)]) continue; // chỉ đếm từ ngày đầu mỗi chuỗi
+    let n = 0;
+    for (let x = d; days[x]; x = addDays(x, 1)) n++;
+    best = Math.max(best, n);
+  }
+  return best;
+}
+
 /** Hàng đợi một phiên flashcard: thẻ đến hạn (hạn sớm trước) rồi thẻ mới theo thứ tự lộ trình. */
 export function buildQueue(ids: string[], p: Progress, max: number, now = today()): string[] {
   const due = ids.filter((id) => isDue(p.q[id], now)).sort((a, b) => p.q[a].due!.localeCompare(p.q[b].due!));

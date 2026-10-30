@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>DevInterview – UI v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Mockup v2 – mở bằng index.html?s=dashboard|bank|setup|room|report
+   Hệ màu nền sáng:
+   - 1 màu thương hiệu (tím → chàm) cho hành động chính, mục đang chọn, điểm nhấn.
+   - Màu trạng thái chỉ để báo nghĩa: xanh = tốt/xong, cam = cần ôn, đỏ = yếu.
+   - Màu theo mảng chỉ dùng ở chip icon và thanh tiến độ nhỏ.
+   - Khối gradient đậm chỉ giữ ở 4 thẻ thống kê + 1 thẻ hero mỗi màn. */
+:root{
+  --bg:#f5f6fa; --surface:#fff; --surface2:#f8f9fc; --hover:#f1f3f8;
+  --line:#e7e9f0; --line2:#d9dce6;
+  --text:#0f172a; --muted:#475569; --subtle:#64748b;
+  --brand:#6d28d9; --brand-soft:#f3efff; --brand-line:#ddd3fe;
+  --green:#059669; --amber:#d97706; --red:#dc2626;
+  --grad:linear-gradient(135deg,#7c3aed,#4f46e5);
+  --g-warm:linear-gradient(135deg,#f97316,#e11d48);
+  --g-teal:linear-gradient(135deg,#10b981,#0e7490);
+  --g-ocean:linear-gradient(135deg,#3b82f6,#4f46e5);
+  --g-berry:linear-gradient(135deg,#ec4899,#9333ea);
+  --glow:radial-gradient(180px 120px at 100% 0%,rgba(255,255,255,.22),transparent 70%);
+  --shadow:0 1px 2px rgba(15,23,42,.04),0 2px 6px rgba(15,23,42,.05);
+  --code:#0f172a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font:14px/1.55 Inter,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+svg.i{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.mono{font-family:"JetBrains Mono",Consolas,monospace}
+.screen{display:none}.screen.on{display:flex}
+.app{min-height:100vh}
+
+/* màu theo mảng / level (bản đậm để đọc được trên nền trắng) */
+.k-fe{--c:#0891b2}.k-be{--c:#7c3aed}.k-ai{--c:#d97706}.k-do{--c:#059669}.k-mo{--c:#db2777}.k-da{--c:#2563eb}.k-ds{--c:#ea580c}.k-sd{--c:#dc2626}.k-bh{--c:#475569}
+.k-intern{--c:#059669}.k-junior{--c:#2563eb}.k-mid{--c:#d97706}.k-senior{--c:#dc2626}
+.chipi{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;flex:none;color:var(--c,var(--brand));background:color-mix(in srgb,var(--c,var(--brand)) 11%,#fff)}
+.chipi.sm{width:28px;height:28px;border-radius:8px}
+.chipi.sm svg{width:15px;height:15px}
+.tagc{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:99px;color:var(--c,var(--brand));background:color-mix(in srgb,var(--c,var(--brand)) 10%,#fff);border:1px solid color-mix(in srgb,var(--c,var(--brand)) 22%,#fff)}
+.fill{display:block;height:100%;border-radius:99px;background:var(--c,var(--brand))}
+
+/* sidebar */
+.side{width:236px;flex:none;border-right:1px solid var(--line);background:#fff;display:flex;flex-direction:column;padding:16px 12px;gap:2px;position:sticky;top:0;height:100vh}
+.logo{display:flex;align-items:center;gap:10px;padding:4px 8px 18px;font-weight:700;font-size:15px}
+.logo b{width:30px;height:30px;border-radius:9px;background:var(--grad);display:grid;place-items:center;color:#fff;box-shadow:0 4px 12px -4px rgba(109,40,217,.6)}
+.logo b svg{width:15px;height:15px}
+.group{font-size:11px;font-weight:600;color:var(--subtle);text-transform:uppercase;letter-spacing:.06em;padding:14px 10px 6px}
+.nav{display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:9px;color:var(--muted);white-space:nowrap;font-weight:500}
+.nav .chipi{width:26px;height:26px;border-radius:7px;background:transparent;color:var(--subtle)}
+.nav .chipi svg{width:16px;height:16px}
+.nav.on{background:var(--brand-soft);color:var(--brand);font-weight:600}
+.nav.on .chipi{background:var(--grad);color:#fff}
+.nav .count{margin-left:auto;font-size:11px;color:var(--subtle)}
+.nav .pill{margin-left:auto;font-size:10px;font-weight:700;padding:1px 7px;border-radius:99px;background:#fff1e6;color:#c2410c}
+.side-foot{margin-top:auto;display:flex;flex-direction:column;gap:10px}
+.streak-card{border-radius:12px;padding:12px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412}
+.streak-card .row{display:flex;align-items:center;gap:8px;font-weight:700;color:#c2410c}
+.week{display:flex;gap:4px;margin-top:10px}
+.week span{flex:1;height:6px;border-radius:3px;background:#fed7aa}
+.week span.d{background:var(--g-warm)}
+.seg{display:flex;padding:3px;border-radius:9px;background:var(--hover);border:1px solid var(--line)}
+.seg span{flex:1;text-align:center;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;color:var(--subtle)}
+.seg span.on{background:#fff;color:var(--text);box-shadow:var(--shadow)}
+
+/* main */
+.main{flex:1;min-width:0;display:flex;flex-direction:column;background:radial-gradient(900px 320px at 15% -10%,rgba(124,58,237,.07),transparent 70%)}
+.top{height:56px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:0 28px;position:sticky;top:0;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);z-index:2}
+.crumb{display:flex;align-items:center;gap:6px;color:var(--subtle);font-size:13px}
+.crumb b{color:var(--text);font-weight:600}
+.search{margin-left:auto;width:340px;display:flex;align-items:center;gap:8px;height:34px;padding:0 10px;border:1px solid var(--line);border-radius:9px;background:var(--surface2);color:var(--subtle);font-size:13px}
+kbd{font:11px "JetBrains Mono",monospace;padding:1px 5px;border-radius:4px;border:1px solid var(--line2);background:#fff;color:var(--muted)}
+.search kbd{margin-left:auto}
+.content{padding:28px;display:flex;flex-direction:column;gap:20px;max-width:1240px;width:100%;margin:0 auto}
+
+h1{font-size:24px;font-weight:700;letter-spacing:-.02em}
+h2{font-size:15px;font-weight:600}
+.sub{color:var(--muted)}
+.small{font-size:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.pad{padding:18px 20px}
+.card-h{display:flex;align-items:center;gap:10px;padding:14px 20px;border-bottom:1px solid var(--line)}
+.card-h a{margin-left:auto;font-size:12px;font-weight:500;color:var(--brand);display:flex;align-items:center;gap:4px}
+.btn{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 15px;border-radius:9px;font:600 13px Inter,sans-serif;border:1px solid transparent;cursor:pointer;white-space:nowrap;color:var(--text)}
+.btn.primary{background:var(--grad);color:#fff;box-shadow:0 6px 16px -6px rgba(109,40,217,.55),inset 0 1px 0 rgba(255,255,255,.2)}
+.btn.ghost{background:#fff;border-color:var(--line2);box-shadow:0 1px 2px rgba(15,23,42,.05)}
+.btn.white{background:#fff;color:#3b0764}
+.btn.sm{height:30px;padding:0 11px;font-size:12px}
+.btn.lg{height:44px;padding:0 18px;font-size:14px}
+.row{display:flex;align-items:center;gap:12px}
+.grow{flex:1;min-width:0}
+.meta{display:flex;align-items:center;gap:6px;color:var(--subtle);font-size:12px}
+.meta i{font-style:normal;opacity:.6}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;border:1px solid var(--line2);color:var(--muted);background:#fff}
+.bar{height:6px;border-radius:99px;background:#eceef4;overflow:hidden}
+
+/* khối gradient: chỉ dùng cho thẻ thống kê và thẻ hero */
+.vivid{border:0;color:#fff;position:relative;overflow:hidden}
+.vivid .sub,.vivid .small{color:rgba(255,255,255,.92)}
+.g-orange{--c:#e11d48;background:var(--glow),var(--g-warm);box-shadow:0 10px 24px -12px rgba(225,29,72,.55)}
+.g-green{--c:#0e7490;background:var(--glow),var(--g-teal);box-shadow:0 10px 24px -12px rgba(14,116,144,.55)}
+.g-blue{--c:#4f46e5;background:var(--glow),var(--g-ocean);box-shadow:0 10px 24px -12px rgba(79,70,229,.55)}
+.g-pink{--c:#9333ea;background:var(--glow),var(--g-berry);box-shadow:0 10px 24px -12px rgba(147,51,234,.55)}
+.g-hero{background:radial-gradient(260px 160px at 100% 0%,rgba(34,211,238,.45),transparent 70%),var(--grad);box-shadow:0 14px 30px -14px rgba(109,40,217,.6)}
+.gborder{border:1px solid var(--brand-line);background:#fff;box-shadow:0 0 0 4px var(--brand-soft)}
+
+/* dashboard */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.stat{padding:16px 18px;display:flex;flex-direction:column;gap:6px;border-radius:16px}
+.stat .lbl{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#fff;letter-spacing:.01em}
+/* icon: ô trắng đặc, icon mang màu thẻ (--c) */
+.stat .ic{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;margin-left:auto;background:#fff;color:var(--c);box-shadow:0 4px 10px -4px rgba(0,0,0,.25)}
+.stat .ic svg{width:17px;height:17px;stroke-width:2.2}
+.stat .num{font-size:34px;font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.stat .num .pill{float:right;margin-top:10px;letter-spacing:0;line-height:1.6}
+.stat .num small{font-size:14px;font-weight:600;opacity:.9;letter-spacing:0}
+.stat .foot{display:flex;align-items:center;gap:8px;margin-top:auto;font-size:12px;font-weight:500}
+.stat .bar{flex:1;height:7px;background:rgba(0,0,0,.2)}
+.stat .bar span{background:#fff}
+.stat .pill{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:99px;background:rgba(0,0,0,.18);font-weight:600;font-size:11.5px}
+.stat .pill.w{background:#fff;color:var(--c)}
+.stat .pill svg{width:12px;height:12px;stroke-width:2.4}
+/* 7 ô tuần cho chuỗi ngày */
+.stat .week{display:flex;gap:4px;flex:1;margin:0}
+.stat .week i{flex:1;height:20px;border-radius:5px;background:rgba(0,0,0,.18);font:600 9.5px/20px Inter,sans-serif;text-align:center;font-style:normal;color:rgba(255,255,255,.8)}
+.stat .week i.on{background:rgba(255,255,255,.95);color:var(--c)}
+.stat .week i.today{box-shadow:0 0 0 2px #fff inset;background:transparent;color:#fff}
+/* sparkline cột cho số câu lưu theo tuần */
+.stat .spark{display:flex;align-items:flex-end;gap:3px;height:22px;margin-left:auto}
+.stat .spark i{width:6px;border-radius:2px;background:rgba(255,255,255,.45)}
+.stat .spark i:last-child{background:#fff}
+.grid-dash{display:grid;grid-template-columns:1fr 360px;gap:20px}
+.task{display:flex;align-items:center;gap:14px;padding:13px 20px;border-bottom:1px solid var(--line)}
+.task:last-child{border:0}
+.check{width:20px;height:20px;border-radius:99px;border:1.5px solid var(--line2);display:grid;place-items:center;flex:none}
+.check.done{background:var(--green);border-color:var(--green);color:#fff}
+.check.done svg{width:12px;height:12px;stroke-width:3}
+.task.done .t{color:var(--subtle);text-decoration:line-through}
+.task .t{font-weight:600}
+.task.hot{background:#fffbf5;box-shadow:inset 3px 0 0 #f97316}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px 20px 20px}
+.tile{border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;background:var(--surface2);border:1px solid var(--line)}
+.tile .top-r{display:flex;align-items:center;gap:10px}
+.tile .nm{font-weight:600;font-size:13.5px;line-height:1.25}
+.tile .ct{font-size:11.5px;color:var(--subtle)}
+.tile .pct{margin-left:auto;font-weight:700;font-size:15px;color:var(--c)}
+.countdown{padding:20px;border-radius:16px}
+.countdown .big{font-size:44px;font-weight:800;letter-spacing:-.04em;line-height:1.05}
+.countdown:before,.countdown:after{content:"";position:absolute;border-radius:99px;border:1px solid rgba(255,255,255,.2)}
+.countdown:before{width:180px;height:180px;right:-60px;bottom:-90px}
+.countdown:after{width:260px;height:260px;right:-100px;bottom:-130px}
+.heat{display:grid;grid-template-columns:repeat(26,1fr);grid-template-rows:repeat(7,1fr);grid-auto-flow:column;gap:3px;padding:16px 20px}
+.heat i{aspect-ratio:1;border-radius:3px;background:#eef0f5}
+.heat i.l1{background:#ddd6fe}.heat i.l2{background:#a78bfa}.heat i.l3{background:#6d28d9}
+.q{display:flex;align-items:center;gap:12px;padding:11px 20px;border-bottom:1px solid var(--line)}
+.q:last-child{border:0}
+.q .t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+
+/* bank */
+.split{display:flex;height:calc(100vh - 56px)}
+.list{width:440px;flex:none;border-right:1px solid var(--line);display:flex;flex-direction:column;background:#fff}
+.list-h{padding:18px 20px 12px;display:flex;flex-direction:column;gap:12px}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:8px;border:1px solid var(--line2);font-size:12px;font-weight:500;color:var(--muted);background:#fff}
+.tabs-s{display:flex;gap:2px;border-bottom:1px solid var(--line);padding:0 20px}
+.tabs-s span{padding:10px 8px;font-size:13px;font-weight:500;color:var(--subtle);border-bottom:2px solid transparent;margin-bottom:-1px;display:flex;align-items:center;gap:6px}
+.tabs-s span.on{color:var(--brand);font-weight:600;border-bottom-color:var(--brand)}
+.tabs-s em{font-style:normal;font-size:10.5px;font-weight:700;padding:0 6px;border-radius:99px;background:var(--hover);color:var(--muted)}
+.tabs-s em.am{background:#fff4e5;color:#b45309}
+.tabs-s em.vi{background:var(--brand-soft);color:var(--brand)}
+.item{display:flex;gap:12px;padding:13px 20px;border-bottom:1px solid var(--line);position:relative}
+.item.on{background:var(--brand-soft)}
+.item.on:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--grad)}
+.item .t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:5px;font-weight:500}
+.st{width:18px;height:18px;border-radius:99px;border:1.5px solid var(--line2);flex:none;display:grid;place-items:center;margin-top:2px}
+.st.ok{border-color:var(--green);background:var(--green);color:#fff}
+.st.due{border-color:#f59e0b;background:#f59e0b;color:#fff}
+.st svg{width:10px;height:10px;stroke-width:3.2}
+.lv{font-size:11px;font-weight:600;color:var(--c)}
+.detail{flex:1;min-width:0;display:flex;flex-direction:column}
+.detail-body{flex:1;overflow:hidden;padding:26px 40px;display:flex;flex-direction:column;gap:16px;max-width:900px}
+.detail h1{font-size:25px;line-height:1.35}
+.tabs{display:flex;gap:4px;padding:4px;border-radius:11px;background:var(--hover);align-self:flex-start}
+.tabs span{padding:6px 14px;border-radius:8px;font-weight:500;color:var(--muted);display:flex;align-items:center;gap:6px}
+.tabs span.on{background:#fff;color:var(--brand);font-weight:600;box-shadow:var(--shadow)}
+.prose{color:#334155;line-height:1.7}
+.prose b{color:var(--text)}
+.tldr{border-radius:12px;padding:14px 16px;display:flex;gap:12px;line-height:1.65;color:#1e1b4b;background:var(--brand-soft);border:1px solid var(--brand-line)}
+.tldr b:first-child{color:var(--brand)}
+.tldr .chipi{background:var(--grad);color:#fff}
+.code{border-radius:12px;overflow:hidden;background:var(--code)}
+.code-h{display:flex;align-items:center;gap:6px;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.08);font-size:12px;color:#94a3b8}
+.dots{display:flex;gap:6px;margin-right:8px}.dots i{width:10px;height:10px;border-radius:99px;background:#ef4444}.dots i:nth-child(2){background:#f59e0b}.dots i:nth-child(3){background:#10b981}
+.code-h span:last-child{margin-left:auto;display:flex;gap:5px;align-items:center}
+.code pre{padding:14px 16px;font:12.5px/1.7 "JetBrains Mono",monospace;color:#e2e8f0}
+.k{color:#c4b5fd}.s{color:#6ee7b7}.c{color:#7b8496}.nu{color:#fdba74}.f{color:#67e8f9}
+.tip{border-radius:12px;padding:13px 16px;display:flex;gap:12px;color:#431407;background:#fff7ed;border:1px solid #fed7aa}
+.tip b{color:#c2410c}
+.tip .chipi{background:var(--g-warm);color:#fff}
+.rate{border-top:1px solid var(--line);padding:14px 40px;display:flex;align-items:center;gap:10px;background:#fff}
+.rbtn{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 13px;border-radius:9px;font-weight:700;font-size:13px;border:1px solid}
+.rbtn small{font-weight:500;font-size:11px;opacity:.8}
+.rbtn kbd{background:#fff;font-size:10px;border-color:currentColor;color:inherit}
+.rbtn.h{color:#b91c1c;background:#fef2f2;border-color:#fecaca}.rbtn.m{color:#b45309;background:#fffbeb;border-color:#fde68a}.rbtn.e{color:#047857;background:#ecfdf5;border-color:#a7f3d0}
+
+/* setup */
+.setup{display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start}
+.sec{padding:20px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:12px}
+.sec:last-child{border:0}
+.sec-t{display:flex;align-items:baseline;gap:8px;font-weight:600}
+.sec-t span{font-size:12px;color:var(--subtle);font-weight:400}
+.opts{display:grid;gap:10px}
+.opt{border:1px solid var(--line2);border-radius:11px;padding:9px 11px;display:flex;align-items:center;gap:10px;font-weight:600;background:#fff}
+.opt.on{border-color:var(--brand);background:var(--brand-soft);box-shadow:0 0 0 3px #ede7fe;color:var(--brand)}
+.opt.on .chipi{background:var(--grad);color:#fff}
+.opt.big{flex-direction:column;align-items:flex-start;gap:8px;padding:14px}
+.opt.big p{font-size:12px;color:var(--muted);font-weight:400;line-height:1.5}
+.levels{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.lvl{padding:10px;border-radius:10px;text-align:center;font-weight:600;border:1px solid var(--line2);background:#fff;color:var(--muted)}
+.lvl.on{background:var(--grad);border-color:transparent;color:#fff;box-shadow:0 6px 16px -8px rgba(109,40,217,.6)}
+.segbig{display:flex;gap:8px}
+.segbig span{flex:1;text-align:center;padding:10px;border-radius:10px;font-weight:600;color:var(--muted);border:1px solid var(--line2);background:#fff}
+.segbig span.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 6px 16px -8px rgba(109,40,217,.6)}
+.sum{position:sticky;top:84px;overflow:hidden}
+.sum .head{padding:20px;color:#fff;position:relative;overflow:hidden;border-radius:0}
+.sum .head .big{font-size:22px;font-weight:800;letter-spacing:-.02em;margin-top:4px}
+.sum dl{display:grid;grid-template-columns:auto 1fr;gap:10px 16px;padding:18px 20px}
+.sum dt{color:var(--subtle)}
+.sum dd{text-align:right;font-weight:600}
+.feat{display:flex;gap:10px;padding:7px 0;color:var(--muted);font-size:13px;align-items:center}
+
+/* room */
+.room-h{height:58px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 24px;background:#fff}
+.steps{display:flex;gap:4px;margin-left:16px}
+.steps span{width:30px;height:5px;border-radius:3px;background:#e5e7ef}
+.steps span.d{background:var(--grad)}
+.steps span.c{background:linear-gradient(90deg,#7c3aed 50%,#e5e7ef 50%)}
+.room{display:flex;height:calc(100vh - 58px)}
+.chat{flex:1;display:flex;flex-direction:column;min-width:0}
+.msgs{flex:1;overflow:hidden;padding:26px 40px;display:flex;flex-direction:column;gap:20px}
+.msg{display:flex;gap:12px;max-width:640px}
+.av{width:32px;height:32px;border-radius:99px;display:grid;place-items:center;flex:none;font-size:12px;font-weight:700}
+.av.ai{background:var(--grad);color:#fff;box-shadow:0 4px 12px -4px rgba(109,40,217,.6)}
+.av.ai svg{width:15px;height:15px}
+.av.me{background:#e2e8f0;color:#334155}
+.msg .who{font-size:12px;color:var(--subtle);margin-bottom:4px}
+.msg .who b{color:var(--text);font-weight:600;margin-right:6px}
+.msg.me{align-self:flex-end;flex-direction:row-reverse}
+.bubble{background:#fff;border:1px solid var(--line);border-radius:4px 16px 16px 16px;padding:11px 15px;line-height:1.65;box-shadow:var(--shadow)}
+.msg.me .bubble{background:var(--grad);border:0;border-radius:16px 4px 16px 16px;color:#fff;box-shadow:0 8px 20px -12px rgba(79,70,229,.7)}
+.msg.me .mono{color:#ede9fe}
+.attach{margin-top:8px;display:inline-flex;align-items:center;gap:6px;font-size:12px;border-radius:7px;padding:3px 9px;background:rgba(255,255,255,.18);color:#fff}
+.typing{display:flex;gap:5px;padding:14px 16px;background:#fff;border:1px solid var(--line);border-radius:4px 16px 16px 16px}
+.typing i{width:7px;height:7px;border-radius:99px;background:var(--brand)}
+.composer{margin:0 40px 22px;border-radius:16px;padding:12px 12px 10px 16px;display:flex;flex-direction:column;gap:10px}
+.composer .ph{color:var(--subtle);min-height:44px}
+.composer .tools{display:flex;align-items:center;gap:8px}
+.icbtn{width:34px;height:34px;border-radius:99px;display:grid;place-items:center;color:#fff}
+.icbtn.rec{background:var(--red);box-shadow:0 0 0 5px rgba(220,38,38,.14)}
+.editor{width:460px;flex:none;display:flex;flex-direction:column;background:var(--code);color:#e2e8f0}
+.editor-h{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+.editor pre{flex:1;padding:14px 0;font:12.5px/1.75 "JetBrains Mono",monospace;color:#e2e8f0;counter-reset:ln}
+.editor pre div{padding:0 16px 0 0;white-space:pre}
+.editor pre div:before{counter-increment:ln;content:counter(ln);display:inline-block;width:40px;text-align:right;padding-right:16px;color:#475569}
+.editor-f{border-top:1px solid rgba(255,255,255,.08);padding:10px 14px;display:flex;align-items:center;gap:8px;font-size:12px;color:#94a3b8}
+
+/* report */
+.rep-top{display:grid;grid-template-columns:300px 1fr;gap:20px}
+.scorecard{padding:22px;border-radius:16px;text-align:center;display:flex;flex-direction:column;align-items:center}
+.ringwrap{position:relative;width:150px;height:150px}
+.ring{position:absolute;inset:0;border-radius:99px;background:conic-gradient(#fff 0 72%,rgba(255,255,255,.22) 72% 100%);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 11px),#000 calc(100% - 10px))}
+.rv{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.rv b{font-size:42px;font-weight:800;letter-spacing:-.04em;line-height:1}
+.crits{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.crit{padding:12px 14px;border-radius:12px;background:var(--surface2);display:flex;flex-direction:column;gap:8px;border:1px solid var(--line)}
+.crit .row span:nth-child(2){font-weight:600;color:var(--text)}
+.crit .row span:last-child{margin-left:auto;font-weight:800;font-size:18px;color:var(--c)}
+.lists{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.lbox{border-radius:12px;padding:12px 14px;background:color-mix(in srgb,var(--c) 7%,#fff);border:1px solid color-mix(in srgb,var(--c) 22%,#fff)}
+.lbox h4{font-size:12px;font-weight:700;color:var(--c);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+.li{display:flex;gap:8px;color:#334155;font-size:13px;padding:3px 0}
+.li svg{margin-top:3px;color:var(--c);stroke-width:2.4}
+.qa{border-bottom:1px solid var(--line)}
+.qa:last-child{border:0}
+.qa-h{display:flex;align-items:center;gap:14px;padding:13px 20px}
+.score{width:44px;height:30px;border-radius:8px;display:grid;place-items:center;font-weight:800;font-size:13px}
+.s-g{background:#ecfdf5;color:#047857}.s-a{background:#fffbeb;color:#b45309}.s-r{background:#fef2f2;color:#b91c1c}
+.qa-b{padding:0 20px 18px 78px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.qa-b h4{font-size:12px;font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+.qa-b p{color:#334155;font-size:13px;line-height:1.65}
+.fb{border-radius:12px;padding:12px 14px;background:#fef2f2;border:1px solid #fecaca}
+.fb h4{color:#b91c1c}
+.better{border-radius:12px;padding:12px 14px;background:#ecfdf5;border:1px solid #a7f3d0}
+.better h4{color:#047857}
+.cta{display:flex;align-items:center;gap:14px;padding:16px 20px;border-radius:14px;background:var(--brand-soft);border:1px solid var(--brand-line)}
+.cta .chipi{background:var(--grad);color:#fff}
+.new{font-size:10px;font-weight:800;padding:1px 6px;border-radius:4px;background:#f97316;color:#fff;letter-spacing:.04em}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="dash" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></symbol>
+  <symbol id="book" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol>
+  <symbol id="map" viewBox="0 0 24 24"><path d="M14.1 5.55a2 2 0 0 0 1.8 0l3.66-1.83A1 1 0 0 1 21 4.62v12.76a1 1 0 0 1-.55.9l-4.55 2.27a2 2 0 0 1-1.8 0l-4.2-2.1a2 2 0 0 0-1.8 0l-3.66 1.83A1 1 0 0 1 3 19.38V6.62a1 1 0 0 1 .55-.9L8.1 3.45a2 2 0 0 1 1.8 0z"/><path d="M15 5.76v15"/><path d="M9 3.24v15"/></symbol>
+  <symbol id="layers" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></symbol>
+  <symbol id="chat" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="git" viewBox="0 0 24 24"><path d="M6 3v12"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></symbol>
+  <symbol id="search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+  <symbol id="check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></symbol>
+  <symbol id="clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="cal" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="play" viewBox="0 0 24 24"><path d="M6 3l14 9-14 9z"/></symbol>
+  <symbol id="chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
+  <symbol id="spark" viewBox="0 0 24 24"><path d="M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.14-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.14a.5.5 0 0 1 .96 0l1.58 6.14a2 2 0 0 0 1.44 1.44l6.14 1.58a.5.5 0 0 1 0 .96l-6.14 1.58a2 2 0 0 0-1.44 1.44l-1.58 6.14a.5.5 0 0 1-.96 0z"/></symbol>
+  <symbol id="code" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></symbol>
+  <symbol id="copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+  <symbol id="bulb" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4"/></symbol>
+  <symbol id="bookmark" viewBox="0 0 24 24"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+  <symbol id="mic" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/></symbol>
+  <symbol id="target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="rotate" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></symbol>
+  <symbol id="building" viewBox="0 0 24 24"><rect width="16" height="20" x="4" y="2" rx="2"/><path d="M9 22v-4h6v4M8 6h.01M16 6h.01M12 6h.01M12 10h.01M12 14h.01M16 10h.01M16 14h.01M8 10h.01M8 14h.01"/></symbol>
+  <symbol id="rocket" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></symbol>
+  <symbol id="globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20"/></symbol>
+  <symbol id="plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></symbol>
+  <symbol id="x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M12 5v13"/></symbol>
+  <symbol id="msg2" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+  <symbol id="t-fe" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+  <symbol id="t-be" viewBox="0 0 24 24"><rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/><path d="M6 6h.01M6 18h.01"/></symbol>
+  <symbol id="t-ai" viewBox="0 0 24 24"><path d="M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.14-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.14a.5.5 0 0 1 .96 0l1.58 6.14a2 2 0 0 0 1.44 1.44l6.14 1.58a.5.5 0 0 1 0 .96l-6.14 1.58a2 2 0 0 0-1.44 1.44l-1.58 6.14a.5.5 0 0 1-.96 0z"/></symbol>
+  <symbol id="t-do" viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></symbol>
+  <symbol id="t-mo" viewBox="0 0 24 24"><rect width="14" height="20" x="5" y="2" rx="2"/><path d="M12 18h.01"/></symbol>
+  <symbol id="t-da" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></symbol>
+  <symbol id="t-ds" viewBox="0 0 24 24"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"/></symbol>
+  <symbol id="t-sd" viewBox="0 0 24 24"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3M12 12V8"/></symbol>
+  <symbol id="t-bh" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+</svg>
+
+<template id="side">
+  <aside class="side">
+    <div class="logo"><b><svg class="i"><use href="#code"/></svg></b>DevInterview</div>
+    <div class="group">Học</div>
+    <a class="nav" data-k="dashboard"><span class="chipi"><svg class="i"><use href="#dash"/></svg></span>Tổng quan</a>
+    <a class="nav" data-k="bank"><span class="chipi"><svg class="i"><use href="#book"/></svg></span>Ngân hàng câu hỏi<span class="count">296</span></a>
+    <a class="nav" data-k="roadmap"><span class="chipi"><svg class="i"><use href="#map"/></svg></span>Lộ trình học</a>
+    <a class="nav" data-k="flash"><span class="chipi"><svg class="i"><use href="#layers"/></svg></span>Flashcards<span class="pill">8</span></a>
+    <div class="group">Luyện với AI</div>
+    <a class="nav" data-k="setup"><span class="chipi"><svg class="i"><use href="#chat"/></svg></span>Phỏng vấn thử</a>
+    <a class="nav" data-k="project"><span class="chipi"><svg class="i"><use href="#git"/></svg></span>Hỏi về project</a>
+    <div class="side-foot">
+      <div class="streak-card">
+        <div class="row"><svg class="i"><use href="#flame"/></svg>7 ngày liên tiếp</div>
+        <div class="week"><span class="d"></span><span class="d"></span><span class="d"></span><span class="d"></span><span class="d"></span><span class="d"></span><span></span></div>
+        <div class="small" style="margin-top:8px;opacity:.9">Luyện 1 câu nữa để giữ chuỗi</div>
+      </div>
+      <div class="seg"><span class="on">Tiếng Việt</span><span>English</span></div>
+    </div>
+  </aside>
+</template>
+<template id="topbar"><div class="search"><svg class="i"><use href="#search"/></svg>Tìm câu hỏi, chủ đề…<kbd>Ctrl K</kbd></div></template>
+
+<!-- ============ DASHBOARD ============ -->
+<div class="screen app" id="dashboard">
+  <slot data-side="dashboard"></slot>
+  <main class="main">
+    <div class="top"><div class="crumb"><b>Tổng quan</b></div><slot data-search></slot></div>
+    <div class="content">
+      <div class="row" style="align-items:flex-end">
+        <div class="grow">
+          <h1>Chào buổi tối 👋</h1>
+          <div class="sub" style="margin-top:2px">Hôm nay có <b style="color:#c2410c">8 thẻ</b> cần ôn và <b style="color:var(--brand)">5 câu mới</b>.</div>
+        </div>
+        <button class="btn ghost"><svg class="i" style="color:var(--brand)"><use href="#layers"/></svg>Ôn flashcards</button>
+        <button class="btn primary"><svg class="i"><use href="#play"/></svg>Phỏng vấn thử</button>
+      </div>
+
+      <div class="stats">
+        <div class="card stat vivid g-orange"><div class="lbl">Chuỗi ngày học<span class="ic"><svg class="i"><use href="#flame"/></svg></span></div><div class="num">7 <small>ngày</small><span class="pill">Kỷ lục 12</span></div><div class="foot"><div class="week"><i class="on">T2</i><i class="on">T3</i><i class="on">T4</i><i class="on">T5</i><i class="on">T6</i><i class="today">T7</i><i>CN</i></div></div></div>
+        <div class="card stat vivid g-green"><div class="lbl">Đã luyện<span class="ic"><svg class="i"><use href="#check"/></svg></span></div><div class="num">64 <small>/ 296 câu</small></div><div class="foot"><div class="bar"><span class="fill" style="width:22%"></span></div><b>22%</b></div></div>
+        <div class="card stat vivid g-blue"><div class="lbl">Cần ôn hôm nay<span class="ic"><svg class="i"><use href="#rotate"/></svg></span></div><div class="num">8 <small>thẻ</small></div><div class="foot"><span class="pill">3 Khó</span><span class="pill">5 Vừa</span><span class="pill w" style="margin-left:auto">Ôn ngay<svg class="i"><use href="#arrow"/></svg></span></div></div>
+        <div class="card stat vivid g-pink"><div class="lbl">Đã lưu<span class="ic"><svg class="i"><use href="#bookmark"/></svg></span></div><div class="num">12 <small>câu</small></div><div class="foot"><span class="pill">+3 tuần này</span><div class="spark"><i style="height:30%"></i><i style="height:45%"></i><i style="height:25%"></i><i style="height:60%"></i><i style="height:50%"></i><i style="height:100%"></i></div></div></div>
+      </div>
+
+      <div class="grid-dash">
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div class="card">
+            <div class="card-h"><span class="chipi sm"><svg class="i"><use href="#target"/></svg></span><h2>Kế hoạch hôm nay</h2><span class="tagc k-do">1/3 xong</span><div class="bar" style="width:120px;margin-left:auto"><span class="fill" style="width:33%;background:var(--grad)"></span></div></div>
+            <div class="task done"><span class="check done"><svg class="i"><use href="#check"/></svg></span><div class="grow"><div class="t">Luyện 5 câu mới</div><div class="meta">Backend<i>·</i>HTTP & REST</div></div></div>
+            <div class="task hot"><span class="check" style="border-color:#f97316"></span><div class="grow"><div class="t">Ôn 8 flashcards đến hạn</div><div class="meta">~6 phút<i>·</i><span style="color:var(--red);font-weight:600">3 câu Khó</span><i>·</i>5 câu Vừa</div></div><button class="btn sm primary">Bắt đầu<svg class="i" style="width:14px"><use href="#arrow"/></svg></button></div>
+            <div class="task"><span class="check"></span><div class="grow"><div class="t">Phỏng vấn thử 5 câu</div><div class="meta">Backend<i>·</i>Junior<i>·</i>Product<i>·</i>~15 phút</div></div><button class="btn sm ghost">Bắt đầu</button></div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><span class="chipi sm"><svg class="i"><use href="#map"/></svg></span><h2>Thành thạo theo mảng</h2><a>Lộ trình<svg class="i" style="width:14px"><use href="#chev"/></svg></a></div>
+            <div class="tgrid" id="tgrid"></div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div class="card countdown vivid g-hero">
+            <div class="row small"><svg class="i"><use href="#cal"/></svg>Phỏng vấn tại Shopee · 11/11</div>
+            <div class="big" style="margin-top:10px">12 ngày</div>
+            <div class="small" style="max-width:250px">Theo nhịp hiện tại bạn sẽ luyện xong Backend trước ngày phỏng vấn.</div>
+            <div class="row" style="margin-top:14px;position:relative;z-index:1"><button class="btn sm white">Đổi ngày</button></div>
+          </div>
+          <div class="card">
+            <div class="card-h"><span class="chipi sm"><svg class="i"><use href="#cal"/></svg></span><h2>Hoạt động</h2><span class="small sub" style="margin-left:auto">48 ngày · 6 tháng</span></div>
+            <div class="heat" id="heat"></div>
+          </div>
+          <div class="card">
+            <div class="card-h"><span class="chipi sm"><svg class="i"><use href="#spark"/></svg></span><h2>Gợi ý luyện tiếp</h2><a>Tất cả<svg class="i" style="width:14px"><use href="#chev"/></svg></a></div>
+            <div class="q"><span class="chipi sm k-be"><svg class="i"><use href="#t-be"/></svg></span><div class="grow"><div class="t">REST và GraphQL khác nhau thế nào?</div><div class="meta">Backend<i>·</i><span class="lv k-junior">Junior</span></div></div></div>
+            <div class="q"><span class="chipi sm k-da"><svg class="i"><use href="#t-da"/></svg></span><div class="grow"><div class="t">Index trong database hoạt động ra sao?</div><div class="meta">Backend<i>·</i><span class="lv k-mid">Mid</span></div></div></div>
+            <div class="q"><span class="chipi sm k-ds"><svg class="i"><use href="#t-ds"/></svg></span><div class="grow"><div class="t">Two pointers dùng khi nào? Cho ví dụ.</div><div class="meta">DSA<i>·</i><span class="lv k-junior">Junior</span></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ BANK ============ -->
+<div class="screen app" id="bank">
+  <slot data-side="bank"></slot>
+  <main class="main">
+    <div class="top"><div class="crumb">Ngân hàng câu hỏi<svg class="i" style="width:14px"><use href="#chev"/></svg><b>Backend</b></div><slot data-search></slot></div>
+    <div class="split">
+      <div class="list">
+        <div class="list-h">
+          <div class="row"><h2 style="font-size:17px">Ngân hàng câu hỏi</h2><span class="sub small">41 / 296 câu</span></div>
+          <div class="filters">
+            <span class="tagc k-be" style="height:28px;border-radius:8px"><svg class="i" style="width:13px"><use href="#t-be"/></svg>Backend<svg class="i" style="width:12px"><use href="#x"/></svg></span>
+            <span class="chip">Level: Tất cả<svg class="i" style="width:12px"><use href="#down"/></svg></span>
+            <span class="chip">Chủ đề<svg class="i" style="width:12px"><use href="#down"/></svg></span>
+          </div>
+        </div>
+        <div class="tabs-s"><span class="on">Tất cả<em>41</em></span><span>Chưa làm<em>17</em></span><span>Cần ôn<em class="am">5</em></span><span>Đã lưu<em class="vi">4</em></span></div>
+        <div style="overflow:hidden">
+          <div class="item"><span class="st ok"><svg class="i"><use href="#check"/></svg></span><div class="grow"><div class="t">Client–server, request/response là gì? Điều gì xảy ra khi gõ URL vào trình duyệt?</div><div class="meta">HTTP & REST<i>·</i><span class="lv k-intern">Intern</span></div></div></div>
+          <div class="item on"><span class="st due"><svg class="i"><use href="#clock"/></svg></span><div class="grow"><div class="t">Các HTTP method phổ biến khác nhau thế nào? "Safe" và "idempotent" nghĩa là gì?</div><div class="meta">HTTP & REST<i>·</i><span class="lv k-intern">Intern</span><i>·</i><span style="color:#b45309;font-weight:600">Đến hạn ôn</span></div></div><svg class="i" style="color:#fbbf24;width:14px;fill:#fbbf24"><use href="#star"/></svg></div>
+          <div class="item"><span class="st ok"><svg class="i"><use href="#check"/></svg></span><div class="grow"><div class="t">Status code 2xx, 3xx, 4xx, 5xx — khi nào trả về 400, 401, 403, 404, 409, 422?</div><div class="meta">HTTP & REST<i>·</i><span class="lv k-junior">Junior</span></div></div></div>
+          <div class="item"><span class="st"></span><div class="grow"><div class="t">Thiết kế REST API thế nào cho chuẩn? Đặt tên resource, versioning, phân trang.</div><div class="meta">HTTP & REST<i>·</i><span class="lv k-junior">Junior</span></div></div></div>
+          <div class="item"><span class="st"></span><div class="grow"><div class="t">REST và GraphQL khác nhau thế nào? Khi nào chọn GraphQL?</div><div class="meta">HTTP & REST<i>·</i><span class="lv k-mid">Mid</span></div></div></div>
+          <div class="item"><span class="st ok"><svg class="i"><use href="#check"/></svg></span><div class="grow"><div class="t">Cookie, session và JWT khác nhau thế nào? Lưu token ở đâu an toàn?</div><div class="meta">Auth & Security<i>·</i><span class="lv k-junior">Junior</span></div></div></div>
+          <div class="item"><span class="st"></span><div class="grow"><div class="t">OAuth 2.0 hoạt động thế nào? Authorization Code + PKCE là gì?</div><div class="meta">Auth & Security<i>·</i><span class="lv k-mid">Mid</span></div></div></div>
+          <div class="item"><span class="st due"><svg class="i"><use href="#clock"/></svg></span><div class="grow"><div class="t">SQL injection, XSS, CSRF là gì và phòng chống ra sao?</div><div class="meta">Auth & Security<i>·</i><span class="lv k-junior">Junior</span></div></div></div>
+          <div class="item"><span class="st"></span><div class="grow"><div class="t">Index trong database hoạt động ra sao? Khi nào index làm chậm hệ thống?</div><div class="meta">Database<i>·</i><span class="lv k-senior">Senior</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="detail">
+        <div class="detail-body">
+          <div class="row" style="gap:8px">
+            <span class="tagc k-be"><svg class="i" style="width:13px"><use href="#t-be"/></svg>Backend</span><span class="badge">HTTP & REST</span><span class="tagc k-intern">Intern</span>
+            <span class="tagc" style="--c:#d97706"><svg class="i" style="width:12px"><use href="#clock"/></svg>Đến hạn ôn</span>
+            <div class="grow"></div>
+            <button class="btn sm ghost"><svg class="i" style="width:14px;color:#fbbf24;fill:#fbbf24"><use href="#star"/></svg>Đã lưu</button>
+          </div>
+          <h1>Các HTTP method phổ biến khác nhau thế nào? "Safe" và "idempotent" nghĩa là gì?</h1>
+          <div class="tabs"><span>Tự trả lời</span><span class="on">Đáp án gợi ý</span><span>Follow-up <span class="badge" style="padding:0 6px">2</span></span></div>
+          <div class="tldr"><span class="chipi"><svg class="i"><use href="#spark"/></svg></span><div><b>Trả lời 30 giây</b><br>GET đọc, POST tạo, PUT thay toàn bộ, PATCH sửa một phần, DELETE xoá. <b style="color:#0e7490">Safe</b> = không đổi dữ liệu (GET, HEAD). <b style="color:#047857">Idempotent</b> = gọi nhiều lần cho kết quả như một lần (GET, PUT, DELETE).</div></div>
+          <div class="prose"><b>Vì sao quan trọng:</b> client, proxy và retry logic dựa vào hai tính chất này. Request idempotent có thể tự động gửi lại khi timeout mà không sợ tạo bản ghi trùng; POST thì không.</div>
+          <div class="code">
+            <div class="code-h"><span class="dots"><i></i><i></i><i></i></span>http<span><svg class="i" style="width:13px"><use href="#copy"/></svg>Sao chép</span></div>
+<pre><span class="k">PUT</span> <span class="f">/users/</span><span class="nu">42</span>      <span class="c"># gọi 3 lần → user 42 vẫn như nhau</span>
+<span class="k">POST</span> <span class="f">/orders</span>        <span class="c"># gọi 3 lần → 3 đơn hàng</span>
+<span class="k">POST</span> <span class="f">/orders</span>
+Idempotency-Key: <span class="s">"a1b2-c3d4"</span>   <span class="c"># server bỏ qua request trùng</span></pre>
+          </div>
+          <div class="tip"><span class="chipi"><svg class="i"><use href="#bulb"/></svg></span><div><b>Mẹo ghi điểm</b><br>Nhắc tới <span class="mono" style="font-size:12.5px;padding:1px 6px;border-radius:5px;background:#ffedd5;color:#9a3412">Idempotency-Key</span> khi làm thanh toán — cho thấy bạn đã nghĩ tới retry và trùng giao dịch.</div></div>
+        </div>
+        <div class="rate">
+          <span class="sub small">Tự chấm · ôn lại sau</span>
+          <span class="rbtn h">Khó <small>1 ngày</small><kbd>1</kbd></span><span class="rbtn m">Vừa <small>4 ngày</small><kbd>2</kbd></span><span class="rbtn e">Dễ <small>9 ngày</small><kbd>3</kbd></span>
+          <div class="grow"></div>
+          <button class="btn ghost">Câu tiếp<svg class="i" style="width:14px"><use href="#arrow"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ INTERVIEW SETUP ============ -->
+<div class="screen app" id="setup">
+  <slot data-side="setup"></slot>
+  <main class="main">
+    <div class="top"><div class="crumb"><b>Phỏng vấn thử</b><span class="tagc" style="margin-left:6px;font-size:10.5px;padding:1px 8px">Beta</span></div><slot data-search></slot></div>
+    <div class="content" style="max-width:1120px">
+      <div><h1>Phỏng vấn thử với AI</h1><div class="sub" style="margin-top:2px">AI đóng vai người phỏng vấn, hỏi follow-up như buổi thật và chấm điểm cuối buổi.</div></div>
+      <div class="setup">
+        <div class="card">
+          <div class="sec">
+            <div class="sec-t">Vị trí</div>
+            <div class="opts" style="grid-template-columns:repeat(3,1fr)" id="trackopts"></div>
+          </div>
+          <div class="sec">
+            <div class="sec-t">Level</div>
+            <div class="levels"><span class="lvl k-intern">Intern</span><span class="lvl on k-junior">Junior</span><span class="lvl k-mid">Mid-level</span><span class="lvl k-senior">Senior</span></div>
+          </div>
+          <div class="sec">
+            <div class="sec-t">Phong cách <span>Mỗi loại công ty hỏi một kiểu</span></div>
+            <div class="opts" style="grid-template-columns:repeat(3,1fr)">
+              <div class="opt big"><span class="chipi"><svg class="i"><use href="#globe"/></svg></span>Outsource<p>Lý thuyết nền tảng, định nghĩa, framework, quy trình làm việc.</p></div>
+              <div class="opt big on"><span class="chipi"><svg class="i"><use href="#rocket"/></svg></span>Product<p>Đào sâu project đã làm, tình huống thực tế, đánh đổi khi thiết kế.</p></div>
+              <div class="opt big"><span class="chipi"><svg class="i"><use href="#building"/></svg></span>Big tech<p>Thuật toán, độ phức tạp, system design, follow-up dồn dập.</p></div>
+            </div>
+          </div>
+          <div class="sec">
+            <div class="sec-t">Số câu hỏi</div>
+            <div class="segbig"><span>3 câu · ~10 phút</span><span class="on">5 câu · ~15 phút</span><span>8 câu · ~25 phút</span></div>
+          </div>
+        </div>
+
+        <div class="card sum">
+          <div class="head vivid g-hero">
+            <div class="small">Buổi phỏng vấn của bạn</div>
+            <div class="big">Backend · Junior</div>
+            <div class="small">Product · 5 câu · ~15 phút</div>
+          </div>
+          <dl>
+            <dt>Vị trí</dt><dd style="color:var(--brand)">Backend</dd>
+            <dt>Level</dt><dd style="color:var(--brand)">Junior</dd>
+            <dt>Phong cách</dt><dd style="color:var(--brand)">Product</dd>
+            <dt>Thời lượng</dt><dd>5 câu · ~15 phút</dd>
+          </dl>
+          <div style="padding:0 20px 18px"><button class="btn primary lg" style="width:100%;justify-content:center"><svg class="i"><use href="#play"/></svg>Bắt đầu phỏng vấn</button></div>
+          <div style="border-top:1px solid var(--line);padding:10px 20px 14px">
+            <div class="feat"><span class="chipi sm"><svg class="i"><use href="#mic"/></svg></span>Trả lời bằng giọng nói hoặc gõ phím</div>
+            <div class="feat"><span class="chipi sm"><svg class="i"><use href="#code"/></svg></span>Có code editor để viết đoạn code ngắn</div>
+            <div class="feat"><span class="chipi sm"><svg class="i"><use href="#target"/></svg></span>Điểm từng câu + câu trả lời mẫu</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ INTERVIEW ROOM ============ -->
+<div class="screen app" id="room">
+  <slot data-side="setup"></slot>
+  <main class="main">
+    <div class="room-h">
+      <span class="tagc k-be"><svg class="i" style="width:13px"><use href="#t-be"/></svg>Backend</span><span class="tagc k-junior">Junior</span><span class="tagc">Product</span>
+      <div class="steps"><span class="d"></span><span class="d"></span><span class="c"></span><span></span><span></span></div>
+      <span class="small" style="font-weight:600">Câu 3/5</span>
+      <span class="small sub row" style="gap:6px;margin-left:10px"><svg class="i" style="width:14px"><use href="#clock"/></svg>08:24</span>
+      <div class="grow"></div>
+      <button class="btn primary sm">Kết thúc & chấm điểm</button>
+    </div>
+    <div class="room">
+      <div class="chat">
+        <div class="msgs">
+          <div class="msg"><span class="av ai"><svg class="i"><use href="#spark"/></svg></span><div><div class="who"><b>Người phỏng vấn</b>Câu 2</div><div class="bubble">Bạn nói project dùng JWT để xác thực. Nếu người dùng đổi mật khẩu thì các token cũ xử lý thế nào?</div></div></div>
+          <div class="msg me"><span class="av me">B</span><div><div class="who" style="text-align:right"><b>Bạn</b></div><div class="bubble">Em lưu một trường <span class="mono" style="font-size:12.5px">tokenVersion</span> trong bảng user, mỗi lần đổi mật khẩu thì tăng lên. Middleware so sánh version trong token với DB, lệch thì từ chối.</div></div></div>
+          <div class="msg"><span class="av ai"><svg class="i"><use href="#spark"/></svg></span><div><div class="who"><b>Người phỏng vấn</b>Câu 3</div><div class="bubble">Hợp lý. Vậy mỗi request đều phải query DB — có làm mất ưu điểm stateless của JWT không? Bạn viết thử middleware đó ở khung code bên phải, có cache nếu cần.</div></div></div>
+          <div class="msg me"><span class="av me">B</span><div><div class="who" style="text-align:right"><b>Bạn</b></div><div class="bubble">Có, nên em cache version trong Redis với TTL ngắn, đổi mật khẩu thì xoá key.<div><span class="attach"><svg class="i" style="width:13px"><use href="#code"/></svg>auth.ts · 14 dòng</span></div></div></div></div>
+          <div class="msg"><span class="av ai"><svg class="i"><use href="#spark"/></svg></span><div class="typing"><i></i><i style="opacity:.6"></i><i style="opacity:.3"></i></div></div>
+        </div>
+        <div class="composer gborder">
+          <div class="ph">Nhập câu trả lời… <span class="small">(Ctrl+Enter để gửi)</span></div>
+          <div class="tools">
+            <span class="icbtn rec"><svg class="i"><use href="#mic"/></svg></span>
+            <span class="small" style="color:var(--red);font-weight:600">Đang nghe…</span>
+            <span class="tagc" style="margin-left:8px"><svg class="i" style="width:13px"><use href="#code"/></svg>Gửi kèm code</span>
+            <div class="grow"></div>
+            <button class="btn primary sm"><svg class="i" style="width:14px"><use href="#send"/></svg>Gửi</button>
+          </div>
+        </div>
+      </div>
+      <div class="editor">
+        <div class="editor-h"><span class="dots"><i></i><i></i><i></i></span><span style="font-weight:600;font-size:13px;color:#fff">auth.ts</span><span class="tagc" style="--c:#a78bfa;margin-left:auto;background:rgba(167,139,250,.12);border-color:rgba(167,139,250,.3)">TypeScript<svg class="i" style="width:12px"><use href="#down"/></svg></span></div>
+<pre><div><span class="k">export async function</span> <span class="f">auth</span>(req, res, next) {</div><div>  <span class="k">const</span> token = req.headers.authorization?.<span class="f">slice</span>(<span class="nu">7</span>);</div><div>  <span class="k">const</span> p = jwt.<span class="f">verify</span>(token, SECRET);</div><div></div><div>  <span class="c">// cache version 60s để không query DB mỗi request</span></div><div>  <span class="k">let</span> v = <span class="k">await</span> redis.<span class="f">get</span>(<span class="s">`tv:${p.sub}`</span>);</div><div>  <span class="k">if</span> (v === <span class="k">null</span>) {</div><div>    v = (<span class="k">await</span> db.user.<span class="f">find</span>(p.sub)).tokenVersion;</div><div>    <span class="k">await</span> redis.<span class="f">set</span>(<span class="s">`tv:${p.sub}`</span>, v, { EX: <span class="nu">60</span> });</div><div>  }</div><div>  <span class="k">if</span> (<span class="f">Number</span>(v) !== p.tv) <span class="k">return</span> res.<span class="f">sendStatus</span>(<span class="nu">401</span>);</div><div>  req.user = p;</div><div>  <span class="f">next</span>();</div><div>}</div></pre>
+        <div class="editor-f"><svg class="i" style="width:14px;color:#34d399"><use href="#check"/></svg><span style="color:#6ee7b7">Đã gửi kèm câu trả lời</span><span style="margin-left:auto">Tab để thụt lề</span></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ REPORT ============ -->
+<div class="screen app" id="report">
+  <slot data-side="setup"></slot>
+  <main class="main">
+    <div class="top"><div class="crumb">Phỏng vấn thử<svg class="i" style="width:14px"><use href="#chev"/></svg><b>Kết quả</b></div><slot data-search></slot></div>
+    <div class="content">
+      <div class="row" style="align-items:flex-end">
+        <div class="grow"><h1>Kết quả phỏng vấn</h1><div class="row" style="gap:6px;margin-top:8px"><span class="tagc k-be">Backend</span><span class="tagc k-junior">Junior</span><span class="tagc">Product</span><span class="badge">5 câu · 14 phút</span></div></div>
+        <button class="btn ghost"><svg class="i"><use href="#rotate"/></svg>Phỏng vấn lại</button>
+        <button class="btn primary"><svg class="i"><use href="#plus"/></svg>Buổi mới</button>
+      </div>
+
+      <div class="rep-top">
+        <div class="card scorecard vivid g-hero">
+          <div class="ringwrap"><div class="ring"></div><div class="rv"><b>7.2</b><span class="small">/ 10</span></div></div>
+          <div style="font-weight:700;font-size:16px;margin-top:14px">Đạt kỳ vọng Junior</div>
+          <div class="tagc" style="--c:#6ee7b7;margin-top:8px;background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.3)">▲ +0.8 so với buổi trước</div>
+        </div>
+        <div class="card pad" style="display:flex;flex-direction:column;gap:14px">
+          <p style="color:#334155;line-height:1.7">Nắm chắc HTTP và xác thực, biết đưa ra giải pháp cụ thể (tokenVersion + cache). Phần database còn trả lời chung chung, chưa nêu được khi nào index gây chậm ghi. Nên trả lời theo cấu trúc: ý chính → ví dụ → đánh đổi.</p>
+          <div class="crits">
+            <div class="crit" style="--c:#2563eb"><div class="row small"><span class="chipi sm"><svg class="i"><use href="#brain"/></svg></span><span>Kiến thức</span><span>7.5</span></div><div class="bar"><span class="fill" style="width:75%"></span></div></div>
+            <div class="crit" style="--c:#059669"><div class="row small"><span class="chipi sm"><svg class="i"><use href="#target"/></svg></span><span>Giải quyết vấn đề</span><span>7.8</span></div><div class="bar"><span class="fill" style="width:78%"></span></div></div>
+            <div class="crit" style="--c:#d97706"><div class="row small"><span class="chipi sm"><svg class="i"><use href="#msg2"/></svg></span><span>Giao tiếp</span><span>6.4</span></div><div class="bar"><span class="fill" style="width:64%"></span></div></div>
+          </div>
+          <div class="lists">
+            <div class="lbox" style="--c:#059669"><h4>Điểm mạnh</h4>
+              <div class="li"><svg class="i"><use href="#check"/></svg>Giải pháp thu hồi JWT thực tế, có tính đến hiệu năng</div>
+              <div class="li"><svg class="i"><use href="#check"/></svg>Phân biệt rõ 401 và 403</div></div>
+            <div class="lbox" style="--c:#d97706"><h4>Cần cải thiện</h4>
+              <div class="li"><svg class="i"><use href="#alert"/></svg>Index: thiếu đánh đổi đọc/ghi, composite index</div>
+              <div class="li"><svg class="i"><use href="#alert"/></svg>Trả lời dài, nên vào ý chính trước</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cta">
+        <span class="chipi"><svg class="i"><use href="#layers"/></svg></span>
+        <div class="grow"><div style="font-weight:600">Ôn lại 2 câu bạn trả lời yếu <span class="new">MỚI</span></div><div class="small sub">Thêm "Index trong database" và "Transaction isolation" vào flashcards, ôn lại sau 1 ngày.</div></div>
+        <button class="btn primary">Thêm vào ôn tập</button>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><span class="chipi sm"><svg class="i"><use href="#chat"/></svg></span><h2>Chi tiết từng câu</h2></div>
+        <div class="qa"><div class="qa-h"><span class="score s-g">8.5</span><div class="grow" style="font-weight:500">Giới thiệu bản thân và một project bạn tự hào</div><svg class="i" style="color:var(--subtle)"><use href="#chev"/></svg></div></div>
+        <div class="qa"><div class="qa-h"><span class="score s-g">8.0</span><div class="grow" style="font-weight:500">Thu hồi JWT khi người dùng đổi mật khẩu</div><svg class="i" style="color:var(--subtle)"><use href="#chev"/></svg></div></div>
+        <div class="qa"><div class="qa-h"><span class="score s-r">4.5</span><div class="grow" style="font-weight:500">Index trong database hoạt động thế nào? Khi nào index làm chậm hệ thống?</div><svg class="i" style="color:var(--subtle);transform:rotate(90deg)"><use href="#chev"/></svg></div>
+          <div class="qa-b">
+            <div class="fb"><h4>Nhận xét</h4><p>Giải thích được index giúp tìm nhanh hơn nhưng chưa nói tới cấu trúc B-tree, chưa nêu chi phí khi INSERT/UPDATE và trường hợp index không được dùng (hàm trên cột, LIKE '%x').</p></div>
+            <div class="better"><h4>Câu trả lời tốt hơn</h4><p>Index thường là B-tree sắp xếp theo cột, giúp tìm kiếm O(log n) thay vì quét toàn bảng. Đổi lại mỗi lần ghi phải cập nhật index nên bảng ghi nhiều không nên index tràn lan. Composite index theo thứ tự cột hay lọc nhất; kiểm tra bằng EXPLAIN.</p></div>
+          </div>
+        </div>
+        <div class="qa"><div class="qa-h"><span class="score s-a">6.5</span><div class="grow" style="font-weight:500">Transaction isolation level — dirty read, phantom read là gì?</div><svg class="i" style="color:var(--subtle)"><use href="#chev"/></svg></div></div>
+        <div class="qa"><div class="qa-h"><span class="score s-g">8.5</span><div class="grow" style="font-weight:500">Thiết kế API phân trang cho danh sách đơn hàng</div><svg class="i" style="color:var(--subtle)"><use href="#chev"/></svg></div></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  const tracks = [["fe","Frontend",18,43],["be","Backend",24,41],["ai","AI / ML",3,36],["do","DevOps / Cloud",6,36],["mo","Mobile",0,27],["da","Data",2,27],["ds","Thuật toán (DSA)",9,37],["sd","System Design",2,29],["bh","Behavioral",0,20]];
+  const ic = (k) => `<svg class="i"><use href="#t-${k}"/></svg>`;
+  document.getElementById("tgrid").innerHTML = tracks.map(([k, n, d, t]) => {
+    const p = Math.round((d * 100) / t);
+    return `<div class="tile k-${k}"><div class="top-r"><span class="chipi sm">${ic(k)}</span><div><div class="nm">${n}</div><div class="ct">${d}/${t} câu</div></div><span class="pct">${p}%</span></div><div class="bar"><span class="fill" style="width:${p}%"></span></div></div>`;
+  }).join("");
+  document.getElementById("trackopts").innerHTML = tracks.map(([k, n]) =>
+    `<div class="opt k-${k}${k === "be" ? " on" : ""}"><span class="chipi sm">${ic(k)}</span>${n}</div>`).join("");
+
+  const side = document.getElementById("side"), search = document.getElementById("topbar");
+  document.querySelectorAll("slot[data-side]").forEach((s) => {
+    const n = side.content.cloneNode(true);
+    n.querySelector(`[data-k="${s.dataset.side}"]`)?.classList.add("on");
+    s.replaceWith(n);
+  });
+  document.querySelectorAll("slot[data-search]").forEach((s) => s.replaceWith(search.content.cloneNode(true)));
+
+  const h = document.getElementById("heat");
+  for (let i = 0; i < 182; i++) {
+    const v = Math.abs((Math.sin(i * 12.9898) * 43758.5453) % 1);
+    const lv = i < 60 ? (v > .85 ? 1 : 0) : v > .82 ? 3 : v > .62 ? 2 : v > .45 ? 1 : 0;
+    h.insertAdjacentHTML("beforeend", `<i class="${lv ? "l" + lv : ""}"></i>`);
+  }
+  const s = new URLSearchParams(location.search).get("s") || "dashboard";
+  document.getElementById(s).classList.add("on");
+</script>
+</body>
+</html>

@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
+import Icon from "@/components/icon";
 import type { Dict } from "@/i18n";
+import { dueColor, hue, ratingColor } from "@/lib/catalog";
 import { updateProgress, useProgress } from "@/lib/progress";
-import { rate, ratingKey, toggleSave, type Rating } from "@/lib/srs";
+import { isDue, nextInterval, today, rate, ratingKey, toggleSave, type Rating } from "@/lib/srs";
 import { fmt } from "@/locales";
 
 /** Link giữ nguyên bộ lọc đang chọn (?track=…&status=…) của danh sách. */
@@ -18,40 +20,58 @@ export function KeepQueryLink({ href, className, children }: { href: string; cla
   );
 }
 
+export function DueTag({ id, label }: { id: string; label: string }) {
+  const p = useProgress();
+  if (!p || !isDue(p.q[id], today())) return null;
+  return (
+    <span className="tagc py-0.75" style={hue(dueColor)}>
+      <Icon name="clock" size={12} /> {label}
+    </span>
+  );
+}
+
 export function SaveButton({ id, t }: { id: string; t: Dict["questions"] }) {
   const saved = !!useProgress()?.q[id]?.saved;
   return (
-    <button
-      onClick={() => updateProgress((p) => toggleSave(p, id))}
-      className={`btn-ghost py-1.5 ${saved ? "border-amber-700 text-amber-300" : ""}`}
-    >
+    <button onClick={() => updateProgress((p) => toggleSave(p, id))} className="btn-ghost h-7.5 px-2.75 text-xs">
+      {saved ? <Icon name="star" size={14} className="fill-amber-400 text-amber-400" /> : <Icon name="bookmark" size={14} />}
       {saved ? t.saved : t.save}
     </button>
   );
 }
 
-const styles: Record<Rating, string> = {
-  1: "border-red-800 text-red-300 data-[on=true]:bg-red-950",
-  2: "border-amber-800 text-amber-300 data-[on=true]:bg-amber-950",
-  3: "border-green-800 text-green-300 data-[on=true]:bg-green-950",
-};
-
 export function RateBar({ id, t, ratings }: { id: string; t: Dict["questions"]; ratings: Dict["ratings"] }) {
   const s = useProgress()?.q[id];
+
+  // Phím 1/2/3 = Khó/Vừa/Dễ (bỏ qua khi đang gõ trong ô nhập).
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const r = Number(e.key);
+      if (![1, 2, 3].includes(r) || e.ctrlKey || e.metaKey || e.altKey) return;
+      if ((e.target as HTMLElement).closest("input, textarea, select, [contenteditable]")) return;
+      updateProgress((p) => rate(p, id, r as Rating));
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [id]);
+
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      <span className="text-sm text-muted">{t.rate}</span>
+    <div className="flex flex-wrap items-center gap-2.5">
+      <span className="whitespace-nowrap text-xs text-muted">{t.rate}</span>
       {([1, 2, 3] as const).map((r) => (
         <button
           key={r}
-          data-on={s?.rating === r}
           onClick={() => updateProgress((p) => rate(p, id, r))}
-          className={`cursor-pointer rounded-full border px-3.5 py-1 text-sm hover:brightness-125 data-[on=true]:font-semibold ${styles[r]}`}
+          style={hue(ratingColor[r])}
+          className={`soft flex h-9 cursor-pointer items-center gap-2 rounded-[9px] px-3.25 text-[13px] font-bold text-(--c) hover:brightness-97 ${
+            s?.rating === r ? "ring-2 ring-(--c)/40" : ""
+          }`}
         >
           {ratings[ratingKey[r]]}
+          <small className="text-[11px] font-medium opacity-80">{fmt(t.inDays, { n: nextInterval(s?.interval, r) })}</small>
+          <kbd className="rounded border border-current bg-white px-1.25 font-mono text-[10px]">{r}</kbd>
         </button>
       ))}
-      {s?.interval && <span className="text-xs text-muted">✓ {fmt(t.nextReview, { n: s.interval })}</span>}
     </div>
   );
 }

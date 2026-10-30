@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Icon from "@/components/icon";
 import type { Dict } from "@/i18n";
-import { fmt } from "@/locales";
 
 type Props = {
   t: Dict["questions"];
@@ -15,72 +15,108 @@ type Props = {
 export default function AnswerTabs({ t, answer, code, tip, followUps }: Props) {
   const [tab, setTab] = useState<"try" | "answer" | "followUps">("try");
   const [draft, setDraft] = useState("");
+  const [copied, setCopied] = useState(false);
+  // Đoạn đầu của đáp án = bản trả lời ngắn; phần còn lại là giải thích thêm.
+  const [quick, ...rest] = answer.split(/\n\s*\n/);
   const tabs = [
     ["try", t.tabs.try],
     ["answer", t.tabs.answer],
-    ["followUps", fmt(t.tabs.followUps, { n: followUps.length })],
+    ["followUps", t.tabs.followUps],
   ] as const;
 
   return (
     <>
-      <div className="flex flex-wrap gap-1.5">
+      <div className="flex w-fit flex-wrap gap-1 rounded-[11px] bg-hover p-1">
         {tabs.map(([key, label]) => (
           <button
             key={key}
             onClick={() => setTab(key)}
-            className={`cursor-pointer rounded-lg border px-3.5 py-1.5 text-sm ${
-              tab === key ? "border-brand bg-brand text-white" : "border-line bg-panel text-muted hover:text-white"
+            className={`flex cursor-pointer items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-sm ${
+              tab === key ? "bg-white font-semibold text-brand shadow-[var(--shadow)]" : "font-medium text-muted hover:text-fg"
             }`}
           >
             {label}
+            {key === "followUps" && <span className="rounded-full border border-line2 bg-white px-1.5 text-[11px] font-semibold">{followUps.length}</span>}
           </button>
         ))}
       </div>
 
-      <div className="card flex flex-col gap-4">
-        {tab === "try" && (
-          <>
-            <p className="text-sm text-muted">{t.tryFirst}</p>
-            <textarea
-              placeholder={t.draft}
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-              className="field min-h-40 resize-y bg-bg"
-            />
-            <button className="btn self-start" onClick={() => setTab("answer")}>
-              {t.showAnswer}
-            </button>
-          </>
-        )}
+      {tab === "try" && (
+        <div className="flex flex-col gap-3">
+          <p className="text-muted">{t.tryFirst}</p>
+          <textarea
+            placeholder={t.draft}
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            className="field min-h-40 resize-y"
+          />
+          <button className="btn self-start" onClick={() => setTab("answer")}>
+            <Icon name="spark" /> {t.showAnswer}
+          </button>
+        </div>
+      )}
 
-        {tab === "answer" && (
-          <>
-            <p className="whitespace-pre-line leading-relaxed text-[#d5d9e5]">{answer}</p>
-            {code && (
-              <pre className="overflow-x-auto rounded-xl border border-line bg-bg p-4 font-mono text-[13px] leading-relaxed text-[#c9d1e4]">
-                {code}
-              </pre>
-            )}
-            {tip && (
-              <div className="rounded-xl border border-[#7a5a0f] bg-[#2b2108] px-4 py-3 text-sm text-[#e9dcb5]">
-                <b className="text-amber-300">{t.tip}</b> {tip}
-              </div>
-            )}
-          </>
-        )}
+      {tab === "answer" && (
+        <>
+          <div className="flex gap-3 rounded-xl border border-brand-line bg-brand-soft px-4 py-3.5 leading-[1.65] text-[#1e1b4b]">
+            <span className="grid size-8 shrink-0 place-items-center rounded-[9px] bg-[image:var(--grad)] text-white">
+              <Icon name="spark" />
+            </span>
+            <div>
+              <b className="text-brand">{t.quick}</b>
+              <p className="whitespace-pre-line">{quick}</p>
+            </div>
+          </div>
 
-        {tab === "followUps" &&
-          (followUps.length ? (
+          {rest.length > 0 && <p className="whitespace-pre-line leading-[1.7] text-[#334155]">{rest.join("\n\n")}</p>}
+
+          {code && (
             <>
-              <p className="text-sm text-muted">{t.followUpsHint}</p>
-              <ol className="flex list-decimal flex-col gap-2 pl-5">
-                {followUps.map((f, i) => <li key={i}>{f}</li>)}
-              </ol>
+              <div className="overflow-hidden rounded-xl bg-code">
+                <div className="flex items-center gap-1.5 border-b border-white/8 px-3 py-2 text-xs text-[#94a3b8]">
+                  <span className="mr-2 flex gap-1.5">
+                    <i className="size-2.5 rounded-full bg-red-500" />
+                    <i className="size-2.5 rounded-full bg-amber-500" />
+                    <i className="size-2.5 rounded-full bg-emerald-500" />
+                  </span>
+                  code
+                  <button
+                    className="ml-auto flex cursor-pointer items-center gap-1.5 hover:text-white"
+                    onClick={() => navigator.clipboard.writeText(code).then(() => setCopied(true))}
+                  >
+                    <Icon name={copied ? "check" : "copy"} size={13} /> {copied ? t.copied : t.copy}
+                  </button>
+                </div>
+                <pre className="overflow-x-auto px-4 py-3.5 font-mono text-[12.5px] leading-[1.7] text-[#e2e8f0]">{code}</pre>
+              </div>
             </>
-          ) : (
-            <p className="text-sm text-muted">{t.noFollowUps}</p>
-          ))}
-      </div>
+          )}
+
+          {tip && (
+            <div className="flex gap-3 rounded-xl border border-[#fed7aa] bg-[#fff7ed] px-4 py-3.25 leading-relaxed text-[#431407]">
+              <span className="grid size-8 shrink-0 place-items-center rounded-[9px] bg-[image:var(--g-warm)] text-white">
+                <Icon name="bulb" />
+              </span>
+              <div>
+                <b className="text-[#c2410c]">{t.tip}</b>
+                <p>{tip}</p>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+
+      {tab === "followUps" &&
+        (followUps.length ? (
+          <div className="card flex flex-col gap-3">
+            <p className="text-sm text-muted">{t.followUpsHint}</p>
+            <ol className="flex list-decimal flex-col gap-2 pl-5">
+              {followUps.map((f, i) => <li key={i}>{f}</li>)}
+            </ol>
+          </div>
+        ) : (
+          <p className="text-sm text-muted">{t.noFollowUps}</p>
+        ))}
     </>
   );
 }

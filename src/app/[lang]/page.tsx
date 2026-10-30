@@ -1,7 +1,5 @@
-import PageHeader from "@/components/page-header";
 import { getDictionary, getLocale } from "@/i18n";
 import { questions, toItem } from "@/lib/questions";
-import Countdown from "./countdown";
 import Dashboard from "./dashboard";
 
 export default async function Home() {
@@ -10,7 +8,6 @@ export default async function Home() {
 
   return (
     <div className="page">
-      <PageHeader title={t.dashboard.greeting} sub={<Countdown t={t.dashboard} />} />
       <Dashboard
         lang={lang}
         t={t.dashboard}

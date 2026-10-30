@@ -19,7 +19,7 @@ async function Content({ searchParams }: Pick<PageProps<"/[lang]/interview">, "s
     <div className="page">
       <InterviewRoom
         lang={await getLocale()}
-        t={{ ...t.interview, title: t.nav.interview, speechLang: t.meta.speechLang }}
+        t={{ ...t.interview, title: t.interview.setupTitle, speechLang: t.meta.speechLang }}
         trackNames={t.tracks}
         levelNames={t.levels}
         initialTrack={isTrack(sp.track) ? sp.track : "backend"}

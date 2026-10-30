@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import Bar from "@/components/bar";
 import type { Dict } from "@/i18n";
+import { hue, ratingColor } from "@/lib/catalog";
 import { updateProgress, useProgress } from "@/lib/progress";
 import { buildQueue, isDue, rate, ratingKey, today, type Rating } from "@/lib/srs";
 import { fmt, type Locale } from "@/locales";
@@ -12,12 +13,6 @@ const MAX = 20;
 
 type Card = { id: string; question: string; answer: string; code?: string; tip?: string };
 type Props = { lang: Locale; t: Dict["flashcards"]; ratings: Dict["ratings"]; cards: Card[] };
-
-const rateStyle: Record<Rating, string> = {
-  1: "border-red-800 bg-red-950/50 text-red-300",
-  2: "border-amber-800 bg-amber-950/50 text-amber-300",
-  3: "border-green-800 bg-green-950/50 text-green-300",
-};
 
 export default function Session({ lang, t, ratings, cards }: Props) {
   const p = useProgress();
@@ -68,7 +63,7 @@ export default function Session({ lang, t, ratings, cards }: Props) {
         ) : (
           <p className="text-lg">{t.nothing}</p>
         )}
-        <Link href={`/${lang}/flashcards`} className="text-sm text-muted hover:text-white">{t.back}</Link>
+        <Link href={`/${lang}/flashcards`} className="text-sm text-muted hover:text-fg">{t.back}</Link>
       </div>
     );
   }
@@ -108,11 +103,11 @@ export default function Session({ lang, t, ratings, cards }: Props) {
         {flipped ? (
           <>
             <hr className="border-line" />
-            <p className="whitespace-pre-line leading-relaxed text-[#d5d9e5]">{card.answer}</p>
+            <p className="whitespace-pre-line leading-relaxed text-[#334155]">{card.answer}</p>
             {card.code && (
-              <pre className="overflow-x-auto rounded-xl border border-line bg-bg p-4 font-mono text-[13px] text-[#c9d1e4]">{card.code}</pre>
+              <pre className="overflow-x-auto rounded-xl bg-code p-4 font-mono text-[13px] text-[#e2e8f0]">{card.code}</pre>
             )}
-            {card.tip && <p className="text-sm text-amber-200">💡 {card.tip}</p>}
+            {card.tip && <p className="text-sm text-[#c2410c]">💡 {card.tip}</p>}
           </>
         ) : (
           <button className="btn mt-auto self-center" onClick={() => setFlipped(true)}>{t.flip}</button>
@@ -123,7 +118,7 @@ export default function Session({ lang, t, ratings, cards }: Props) {
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-sm text-muted">{t.ratePrompt}</span>
           {([1, 2, 3] as const).map((r) => (
-            <button key={r} onClick={() => answer(r)} className={`cursor-pointer rounded-lg border px-5 py-2 text-sm font-semibold hover:brightness-125 ${rateStyle[r]}`}>
+            <button key={r} onClick={() => answer(r)} style={hue(ratingColor[r])} className="soft cursor-pointer rounded-lg px-5 py-2 text-sm font-semibold text-(--c) hover:brightness-97">
               {r} · {ratings[ratingKey[r]]}
             </button>
           ))}

@@ -51,14 +51,14 @@ function context(p: Project, first?: ProjectQuestion) {
 }
 
 const kindColor = {
-  strength: "border-green-800 bg-green-950/60 text-green-300",
-  likely: "border-amber-800 bg-amber-950/60 text-amber-300",
-  risk: "border-red-800 bg-red-950/60 text-red-300",
+  strength: "border-green-200 bg-green-50 text-green-700",
+  likely: "border-amber-200 bg-amber-50 text-amber-700",
+  risk: "border-red-200 bg-red-50 text-red-700",
 };
 const diffColor = {
   easy: "",
-  medium: "border-amber-800 bg-amber-950/60 text-amber-300",
-  hard: "border-red-800 bg-red-950/60 text-red-300",
+  medium: "border-amber-200 bg-amber-50 text-amber-700",
+  hard: "border-red-200 bg-red-50 text-red-700",
 };
 
 export default function DeepDive({ lang, t, ratings, room }: Props) {
@@ -152,7 +152,7 @@ export default function DeepDive({ lang, t, ratings, room }: Props) {
 
       {busy && <p className="text-sm text-muted">● ● ● {t.analyzing}</p>}
       {error && (
-        <div className="rounded-xl border border-red-900 bg-red-950/50 px-4 py-3 text-sm text-red-300">{error}</div>
+        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
       )}
 
       {!project ? (
@@ -172,7 +172,7 @@ export default function DeepDive({ lang, t, ratings, room }: Props) {
                     project.name
                   )}
                 </h2>
-                <span className="tag ml-auto border-green-800 bg-green-950/60 text-green-300">{t.analyzed}</span>
+                <span className="tag ml-auto border-green-200 bg-green-50 text-green-700">{t.analyzed}</span>
               </div>
               <p className="mt-2 text-sm text-muted">
                 {project.summary}
@@ -180,7 +180,7 @@ export default function DeepDive({ lang, t, ratings, room }: Props) {
               </p>
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {project.stack.map((s) => (
-                  <span key={s} className="tag border-violet-800 bg-violet-950/60 text-violet-300">{s}</span>
+                  <span key={s} className="tag border-brand-line bg-brand-soft text-brand">{s}</span>
                 ))}
               </div>
             </div>

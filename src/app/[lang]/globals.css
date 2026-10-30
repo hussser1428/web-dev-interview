@@ -1,20 +1,44 @@
 @import "tailwindcss";
 
+/* Bảng màu nền sáng theo mockups/v2/index-light.html:
+   - 1 màu thương hiệu (tím → chàm) cho hành động chính, mục đang chọn.
+   - Màu trạng thái chỉ để báo nghĩa: xanh = tốt/xong, cam = cần ôn, đỏ = yếu.
+   - Khối gradient đậm chỉ giữ ở thẻ thống kê + thẻ hero; còn lại là ô nhuốm nhạt (.soft). */
 @theme {
-  --color-bg: #0b0f17;
-  --color-panel: #121826;
-  --color-panel2: #182033;
-  --color-line: #232c40;
-  --color-muted: #8a93a8;
-  --color-brand: #7c5cff;
-  --color-brand2: #22d3ee;
-  --font-sans: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
-  --font-mono: Consolas, "SF Mono", Menlo, monospace;
+  --color-bg: #f5f6fa;
+  --color-side: #fff;
+  --color-panel: #fff;
+  --color-panel2: #f8f9fc;
+  --color-hover: #f1f3f8;
+  --color-line: #e7e9f0;
+  --color-line2: #d9dce6;
+  --color-fg: #0f172a;
+  --color-muted: #475569;
+  --color-subtle: #5b6576;
+  --color-brand: #6d28d9;
+  --color-brand2: #4f46e5;
+  --color-brand-soft: #f3efff;
+  --color-brand-line: #ddd3fe;
+  --color-code: #0f172a;
+  --font-sans: var(--font-inter), "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  --font-mono: var(--font-jb), Consolas, "SF Mono", Menlo, monospace;
+}
+
+:root {
+  --grad: linear-gradient(135deg, #7c3aed, #4f46e5);
+  --g-warm: linear-gradient(135deg, #f97316, #e11d48);
+  --g-teal: linear-gradient(135deg, #10b981, #0e7490);
+  --g-ocean: linear-gradient(135deg, #3b82f6, #4f46e5);
+  --g-berry: linear-gradient(135deg, #ec4899, #9333ea);
+  --g-red: linear-gradient(135deg, #fb7185, #be123c);
+  --g-amber: linear-gradient(135deg, #fbbf24, #ea580c);
+  --glow: radial-gradient(180px 120px at 100% 0%, rgb(255 255 255 / 0.22), transparent 70%);
+  --shadow: 0 1px 2px rgb(15 23 42 / 0.04), 0 2px 6px rgb(15 23 42 / 0.05);
 }
 
 body {
   background: var(--color-bg);
-  color: #e6e9f2;
+  color: var(--color-fg);
 }
 
 @utility page {
@@ -22,16 +46,121 @@ body {
 }
 @utility card {
   @apply rounded-2xl border border-line bg-panel p-5;
+  box-shadow: var(--shadow);
 }
 @utility btn {
-  @apply inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:brightness-110 disabled:cursor-default disabled:opacity-50;
+  @apply inline-flex h-9 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-xl px-4 text-sm font-semibold text-white hover:brightness-110 disabled:cursor-default disabled:opacity-50;
+  background: var(--grad);
+  box-shadow: 0 6px 16px -6px rgb(109 40 217 / 0.55), inset 0 1px 0 rgb(255 255 255 / 0.2);
 }
 @utility btn-ghost {
-  @apply inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-line px-4 py-2 text-sm font-semibold hover:bg-panel2 disabled:cursor-default disabled:opacity-50;
+  @apply inline-flex h-9 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-line2 bg-panel px-4 text-sm font-semibold hover:bg-hover disabled:cursor-default disabled:opacity-50;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+}
+@utility btn-white {
+  @apply inline-flex h-9 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-white px-4 text-sm font-semibold text-[#3b0764] hover:bg-white/90;
 }
 @utility tag {
-  @apply inline-block whitespace-nowrap rounded-full border border-line bg-panel2 px-2.5 py-0.5 text-xs text-muted;
+  @apply inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-line2 bg-panel px-2.5 py-0.5 text-xs text-muted;
 }
 @utility field {
-  @apply rounded-lg border border-line bg-panel px-3 py-2 text-sm outline-none focus:border-brand;
+  @apply rounded-xl border border-line2 bg-panel px-3 py-2 text-sm outline-none focus:border-brand;
+}
+
+/* Màu theo mảng/level: đặt --c (chính, đủ đậm để đọc trên nền trắng) và --c2 (cuối gradient) qua style={hue(...)} */
+.tagc {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 99px;
+  color: var(--c);
+  background: color-mix(in srgb, var(--c) 7%, #fff);
+  border: 1px solid color-mix(in srgb, var(--c) 22%, #fff);
+}
+.chipi {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  color: var(--c, var(--color-brand));
+  background: color-mix(in srgb, var(--c, var(--color-brand)) 11%, #fff);
+}
+.chipi.sm {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+}
+.chipi.solid {
+  background: linear-gradient(135deg, var(--c), var(--c2, var(--c)));
+  color: #fff;
+}
+.chipi.white {
+  background: #fff;
+  color: var(--c2, var(--c));
+}
+.bar {
+  height: 7px;
+  border-radius: 99px;
+  background: #eceef4;
+  overflow: hidden;
+}
+.bar > span {
+  display: block;
+  height: 100%;
+  border-radius: 99px;
+  background: var(--c, var(--color-brand));
+  transition: width 0.3s;
+}
+
+/* Ô nhuốm nhạt theo --c: mẹo, nhận xét, nút tự chấm, hộp lỗi… */
+.soft {
+  background: color-mix(in srgb, var(--c) 7%, #fff);
+  border: 1px solid color-mix(in srgb, var(--c) 22%, #fff);
+}
+
+/* Thẻ màu nổi bật: chữ trắng trên nền gradient — chỉ dùng cho thẻ thống kê và hero */
+.vivid {
+  color: #fff;
+  border: 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 24px -12px var(--c, #6d28d9);
+}
+.g-warm { --c: #e11d48; background: var(--glow), var(--g-warm); }
+.g-teal { --c: #0e7490; background: var(--glow), var(--g-teal); }
+.g-ocean { --c: #4f46e5; background: var(--glow), var(--g-ocean); }
+.g-berry { --c: #9333ea; background: var(--glow), var(--g-berry); }
+.g-red { --c: #be123c; background: var(--glow), var(--g-red); }
+.g-amber { --c: #ea580c; background: var(--glow), var(--g-amber); }
+.g-grad { --c: #6d28d9; background: var(--grad); }
+.g-hero { --c: #6d28d9; background: radial-gradient(260px 160px at 100% 0%, rgb(34 211 238 / 0.45), transparent 70%), var(--grad); }
+/* Ô lựa chọn đang chọn: nền nhuốm --c, viền --c, vòng sáng */
+.g-hue {
+  background: color-mix(in srgb, var(--c) 8%, #fff);
+  border: 1px solid var(--c) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 14%, #fff);
+}
+/* Ô lựa chọn chưa chọn / tile trung tính */
+.tint {
+  background: var(--color-panel2);
+  border: 1px solid var(--color-line);
+}
+.gborder {
+  border: 1px solid var(--color-brand-line);
+  background: #fff;
+  box-shadow: 0 0 0 4px var(--color-brand-soft);
+}
+/* Header thẻ: chip icon nhuốm màu + tiêu đề, ngăn với thân thẻ bằng đường kẻ */
+.card-h {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--color-line);
 }

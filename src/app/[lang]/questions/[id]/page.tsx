@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import Icon, { trackIcon } from "@/components/icon";
 import { getDictionary, getLocale } from "@/i18n";
-import { trackColor } from "@/lib/catalog";
+import { hue, levelColor, trackColor } from "@/lib/catalog";
 import { byTrack, getQuestion, questions } from "@/lib/questions";
 import { pick } from "@/locales";
-import { KeepQueryLink, RateBar, SaveButton } from "./actions";
+import { DueTag, KeepQueryLink, RateBar, SaveButton } from "./actions";
 import AnswerTabs from "./answer-tabs";
 
 export function generateStaticParams() {
@@ -18,53 +19,59 @@ export default async function QuestionPage({ params }: PageProps<"/[lang]/questi
   const t = await getDictionary();
   const t2 = t.questions;
 
-  // Câu trước / sau theo thứ tự lộ trình của cùng mảng.
+  // Câu tiếp theo thứ tự lộ trình của cùng mảng.
   const siblings = byTrack(q.track);
-  const i = siblings.indexOf(q);
-  const prev = siblings[i - 1];
-  const next = siblings[i + 1];
-  const href = (id: string) => `/${lang}/questions/${id}`;
+  const next = siblings[siblings.indexOf(q) + 1];
 
   return (
-    <div className="flex min-h-full flex-col gap-4 px-7 py-6">
-      <div className="flex flex-wrap items-center gap-2">
-        <Suspense>
-          <KeepQueryLink href={`/${lang}/questions`} className="btn-ghost px-3 py-1 md:hidden">{t2.back}</KeepQueryLink>
-        </Suspense>
-        <span className={`tag ${trackColor[q.track]}`}>{t.tracks[q.track]}</span>
-        <span className="tag">{q.topic}</span>
-        <span className="tag">{t.levels[q.level]}</span>
-        <div className="ml-auto">
-          <SaveButton id={q.id} t={t2} />
+    <>
+      <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-10 py-6.5 text-sm *:max-w-[820px] *:shrink-0">
+        <div className="flex flex-wrap items-center gap-2">
+          <Suspense>
+            <KeepQueryLink href={`/${lang}/questions`} className="btn-ghost h-8 px-3 md:hidden">{t2.back}</KeepQueryLink>
+          </Suspense>
+          <span className="tagc py-0.75" style={hue(trackColor[q.track])}>
+            <Icon name={trackIcon[q.track]} size={13} /> {t.tracks[q.track]}
+          </span>
+          <span className="rounded-full border border-line2 bg-panel px-2 py-0.5 text-[11px] font-semibold text-muted">{q.topic}</span>
+          <span className="tagc py-0.75" style={hue(levelColor[q.level])}>{t.levels[q.level]}</span>
+          <DueTag id={q.id} label={t2.due} />
+          <div className="ml-auto">
+            <SaveButton id={q.id} t={t2} />
+          </div>
         </div>
+
+        <h1 className="text-[25px] font-bold leading-[1.35] tracking-tight">{pick(q.q, lang)}</h1>
+
+        <AnswerTabs
+          key={q.id}
+          t={t2}
+          answer={pick(q.a, lang)}
+          code={q.code}
+          tip={q.tip && pick(q.tip, lang)}
+          followUps={(q.followUps ?? []).map((f) => pick(f, lang))}
+        />
+
+        {q.source && (
+          <div className="text-xs text-subtle">
+            {t2.source}:{" "}
+            <a href={q.source} target="_blank" rel="noreferrer" className="text-brand2 hover:underline">
+              {q.source.replace(/^https:\/\//, "")}
+            </a>
+          </div>
+        )}
       </div>
 
-      <h1 className="text-2xl font-semibold leading-snug">{pick(q.q, lang)}</h1>
-      {q.source && (
-        <div className="text-xs text-muted">
-          {t2.source}:{" "}
-          <a href={q.source} target="_blank" rel="noreferrer" className="text-brand2 hover:underline">
-            {q.source.replace(/^https:\/\//, "")}
-          </a>
-        </div>
-      )}
-
-      <AnswerTabs
-        key={q.id}
-        t={t2}
-        answer={pick(q.a, lang)}
-        code={q.code}
-        tip={q.tip && pick(q.tip, lang)}
-        followUps={(q.followUps ?? []).map((f) => pick(f, lang))}
-      />
-
-      <div className="mt-auto flex flex-wrap items-center gap-3 border-t border-line pt-4">
+      <div className="flex flex-wrap items-center gap-2.5 border-t border-line bg-panel px-10 py-3.5">
         <Suspense>
-          {prev && <KeepQueryLink href={href(prev.id)} className="btn-ghost">{t2.prev}</KeepQueryLink>}
           <RateBar id={q.id} t={t2} ratings={t.ratings} />
-          {next && <KeepQueryLink href={href(next.id)} className="btn-ghost ml-auto">{t2.next}</KeepQueryLink>}
+          {next && (
+            <KeepQueryLink href={`/${lang}/questions/${next.id}`} className="btn-ghost ml-auto">
+              {t2.next} <Icon name="arrow" />
+            </KeepQueryLink>
+          )}
         </Suspense>
       </div>
-    </div>
+    </>
   );
 }

@@ -1,6 +1,6 @@
 // Chạy: npm run test
 import assert from "node:assert/strict";
-import { addDays, buildQueue, daysBetween, emptyProgress, isDue, nextInterval, rate, streak, toggleSave } from "../src/lib/srs.ts";
+import { addDays, buildQueue, daysBetween, emptyProgress, isDue, nextInterval, rate, streak, bestStreak, toggleSave } from "../src/lib/srs.ts";
 
 assert.equal(addDays("2026-02-28", 1), "2026-03-01");
 assert.equal(addDays("2026-01-01", -1), "2025-12-31");
@@ -33,6 +33,8 @@ const days = { "2026-10-22": 1, "2026-10-23": 2, "2026-10-24": 1 };
 assert.equal(streak(days, "2026-10-24"), 3);
 assert.equal(streak(days, "2026-10-25"), 3);
 assert.equal(streak(days, "2026-10-26"), 0);
+assert.equal(bestStreak({ ...days, "2026-10-01": 1, "2026-10-26": 1, "2026-10-27": 1 }), 3);
+assert.equal(bestStreak({}), 0);
 
 // Hàng đợi: thẻ đến hạn (hạn sớm trước) rồi thẻ mới, cắt theo max.
 const q = { ...emptyProgress, q: { x: { rating: 2 as const, due: "2026-10-20" }, y: { rating: 1 as const, due: "2026-10-18" }, z: { rating: 3 as const, due: "2026-12-01" } } };
