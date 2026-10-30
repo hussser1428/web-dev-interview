@@ -5,7 +5,7 @@
 <title>DevInterview – UI v2</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* Mockup v2 – mở bằng index.html?s=dashboard|bank|setup|room|report|weak
+/* Mockup v2 – mở bằng index.html?s=dashboard|bank|setup|room|report|weak|term|glossary
    Hệ màu nền sáng:
    - 1 màu thương hiệu (tím → chàm) cho hành động chính, mục đang chọn, điểm nhấn.
    - Màu trạng thái chỉ để báo nghĩa: xanh = tốt/xong, cam = cần ôn, đỏ = yếu.
@@ -302,6 +302,42 @@ h2{font-size:15px;font-weight:600}
 .mine h4,.wk-cols h4{font-size:12px;font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
 .mine p,.wk-cols p{color:#334155;font-size:13.5px;line-height:1.7}
 .wk-cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+/* Thuật ngữ + ví dụ thực tế */
+.term{border-bottom:1.5px dotted var(--brand);cursor:help;color:inherit}
+.term.on{background:var(--brand-soft);border-radius:4px;border-bottom-style:solid}
+.term.self{border-bottom-color:var(--subtle)}
+.pop{position:absolute;z-index:5;width:340px;background:#fff;border:1px solid var(--line2);border-radius:12px;box-shadow:0 18px 40px -12px rgba(15,23,42,.28);padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.pop:before{content:"";position:absolute;top:-7px;left:var(--ax,28px);width:12px;height:12px;background:#fff;border-left:1px solid var(--line2);border-top:1px solid var(--line2);transform:rotate(45deg)}
+.pop .hd{display:flex;align-items:center;gap:8px}
+.pop .hd b{font-size:14.5px}
+.pop p{color:#334155;font-size:13px;line-height:1.6}
+.pop .see{border-top:1px solid var(--line);padding-top:9px;font-size:12.5px;font-weight:600;color:var(--brand);display:flex;flex-direction:column;gap:2px}
+.pop .see span{color:var(--muted);font-weight:500}
+.pop .tagc{white-space:nowrap}
+.example{border-radius:12px;padding:13px 16px;display:flex;gap:12px;color:#0c4a6e;background:#f0f9ff;border:1px solid #bae6fd}
+.example b{color:#0369a1}
+.example .chipi{background:linear-gradient(135deg,#0284c7,#0d9488);color:#fff}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:6px}
+/* Trang thuật ngữ */
+.gsearch{display:flex;align-items:center;gap:8px;height:36px;padding:0 12px;border:1px solid var(--line2);border-radius:9px;background:#fff;color:var(--subtle);font-size:13px}
+.alpha{display:flex;flex-wrap:wrap;gap:2px;padding:0 20px 10px}
+.alpha span{width:22px;height:22px;display:grid;place-items:center;border-radius:6px;font-size:11.5px;font-weight:600;color:var(--muted)}
+.alpha span.on{background:var(--brand);color:#fff}
+.alpha span.off{color:#cbd5e1}
+.gitem{display:flex;flex-direction:column;gap:3px;padding:11px 20px;border-bottom:1px solid var(--line);position:relative}
+.gitem b{font-size:14px}
+.gitem .d{font-size:12.5px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.gitem.on{background:var(--brand-soft)}
+.gitem.on:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--grad)}
+.gitem .ok{position:absolute;right:20px;top:12px;color:var(--green,#059669)}
+.gdef{font-size:15.5px;line-height:1.75;color:#1e293b}
+.gsec h3{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.qlink{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;margin-bottom:8px}
+.qlink .grow{font-size:13.5px;font-weight:500}
+.qlink.primary{border-color:var(--brand-line);background:var(--brand-soft)}
+.rel{display:flex;flex-wrap:wrap;gap:8px}
+.rel span{font-size:12.5px;font-weight:600;padding:5px 11px;border-radius:99px;border:1px solid var(--line2);background:#fff;color:#334155}
 .new{font-size:10px;font-weight:800;padding:1px 6px;border-radius:4px;background:#f97316;color:#fff;letter-spacing:.04em}
 </style>
 </head>
@@ -340,6 +376,7 @@ h2{font-size:15px;font-weight:600}
   <symbol id="x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
   <symbol id="brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M12 5v13"/></symbol>
   <symbol id="msg2" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+  <symbol id="gloss" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/><path d="m8 13 4-7 4 7"/><path d="M9.1 11h5.7"/></symbol>
   <symbol id="t-fe" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
   <symbol id="t-be" viewBox="0 0 24 24"><rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/><path d="M6 6h.01M6 18h.01"/></symbol>
   <symbol id="t-ai" viewBox="0 0 24 24"><path d="M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.14-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.14a.5.5 0 0 1 .96 0l1.58 6.14a2 2 0 0 0 1.44 1.44l6.14 1.58a.5.5 0 0 1 0 .96l-6.14 1.58a2 2 0 0 0-1.44 1.44l-1.58 6.14a.5.5 0 0 1-.96 0z"/></symbol>
@@ -359,6 +396,7 @@ h2{font-size:15px;font-weight:600}
     <a class="nav" data-k="bank"><span class="chipi"><svg class="i"><use href="#book"/></svg></span>Ngân hàng câu hỏi<span class="count">296</span></a>
     <a class="nav" data-k="roadmap"><span class="chipi"><svg class="i"><use href="#map"/></svg></span>Lộ trình học</a>
     <a class="nav" data-k="flash"><span class="chipi"><svg class="i"><use href="#layers"/></svg></span>Flashcards<span class="pill">8</span></a>
+    <a class="nav" data-k="glossary"><span class="chipi"><svg class="i"><use href="#gloss"/></svg></span>Thuật ngữ<span class="count">182</span></a>
     <div class="group">Luyện với AI</div>
     <a class="nav" data-k="setup"><span class="chipi"><svg class="i"><use href="#chat"/></svg></span>Phỏng vấn thử</a>
     <a class="nav" data-k="project"><span class="chipi"><svg class="i"><use href="#git"/></svg></span>Hỏi về project</a>
@@ -707,6 +745,151 @@ Idempotency-Key: <span class="s">"a1b2-c3d4"</span>   <span class="c"># server b
   </main>
 </div>
 
+<!-- ============ THUẬT NGỮ + VÍ DỤ ============ -->
+<div class="screen app" id="term">
+  <slot data-side="bank"></slot>
+  <main class="main">
+    <div class="top"><div class="crumb">Ngân hàng câu hỏi<svg class="i" style="width:14px"><use href="#chev"/></svg><b>DevOps / Cloud</b></div><slot data-search></slot></div>
+    <div class="split">
+      <div class="list">
+        <div class="list-h">
+          <div class="row"><h2 style="font-size:17px">Ngân hàng câu hỏi</h2><span class="sub small">36 / 356 câu</span></div>
+          <div class="filters">
+            <span class="tagc k-do" style="height:28px;border-radius:8px"><svg class="i" style="width:13px"><use href="#t-do"/></svg>DevOps / Cloud<svg class="i" style="width:12px"><use href="#x"/></svg></span>
+            <span class="chip">Level: Tất cả<svg class="i" style="width:12px"><use href="#down"/></svg></span>
+            <span class="chip">Observability<svg class="i" style="width:12px"><use href="#down"/></svg></span>
+          </div>
+        </div>
+        <div class="tabs-s"><span class="on">Tất cả<em>6</em></span><span>Chưa làm<em>3</em></span><span>Cần ôn<em class="am">1</em></span><span>Đã lưu<em class="vi">0</em></span></div>
+        <div style="overflow:hidden">
+          <div class="item"><span class="st ok"><svg class="i"><use href="#check"/></svg></span><div class="grow"><div class="t">Metrics, logs và traces khác nhau thế nào? Khi nào dùng cái nào?</div><div class="meta">Observability<i>·</i><span class="lv k-junior">Junior</span></div></div></div>
+          <div class="item"><span class="st "></span><div class="grow"><div class="t">SLI, SLO, SLA là gì? Error budget dùng để làm gì?</div><div class="meta">Observability<i>·</i><span class="lv k-mid">Mid</span></div></div></div>
+          <div class="item on"><span class="st due"><svg class="i"><use href="#clock"/></svg></span><div class="grow"><div class="t">Thế nào là một cảnh báo (alert) tốt? Bạn giảm alert fatigue ra sao?</div><div class="meta">Observability<i>·</i><span class="lv k-mid">Mid</span></div></div></div>
+          <div class="item"><span class="st "></span><div class="grow"><div class="t">Bạn xử lý một sự cố production (incident) theo quy trình nào? Postmortem là gì?</div><div class="meta">Observability<i>·</i><span class="lv k-mid">Mid</span></div></div></div>
+          <div class="item"><span class="st ok"><svg class="i"><use href="#check"/></svg></span><div class="grow"><div class="t">Prometheus thu thập metric thế nào? Pull khác push ra sao?</div><div class="meta">Observability<i>·</i><span class="lv k-junior">Junior</span></div></div></div>
+          <div class="item"><span class="st "></span><div class="grow"><div class="t">Distributed tracing hoạt động thế nào? Trace ID được truyền qua các service ra sao?</div><div class="meta">Observability<i>·</i><span class="lv k-senior">Senior</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="detail">
+        <div class="detail-body" style="position:relative">
+          <div class="row" style="gap:8px">
+            <span class="tagc k-do"><svg class="i" style="width:13px"><use href="#t-do"/></svg>DevOps / Cloud</span><span class="badge">Observability</span><span class="tagc k-mid">Mid</span>
+            <div class="grow"></div>
+            <button class="btn sm ghost"><svg class="i" style="width:14px"><use href="#bookmark"/></svg>Lưu</button>
+          </div>
+          <h1>Thế nào là một cảnh báo (alert) tốt? Bạn giảm <span class="term self">alert fatigue</span> ra sao?</h1>
+          <div class="tabs"><span>Tự trả lời</span><span class="on">Đáp án gợi ý</span><span>Follow-up <span class="badge" style="padding:0 6px">2</span></span></div>
+
+          <div class="tldr"><span class="chipi"><svg class="i"><use href="#spark"/></svg></span><div><b>Trả lời 30 giây</b><br>Cảnh báo tốt là cảnh báo cần con người hành động ngay, phản ánh ảnh hưởng tới người dùng, và có hướng dẫn xử lý; mọi thứ khác nên là dashboard hoặc ticket.</div></div>
+
+          <div class="example"><span class="chipi"><svg class="i"><use href="#target"/></svg></span><div><b>Ví dụ thực tế</b><br>Giống chuông báo cháy cứ kêu mỗi lần nấu ăn có khói: vài lần sau mọi người tắt chuông hoặc lờ đi — tới khi cháy thật thì không ai chạy. Ca trực nhận 50 alert mỗi đêm, 48 cái tự hết sau 2 phút, nên người trực quen tay bỏ qua — và bỏ qua luôn alert thật lúc hệ thống sập.</div></div>
+
+          <div class="prose" style="line-height:1.75">
+            • Cảnh báo theo triệu chứng thay vì nguyên nhân: tỉ lệ lỗi tăng, <span class="term">latency</span> vượt <span class="term on" id="slo">SLO</span>, thay vì CPU 80%. CPU cao mà người dùng không bị ảnh hưởng thì không cần đánh thức ai lúc 3 giờ sáng.<br>
+            • Phân mức: <span class="term">page</span> (cần xử lý ngay) và ticket (xử lý trong giờ làm việc).<br>
+            • Dùng điều kiện for (ví dụ kéo dài 5 phút) để tránh nhiễu do <span class="term">spike</span> ngắn; với SLO, dùng <span class="term">burn-rate alert</span> nhiều cửa sổ thời gian.<br>
+            • Mỗi alert có owner, <span class="term">runbook</span> link, dashboard liên quan và mô tả ảnh hưởng.
+          </div>
+
+          <div class="pop" id="slo-pop">
+            <div class="hd"><span class="chipi sm k-do"><svg class="i"><use href="#book"/></svg></span><b>SLO — Service Level Objective</b><span class="tagc" style="margin-left:auto;font-size:10.5px;padding:1px 8px">Thuật ngữ</span></div>
+            <p>Mục tiêu chất lượng dịch vụ mà team tự đặt ra, đo bằng con số. Ví dụ: <b>99,9% request trả lời dưới 300 ms</b> trong 30 ngày.</p>
+            <p style="color:var(--muted);font-size:12.5px">Đời thường: giống cam kết "giao hàng trong 2 giờ" của một cửa hàng — đo được, và biết khi nào mình đang trễ.</p>
+            <div class="see"><div style="display:flex;align-items:center;gap:6px">Xem giải thích đầy đủ<svg class="i" style="width:14px"><use href="#arrow"/></svg></div><span>SLI, SLO, SLA là gì? Error budget dùng để làm gì?</span></div>
+          </div>
+
+          <div class="legend" style="margin-top:6px">
+            <span><span class="term">thuật ngữ</span> bấm để xem nghĩa</span>
+            <span><span class="term self">thuật ngữ</span> chính là chủ đề câu này — chỉ hiện nghĩa, không link</span>
+          </div>
+        </div>
+        <div class="rate">
+          <span class="sub small">Tự chấm · ôn lại sau</span>
+          <span class="rbtn h">Khó <small>1 ngày</small><kbd>1</kbd></span><span class="rbtn m">Vừa <small>2 ngày</small><kbd>2</kbd></span><span class="rbtn e">Dễ <small>4 ngày</small><kbd>3</kbd></span>
+          <div class="grow"></div>
+          <button class="btn ghost">Câu tiếp<svg class="i" style="width:14px"><use href="#arrow"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ TRANG THUẬT NGỮ ============ -->
+<div class="screen app" id="glossary">
+  <slot data-side="glossary"></slot>
+  <main class="main">
+    <div class="top"><div class="crumb">Thuật ngữ<svg class="i" style="width:14px"><use href="#chev"/></svg><b>SLO</b></div><slot data-search></slot></div>
+    <div class="split">
+      <div class="list">
+        <div class="list-h">
+          <div class="row"><h2 style="font-size:17px">Thuật ngữ</h2><span class="sub small">182 từ · đã hiểu 23</span></div>
+          <div class="gsearch"><svg class="i" style="width:15px"><use href="#search"/></svg>Tìm thuật ngữ… (vd: SLO, idempotent)</div>
+          <div class="filters">
+            <span class="tagc k-do" style="height:28px;border-radius:8px"><svg class="i" style="width:13px"><use href="#t-do"/></svg>DevOps / Cloud<svg class="i" style="width:12px"><use href="#x"/></svg></span>
+            <span class="chip">Tất cả trạng thái<svg class="i" style="width:12px"><use href="#down"/></svg></span>
+          </div>
+        </div>
+        <div class="alpha"><span class="">A</span><span class="">B</span><span class="">C</span><span class="">D</span><span class="">E</span><span class="">F</span><span class="">G</span><span class="">H</span><span class="">I</span><span class="off">J</span><span class="off">K</span><span class="">L</span><span class="">M</span><span class="">N</span><span class="off">O</span><span class="">P</span><span class="off">Q</span><span class="">R</span><span class="on">S</span><span class="">T</span><span class="off">U</span><span class="">V</span><span class="">W</span><span class="off">X</span><span class="off">Y</span><span class="off">Z</span></div>
+        <div class="tabs-s"><span class="on">Tất cả<em>41</em></span><span>Chưa hiểu<em class="am">33</em></span><span>Đã hiểu<em class="vi">8</em></span></div>
+        <div style="overflow:hidden">
+          <div class="gitem"><b>Error budget</b><span class="d">Phần lỗi được phép trong một khoảng thời gian, = 100% − SLO.</span></div>
+          <div class="gitem"><b>Idempotent</b><span class="d">Gọi một lần hay nhiều lần thì trạng thái cuối như nhau.</span><svg class="i ok" style="width:15px"><use href="#check"/></svg></div>
+          <div class="gitem"><b>Incident</b><span class="d">Sự cố làm dịch vụ hỏng hoặc chậm, cần xử lý ngay.</span></div>
+          <div class="gitem"><b>Latency</b><span class="d">Thời gian từ lúc gửi request tới lúc nhận phản hồi.</span><svg class="i ok" style="width:15px"><use href="#check"/></svg></div>
+          <div class="gitem"><b>Race condition</b><span class="d">Kết quả sai vì nhiều luồng cùng đọc/ghi dữ liệu không đồng bộ.</span></div>
+          <div class="gitem"><b>Runbook</b><span class="d">Tài liệu từng bước xử lý một loại sự cố cụ thể.</span></div>
+          <div class="gitem"><b>SLA</b><span class="d">Cam kết chất lượng với khách hàng, vi phạm thì bồi thường.</span></div>
+          <div class="gitem"><b>SLI</b><span class="d">Con số đo chất lượng thực tế, ví dụ % request thành công.</span></div>
+          <div class="gitem on"><b>SLO</b><span class="d">Mục tiêu chất lượng team tự đặt, ví dụ 99,9% request < 300 ms.</span></div>
+          <div class="gitem"><b>Spike</b><span class="d">Tăng vọt đột ngột trong thời gian ngắn (traffic, CPU…).</span></div>
+        </div>
+      </div>
+
+      <div class="detail">
+        <div class="detail-body" style="gap:18px">
+          <div class="row" style="gap:8px">
+            <span class="tagc k-do"><svg class="i" style="width:13px"><use href="#t-do"/></svg>DevOps / Cloud</span><span class="tagc k-be"><svg class="i" style="width:13px"><use href="#t-be"/></svg>Backend</span><span class="tagc k-sd"><svg class="i" style="width:13px"><use href="#t-sd"/></svg>System Design</span>
+            <div class="grow"></div>
+            <button class="btn sm ghost"><svg class="i" style="width:14px"><use href="#check"/></svg>Đánh dấu đã hiểu</button>
+          </div>
+          <div>
+            <h1 style="margin-bottom:4px">SLO</h1>
+            <div class="sub">Service Level Objective · mục tiêu mức dịch vụ</div>
+          </div>
+          <div class="gdef">Mục tiêu chất lượng dịch vụ mà team tự đặt ra và đo bằng con số trong một khoảng thời gian. Ví dụ: <b>99,9% request trả lời dưới 300 ms trong 30 ngày</b>. Nằm giữa SLI (con số đo được thực tế) và SLA (cam kết với khách hàng, thường thấp hơn SLO để còn khoảng an toàn).</div>
+
+          <div class="example"><span class="chipi"><svg class="i"><use href="#target"/></svg></span><div><b>Đời thường</b><br>Một quán cà phê tự đặt mục tiêu "95% đơn giao trong 10 phút". Đó là SLO. Con số thực tế tuần này 93% là SLI. Còn "trễ quá 20 phút thì miễn phí" in trên menu là SLA.</div></div>
+
+          <div class="gsec">
+            <h3>Giải thích đầy đủ</h3>
+            <div class="qlink primary"><span class="chipi sm k-do"><svg class="i"><use href="#t-do"/></svg></span><div class="grow">SLI, SLO, SLA là gì? Error budget dùng để làm gì?</div><span class="lv k-mid" style="font-size:11px;font-weight:600">Mid</span><svg class="i" style="width:15px;color:var(--brand)"><use href="#arrow"/></svg></div>
+          </div>
+
+          <div class="gsec">
+            <h3>Xuất hiện trong 4 câu khác</h3>
+            <div class="qlink"><span class="chipi sm k-do"><svg class="i"><use href="#t-do"/></svg></span><div class="grow">Thế nào là một cảnh báo (alert) tốt? Bạn giảm alert fatigue ra sao?</div><svg class="i" style="width:15px;color:var(--subtle)"><use href="#chev"/></svg></div>
+            <div class="qlink"><span class="chipi sm k-do"><svg class="i"><use href="#t-do"/></svg></span><div class="grow">Bạn xử lý một sự cố production (incident) theo quy trình nào?</div><svg class="i" style="width:15px;color:var(--subtle)"><use href="#chev"/></svg></div>
+            <div class="qlink"><span class="chipi sm k-sd"><svg class="i"><use href="#t-sd"/></svg></span><div class="grow">Bạn thiết kế hệ thống đạt 99,99% uptime như thế nào?</div><svg class="i" style="width:15px;color:var(--subtle)"><use href="#chev"/></svg></div>
+            <div class="small sub" style="padding-left:4px">+ 1 câu nữa</div>
+          </div>
+
+          <div class="gsec">
+            <h3>Thuật ngữ liên quan</h3>
+            <div class="rel"><span>SLI</span><span>SLA</span><span>Error budget</span><span>Burn rate</span><span>Uptime</span></div>
+          </div>
+        </div>
+        <div class="rate">
+          <span class="sub small">Thuật ngữ 9 / 41 trong DevOps / Cloud</span>
+          <div class="grow"></div>
+          <button class="btn ghost"><svg class="i" style="width:14px"><use href="#layers"/></svg>Ôn thuật ngữ bằng flashcard</button>
+          <button class="btn ghost">Từ tiếp<svg class="i" style="width:14px"><use href="#arrow"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
 <script>
   const tracks = [["fe","Frontend",18,43],["be","Backend",24,41],["ai","AI / ML",3,36],["do","DevOps / Cloud",6,36],["mo","Mobile",0,27],["da","Data",2,27],["ds","Thuật toán (DSA)",9,37],["sd","System Design",2,29],["bh","Behavioral",0,20]];
   const ic = (k) => `<svg class="i"><use href="#t-${k}"/></svg>`;
@@ -733,6 +916,16 @@ Idempotency-Key: <span class="s">"a1b2-c3d4"</span>   <span class="c"># server b
   }
   const s = new URLSearchParams(location.search).get("s") || "dashboard";
   document.getElementById(s).classList.add("on");
+  // Mockup thuật ngữ: đặt popup ngay dưới chữ "SLO", mũi tên chỉ vào nó
+  const slo = document.getElementById("slo"), pop = document.getElementById("slo-pop");
+  if (s === "term" && slo && pop) document.fonts.ready.then(() => {
+    const box = pop.offsetParent.getBoundingClientRect(), r = slo.getBoundingClientRect();
+    const mid = r.left - box.left + r.width / 2;                          // tâm chữ SLO
+    const left = Math.max(8, Math.min(mid - 34, box.width - pop.offsetWidth - 16)); // không tràn khung
+    pop.style.top = r.bottom - box.top + 10 + "px";
+    pop.style.left = left + "px";
+    pop.style.setProperty("--ax", mid - left - 6 + "px");                  // mũi tên chỉ đúng chữ
+  });
 </script>
 </body>
 </html>

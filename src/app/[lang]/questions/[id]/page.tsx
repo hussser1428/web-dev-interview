@@ -6,6 +6,8 @@ import { hue, levelColor, trackColor } from "@/lib/catalog";
 import { byTrack, getQuestion, questions } from "@/lib/questions";
 import { pick } from "@/locales";
 import { DueTag, KeepQueryLink, RateBar, SaveButton } from "./actions";
+import Rich from "@/components/rich-text";
+import { richQuestion } from "@/lib/glossary";
 import AnswerTabs from "./answer-tabs";
 
 export function generateStaticParams() {
@@ -22,6 +24,7 @@ export default async function QuestionPage({ params }: PageProps<"/[lang]/questi
   // Câu tiếp theo thứ tự lộ trình của cùng mảng.
   const siblings = byTrack(q.track);
   const next = siblings[siblings.indexOf(q) + 1];
+  const rich = richQuestion(q, lang);
 
   return (
     <>
@@ -41,12 +44,18 @@ export default async function QuestionPage({ params }: PageProps<"/[lang]/questi
           </div>
         </div>
 
-        <h1 className="text-[25px] font-bold leading-[1.35] tracking-tight">{pick(q.q, lang)}</h1>
+        <h1 className="text-[25px] font-bold leading-[1.35] tracking-tight">
+          <Rich segs={rich.title} terms={rich.terms} lang={lang} t={t.terms} />
+        </h1>
 
         <AnswerTabs
           key={q.id}
           t={t2}
-          answer={pick(q.a, lang)}
+          lang={lang}
+          quick={rich.quick}
+          rest={rich.rest}
+          terms={rich.terms}
+          termT={t.terms}
           code={q.code}
           tip={q.tip && pick(q.tip, lang)}
           followUps={(q.followUps ?? []).map((f) => pick(f, lang))}

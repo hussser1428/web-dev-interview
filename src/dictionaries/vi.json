@@ -18,7 +18,8 @@
     "streak": "{n} ngày liên tiếp",
     "keepStreak": "Luyện 1 câu nữa để giữ chuỗi!",
     "streakDone": "Hôm nay đã học — giữ vững nhé!",
-    "weak": "Câu yếu"
+    "weak": "Câu yếu",
+    "glossary": "Thuật ngữ"
   },
   "header": {
     "search": "Tìm câu hỏi, chủ đề…"
@@ -313,5 +314,33 @@
     "back": "← Câu yếu",
     "retryTitle": "Luyện lại câu yếu",
     "retrySubtitle": "AI hỏi lại câu bạn trả lời yếu và đào sâu phần còn thiếu."
+  },
+  "terms": {
+    "badge": "Thuật ngữ",
+    "example": "Đời thường",
+    "seeFull": "Xem giải thích đầy đủ",
+    "self": "Câu này chính là phần giải thích đầy đủ.",
+    "openGlossary": "Mở trong Thuật ngữ"
+  },
+  "glossary": {
+    "title": "Thuật ngữ",
+    "count": "{n} từ · đã hiểu {known}",
+    "search": "Tìm thuật ngữ… (vd: SLO, idempotent)",
+    "allTracks": "Mảng: Tất cả",
+    "tabs": {
+      "all": "Tất cả",
+      "todo": "Chưa hiểu",
+      "known": "Đã hiểu"
+    },
+    "empty": "Không có thuật ngữ nào khớp.",
+    "mark": "Đánh dấu đã hiểu",
+    "unmark": "Bỏ đánh dấu",
+    "example": "Đời thường",
+    "seeFull": "Giải thích đầy đủ",
+    "appears": "Xuất hiện trong {n} câu khác",
+    "more": "+ {n} câu nữa",
+    "related": "Thuật ngữ liên quan",
+    "position": "Thuật ngữ {i} / {n}",
+    "next": "Từ tiếp"
   }
 }

@@ -2,22 +2,27 @@
 
 import { useState } from "react";
 import Icon from "@/components/icon";
+import Rich from "@/components/rich-text";
 import type { Dict } from "@/i18n";
+import type { Seg, TermMap } from "@/lib/glossary-match";
 
 type Props = {
   t: Dict["questions"];
-  answer: string;
+  lang: string;
+  /** Đáp án đã đánh dấu thuật ngữ: đoạn đầu = bản trả lời ngắn, phần còn lại = giải thích thêm. */
+  quick: Seg[];
+  rest: Seg[];
+  terms: TermMap;
+  termT: Dict["terms"];
   code?: string;
   tip?: string;
   followUps: string[];
 };
 
-export default function AnswerTabs({ t, answer, code, tip, followUps }: Props) {
+export default function AnswerTabs({ t, lang, quick, rest, terms, termT, code, tip, followUps }: Props) {
   const [tab, setTab] = useState<"try" | "answer" | "followUps">("try");
   const [draft, setDraft] = useState("");
   const [copied, setCopied] = useState(false);
-  // Đoạn đầu của đáp án = bản trả lời ngắn; phần còn lại là giải thích thêm.
-  const [quick, ...rest] = answer.split(/\n\s*\n/);
   const tabs = [
     ["try", t.tabs.try],
     ["answer", t.tabs.answer],
@@ -64,11 +69,13 @@ export default function AnswerTabs({ t, answer, code, tip, followUps }: Props) {
             </span>
             <div>
               <b className="text-brand">{t.quick}</b>
-              <p className="whitespace-pre-line">{quick}</p>
+              <p className="whitespace-pre-line"><Rich segs={quick} terms={terms} lang={lang} t={termT} /></p>
             </div>
           </div>
 
-          {rest.length > 0 && <p className="whitespace-pre-line leading-[1.7] text-[#334155]">{rest.join("\n\n")}</p>}
+          {rest.length > 0 && (
+            <p className="whitespace-pre-line leading-[1.7] text-[#334155]"><Rich segs={rest} terms={terms} lang={lang} t={termT} /></p>
+          )}
 
           {code && (
             <>

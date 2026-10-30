@@ -45,6 +45,33 @@ for (const track of tracks) {
 }
 
 console.log(`tổng           ${String(ids.size).padStart(3)}`);
+
+// Thuật ngữ: src/data/glossary.json
+const glossary = JSON.parse(readFileSync(new URL("data/glossary.json", root), "utf8"));
+const termIds = new Set(glossary.map((g) => g.id));
+const forms = new Map();
+const seenTerms = new Set();
+glossary.forEach((g, i) => {
+  const err = (m) => errors.push(`data/glossary.json[${i}] ${g?.id ?? ""}: ${m}`);
+  if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(g.id ?? "")) err("id phải dạng kebab-case");
+  if (seenTerms.has(g.id)) err("id bị trùng");
+  seenTerms.add(g.id);
+  if (!isText(g.term)) err("thiếu term");
+  if (!Array.isArray(g.match) || !g.match.length || !g.match.every(isText)) err("match phải là mảng chuỗi");
+  for (const f of g.match ?? []) {
+    const k = f.toLowerCase();
+    if (forms.has(k) && forms.get(k) !== g.id) err(`"${f}" đã thuộc thuật ngữ ${forms.get(k)}`);
+    forms.set(k, g.id);
+  }
+  if (!isLocalized(g.def)) err("def cần đủ vi, en");
+  for (const k of ["full", "example"]) if (g[k] !== undefined && !isLocalized(g[k])) err(`${k} cần đủ vi, en`);
+  if (g.see !== undefined && !ids.has(g.see)) err(`see "${g.see}" không phải id câu hỏi`);
+  for (const r of g.related ?? []) if (!termIds.has(r) || r === g.id) err(`related "${r}" không hợp lệ`);
+  for (const tr of g.tracks ?? []) if (!tracks.includes(tr)) err(`tracks có mảng lạ "${tr}"`);
+  const extra = Object.keys(g).filter((k) => !["id", "term", "full", "match", "def", "example", "see", "related", "tracks"].includes(k));
+  if (extra.length) err(`trường lạ: ${extra.join(", ")}`);
+});
+console.log(`thuật ngữ      ${String(glossary.length).padStart(3)}`);
 if (errors.length) {
   console.error(`\n${errors.length} lỗi:\n` + errors.join("\n"));
   process.exit(1);

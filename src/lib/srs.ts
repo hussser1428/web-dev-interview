@@ -14,6 +14,7 @@ export type Progress = {
   interviewDate?: string;
   interviews?: InterviewLog[]; // các buổi phỏng vấn AI, cũ -> mới
   weak?: WeakItem[]; // câu phỏng vấn AI bị chấm yếu, cũ -> mới
+  terms?: Record<string, true>; // thuật ngữ đã đánh dấu "Đã hiểu"
 };
 export type InterviewLog = { date: string; track: Track; level: Level; style: Style; overall: number };
 /**
@@ -126,3 +127,9 @@ export const toggleWeak = (p: Progress, id: string): Progress => ({
   ...p,
   weak: p.weak?.map((w) => (w.id === id ? { ...w, done: !w.done } : w)),
 });
+
+/** Bật/tắt "Đã hiểu" cho một thuật ngữ. */
+export function toggleTerm(p: Progress, id: string): Progress {
+  const { [id]: was, ...rest } = p.terms ?? {};
+  return { ...p, terms: was ? rest : { ...rest, [id]: true } };
+}

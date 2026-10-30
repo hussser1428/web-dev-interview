@@ -86,6 +86,93 @@
     "source": "https://leetcode.com/problems/group-anagrams/"
   },
   {
+    "id": "dsa-majority-element",
+    "level": "junior",
+    "topic": "Hash Map",
+    "q": {
+      "vi": "Tìm phần tử xuất hiện nhiều hơn n/2 lần trong mảng (luôn tồn tại). Ví dụ [2, 2, 1, 1, 1, 2, 2] → 2. Làm được với O(1) bộ nhớ không?",
+      "en": "Find the element that appears more than n/2 times in an array (it always exists). Example: [2, 2, 1, 1, 1, 2, 2] → 2. Can you do it in O(1) memory?"
+    },
+    "a": {
+      "vi": "Các cách theo thứ tự cải tiến:\n- Đếm bằng hash map: duyệt một lần, đếm số lần xuất hiện, trả về phần tử có đếm > n/2. O(n) thời gian, O(n) bộ nhớ.\n- Sắp xếp rồi lấy phần tử ở giữa: phần tử chiếm quá nửa chắc chắn nằm ở vị trí n/2. O(n log n), không cần thêm bộ nhớ nếu sort tại chỗ.\n- Boyer–Moore voting: O(n) thời gian, O(1) bộ nhớ. Giữ một ứng viên và một bộ đếm: gặp phần tử giống ứng viên thì +1, khác thì −1; bộ đếm về 0 thì chọn phần tử hiện tại làm ứng viên mới.\n\nVì sao đúng: mỗi lần −1 là \"triệt tiêu\" một cặp hai phần tử khác nhau. Phần tử đa số có nhiều hơn tổng tất cả phần tử còn lại, nên không thể bị triệt tiêu hết — cuối cùng nó là ứng viên còn lại.\n\nEdge case: nếu đề không đảm bảo luôn có phần tử đa số, phải duyệt lần hai để đếm lại ứng viên và kiểm tra > n/2. Mảng một phần tử.\n\nBài anh em: tìm mọi phần tử xuất hiện nhiều hơn n/3 lần (tối đa 2 phần tử, giữ 2 ứng viên và 2 bộ đếm).",
+      "en": "Approaches in order of improvement:\n- Count with a hash map: one pass counting occurrences, return the element with count > n/2. O(n) time, O(n) memory.\n- Sort and take the middle element: the majority element must sit at index n/2. O(n log n), no extra memory with an in-place sort.\n- Boyer–Moore voting: O(n) time, O(1) memory. Keep a candidate and a counter: +1 when the element equals the candidate, −1 otherwise; when the counter hits 0, the current element becomes the new candidate.\n\nWhy it works: each −1 \"cancels\" a pair of two different elements. The majority element outnumbers all others combined, so it cannot be cancelled out completely — it is the candidate left at the end.\n\nEdge cases: if a majority is not guaranteed, do a second pass to count the candidate and check > n/2. A single-element array.\n\nSibling problem: find all elements appearing more than n/3 times (at most 2, keep 2 candidates and 2 counters)."
+    },
+    "code": "function majorityElement(nums: number[]): number {\n  let candidate = nums[0];\n  let count = 0;\n  for (const x of nums) {\n    if (count === 0) candidate = x;\n    count += x === candidate ? 1 : -1;\n  }\n  return candidate;\n}",
+    "tip": {
+      "vi": "Nói cách hash map trước (ai cũng nghĩ ra), rồi đưa Boyer–Moore kèm lập luận \"triệt tiêu cặp\" — lập luận đúng quan trọng hơn thuộc code.",
+      "en": "Give the hash-map solution first (anyone thinks of it), then Boyer–Moore with the \"pair cancellation\" argument — the reasoning matters more than memorised code."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu không chắc có phần tử đa số thì sửa thế nào?",
+        "en": "How do you adapt it if a majority element is not guaranteed?"
+      },
+      {
+        "vi": "Tìm các phần tử xuất hiện nhiều hơn n/3 lần?",
+        "en": "Find all elements appearing more than n/3 times?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/majority-element/"
+  },
+  {
+    "id": "dsa-two-pointers-valid-palindrome",
+    "level": "intern",
+    "topic": "Two Pointers",
+    "q": {
+      "vi": "Kiểm tra một chuỗi có phải palindrome không, chỉ xét chữ và số, không phân biệt hoa thường. Ví dụ \"A man, a plan, a canal: Panama\" → true.",
+      "en": "Check whether a string is a palindrome, considering only letters and digits and ignoring case. Example: \"A man, a plan, a canal: Panama\" → true."
+    },
+    "a": {
+      "vi": "Cách đơn giản: lọc giữ chữ và số, chuyển về chữ thường, so với chuỗi đảo ngược. Đúng nhưng tạo thêm hai chuỗi, O(n) bộ nhớ.\n\nHai con trỏ: i từ đầu, j từ cuối.\n- Bỏ qua ký tự không phải chữ/số ở cả hai phía.\n- So sánh s[i] và s[j] sau khi chuyển chữ thường; khác nhau thì trả false.\n- Tiến i, lùi j cho tới khi gặp nhau.\nO(n) thời gian, O(1) bộ nhớ.\n\nEdge case: chuỗi rỗng hoặc chỉ toàn dấu câu (palindrome — trả true), một ký tự, chữ có dấu tiếng Việt hoặc Unicode (hỏi lại phạm vi; regex [a-z0-9] chỉ xét ASCII).\n\nBài anh em: palindrome nếu được xoá tối đa một ký tự (khi gặp cặp khác nhau, thử bỏ bên trái hoặc bên phải rồi kiểm tra phần còn lại), chuỗi con palindrome dài nhất.",
+      "en": "The simple way: keep letters and digits, lowercase, compare with the reversed string. Correct, but it builds two extra strings, O(n) memory.\n\nTwo pointers: i from the start, j from the end.\n- Skip non-alphanumeric characters on both sides.\n- Compare s[i] and s[j] in lowercase; if different, return false.\n- Move i forward and j backward until they meet.\nO(n) time, O(1) memory.\n\nEdge cases: an empty string or one with only punctuation (a palindrome — return true), a single character, accented Vietnamese or other Unicode letters (ask about scope; a regex like [a-z0-9] only covers ASCII).\n\nSibling problems: palindrome after deleting at most one character (on the first mismatch, try skipping the left or the right one and check the rest), longest palindromic substring."
+    },
+    "code": "function isPalindrome(s: string): boolean {\n  const ok = (c: string) => /[a-z0-9]/i.test(c);\n  let i = 0, j = s.length - 1;\n  while (i < j) {\n    if (!ok(s[i])) { i++; continue; }\n    if (!ok(s[j])) { j--; continue; }\n    if (s[i].toLowerCase() !== s[j].toLowerCase()) return false;\n    i++; j--;\n  }\n  return true;\n}",
+    "tip": {
+      "vi": "Hỏi lại người phỏng vấn về Unicode/chữ có dấu trước khi code — một câu hỏi làm rõ yêu cầu luôn được đánh giá cao ở bài dễ.",
+      "en": "Ask about Unicode/accented letters before coding — a clarifying question is always valued on an easy problem."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu được xoá tối đa một ký tự thì kiểm tra thế nào?",
+        "en": "How do you check if deleting at most one character is allowed?"
+      },
+      {
+        "vi": "Kiểm tra một số nguyên có phải palindrome mà không chuyển sang chuỗi?",
+        "en": "Check whether an integer is a palindrome without converting it to a string?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/valid-palindrome/"
+  },
+  {
+    "id": "dsa-two-pointers-container-most-water",
+    "level": "junior",
+    "topic": "Two Pointers",
+    "q": {
+      "vi": "Cho mảng height, height[i] là chiều cao cột thứ i. Chọn hai cột cùng trục hoành tạo thành bể chứa nhiều nước nhất. Ví dụ [1, 8, 6, 2, 5, 4, 8, 3, 7] → 49.",
+      "en": "Given height, where height[i] is the height of line i, pick two lines that together with the x-axis hold the most water. Example: [1, 8, 6, 2, 5, 4, 8, 3, 7] → 49."
+    },
+    "a": {
+      "vi": "Lượng nước giữa cột i và j = min(height[i], height[j]) × (j − i).\n\nBrute force: thử mọi cặp, O(n²).\n\nHai con trỏ: i = 0, j = n − 1 (bề rộng lớn nhất). Mỗi bước tính diện tích, rồi dịch con trỏ ở cột thấp hơn vào trong.\n\nVì sao dịch cột thấp: diện tích bị giới hạn bởi cột thấp. Nếu giữ cột thấp và dịch cột cao vào trong, bề rộng giảm còn chiều cao không thể vượt cột thấp — mọi cặp đó đều không tốt hơn cặp hiện tại, nên bỏ qua được. Chỉ dịch cột thấp mới có cơ hội tìm cột cao hơn bù lại bề rộng mất đi.\n\nĐộ phức tạp: O(n) thời gian, O(1) bộ nhớ.\n\nEdge case: chỉ 2 cột, các cột bằng nhau (dịch bên nào cũng được), cột cao 0.\n\nBài anh em: trapping rain water (nước đọng trên toàn bộ địa hình — cũng hai con trỏ, giữ max trái và max phải).",
+      "en": "Water between lines i and j = min(height[i], height[j]) × (j − i).\n\nBrute force: try every pair, O(n²).\n\nTwo pointers: i = 0, j = n − 1 (the widest). At each step compute the area, then move the pointer at the shorter line inward.\n\nWhy move the shorter line: the area is limited by the shorter line. Keeping it and moving the taller one inward shrinks the width while the height can never exceed the shorter line — none of those pairs beats the current one, so they can be skipped. Only moving the shorter line can find a taller line to make up for the lost width.\n\nComplexity: O(n) time, O(1) memory.\n\nEdge cases: only 2 lines, equal heights (move either), zero-height lines.\n\nSibling problem: trapping rain water (water held over the whole terrain — also two pointers, tracking left max and right max)."
+    },
+    "code": "function maxArea(height: number[]): number {\n  let i = 0, j = height.length - 1, best = 0;\n  while (i < j) {\n    best = Math.max(best, Math.min(height[i], height[j]) * (j - i));\n    if (height[i] < height[j]) i++;\n    else j--;\n  }\n  return best;\n}",
+    "tip": {
+      "vi": "Phần ăn điểm là lập luận vì sao được bỏ qua các cặp khi dịch cột thấp — luyện nói lập luận này thành 2–3 câu.",
+      "en": "The scoring part is arguing why moving the shorter line safely skips pairs — practise saying it in 2–3 sentences."
+    },
+    "followUps": [
+      {
+        "vi": "Trapping rain water khác bài này thế nào?",
+        "en": "How does trapping rain water differ from this problem?"
+      },
+      {
+        "vi": "Nếu hai cột bằng nhau thì dịch bên nào? Có ảnh hưởng kết quả không?",
+        "en": "If both lines are equal, which one do you move? Does it matter?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/container-with-most-water/"
+  },
+  {
     "id": "dsa-two-pointers-3sum",
     "level": "mid",
     "topic": "Two Pointers",
@@ -113,6 +200,35 @@
       }
     ],
     "source": "https://leetcode.com/problems/3sum/"
+  },
+  {
+    "id": "dsa-longest-palindromic-substring",
+    "level": "mid",
+    "topic": "Two Pointers",
+    "q": {
+      "vi": "Tìm chuỗi con liên tiếp dài nhất là palindrome. Ví dụ \"babad\" → \"bab\" (hoặc \"aba\"), \"cbbd\" → \"bb\".",
+      "en": "Find the longest contiguous substring that is a palindrome. Example: \"babad\" → \"bab\" (or \"aba\"), \"cbbd\" → \"bb\"."
+    },
+    "a": {
+      "vi": "Brute force: thử mọi chuỗi con O(n²) và kiểm tra palindrome O(n) → O(n³).\n\nMở rộng từ tâm (expand around center): mỗi palindrome có một tâm. Có 2n − 1 tâm: mỗi ký tự (palindrome độ dài lẻ như \"aba\") và mỗi khe giữa hai ký tự (độ dài chẵn như \"bb\"). Từ mỗi tâm, mở hai con trỏ ra hai phía khi hai ký tự còn bằng nhau, ghi lại đoạn dài nhất.\n- O(n²) thời gian, O(1) bộ nhớ. Code ngắn, dễ viết đúng trong phỏng vấn.\n\nQuy hoạch động: dp[i][j] = s[i] === s[j] && (j − i < 2 || dp[i+1][j−1]). Cũng O(n²) thời gian nhưng O(n²) bộ nhớ, nên expand around center thường được ưa hơn.\n\nThuật toán Manacher giải trong O(n), nhưng hiếm khi được yêu cầu viết trong phỏng vấn; chỉ cần biết là có.\n\nEdge case: chuỗi một ký tự, mọi ký tự giống nhau (\"aaaa\"), không có palindrome dài hơn 1 (trả về một ký tự bất kỳ), quên trường hợp độ dài chẵn.\n\nPhân biệt với \"dãy con palindrome dài nhất\" (không cần liên tiếp) — bài đó dùng DP O(n²).",
+      "en": "Brute force: try every substring O(n²) and check each O(n) → O(n³).\n\nExpand around centre: every palindrome has a centre. There are 2n − 1 centres: each character (odd lengths like \"aba\") and each gap between two characters (even lengths like \"bb\"). From each centre, expand two pointers outward while the characters match, recording the longest span.\n- O(n²) time, O(1) memory. Short code that is easy to get right in an interview.\n\nDynamic programming: dp[i][j] = s[i] === s[j] && (j − i < 2 || dp[i+1][j−1]). Also O(n²) time but O(n²) memory, so expanding around the centre is usually preferred.\n\nManacher's algorithm solves it in O(n), but it is rarely expected in interviews; just know it exists.\n\nEdge cases: a single character, all characters equal (\"aaaa\"), no palindrome longer than 1 (return any single character), forgetting even lengths.\n\nDo not confuse with \"longest palindromic subsequence\" (not contiguous) — that one is an O(n²) DP."
+    },
+    "code": "function longestPalindrome(s: string): string {\n  let start = 0, len = 0;\n  const expand = (l: number, r: number) => {\n    while (l >= 0 && r < s.length && s[l] === s[r]) { l--; r++; }\n    if (r - l - 1 > len) { start = l + 1; len = r - l - 1; }\n  };\n  for (let i = 0; i < s.length; i++) {\n    expand(i, i);     // độ dài lẻ\n    expand(i, i + 1); // độ dài chẵn\n  }\n  return s.slice(start, start + len);\n}",
+    "tip": {
+      "vi": "Nói rõ \"có 2n − 1 tâm\" và nhớ trường hợp độ dài chẵn — đây là lỗi phổ biến nhất ở bài này.",
+      "en": "State \"there are 2n − 1 centres\" and remember even lengths — the most common mistake on this problem."
+    },
+    "followUps": [
+      {
+        "vi": "Đếm số chuỗi con palindrome của một chuỗi?",
+        "en": "Count the palindromic substrings of a string?"
+      },
+      {
+        "vi": "Dãy con palindrome dài nhất (không cần liên tiếp) giải thế nào?",
+        "en": "How do you solve the longest palindromic subsequence (not contiguous)?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/longest-palindromic-substring/"
   },
   {
     "id": "dsa-sliding-window-longest-substring",
@@ -144,6 +260,35 @@
     "source": "https://leetcode.com/problems/longest-substring-without-repeating-characters/"
   },
   {
+    "id": "dsa-sliding-window-min-window-substring",
+    "level": "senior",
+    "topic": "Sliding Window",
+    "q": {
+      "vi": "Cho chuỗi s và t, tìm chuỗi con ngắn nhất của s chứa mọi ký tự của t (kể cả số lần lặp). Ví dụ s = \"ADOBECODEBANC\", t = \"ABC\" → \"BANC\".",
+      "en": "Given strings s and t, find the shortest substring of s containing every character of t (including duplicates). Example: s = \"ADOBECODEBANC\", t = \"ABC\" → \"BANC\"."
+    },
+    "a": {
+      "vi": "Brute force: thử mọi chuỗi con và kiểm tra, O(n²) trở lên.\n\nCửa sổ trượt co giãn:\n- need: số lần cần của từng ký tự trong t; missing = tổng số ký tự còn thiếu (= t.length lúc đầu).\n- Mở rộng right: gặp ký tự c, nếu need[c] > 0 thì missing giảm; luôn giảm need[c] (có thể âm — nghĩa là đang thừa).\n- Khi missing = 0 (cửa sổ đã đủ): ghi nhận nếu ngắn hơn kết quả hiện tại, rồi co left: tăng lại need[s[left]], nếu nó lớn hơn 0 thì cửa sổ thiếu một ký tự, missing tăng và dừng co.\n\nMỗi ký tự được right đi qua một lần và left đi qua tối đa một lần, nên O(|s| + |t|) thời gian, O(số loại ký tự) bộ nhớ.\n\nĐiểm khó: đếm đúng ký tự lặp (t = \"AABC\" cần hai chữ A), và chỉ tăng missing khi need vượt lên trên 0, không phải mỗi lần bỏ một ký tự.\n\nEdge case: t dài hơn s, không có cửa sổ hợp lệ (trả \"\"), phân biệt hoa thường, t chứa ký tự không có trong s.\n\nKhung chung của sliding window: mở rộng để thoả điều kiện, co lại để tối ưu khi vẫn còn thoả.",
+      "en": "Brute force: try every substring and check it, O(n²) or worse.\n\nVariable sliding window:\n- need: how many of each character t requires; missing = total characters still missing (t.length at first).\n- Expand right: on character c, if need[c] > 0 then missing decreases; always decrement need[c] (it may go negative — meaning a surplus).\n- When missing = 0 (the window is complete): record it if shorter than the best, then shrink left: increment need[s[left]]; if it becomes greater than 0 the window lacks a character, missing increases and shrinking stops.\n\nEach character is passed by right once and by left at most once, so O(|s| + |t|) time and O(alphabet size) memory.\n\nThe tricky parts: counting duplicates correctly (t = \"AABC\" needs two A's), and only incrementing missing when need rises above 0, not on every removed character.\n\nEdge cases: t longer than s, no valid window (return \"\"), case sensitivity, characters in t that are absent from s.\n\nThe general sliding-window template: expand until the condition holds, shrink to optimise while it still holds."
+    },
+    "code": "function minWindow(s: string, t: string): string {\n  const need = new Map<string, number>();\n  for (const c of t) need.set(c, (need.get(c) ?? 0) + 1);\n  let missing = t.length, left = 0, bestStart = 0, bestLen = Infinity;\n  for (let right = 0; right < s.length; right++) {\n    const c = s[right];\n    if ((need.get(c) ?? 0) > 0) missing--;\n    need.set(c, (need.get(c) ?? 0) - 1);\n    while (missing === 0) {\n      if (right - left + 1 < bestLen) { bestStart = left; bestLen = right - left + 1; }\n      const d = s[left++];\n      need.set(d, need.get(d)! + 1);\n      if (need.get(d)! > 0) missing++;\n    }\n  }\n  return bestLen === Infinity ? \"\" : s.slice(bestStart, bestStart + bestLen);\n}",
+    "tip": {
+      "vi": "Trước khi code, nói ra khung \"mở rộng tới khi đủ, co lại khi còn đủ\" và ý nghĩa của need âm — người phỏng vấn sẽ theo được lời giải của bạn.",
+      "en": "Before coding, state the \"expand until valid, shrink while valid\" template and what a negative need means — the interviewer can follow your solution."
+    },
+    "followUps": [
+      {
+        "vi": "Tìm mọi vị trí bắt đầu anagram của p trong s?",
+        "en": "Find all start indices of p's anagrams in s?"
+      },
+      {
+        "vi": "Nếu s là một luồng dữ liệu rất dài không lưu hết được thì sao?",
+        "en": "What if s is a very long stream that cannot be stored?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/minimum-window-substring/"
+  },
+  {
     "id": "dsa-prefix-sum-subarray-sum-k",
     "level": "mid",
     "topic": "Prefix Sum",
@@ -173,6 +318,35 @@
     "source": "https://leetcode.com/problems/subarray-sum-equals-k/"
   },
   {
+    "id": "dsa-prefix-product-except-self",
+    "level": "junior",
+    "topic": "Prefix Sum",
+    "q": {
+      "vi": "Cho mảng nums, trả về mảng answer với answer[i] là tích mọi phần tử trừ nums[i], không dùng phép chia, O(n). Ví dụ [1, 2, 3, 4] → [24, 12, 8, 6].",
+      "en": "Given nums, return answer where answer[i] is the product of all elements except nums[i], without division, in O(n). Example: [1, 2, 3, 4] → [24, 12, 8, 6]."
+    },
+    "a": {
+      "vi": "Cách dùng phép chia (tính tổng tích rồi chia cho từng phần tử) bị cấm, và vốn đã hỏng khi mảng có số 0.\n\nÝ tưởng tiền tố/hậu tố: answer[i] = (tích mọi phần tử bên trái i) × (tích mọi phần tử bên phải i).\n- Lượt 1 từ trái sang: answer[i] = tích tiền tố trước i (answer[0] = 1).\n- Lượt 2 từ phải sang: giữ biến right = tích hậu tố sau i, nhân vào answer[i], rồi right *= nums[i].\n\nĐộ phức tạp: O(n) thời gian; O(1) bộ nhớ phụ nếu không tính mảng kết quả (chỉ thêm một biến right).\n\nEdge case: một số 0 (mọi vị trí khác ra 0, riêng vị trí số 0 là tích phần còn lại), hai số 0 trở lên (toàn bộ là 0), số âm, mảng 2 phần tử, tràn số với tích lớn (hỏi lại kiểu dữ liệu; JavaScript có BigInt).\n\nCùng họ với prefix sum: tiền tố/hậu tố là kỹ thuật chung cho các câu \"thông tin về mọi phần tử trừ vị trí i\".",
+      "en": "Dividing the total product by each element is forbidden, and it breaks on zeros anyway.\n\nPrefix/suffix idea: answer[i] = (product of everything left of i) × (product of everything right of i).\n- Pass 1, left to right: answer[i] = prefix product before i (answer[0] = 1).\n- Pass 2, right to left: keep right = suffix product after i, multiply it into answer[i], then right *= nums[i].\n\nComplexity: O(n) time; O(1) extra memory excluding the output (just one right variable).\n\nEdge cases: one zero (every other position becomes 0, the zero's position gets the product of the rest), two or more zeros (all zeros), negatives, a 2-element array, overflow with large products (ask about types; JavaScript has BigInt).\n\nRelated to prefix sums: prefix/suffix arrays are the general technique for \"information about everything except position i\"."
+    },
+    "code": "function productExceptSelf(nums: number[]): number[] {\n  const n = nums.length;\n  const answer = new Array<number>(n).fill(1);\n  for (let i = 1; i < n; i++) answer[i] = answer[i - 1] * nums[i - 1]; // tiền tố\n  let right = 1;\n  for (let i = n - 1; i >= 0; i--) {\n    answer[i] *= right;  // nhân hậu tố\n    right *= nums[i];\n  }\n  return answer;\n}",
+    "tip": {
+      "vi": "Tự nêu trường hợp có số 0 trước khi bị hỏi — nó giải thích luôn vì sao đề cấm phép chia.",
+      "en": "Raise the zero case before being asked — it also explains why division is forbidden."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao giảm bộ nhớ phụ xuống O(1)?",
+        "en": "How do you get extra memory down to O(1)?"
+      },
+      {
+        "vi": "Tích lớn nhất của một mảng con liên tiếp?",
+        "en": "Maximum product of a contiguous subarray?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/product-of-array-except-self/"
+  },
+  {
     "id": "dsa-stack-valid-parentheses",
     "level": "intern",
     "topic": "Stack & Queue",
@@ -200,6 +374,35 @@
       }
     ],
     "source": "https://leetcode.com/problems/valid-parentheses/"
+  },
+  {
+    "id": "dsa-queue-using-stacks",
+    "level": "junior",
+    "topic": "Stack & Queue",
+    "q": {
+      "vi": "Cài đặt hàng đợi (queue) chỉ bằng hai stack, hỗ trợ push, pop, peek, empty. Độ phức tạp mỗi thao tác là bao nhiêu?",
+      "en": "Implement a queue using only two stacks, supporting push, pop, peek and empty. What is the cost of each operation?"
+    },
+    "a": {
+      "vi": "Queue lấy ra theo thứ tự vào trước ra trước (FIFO), stack thì vào sau ra trước (LIFO). Đổ một stack sang stack khác thì thứ tự bị đảo ngược — đảo hai lần là về đúng thứ tự FIFO.\n\nDùng hai stack:\n- inbox: push luôn vào đây.\n- outbox: pop/peek lấy từ đây. Nếu outbox rỗng, đổ toàn bộ inbox sang outbox (đảo thứ tự), rồi mới lấy.\n- empty: cả hai đều rỗng.\n\nĐộ phức tạp:\n- push O(1).\n- pop/peek: trường hợp xấu O(n) khi phải đổ, nhưng amortized O(1): mỗi phần tử chỉ được chuyển từ inbox sang outbox đúng một lần trong đời, nên n thao tác tốn tổng O(n).\n\nLỗi hay gặp: đổ inbox sang outbox khi outbox chưa rỗng — làm sai thứ tự.\n\nBài ngược: stack bằng hai queue (hoặc một queue — mỗi lần push thì xoay queue). Ý nghĩa thực tế: amortized analysis cũng là lý do push vào mảng động (ArrayList, vector) là O(1) dù thỉnh thoảng phải cấp phát lại.",
+      "en": "A queue removes items first-in first-out (FIFO), a stack last-in first-out (LIFO). Pouring one stack into another reverses the order — reversing twice restores FIFO order.\n\nWith two stacks:\n- inbox: every push goes here.\n- outbox: pop/peek take from here. If outbox is empty, pour all of inbox into outbox (reversing it) first.\n- empty: both are empty.\n\nCost:\n- push O(1).\n- pop/peek: O(n) in the worst case when pouring, but amortized O(1): each element moves from inbox to outbox exactly once in its lifetime, so n operations cost O(n) in total.\n\nCommon bug: pouring inbox into outbox when outbox is not empty — it breaks the order.\n\nThe reverse problem: a stack from two queues (or one queue, rotating it on each push). In practice, the same amortized argument is why pushing onto a dynamic array (ArrayList, vector) is O(1) despite occasional reallocation."
+    },
+    "code": "class MyQueue {\n  private inbox: number[] = [];\n  private outbox: number[] = [];\n  push(x: number) { this.inbox.push(x); }\n  private shift() {\n    if (this.outbox.length === 0)\n      while (this.inbox.length) this.outbox.push(this.inbox.pop()!);\n  }\n  pop(): number { this.shift(); return this.outbox.pop()!; }\n  peek(): number { this.shift(); return this.outbox[this.outbox.length - 1]; }\n  empty(): boolean { return !this.inbox.length && !this.outbox.length; }\n}",
+    "tip": {
+      "vi": "Từ khoá cần nói là \"amortized O(1)\" kèm lý do \"mỗi phần tử chỉ chuyển một lần\" — đó là điều người phỏng vấn thật sự kiểm tra.",
+      "en": "The keyword is \"amortized O(1)\" with the reason \"each element moves once\" — that is what the interviewer is really testing."
+    },
+    "followUps": [
+      {
+        "vi": "Cài stack bằng queue thì sao?",
+        "en": "What about implementing a stack with queues?"
+      },
+      {
+        "vi": "Thiết kế stack hỗ trợ getMin() trong O(1)?",
+        "en": "Design a stack that supports getMin() in O(1)?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/implement-queue-using-stacks/"
   },
   {
     "id": "dsa-monotonic-stack-daily-temperatures",
@@ -491,6 +694,35 @@
     "source": "https://leetcode.com/problems/koko-eating-bananas/"
   },
   {
+    "id": "dsa-binary-search-rotated-array",
+    "level": "mid",
+    "topic": "Binary Search",
+    "q": {
+      "vi": "Mảng tăng dần các số khác nhau bị xoay tại một điểm chưa biết, ví dụ [4, 5, 6, 7, 0, 1, 2]. Tìm vị trí của target trong O(log n), không có thì trả -1. Ví dụ target = 0 → 4.",
+      "en": "A sorted array of distinct numbers is rotated at an unknown pivot, e.g. [4, 5, 6, 7, 0, 1, 2]. Find target's index in O(log n), or -1 if absent. Example: target = 0 → 4."
+    },
+    "a": {
+      "vi": "Duyệt tuyến tính là O(n), không đạt yêu cầu.\n\nBinary search có điều chỉnh: tại mỗi bước, với mid, ít nhất một nửa [lo..mid] hoặc [mid..hi] chắc chắn đã sắp xếp.\n- Nếu nums[lo] <= nums[mid]: nửa trái sắp xếp. Nếu nums[lo] <= target < nums[mid] thì target nằm trong nửa trái (hi = mid − 1), ngược lại sang phải (lo = mid + 1).\n- Ngược lại nửa phải sắp xếp. Nếu nums[mid] < target <= nums[hi] thì sang phải, ngược lại sang trái.\n\nMỗi bước loại được một nửa, nên O(log n) thời gian, O(1) bộ nhớ.\n\nCách khác: tìm điểm xoay (vị trí phần tử nhỏ nhất) bằng một lần binary search, rồi binary search bình thường trên nửa phù hợp — cũng O(log n), dễ giải thích hơn với một số người.\n\nEdge case: mảng không bị xoay, mảng 1–2 phần tử, target ở đúng điểm xoay, dấu <= và < ở các phép so sánh (sai một dấu là lặp vô hạn hoặc bỏ sót).\n\nBiến thể khó: mảng có phần tử trùng nhau — khi nums[lo] = nums[mid] = nums[hi] không biết nửa nào sắp xếp, phải lo++, trường hợp xấu thành O(n).",
+      "en": "A linear scan is O(n), which misses the requirement.\n\nModified binary search: at each step, for mid, at least one half [lo..mid] or [mid..hi] must be sorted.\n- If nums[lo] <= nums[mid]: the left half is sorted. If nums[lo] <= target < nums[mid], target is in the left half (hi = mid − 1), otherwise go right (lo = mid + 1).\n- Otherwise the right half is sorted. If nums[mid] < target <= nums[hi], go right, otherwise go left.\n\nEach step discards half, so O(log n) time and O(1) memory.\n\nAlternative: find the pivot (index of the minimum) with one binary search, then run a normal binary search on the right half — also O(log n), and easier to explain for some people.\n\nEdge cases: an unrotated array, 1–2 elements, target exactly at the pivot, and the <= vs < in the comparisons (one wrong sign means an infinite loop or a miss).\n\nHarder variant: duplicates — when nums[lo] = nums[mid] = nums[hi] you cannot tell which half is sorted and must do lo++, making the worst case O(n)."
+    },
+    "code": "function search(nums: number[], target: number): number {\n  let lo = 0, hi = nums.length - 1;\n  while (lo <= hi) {\n    const mid = (lo + hi) >> 1;\n    if (nums[mid] === target) return mid;\n    if (nums[lo] <= nums[mid]) {              // nửa trái đã sắp xếp\n      if (nums[lo] <= target && target < nums[mid]) hi = mid - 1;\n      else lo = mid + 1;\n    } else {                                  // nửa phải đã sắp xếp\n      if (nums[mid] < target && target <= nums[hi]) lo = mid + 1;\n      else hi = mid - 1;\n    }\n  }\n  return -1;\n}",
+    "tip": {
+      "vi": "Câu then chốt \"luôn có ít nhất một nửa đã sắp xếp\" — nói được câu này là coi như đã giải xong phần ý tưởng.",
+      "en": "The key sentence is \"at least one half is always sorted\" — once you say it, the idea is solved."
+    },
+    "followUps": [
+      {
+        "vi": "Tìm phần tử nhỏ nhất trong mảng đã xoay?",
+        "en": "Find the minimum in a rotated sorted array?"
+      },
+      {
+        "vi": "Nếu mảng có phần tử trùng thì độ phức tạp thay đổi ra sao?",
+        "en": "How does the complexity change if duplicates are allowed?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/search-in-rotated-sorted-array/"
+  },
+  {
     "id": "dsa-bit-manipulation-basics",
     "level": "junior",
     "topic": "Bit Manipulation",
@@ -518,6 +750,64 @@
       }
     ],
     "source": "https://leetcode.com/problems/single-number/"
+  },
+  {
+    "id": "dsa-matrix-spiral-order",
+    "level": "junior",
+    "topic": "Matrix",
+    "q": {
+      "vi": "Trả về các phần tử của ma trận m × n theo thứ tự xoắn ốc theo chiều kim đồng hồ. Ví dụ [[1, 2, 3], [4, 5, 6], [7, 8, 9]] → [1, 2, 3, 6, 9, 8, 7, 4, 5].",
+      "en": "Return the elements of an m × n matrix in clockwise spiral order. Example: [[1, 2, 3], [4, 5, 6], [7, 8, 9]] → [1, 2, 3, 6, 9, 8, 7, 4, 5]."
+    },
+    "a": {
+      "vi": "Không có thuật toán khó, đây là bài kiểm tra khả năng xử lý chỉ số cẩn thận.\n\nCách thu hẹp biên: giữ bốn biên top, bottom, left, right. Lặp khi top <= bottom và left <= right:\n1. Đi hàng top từ left → right, rồi top++.\n2. Đi cột right từ top → bottom, rồi right--.\n3. Nếu còn hàng (top <= bottom): đi hàng bottom từ right → left, rồi bottom--.\n4. Nếu còn cột (left <= right): đi cột left từ bottom → top, rồi left++.\n\nHai điều kiện kiểm tra ở bước 3 và 4 là chỗ hay sai: với ma trận chỉ một hàng hoặc một cột, thiếu chúng sẽ in lặp phần tử.\n\nĐộ phức tạp: O(m·n) thời gian, O(1) bộ nhớ ngoài kết quả.\n\nCách khác: mô phỏng hướng đi (phải, xuống, trái, lên) với mảng visited, gặp biên hoặc ô đã thăm thì rẽ phải — dễ nghĩ nhưng tốn O(m·n) bộ nhớ.\n\nEdge case: ma trận rỗng, một hàng, một cột, ma trận không vuông (3 × 5).",
+      "en": "There is no clever algorithm; it tests careful index handling.\n\nShrinking boundaries: keep four bounds top, bottom, left, right. Loop while top <= bottom and left <= right:\n1. Walk row top from left → right, then top++.\n2. Walk column right from top → bottom, then right--.\n3. If rows remain (top <= bottom): walk row bottom from right → left, then bottom--.\n4. If columns remain (left <= right): walk column left from bottom → top, then left++.\n\nThe checks in steps 3 and 4 are where people slip: without them, a single-row or single-column matrix prints elements twice.\n\nComplexity: O(m·n) time, O(1) memory besides the output.\n\nAlternative: simulate directions (right, down, left, up) with a visited array, turning right at a wall or visited cell — intuitive, but O(m·n) extra memory.\n\nEdge cases: an empty matrix, one row, one column, non-square matrices (3 × 5)."
+    },
+    "code": "function spiralOrder(matrix: number[][]): number[] {\n  const res: number[] = [];\n  if (!matrix.length) return res;\n  let top = 0, bottom = matrix.length - 1, left = 0, right = matrix[0].length - 1;\n  while (top <= bottom && left <= right) {\n    for (let j = left; j <= right; j++) res.push(matrix[top][j]);\n    top++;\n    for (let i = top; i <= bottom; i++) res.push(matrix[i][right]);\n    right--;\n    if (top <= bottom) {\n      for (let j = right; j >= left; j--) res.push(matrix[bottom][j]);\n      bottom--;\n    }\n    if (left <= right) {\n      for (let i = bottom; i >= top; i--) res.push(matrix[i][left]);\n      left++;\n    }\n  }\n  return res;\n}",
+    "tip": {
+      "vi": "Tự chạy tay ví dụ một hàng [[1, 2, 3]] trước khi nói \"xong\" — bắt được lỗi in lặp mà đa số ứng viên mắc.",
+      "en": "Trace a one-row example [[1, 2, 3]] by hand before saying \"done\" — it catches the duplicate-printing bug most candidates make."
+    },
+    "followUps": [
+      {
+        "vi": "Sinh ma trận n × n chứa 1..n² theo thứ tự xoắn ốc?",
+        "en": "Generate an n × n matrix filled with 1..n² in spiral order?"
+      },
+      {
+        "vi": "Duyệt ma trận theo đường chéo?",
+        "en": "Traverse a matrix diagonally?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/spiral-matrix/"
+  },
+  {
+    "id": "dsa-matrix-rotate-image",
+    "level": "mid",
+    "topic": "Matrix",
+    "q": {
+      "vi": "Xoay ma trận vuông n × n một góc 90° theo chiều kim đồng hồ, tại chỗ (không tạo ma trận mới). Ví dụ [[1, 2, 3], [4, 5, 6], [7, 8, 9]] → [[7, 4, 1], [8, 5, 2], [9, 6, 3]].",
+      "en": "Rotate an n × n matrix 90° clockwise in place (no new matrix). Example: [[1, 2, 3], [4, 5, 6], [7, 8, 9]] → [[7, 4, 1], [8, 5, 2], [9, 6, 3]]."
+    },
+    "a": {
+      "vi": "Nếu được dùng ma trận phụ: phần tử ở (i, j) đi tới (j, n − 1 − i). O(n²) bộ nhớ, bị cấm ở đề này.\n\nTại chỗ bằng hai phép biến đổi:\n1. Chuyển vị (transpose): đổi chỗ matrix[i][j] với matrix[j][i] cho mọi j > i — hàng thành cột.\n2. Đảo ngược từng hàng.\nKết hợp lại đúng bằng xoay 90° theo chiều kim đồng hồ. (Xoay ngược chiều: chuyển vị rồi đảo ngược từng cột, hoặc đảo hàng trước rồi chuyển vị.)\n\nCách khác: xoay từng lớp từ ngoài vào trong, mỗi lần hoán đổi vòng 4 phần tử ở 4 cạnh. Cùng độ phức tạp nhưng chỉ số rối hơn, dễ sai.\n\nĐộ phức tạp: O(n²) thời gian, O(1) bộ nhớ.\n\nEdge case: n = 1, n chẵn và n lẻ (phần tử ở tâm đứng yên), lỗi hay gặp là chuyển vị cả hai nửa (j chạy từ 0) làm ma trận đổi chỗ hai lần và quay về như cũ.\n\nỨng dụng: xoay ảnh, xoay khối trong game kiểu Tetris.",
+      "en": "With an extra matrix, the element at (i, j) moves to (j, n − 1 − i). O(n²) memory, which this problem forbids.\n\nIn place with two transforms:\n1. Transpose: swap matrix[i][j] with matrix[j][i] for every j > i — rows become columns.\n2. Reverse each row.\nTogether they equal a 90° clockwise rotation. (Counter-clockwise: transpose then reverse each column, or reverse rows first and then transpose.)\n\nAlternative: rotate layer by layer from the outside in, cycling 4 elements on the 4 sides at a time. Same complexity, but messier indices and easier to get wrong.\n\nComplexity: O(n²) time, O(1) memory.\n\nEdge cases: n = 1, even and odd n (the centre stays put), and the common bug of transposing both halves (j starting at 0), which swaps every pair twice and leaves the matrix unchanged.\n\nApplications: rotating images, rotating pieces in a Tetris-like game."
+    },
+    "code": "function rotate(matrix: number[][]): void {\n  const n = matrix.length;\n  for (let i = 0; i < n; i++)\n    for (let j = i + 1; j < n; j++)        // chỉ nửa trên đường chéo\n      [matrix[i][j], matrix[j][i]] = [matrix[j][i], matrix[i][j]];\n  for (const row of matrix) row.reverse();\n}",
+    "tip": {
+      "vi": "Phân tích \"xoay = chuyển vị + đảo hàng\" bằng cách chạy tay ma trận 3 × 3 trên giấy — dễ thuyết phục hơn công thức chỉ số.",
+      "en": "Show \"rotate = transpose + reverse rows\" by tracing a 3 × 3 matrix on paper — more convincing than index formulas."
+    },
+    "followUps": [
+      {
+        "vi": "Xoay 90° ngược chiều kim đồng hồ thì làm thế nào?",
+        "en": "How do you rotate 90° counter-clockwise?"
+      },
+      {
+        "vi": "Nếu ma trận không vuông (m × n) thì có xoay tại chỗ được không?",
+        "en": "Can a non-square (m × n) matrix be rotated in place?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/rotate-image/"
   },
   {
     "id": "dsa-tree-traversals",
@@ -665,6 +955,35 @@
     "source": "https://leetcode.com/problems/kth-largest-element-in-an-array/"
   },
   {
+    "id": "dsa-top-k-frequent",
+    "level": "mid",
+    "topic": "Heap",
+    "q": {
+      "vi": "Trả về k phần tử xuất hiện nhiều nhất trong mảng. Ví dụ nums = [1, 1, 1, 2, 2, 3], k = 2 → [1, 2]. Làm tốt hơn O(n log n) được không?",
+      "en": "Return the k most frequent elements of an array. Example: nums = [1, 1, 1, 2, 2, 3], k = 2 → [1, 2]. Can you beat O(n log n)?"
+    },
+    "a": {
+      "vi": "Bước 1 luôn là đếm tần suất bằng hash map: O(n).\n\nBước 2, chọn k phần tử có tần suất cao nhất:\n- Sắp xếp các cặp (phần tử, tần suất) theo tần suất: O(m log m), m là số phần tử khác nhau.\n- Min-heap kích thước k: duyệt các cặp, đẩy vào heap, heap vượt k thì bỏ phần tử nhỏ nhất. O(m log k) — tốt khi k nhỏ hơn nhiều so với m, và dùng được cho luồng dữ liệu.\n- Bucket sort: tần suất chỉ nằm trong khoảng 1..n, nên tạo mảng buckets với buckets[f] = các phần tử xuất hiện f lần, rồi duyệt từ f = n xuống, lấy đủ k phần tử. O(n) thời gian, O(n) bộ nhớ.\n- Quickselect trên tần suất: trung bình O(m), xấu nhất O(m²).\n\nEdge case: k bằng số phần tử khác nhau, nhiều phần tử cùng tần suất ở ranh giới (hỏi lại có cần thứ tự cố định không), mảng một phần tử.\n\nỨng dụng: top hashtag, top sản phẩm bán chạy, top lỗi trong log. Ở quy mô hệ thống với luồng dữ liệu khổng lồ, dùng Count-Min Sketch + heap để ước lượng gần đúng.",
+      "en": "Step 1 is always counting frequencies with a hash map: O(n).\n\nStep 2, pick the k highest frequencies:\n- Sort the (element, count) pairs by count: O(m log m), where m is the number of distinct elements.\n- A min-heap of size k: push each pair, pop the smallest when the heap exceeds k. O(m log k) — good when k is much smaller than m, and it works on streams.\n- Bucket sort: counts lie between 1 and n, so build buckets where buckets[f] = elements seen f times, then walk from f = n downward until you have k. O(n) time, O(n) memory.\n- Quickselect on counts: O(m) average, O(m²) worst case.\n\nEdge cases: k equals the number of distinct elements, ties at the boundary (ask whether a fixed order is needed), a single-element array.\n\nApplications: top hashtags, best-selling products, most frequent errors in logs. At system scale with huge streams, use a Count-Min Sketch + heap for approximate answers."
+    },
+    "code": "function topKFrequent(nums: number[], k: number): number[] {\n  const count = new Map<number, number>();\n  for (const x of nums) count.set(x, (count.get(x) ?? 0) + 1);\n  const buckets: number[][] = Array.from({ length: nums.length + 1 }, () => []);\n  for (const [x, f] of count) buckets[f].push(x);\n  const res: number[] = [];\n  for (let f = nums.length; f > 0 && res.length < k; f--) res.push(...buckets[f]);\n  return res.slice(0, k);\n}",
+    "tip": {
+      "vi": "Đưa ra cả hai lời giải heap O(m log k) và bucket O(n), rồi nói khi nào chọn cái nào (luồng dữ liệu → heap) — thể hiện bạn cân nhắc đánh đổi.",
+      "en": "Offer both heap O(m log k) and bucket O(n), then say when to choose each (streaming → heap) — it shows you weigh trade-offs."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu dữ liệu là luồng vô hạn và chỉ cần gần đúng thì sao?",
+        "en": "What if the data is an endless stream and an approximate answer is fine?"
+      },
+      {
+        "vi": "Top k từ xuất hiện nhiều nhất, cùng tần suất thì xếp theo thứ tự chữ cái?",
+        "en": "Top k frequent words, with ties broken alphabetically?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/top-k-frequent-elements/"
+  },
+  {
     "id": "dsa-heap-merge-k-sorted-lists",
     "level": "senior",
     "topic": "Heap",
@@ -750,6 +1069,63 @@
       }
     ],
     "source": "https://leetcode.com/problems/merge-intervals/"
+  },
+  {
+    "id": "dsa-greedy-jump-game",
+    "level": "mid",
+    "topic": "Greedy",
+    "q": {
+      "vi": "Mảng nums, nums[i] là số bước nhảy tối đa từ vị trí i. Bắt đầu ở vị trí 0, có tới được vị trí cuối không? Ví dụ [2, 3, 1, 1, 4] → true, [3, 2, 1, 0, 4] → false.",
+      "en": "In nums, nums[i] is the maximum jump length from index i. Starting at index 0, can you reach the last index? Example: [2, 3, 1, 1, 4] → true, [3, 2, 1, 0, 4] → false."
+    },
+    "a": {
+      "vi": "Thử mọi đường nhảy bằng đệ quy là hàm mũ; quy hoạch động (good[i] = có tới đích từ i không) là O(n²).\n\nGreedy O(n): duyệt từ trái sang, giữ farthest = vị trí xa nhất có thể tới được.\n- Tại i, nếu i > farthest thì i không tới được, trả false.\n- Ngược lại cập nhật farthest = max(farthest, i + nums[i]).\n- farthest >= n − 1 thì trả true.\n\nVì sao đúng: tập vị trí tới được luôn là một đoạn liền [0..farthest] — nếu tới được vị trí xa thì mọi vị trí ở giữa đều tới được (nhảy ngắn hơn). Nên chỉ cần theo dõi biên phải của đoạn đó.\n\nĐộ phức tạp: O(n) thời gian, O(1) bộ nhớ.\n\nEdge case: mảng một phần tử (đã ở đích → true), số 0 ở vị trí 0 khi n > 1, số 0 nằm giữa nhưng nhảy qua được.\n\nBiến thể Jump Game II: số lần nhảy ít nhất để tới đích — vẫn greedy, coi như BFS theo từng \"tầng\": giữ biên của tầng hiện tại, khi i đi tới biên thì tăng số lần nhảy và mở rộng biên tới farthest.",
+      "en": "Trying every jump path recursively is exponential; dynamic programming (good[i] = can index i reach the end) is O(n²).\n\nGreedy O(n): scan left to right keeping farthest = the furthest reachable index.\n- At i, if i > farthest, i is unreachable: return false.\n- Otherwise update farthest = max(farthest, i + nums[i]).\n- Once farthest >= n − 1, return true.\n\nWhy it works: the reachable indices always form one contiguous range [0..farthest] — if you can reach a far index, every index before it is reachable too (with a shorter jump). So tracking the right edge of that range is enough.\n\nComplexity: O(n) time, O(1) memory.\n\nEdge cases: a single element (already at the end → true), a 0 at index 0 when n > 1, a 0 in the middle that can be jumped over.\n\nVariant Jump Game II: the minimum number of jumps — still greedy, like a BFS by \"levels\": keep the current level's boundary, and when i reaches it, increment the jump count and extend the boundary to farthest."
+    },
+    "code": "function canJump(nums: number[]): boolean {\n  let farthest = 0;\n  for (let i = 0; i < nums.length; i++) {\n    if (i > farthest) return false;\n    farthest = Math.max(farthest, i + nums[i]);\n    if (farthest >= nums.length - 1) return true;\n  }\n  return true;\n}",
+    "tip": {
+      "vi": "Nêu lập luận \"các vị trí tới được luôn là một đoạn liền\" — với bài greedy, chứng minh vì sao đúng quan trọng ngang với code.",
+      "en": "Give the \"reachable indices form one contiguous range\" argument — for greedy problems, proving correctness matters as much as the code."
+    },
+    "followUps": [
+      {
+        "vi": "Số lần nhảy ít nhất để tới đích (Jump Game II)?",
+        "en": "Minimum number of jumps to reach the end (Jump Game II)?"
+      },
+      {
+        "vi": "Nếu được nhảy cả sang trái thì bài toán thành gì?",
+        "en": "If jumps could also go left, what does the problem become?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/jump-game/"
+  },
+  {
+    "id": "dsa-greedy-meeting-rooms",
+    "level": "mid",
+    "topic": "Greedy",
+    "q": {
+      "vi": "Cho danh sách cuộc họp [start, end), cần tối thiểu bao nhiêu phòng họp để không cuộc nào bị trùng phòng? Ví dụ [[0, 30], [5, 10], [15, 20]] → 2.",
+      "en": "Given meetings as [start, end), what is the minimum number of rooms so no two meetings share a room at the same time? Example: [[0, 30], [5, 10], [15, 20]] → 2."
+    },
+    "a": {
+      "vi": "Câu hỏi tương đương: tại một thời điểm có tối đa bao nhiêu cuộc họp diễn ra cùng lúc.\n\nCách 1 — sort + min-heap: sort theo start. Heap giữ end của các phòng đang bận. Với mỗi cuộc họp, nếu phòng kết thúc sớm nhất (đỉnh heap) đã xong (end <= start) thì lấy ra dùng lại; rồi đẩy end của cuộc họp mới vào. Số phòng = kích thước lớn nhất của heap (với cách lấy ra trước khi đẩy, đó là kích thước heap cuối cùng). O(n log n).\n\nCách 2 — hai con trỏ trên hai mảng đã sort: tách mảng starts và ends, sort riêng. Duyệt starts; nếu start hiện tại < end nhỏ nhất chưa xét thì cần thêm phòng, ngược lại một phòng vừa trống (dịch con trỏ ends). O(n log n), không cần heap, code ngắn.\n\nCách 3 — quét sự kiện: +1 tại start, −1 tại end, sort các sự kiện (end xếp trước start khi trùng thời điểm vì khoảng là nửa mở) và lấy tổng chạy lớn nhất.\n\nEdge case: cuộc họp kết thúc đúng lúc cuộc khác bắt đầu (dùng lại phòng được với [start, end)), danh sách rỗng, mọi cuộc họp trùng nhau.\n\nỨng dụng thật: số kết nối đồng thời tối đa, số máy chủ cần cho các job theo lịch.",
+      "en": "Equivalent question: at any moment, how many meetings overlap at most?\n\nApproach 1 — sort + min-heap: sort by start. The heap holds the end times of busy rooms. For each meeting, if the earliest-ending room (heap top) is free (end <= start), pop and reuse it; then push the new meeting's end. Rooms = the largest heap size (with pop-before-push, that is the final heap size). O(n log n).\n\nApproach 2 — two pointers over two sorted arrays: split into starts and ends and sort each. Walk the starts; if the current start < the smallest unconsumed end, you need another room, otherwise a room has just freed up (advance the ends pointer). O(n log n), no heap, short code.\n\nApproach 3 — event sweep: +1 at each start, −1 at each end, sort the events (ends before starts at equal times, since intervals are half-open) and take the maximum running sum.\n\nEdge cases: a meeting ending exactly when another starts (the room can be reused with [start, end)), an empty list, all meetings overlapping.\n\nReal uses: peak concurrent connections, how many servers scheduled jobs need."
+    },
+    "code": "function minMeetingRooms(intervals: number[][]): number {\n  const starts = intervals.map((x) => x[0]).sort((a, b) => a - b);\n  const ends = intervals.map((x) => x[1]).sort((a, b) => a - b);\n  let rooms = 0, e = 0;\n  for (const s of starts) {\n    if (s < ends[e]) rooms++;   // chưa phòng nào trống\n    else e++;                   // dùng lại phòng vừa trống\n  }\n  return rooms;\n}",
+    "tip": {
+      "vi": "Diễn đạt lại thành \"số cuộc họp chồng nhau lớn nhất\" ngay đầu — biến bài toán lạ thành bài quét sự kiện quen thuộc.",
+      "en": "Rephrase it as \"the maximum number of overlapping meetings\" up front — it turns an unfamiliar problem into a familiar sweep."
+    },
+    "followUps": [
+      {
+        "vi": "Một người có dự được tất cả các cuộc họp không (Meeting Rooms I)?",
+        "en": "Can one person attend all meetings (Meeting Rooms I)?"
+      },
+      {
+        "vi": "Trả về luôn cuộc họp nào xếp vào phòng nào?",
+        "en": "Also return which meeting goes to which room?"
+      }
+    ]
   },
   {
     "id": "dsa-bfs-dfs",
@@ -896,6 +1272,35 @@
     "source": "https://leetcode.com/problems/network-delay-time/"
   },
   {
+    "id": "dsa-graph-minimum-spanning-tree",
+    "level": "senior",
+    "topic": "Graph",
+    "q": {
+      "vi": "Cây khung nhỏ nhất (minimum spanning tree) là gì? So sánh thuật toán Kruskal và Prim. Ví dụ nối n thành phố bằng cáp với chi phí nhỏ nhất.",
+      "en": "What is a minimum spanning tree? Compare Kruskal's and Prim's algorithms. Example: connecting n cities with cable at minimum cost."
+    },
+    "a": {
+      "vi": "Với đồ thị vô hướng, liên thông, có trọng số, cây khung nhỏ nhất (MST) là tập n − 1 cạnh nối mọi đỉnh, không có chu trình, với tổng trọng số nhỏ nhất. Bài toán nối mạng điện, cáp quang, đường ống với chi phí thấp nhất là MST.\n\nKruskal (theo cạnh):\n- Sắp xếp mọi cạnh theo trọng số tăng dần.\n- Duyệt từng cạnh; nếu hai đầu đang thuộc hai thành phần khác nhau (kiểm tra bằng Union-Find) thì lấy cạnh và hợp nhất hai thành phần, nếu không thì bỏ (sẽ tạo chu trình).\n- Dừng khi đủ n − 1 cạnh. O(E log E) do sắp xếp. Hợp với đồ thị thưa, hoặc khi đã có sẵn danh sách cạnh.\n\nPrim (theo đỉnh):\n- Bắt đầu từ một đỉnh, dùng min-heap chứa các cạnh từ cây hiện tại ra ngoài.\n- Mỗi bước lấy cạnh nhẹ nhất dẫn tới đỉnh chưa có trong cây, thêm đỉnh đó và đẩy các cạnh mới của nó vào heap.\n- O(E log V) với heap. Hợp với đồ thị dày, danh sách kề.\n\nCả hai đều đúng nhờ tính chất lát cắt (cut property): với bất kỳ cách chia đỉnh thành hai phần, cạnh nhẹ nhất nối hai phần luôn thuộc một MST nào đó.\n\nPhân biệt với Dijkstra: Dijkstra tìm đường ngắn nhất từ một nguồn tới các đỉnh (tối ưu tổng đường đi từ nguồn); MST tối ưu tổng trọng số của cả mạng. Cây đường đi ngắn nhất thường không phải MST.\n\nEdge case: đồ thị không liên thông (không có MST, chỉ có rừng khung — Kruskal trả về ít hơn n − 1 cạnh), cạnh trùng trọng số (MST có thể không duy nhất), trọng số âm (vẫn chạy đúng).",
+      "en": "For a connected, undirected, weighted graph, a minimum spanning tree (MST) is a set of n − 1 edges connecting every vertex with no cycle and the smallest total weight. Connecting power lines, fibre or pipes at the lowest cost is an MST problem.\n\nKruskal (edge-based):\n- Sort all edges by weight ascending.\n- For each edge, if its endpoints are in different components (checked with Union-Find), take it and merge the components; otherwise skip it (it would form a cycle).\n- Stop at n − 1 edges. O(E log E) for the sort. Suits sparse graphs, or when you already have an edge list.\n\nPrim (vertex-based):\n- Start from a vertex, with a min-heap of edges leaving the current tree.\n- Each step takes the lightest edge to a vertex not yet in the tree, adds that vertex and pushes its new edges.\n- O(E log V) with a heap. Suits dense graphs and adjacency lists.\n\nBoth are correct because of the cut property: for any split of the vertices into two sides, the lightest edge crossing the split belongs to some MST.\n\nVersus Dijkstra: Dijkstra finds shortest paths from one source (optimising path length from the source); an MST optimises the total weight of the whole network. A shortest-path tree is usually not an MST.\n\nEdge cases: a disconnected graph (no MST, only a spanning forest — Kruskal returns fewer than n − 1 edges), equal weights (the MST may not be unique), negative weights (still works)."
+    },
+    "code": "function kruskal(n: number, edges: [number, number, number][]): number {\n  const parent = Array.from({ length: n }, (_, i) => i);\n  const find = (x: number): number => (parent[x] === x ? x : (parent[x] = find(parent[x])));\n  let cost = 0, used = 0;\n  for (const [u, v, w] of [...edges].sort((a, b) => a[2] - b[2])) {\n    const ru = find(u), rv = find(v);\n    if (ru === rv) continue;   // sẽ tạo chu trình\n    parent[ru] = rv;\n    cost += w;\n    if (++used === n - 1) break;\n  }\n  return used === n - 1 ? cost : -1; // -1: đồ thị không liên thông\n}",
+    "tip": {
+      "vi": "Chủ động phân biệt MST với Dijkstra — rất nhiều ứng viên nhầm hai bài, và chỉ ra điểm khác nhau là cách chắc chắn để ghi điểm ở câu senior.",
+      "en": "Proactively separate MST from Dijkstra — many candidates confuse them, and drawing the distinction is a sure way to score on a senior question."
+    },
+    "followUps": [
+      {
+        "vi": "Vì sao Kruskal cần Union-Find? Không có thì độ phức tạp thành bao nhiêu?",
+        "en": "Why does Kruskal need Union-Find? What would the complexity be without it?"
+      },
+      {
+        "vi": "Thêm một cạnh mới vào đồ thị thì cập nhật MST thế nào mà không tính lại từ đầu?",
+        "en": "How do you update the MST when a new edge is added, without recomputing from scratch?"
+      }
+    ],
+    "source": "https://en.wikipedia.org/wiki/Minimum_spanning_tree"
+  },
+  {
     "id": "dsa-dp-climbing-stairs",
     "level": "intern",
     "topic": "Dynamic Programming",
@@ -923,6 +1328,35 @@
       }
     ],
     "source": "https://leetcode.com/problems/climbing-stairs/"
+  },
+  {
+    "id": "dsa-dp-house-robber",
+    "level": "junior",
+    "topic": "Dynamic Programming",
+    "q": {
+      "vi": "Các ngôi nhà xếp thành hàng, nums[i] là số tiền ở nhà i. Không được lấy ở hai nhà kề nhau. Lấy được nhiều nhất bao nhiêu? Ví dụ [2, 7, 9, 3, 1] → 12 (2 + 9 + 1).",
+      "en": "Houses stand in a row and nums[i] is the money in house i. You cannot take from two adjacent houses. What is the maximum you can take? Example: [2, 7, 9, 3, 1] → 12 (2 + 9 + 1)."
+    },
+    "a": {
+      "vi": "Thử mọi tập nhà không kề nhau là hàm mũ. Greedy (lấy nhà nhiều tiền nhất trước, hoặc chỉ lấy nhà chẵn/lẻ) đều sai, ví dụ [2, 1, 1, 2] tốt nhất là 2 + 2 = 4.\n\nQuy hoạch động: gọi dp[i] = số tiền lớn nhất với các nhà 0..i. Tại nhà i chỉ có hai lựa chọn:\n- Không lấy nhà i: dp[i − 1].\n- Lấy nhà i: thì không được lấy nhà i − 1, được nums[i] + dp[i − 2].\nVậy dp[i] = max(dp[i − 1], dp[i − 2] + nums[i]), với dp[0] = nums[0], dp[1] = max(nums[0], nums[1]).\n\nVì dp[i] chỉ phụ thuộc hai giá trị trước, chỉ cần hai biến: O(n) thời gian, O(1) bộ nhớ.\n\nKhung tư duy DP áp dụng cho mọi bài: (1) định nghĩa trạng thái, (2) công thức truy hồi từ các lựa chọn ở bước cuối, (3) trường hợp cơ sở, (4) thứ tự tính và tối ưu bộ nhớ.\n\nEdge case: mảng rỗng, một nhà, hai nhà.\n\nBiến thể: nhà xếp thành vòng tròn (nhà đầu và cuối kề nhau — chạy hai lần: bỏ nhà đầu hoặc bỏ nhà cuối, lấy max), nhà trên cây nhị phân (DP trên cây, mỗi node trả về cặp lấy/không lấy).",
+      "en": "Trying every set of non-adjacent houses is exponential. Greedy (take the richest house first, or only even/odd houses) is wrong, e.g. [2, 1, 1, 2] is best as 2 + 2 = 4.\n\nDynamic programming: let dp[i] = the most money from houses 0..i. At house i there are only two choices:\n- Skip house i: dp[i − 1].\n- Take house i: then house i − 1 is off-limits, giving nums[i] + dp[i − 2].\nSo dp[i] = max(dp[i − 1], dp[i − 2] + nums[i]), with dp[0] = nums[0] and dp[1] = max(nums[0], nums[1]).\n\nSince dp[i] depends only on the previous two values, two variables suffice: O(n) time, O(1) memory.\n\nThe DP thinking framework for any problem: (1) define the state, (2) a recurrence from the choices at the last step, (3) base cases, (4) evaluation order and memory optimisation.\n\nEdge cases: an empty array, one house, two houses.\n\nVariants: houses in a circle (first and last are adjacent — run twice, excluding the first or the last, and take the max), houses on a binary tree (tree DP, each node returns a take/skip pair)."
+    },
+    "code": "function rob(nums: number[]): number {\n  let prev2 = 0, prev1 = 0;      // dp[i-2], dp[i-1]\n  for (const x of nums) {\n    const cur = Math.max(prev1, prev2 + x);\n    prev2 = prev1;\n    prev1 = cur;\n  }\n  return prev1;\n}",
+    "tip": {
+      "vi": "Đưa phản ví dụ [2, 1, 1, 2] để bác bỏ greedy trước khi vào DP — cho thấy bạn biết vì sao cần DP chứ không chỉ nhận dạng bài.",
+      "en": "Offer the counterexample [2, 1, 1, 2] to rule out greedy before the DP — it shows you know why DP is needed, not just pattern-matching."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu các nhà xếp thành vòng tròn thì sao?",
+        "en": "What if the houses form a circle?"
+      },
+      {
+        "vi": "Trả về luôn danh sách các nhà được chọn?",
+        "en": "Also return which houses were chosen?"
+      }
+    ],
+    "source": "https://leetcode.com/problems/house-robber/"
   },
   {
     "id": "dsa-dp-coin-change",

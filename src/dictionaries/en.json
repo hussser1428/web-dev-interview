@@ -18,7 +18,8 @@
     "streak": "{n}-day streak",
     "keepStreak": "Practice 1 more to keep it!",
     "streakDone": "Done for today — keep it up!",
-    "weak": "Weak answers"
+    "weak": "Weak answers",
+    "glossary": "Glossary"
   },
   "header": {
     "search": "Search questions, topics…"
@@ -313,5 +314,33 @@
     "back": "← Weak answers",
     "retryTitle": "Retry weak answers",
     "retrySubtitle": "The AI asks the question again and digs into what you missed."
+  },
+  "terms": {
+    "badge": "Term",
+    "example": "Everyday",
+    "seeFull": "Read the full explanation",
+    "self": "This question is the full explanation.",
+    "openGlossary": "Open in Glossary"
+  },
+  "glossary": {
+    "title": "Glossary",
+    "count": "{n} terms · {known} understood",
+    "search": "Search terms… (e.g. SLO, idempotent)",
+    "allTracks": "Track: All",
+    "tabs": {
+      "all": "All",
+      "todo": "Not yet",
+      "known": "Understood"
+    },
+    "empty": "No matching terms.",
+    "mark": "Mark as understood",
+    "unmark": "Unmark",
+    "example": "Everyday example",
+    "seeFull": "Full explanation",
+    "appears": "Appears in {n} other questions",
+    "more": "+ {n} more",
+    "related": "Related terms",
+    "position": "Term {i} / {n}",
+    "next": "Next term"
   }
 }

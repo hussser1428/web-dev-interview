@@ -55,6 +55,24 @@ Thêm object vào `src/data/questions/<mảng>.json`, đặt đúng vị trí tr
 }
 ```
 
+## Thêm thuật ngữ
+
+Thêm object vào `src/data/glossary.json` rồi chạy `npm run check:data`. Thuật ngữ được tự nhận diện trong tiêu đề và đáp án (chỉ lần xuất hiện đầu), bấm vào hiện popup; trang `/glossary` liệt kê tất cả.
+
+```jsonc
+{
+  "id": "slo",                                  // kebab-case, không trùng
+  "term": "SLO",
+  "full": { "vi": "…", "en": "…" },             // tuỳ chọn: tên đầy đủ
+  "match": ["SLO", "SLOs"],                     // cách viết trong đáp án; viết hoa toàn bộ thì chỉ khớp đúng chữ hoa
+  "def": { "vi": "…", "en": "…" },              // 1–2 câu
+  "example": { "vi": "…", "en": "…" },          // tuỳ chọn: ví dụ đời thường
+  "see": "devops-sre-sli-slo-error-budget",     // tuỳ chọn: câu hỏi giải thích sâu
+  "related": ["sli", "sla"],                    // tuỳ chọn
+  "tracks": ["devops"]                          // tuỳ chọn: chỉ nhận diện trong các mảng này (từ nhiều nghĩa)
+}
+```
+
 ## Thêm ngôn ngữ mới (vd: tiếng Nhật)
 
 1. Thêm `"ja"` vào `locales` và `localeNames` trong `src/locales.ts`.

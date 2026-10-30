@@ -6,6 +6,7 @@ import Icon from "@/components/icon";
 import Nav from "@/components/nav";
 import TopBar from "@/components/topbar";
 import { getDictionary, getLocale } from "@/i18n";
+import { glossary } from "@/lib/glossary";
 import { questions } from "@/lib/questions";
 import { locales } from "@/locales";
 import LangSwitch from "./lang-switch";
@@ -32,6 +33,7 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
     { href: `/${lang}/questions`, label: nav.questions, icon: "book", count: questions.length },
     { href: `/${lang}/roadmap`, label: nav.roadmap, icon: "map" },
     { href: `/${lang}/flashcards`, label: nav.flashcards, icon: "layers", badge: "due" },
+    { href: `/${lang}/glossary`, label: nav.glossary, icon: "gloss", count: glossary.length },
   ] as const;
   const ai = [
     { href: `/${lang}/interview`, label: nav.interview, icon: "chat" },

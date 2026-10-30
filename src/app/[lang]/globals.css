@@ -164,3 +164,25 @@ body {
   padding: 14px 20px;
   border-bottom: 1px solid var(--color-line);
 }
+/* Popup thuật ngữ (Popover API): bỏ căn giữa mặc định của trình duyệt, mũi tên chỉ vào chữ (--ax do JS đặt) */
+.term-pop {
+  inset: auto;
+  overflow: visible;
+}
+.term-pop::before {
+  content: "";
+  position: absolute;
+  top: -7px;
+  left: var(--ax, 28px);
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border-left: 1px solid var(--color-line2);
+  border-top: 1px solid var(--color-line2);
+  transform: rotate(45deg);
+}
+.term-pop[data-up]::before {
+  top: auto;
+  bottom: -7px;
+  transform: rotate(225deg);
+}

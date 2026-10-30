@@ -1,6 +1,6 @@
 // Chạy: npm run test
 import assert from "node:assert/strict";
-import { addDays, buildQueue, daysBetween, emptyProgress, isDue, logInterview, migrate, nextInterval, rate, streak, bestStreak, toggleSave, toggleWeak } from "../src/lib/srs.ts";
+import { addDays, buildQueue, daysBetween, emptyProgress, isDue, logInterview, migrate, nextInterval, rate, streak, bestStreak, toggleSave, toggleTerm, toggleWeak } from "../src/lib/srs.ts";
 
 assert.equal(addDays("2026-02-28", 1), "2026-03-01");
 assert.equal(addDays("2026-01-01", -1), "2025-12-31");
@@ -40,6 +40,12 @@ assert.equal(bestStreak({}), 0);
 const q = { ...emptyProgress, q: { x: { rating: 2 as const, due: "2026-10-20" }, y: { rating: 1 as const, due: "2026-10-18" }, z: { rating: 3 as const, due: "2026-12-01" } } };
 assert.deepEqual(buildQueue(["n1", "x", "y", "z", "n2"], q, 10, "2026-10-25"), ["y", "x", "n1", "n2"]);
 assert.deepEqual(buildQueue(["n1", "x", "y", "z", "n2"], q, 3, "2026-10-25"), ["y", "x", "n1"]);
+
+// Thuật ngữ "Đã hiểu": bật rồi tắt, không sửa object gốc.
+const t1 = toggleTerm(emptyProgress, "slo");
+assert.deepEqual(t1.terms, { slo: true });
+assert.deepEqual(toggleTerm(t1, "slo").terms, {});
+assert.equal(emptyProgress.terms, undefined);
 
 console.log("srs: ok");
 
