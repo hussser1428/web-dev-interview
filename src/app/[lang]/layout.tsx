@@ -29,14 +29,14 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
   const t = await getDictionary();
   const { nav } = t;
   const learn = [
-    { href: `/${lang}`, label: nav.home, icon: "dash", exact: true },
-    { href: `/${lang}/questions`, label: nav.questions, icon: "book", count: questions.length },
+    { href: `/${lang}`, label: nav.home, icon: "dash", exact: true, short: nav.home },
+    { href: `/${lang}/questions`, label: nav.questions, icon: "book", count: questions.length, short: nav.bankShort },
     { href: `/${lang}/roadmap`, label: nav.roadmap, icon: "map" },
-    { href: `/${lang}/flashcards`, label: nav.flashcards, icon: "layers", badge: "due" },
+    { href: `/${lang}/flashcards`, label: nav.flashcards, icon: "layers", badge: "due", short: nav.flashcards },
     { href: `/${lang}/glossary`, label: nav.glossary, icon: "gloss", count: glossary.length },
   ] as const;
   const ai = [
-    { href: `/${lang}/interview`, label: nav.interview, icon: "chat" },
+    { href: `/${lang}/interview`, label: nav.interview, icon: "chat", short: nav.interviewShort },
     { href: `/${lang}/project`, label: nav.project, icon: "git" },
     { href: `/${lang}/weak`, label: nav.weak, icon: "alert", badge: "weak" },
   ] as const;
@@ -44,7 +44,7 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
   return (
     <html lang={lang} className={`${inter.variable} ${mono.variable}`}>
       <body className="flex min-h-screen font-sans antialiased max-md:flex-col">
-        <aside className="flex shrink-0 gap-1 border-line bg-side px-3 max-md:items-center max-md:overflow-x-auto max-md:border-b max-md:py-2 md:sticky md:top-0 md:h-screen md:w-59 md:flex-col md:border-r md:py-4">
+        <aside className="flex shrink-0 gap-1 border-line bg-side px-3 max-md:sticky max-md:top-0 max-md:z-20 max-md:items-center max-md:justify-between max-md:border-b max-md:py-2 md:sticky md:top-0 md:h-screen md:w-59 md:flex-col md:border-r md:py-4">
           <Link href={`/${lang}`} className="flex shrink-0 items-center gap-2.5 px-2 text-[15px] font-bold md:pb-3.5 md:pt-1">
             <span className="grid size-7.5 place-items-center rounded-[9px] bg-[image:var(--grad)] text-white shadow-[0_4px_12px_-4px_rgb(109_40_217/0.6)]">
               <Icon name="code" size={15} strokeWidth={2.2} />
@@ -58,11 +58,11 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
             ]}
             t={nav}
           />
-          <div className="mt-2.5 shrink-0">
+          <div className="shrink-0 md:mt-2.5">
             <LangSwitch current={lang} />
           </div>
         </aside>
-        <main className="flex min-w-0 flex-1 flex-col bg-[radial-gradient(900px_320px_at_15%_-10%,rgb(124_58_237/0.07),transparent_70%)]">
+        <main className="flex min-w-0 flex-1 flex-col max-md:pb-16 bg-[radial-gradient(900px_320px_at_15%_-10%,rgb(124_58_237/0.07),transparent_70%)]">
           <Suspense>
             <TopBar
               lang={lang}

@@ -5,6 +5,9 @@
     "speechLang": "vi-VN"
   },
   "nav": {
+    "more": "Thêm",
+    "bankShort": "Câu hỏi",
+    "interviewShort": "Phỏng vấn",
     "home": "Tổng quan",
     "questions": "Ngân hàng câu hỏi",
     "roadmap": "Lộ trình học",
@@ -152,9 +155,7 @@
     "subtitle": "Ôn lặp lại ngắt quãng: câu khó quay lại sớm, câu dễ giãn dần.",
     "due": "{n} đến hạn",
     "fresh": "{n} mới",
-    "start": "Bắt đầu ôn",
     "nothing": "Không còn thẻ nào để ôn hôm nay 🎉",
-    "summary": "Phiên này: {total} thẻ ({due} đến hạn, còn lại là thẻ mới). Tối đa {max} thẻ mỗi phiên.",
     "flip": "Lật thẻ",
     "progress": "Thẻ {n}/{total}",
     "ratePrompt": "Bạn trả lời thế nào?",

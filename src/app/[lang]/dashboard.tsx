@@ -83,7 +83,7 @@ export default function Dashboard({ lang, t, trackNames, levelNames, items }: Pr
   return (
     <>
       <header className="flex flex-wrap items-end gap-3">
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-1 max-sm:basis-full">
           <h1 className={`text-[28px] font-bold tracking-tight ${loaded ? "" : "invisible"}`}>{greeting}</h1>
           <p className={`mt-0.5 text-[17px] text-muted ${loaded ? "" : "invisible"}`}>
             {rich(t.todayLine, {
@@ -92,33 +92,33 @@ export default function Dashboard({ lang, t, trackNames, levelNames, items }: Pr
             })}
           </p>
         </div>
-        <Link href={`/${lang}/flashcards`} className="btn-ghost h-11">
+        <Link href={`/${lang}/flashcards`} className="btn-ghost h-11 max-sm:flex-1">
           <Icon name="layers" className="text-brand" /> {t.flashBtn}
         </Link>
-        <Link href={`/${lang}/interview`} className="btn h-11 px-5">
+        <Link href={`/${lang}/interview`} className="btn h-11 px-5 max-sm:flex-1">
           <Icon name="play" /> {t.interviewBtn}
         </Link>
       </header>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <Stat cls="g-warm" label={t.streak} icon="flame" num={streakDays} unit={t.daysUnit} pill={loaded && fmt(t.record, { n: bestStreak(p.days) })}>
+        <Stat c={["#e11d48", "#f97316"]} label={t.streak} icon="flame" num={streakDays} unit={t.daysUnit} pill={loaded && fmt(t.record, { n: bestStreak(p.days) })}>
           <Week days={p.days} now={now} names={t.weekdays} />
         </Stat>
-        <Stat cls="g-teal" label={t.practiced} icon="check" num={done.length} unit={fmt(t.ofTotal, { n: items.length })}>
-          <div className="bar flex-1 bg-black/25!">
-            <span className="bg-white!" style={{ width: `${(done.length / items.length) * 100}%` }} />
+        <Stat c={["#0e7490", "#10b981"]} label={t.practiced} icon="check" num={done.length} unit={fmt(t.ofTotal, { n: items.length })}>
+          <div className="bar flex-1">
+            <span style={{ width: `${(done.length / items.length) * 100}%` }} />
           </div>
-          <b>{Math.round((done.length / items.length) * 100)}%</b>
+          <b className="text-(--c)">{Math.round((done.length / items.length) * 100)}%</b>
         </Stat>
-        <Stat cls="g-ocean" label={t.due} icon="rotate" num={dueItems.length} unit={t.cardsUnit}>
+        <Stat c={["#4f46e5", "#3b82f6"]} label={t.due} icon="rotate" num={dueItems.length} unit={t.cardsUnit}>
           <Pill>{fmt(t.hardN, { n: dueHard })}</Pill>
           <Pill>{fmt(t.mediumN, { n: dueMedium })}</Pill>
-          <Link href={`/${lang}/flashcards`} className="ml-auto inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-0.5 text-xs font-semibold text-indigo-700">
+          <Link href={`/${lang}/flashcards`} className="ml-auto inline-flex items-center gap-1 font-semibold text-(--c) hover:underline">
             {t.reviewNow} <Icon name="arrow" size={12} strokeWidth={2.4} />
           </Link>
         </Stat>
-        <Stat cls="g-berry" label={t.saved} icon="bookmark" num={saved} unit={t.qUnit}>
-          <Link href={`/${lang}/questions?status=saved`} className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-0.5 text-xs font-semibold text-fuchsia-700">
+        <Stat c={["#a21caf", "#ec4899"]} label={t.saved} icon="bookmark" num={saved} unit={t.qUnit}>
+          <Link href={`/${lang}/questions?status=saved`} className="inline-flex items-center gap-1 font-semibold text-(--c) hover:underline">
             {t.viewSaved} <Icon name="arrow" size={12} strokeWidth={2.4} />
           </Link>
         </Stat>
@@ -295,26 +295,26 @@ export default function Dashboard({ lang, t, trackNames, levelNames, items }: Pr
   );
 }
 
-function Stat({ cls, label, icon, num, unit, pill, children }: { cls: string; label: string; icon: IconName; num: number; unit: string; pill?: ReactNode; children: ReactNode }) {
+function Stat({ c, label, icon, num, unit, pill, children }: { c: [string, string]; label: string; icon: IconName; num: number; unit: string; pill?: ReactNode; children: ReactNode }) {
   return (
-    <div className={`vivid ${cls} flex flex-col gap-2 rounded-2xl px-4.5 py-4`}>
-      <div className="flex items-center gap-2 text-sm font-semibold">
-        <span className="grid size-8 place-items-center rounded-xl bg-white text-(--c) shadow-[0_4px_10px_-4px_rgb(0_0_0/0.35)]">
+    <div style={hue(c)} className="card relative flex flex-col gap-2 overflow-hidden px-4.5 py-4 before:absolute before:inset-x-0 before:top-0 before:h-[3px] before:bg-linear-to-r before:from-(--c) before:to-(--c2)">
+      <div className="flex items-center gap-2 text-sm font-semibold text-muted">
+        <span className="chipi solid size-8! rounded-xl!">
           <Icon name={icon} size={17} strokeWidth={2.2} />
         </span>
         {label}
       </div>
       <div className="flex items-baseline gap-1.5">
         <span className="text-[34px] font-extrabold leading-tight tracking-tight">{num}</span>
-        <span className="text-sm font-semibold opacity-90">{unit}</span>
-        {pill && <span className="ml-auto self-center rounded-full bg-black/22 px-2.5 py-0.5 text-xs font-semibold">{pill}</span>}
+        <span className="text-sm font-semibold text-subtle">{unit}</span>
+        {pill && <span className="tagc ml-auto self-center">{pill}</span>}
       </div>
-      <div className="mt-auto flex items-center gap-2 text-xs font-medium">{children}</div>
+      <div className="mt-auto flex flex-wrap items-center gap-2 text-xs font-medium">{children}</div>
     </div>
   );
 }
 
-const Pill = ({ children }: { children: ReactNode }) => <span className="rounded-full bg-black/22 px-2.5 py-0.5 font-semibold">{children}</span>;
+const Pill = ({ children }: { children: ReactNode }) => <span className="rounded-full bg-hover px-2.5 py-0.5 font-semibold text-muted">{children}</span>;
 
 /** 7 ô của tuần hiện tại (T2 → CN), hôm nay viền trắng. */
 function Week({ days, now, names }: { days: Record<string, number>; now: string; names: string[] }) {
@@ -323,7 +323,8 @@ function Week({ days, now, names }: { days: Record<string, number>; now: string;
     <div className="flex flex-1 gap-1">
       {names.map((n, i) => {
         const d = monday && addDays(monday, i);
-        const cls = d === now ? "shadow-[inset_0_0_0_2px_#fff] text-white" : d && days[d] ? "bg-white/95 text-(--c)" : "bg-black/22 text-white/75";
+        const on = d && days[d] ? "bg-(--c) text-white" : "bg-hover text-subtle";
+        const cls = d === now ? `${on} ring-2 ring-(--c) ring-offset-1` : on;
         return (
           <i key={n} className={`h-6 flex-1 rounded-md text-center text-[10px] font-semibold not-italic leading-6 ${cls}`}>{n}</i>
         );

@@ -195,6 +195,38 @@
     "source": "https://www.rfc-editor.org/rfc/rfc9457"
   },
   {
+    "id": "backend-api-file-upload-presigned",
+    "level": "mid",
+    "topic": "REST API",
+    "q": {
+      "vi": "Thiết kế API upload file lớn (ảnh, video). Vì sao nên dùng presigned URL thay vì cho file đi qua server?",
+      "en": "Design an API for uploading large files (images, video). Why use presigned URLs instead of streaming the file through your server?"
+    },
+    "a": {
+      "vi": "Với file lớn, cách tốt là để client upload thẳng lên object storage (S3, GCS, R2) bằng presigned URL; server chỉ cấp quyền và ghi nhận kết quả.\n\nLuồng thường dùng:\n1. Client gọi POST /uploads kèm tên file, kiểu, dung lượng. Server kiểm tra quyền, giới hạn dung lượng và kiểu file, tạo key ngẫu nhiên (không dùng tên file của người dùng), rồi trả về presigned URL có hạn vài phút.\n2. Client PUT file thẳng lên storage bằng URL đó. File lớn thì dùng multipart upload: chia phần, upload song song, hỏng phần nào gửi lại phần đó.\n3. Client báo server \"đã xong\", hoặc storage bắn event (S3 Event Notification) để server ghi metadata vào DB và chạy xử lý nền: quét virus, tạo thumbnail, chuyển mã video.\n\nVì sao không cho file đi qua server:\n- Server không phải giữ kết nối và băng thông cho hàng trăm MB mỗi request, không bị timeout hay hết RAM.\n- Storage chịu tải và có sẵn độ bền, retry, CDN phía sau.\n- Scale đơn giản: API chỉ xử lý request nhỏ.\n\nLưu ý bảo mật: presigned URL ai có cũng dùng được trong thời hạn, nên đặt hạn ngắn, ràng buộc Content-Type và dung lượng, bucket để private, đọc file qua URL có hạn hoặc CDN. Không tin phần mở rộng tên file; kiểm tra lại nội dung sau khi upload.",
+      "en": "For large files the good approach is to let the client upload directly to object storage (S3, GCS, R2) with a presigned URL; your server only grants permission and records the result.\n\nTypical flow:\n1. The client calls POST /uploads with file name, type and size. The server checks permissions, size and type limits, generates a random key (never the user's file name) and returns a presigned URL valid for a few minutes.\n2. The client PUTs the file straight to storage with that URL. For large files use multipart upload: split into parts, upload in parallel, retry only failed parts.\n3. The client tells the server it is done, or storage emits an event (S3 Event Notification) so the server stores metadata in the DB and runs background processing: virus scan, thumbnails, video transcoding.\n\nWhy not stream through your server:\n- The server does not hold connections and bandwidth for hundreds of MB per request, so no timeouts or memory exhaustion.\n- Storage takes the load and already provides durability, retries and a CDN.\n- Scaling is simple: the API only handles small requests.\n\nSecurity notes: anyone holding a presigned URL can use it until it expires, so keep expiry short, constrain Content-Type and size, keep the bucket private and serve files via expiring URLs or a CDN. Do not trust file extensions; validate content after upload."
+    },
+    "example": {
+      "vi": "App bán hàng cho người bán đăng video sản phẩm 200 MB. Nếu video đi qua API, vài chục người upload cùng lúc là server Node.js nghẽn băng thông và timeout. Chuyển sang presigned URL: API chỉ trả về một đường link có hạn 5 phút, video đi thẳng lên S3, xong thì một job nền tạo bản 720p và ảnh thumbnail.",
+      "en": "A marketplace app lets sellers post 200 MB product videos. If videos pass through the API, a few dozen simultaneous uploads saturate the Node.js server's bandwidth and time out. With presigned URLs the API only returns a 5-minute link, the video goes straight to S3, and a background job then creates a 720p version and a thumbnail."
+    },
+    "code": "import { S3Client, PutObjectCommand } from \"@aws-sdk/client-s3\";\nimport { getSignedUrl } from \"@aws-sdk/s3-request-presigner\";\nimport { randomUUID } from \"node:crypto\";\n\nconst s3 = new S3Client({ region: \"ap-southeast-1\" });\n\n// POST /uploads -> { url, key }\nexport async function createUpload(userId, contentType) {\n  if (![\"image/jpeg\", \"image/png\", \"video/mp4\"].includes(contentType)) throw new Error(\"type not allowed\");\n  const key = `uploads/${userId}/${randomUUID()}`;\n  const cmd = new PutObjectCommand({ Bucket: \"my-app-uploads\", Key: key, ContentType: contentType });\n  const url = await getSignedUrl(s3, cmd, { expiresIn: 300 }); // 5 phút\n  return { url, key };\n}",
+    "tip": {
+      "vi": "Nhắc tới multipart upload cho file lớn và việc xử lý sau upload (quét virus, thumbnail) bằng job nền sẽ cho thấy bạn đã làm thật.",
+      "en": "Mentioning multipart upload for big files and post-upload processing (virus scan, thumbnails) in background jobs shows real experience."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao giới hạn dung lượng file khi client upload thẳng lên S3?",
+        "en": "How do you cap file size when the client uploads directly to S3?"
+      },
+      {
+        "vi": "Người dùng upload xong nhưng không gọi API báo hoàn tất thì xử lý thế nào?",
+        "en": "What if the user uploads but never calls the completion endpoint?"
+      }
+    ]
+  },
+  {
     "id": "backend-api-graphql-grpc",
     "level": "mid",
     "topic": "GraphQL & gRPC",
@@ -626,8 +658,8 @@
       "en": "When should you choose NoSQL over SQL? Name the NoSQL types and their use cases."
     },
     "a": {
-      "vi": "Mặc định hãy bắt đầu với một relational DB như PostgreSQL; chọn NoSQL khi mô hình dữ liệu hoặc yêu cầu scale thực sự không khớp với bảng và join.\n\nCác loại chính:\n- Key-value (Redis, DynamoDB): tra cứu theo key cực nhanh; cache, session, rate limit, giỏ hàng.\n- Document (MongoDB, Firestore): lưu JSON lồng nhau, schema linh hoạt; catalog sản phẩm, CMS, dữ liệu thường đọc theo từng \"aggregate\".\n- Wide-column (Cassandra, ScyllaDB, Bigtable): ghi khối lượng rất lớn, scale ngang; time-series, log, event, IoT. Phải thiết kế bảng theo query trước.\n- Graph (Neo4j): quan hệ nhiều tầng; mạng xã hội, gợi ý, phát hiện gian lận.\n- Search engine (Elasticsearch, OpenSearch): full-text search, lọc, aggregation.\n\nTrade-off: NoSQL thường đổi join, transaction đa bản ghi và ràng buộc chặt lấy khả năng scale và linh hoạt; nhiều hệ thống chỉ đảm bảo eventual consistency. Ranh giới đang mờ dần: PostgreSQL có JSONB, MongoDB có multi-document transaction. Hệ thống thật thường kết hợp nhiều loại (polyglot persistence).",
-      "en": "By default start with a relational DB such as PostgreSQL; choose NoSQL when the data model or scaling needs genuinely do not fit tables and joins.\n\nMain types:\n- Key-value (Redis, DynamoDB): extremely fast lookup by key; cache, sessions, rate limiting, shopping carts.\n- Document (MongoDB, Firestore): nested JSON, flexible schema; product catalogs, CMS, data read as whole \"aggregates\".\n- Wide-column (Cassandra, ScyllaDB, Bigtable): massive write volume, horizontal scale; time series, logs, events, IoT. Tables must be designed around queries up front.\n- Graph (Neo4j): multi-hop relationships; social networks, recommendations, fraud detection.\n- Search engines (Elasticsearch, OpenSearch): full-text search, filtering, aggregations.\n\nTrade-off: NoSQL often gives up joins, multi-record transactions and strict constraints in exchange for scale and flexibility; many systems only guarantee eventual consistency. The line is blurring: PostgreSQL has JSONB and MongoDB has multi-document transactions. Real systems often combine several (polyglot persistence)."
+      "vi": "Mặc định hãy bắt đầu với một relational DB như PostgreSQL; chọn NoSQL khi mô hình dữ liệu hoặc yêu cầu scale thực sự không khớp với bảng và join.\n\nCác loại chính:\n- Key-value (Redis, DynamoDB): tra cứu theo key cực nhanh; cache, session, rate limit, giỏ hàng.\n- Document DB (MongoDB, Firestore): lưu JSON lồng nhau, schema linh hoạt; catalog sản phẩm, CMS, dữ liệu thường đọc theo từng \"aggregate\".\n- Wide-column (Cassandra, ScyllaDB, Bigtable): ghi khối lượng rất lớn, scale ngang; time-series, log, event, IoT. Phải thiết kế bảng theo query trước.\n- Graph DB (Neo4j): quan hệ nhiều tầng; mạng xã hội, gợi ý, phát hiện gian lận.\n- Search engine (Elasticsearch, OpenSearch): full-text search, lọc, aggregation.\n\nTrade-off: NoSQL thường đổi join, transaction đa bản ghi và ràng buộc chặt lấy khả năng scale và linh hoạt; nhiều hệ thống chỉ đảm bảo eventual consistency. Ranh giới đang mờ dần: PostgreSQL có JSONB, MongoDB có multi-document transaction. Hệ thống thật thường kết hợp nhiều loại (polyglot persistence).",
+      "en": "By default start with a relational DB such as PostgreSQL; choose NoSQL when the data model or scaling needs genuinely do not fit tables and joins.\n\nMain types:\n- Key-value (Redis, DynamoDB): extremely fast lookup by key; cache, sessions, rate limiting, shopping carts.\n- Document DB (MongoDB, Firestore): nested JSON, flexible schema; product catalogs, CMS, data read as whole \"aggregates\".\n- Wide-column (Cassandra, ScyllaDB, Bigtable): massive write volume, horizontal scale; time series, logs, events, IoT. Tables must be designed around queries up front.\n- Graph DB (Neo4j): multi-hop relationships; social networks, recommendations, fraud detection.\n- Search engines (Elasticsearch, OpenSearch): full-text search, filtering, aggregations.\n\nTrade-off: NoSQL often gives up joins, multi-record transactions and strict constraints in exchange for scale and flexibility; many systems only guarantee eventual consistency. The line is blurring: PostgreSQL has JSONB and MongoDB has multi-document transactions. Real systems often combine several (polyglot persistence)."
     },
     "example": {
       "vi": "SQL giống tủ hồ sơ có ngăn và nhãn chuẩn cho từng loại giấy tờ; document DB như MongoDB giống bìa hồ sơ mỗi khách một bộ, bên trong mỗi bộ có thể khác nhau. Trong dự án: đơn hàng, thanh toán, tồn kho cần ràng buộc chặt nên để PostgreSQL; log hành vi người dùng hàng trăm triệu dòng thì đưa vào kho chuyên cho dữ liệu lớn.",
@@ -645,6 +677,38 @@
       {
         "vi": "Thiết kế partition key trong DynamoDB/Cassandra cần chú ý gì?",
         "en": "What matters when designing a partition key in DynamoDB/Cassandra?"
+      }
+    ]
+  },
+  {
+    "id": "backend-nosql-redis-use-cases",
+    "level": "junior",
+    "topic": "NoSQL",
+    "q": {
+      "vi": "Ngoài làm cache, Redis còn dùng vào việc gì? Kể các cấu trúc dữ liệu chính và use case.",
+      "en": "Besides caching, what is Redis used for? Name its main data structures and use cases."
+    },
+    "a": {
+      "vi": "Redis là key-value store chạy trong RAM, mỗi lệnh thực thi nguyên tử, nên ngoài cache còn hợp với nhiều việc cần nhanh và đếm chính xác:\n\n- String: cache, bộ đếm (INCR), rate limit theo cửa sổ thời gian, khoá phân tán đơn giản (SET key value NX PX 30000).\n- Hash: lưu object nhỏ như session hoặc giỏ hàng, sửa từng field mà không ghi lại cả object.\n- List: hàng đợi đơn giản (LPUSH, BRPOP), danh sách mới nhất có giới hạn (LTRIM).\n- Set: tập không trùng, như người đã like, kiểm tra thành viên, giao hai tập.\n- Sorted set: bảng xếp hạng, top-K, hàng đợi theo thời gian (score là timestamp).\n- Stream: log sự kiện có consumer group, như một Kafka thu nhỏ.\n- Pub/Sub: phát tin real-time giữa các instance (chat, thông báo), nhưng không lưu lại nếu không ai nghe.\n- HyperLogLog: đếm số phần tử khác nhau gần đúng với rất ít bộ nhớ (unique visitors).\n- Geo: tìm điểm trong bán kính.\n\nLưu ý: dữ liệu nằm trong RAM nên phải tính dung lượng và chính sách eviction; persistence (RDB, AOF) không mạnh như database, nên đừng để Redis là nơi duy nhất giữ dữ liệu quan trọng. Khoá phân tán bằng SET NX cần TTL và giá trị riêng để chỉ người giữ khoá mới được xoá.",
+      "en": "Redis is an in-memory key-value store whose commands run atomically, so beyond caching it suits many jobs that must be fast and count exactly:\n\n- String: cache, counters (INCR), fixed-window rate limiting, simple distributed locks (SET key value NX PX 30000).\n- Hash: small objects such as sessions or carts, updating single fields without rewriting the whole object.\n- List: simple queues (LPUSH, BRPOP), capped latest-items lists (LTRIM).\n- Set: unique collections such as users who liked a post, membership checks, intersections.\n- Sorted set: leaderboards, top-K, time-ordered queues (score = timestamp).\n- Stream: an event log with consumer groups, a mini Kafka.\n- Pub/Sub: real-time fan-out between instances (chat, notifications), but nothing is kept if nobody is listening.\n- HyperLogLog: approximate distinct counts with tiny memory (unique visitors).\n- Geo: find points within a radius.\n\nCaveats: data lives in RAM, so plan memory and the eviction policy; persistence (RDB, AOF) is weaker than a database, so do not make Redis the only home of important data. A SET NX lock needs a TTL and a unique value so only the holder can release it."
+    },
+    "example": {
+      "vi": "Một game mobile cần bảng xếp hạng 2 triệu người chơi cập nhật liên tục. Query ORDER BY score trên PostgreSQL mỗi lần mở màn hình là quá chậm. Dùng sorted set: ZADD khi điểm đổi, ZREVRANGE lấy top 10, ZREVRANK cho biết hạng của chính mình, mỗi lệnh chỉ vài mili giây.",
+      "en": "A mobile game needs a constantly updated leaderboard for 2 million players. Running ORDER BY score on PostgreSQL every time the screen opens is too slow. With a sorted set: ZADD when a score changes, ZREVRANGE for the top 10, ZREVRANK for your own rank, each in a few milliseconds."
+    },
+    "code": "# Rate limit: tối đa 100 request/phút cho user 7\nINCR rate:user:7:202610311200\nEXPIRE rate:user:7:202610311200 60\n\n# Bảng xếp hạng\nZADD leaderboard 1500 user:7\nZREVRANGE leaderboard 0 9 WITHSCORES\nZREVRANK leaderboard user:7\n\n# Khoá phân tán: chỉ đặt được nếu chưa có, tự hết hạn sau 30 giây\nSET lock:order:42 3f9c1a NX PX 30000",
+    "tip": {
+      "vi": "Kể use case kèm cấu trúc dữ liệu tương ứng (sorted set cho leaderboard, INCR cho rate limit) thay vì chỉ liệt kê tên lệnh.",
+      "en": "Pair each use case with its data structure (sorted set for leaderboards, INCR for rate limits) instead of listing commands."
+    },
+    "followUps": [
+      {
+        "vi": "Redis đầy bộ nhớ thì chuyện gì xảy ra? Các eviction policy khác nhau thế nào?",
+        "en": "What happens when Redis runs out of memory? How do the eviction policies differ?"
+      },
+      {
+        "vi": "Khoá phân tán bằng SET NX có điểm yếu gì? Khi nào cần cách khác?",
+        "en": "What are the weaknesses of a SET NX lock? When do you need something else?"
       }
     ]
   },
@@ -778,6 +842,37 @@
       }
     ],
     "source": "https://kafka.apache.org/documentation/"
+  },
+  {
+    "id": "backend-mq-background-jobs",
+    "level": "mid",
+    "topic": "Messaging",
+    "q": {
+      "vi": "Khi nào nên chuyển một việc ra background job? Thiết kế job queue và cron thế nào để không mất job và không chạy trùng?",
+      "en": "When should work move to a background job? How do you design job queues and cron so jobs are neither lost nor run twice?"
+    },
+    "a": {
+      "vi": "Đưa ra background khi việc đó chậm, có thể lỗi tạm thời, hoặc người dùng không cần chờ kết quả: gửi email, tạo PDF, xử lý ảnh, gọi API bên thứ ba, đồng bộ dữ liệu. Request chỉ ghi nhận rồi trả về ngay (thường là 202 Accepted kèm id để theo dõi).\n\nJob queue (BullMQ, Sidekiq, Celery, hoặc SQS, RabbitMQ):\n- Job lưu ở nơi bền (Redis có persistence, DB, broker), không giữ trong RAM của process web.\n- Worker lấy job, xử lý xong mới ack. Worker chết giữa chừng thì job quay lại hàng đợi sau visibility timeout, nên job có thể chạy hơn một lần: phải viết job idempotent (kiểm tra đã làm chưa, dùng idempotency key).\n- Retry có giới hạn, backoff tăng dần; quá số lần thì đưa vào dead letter queue để người xem.\n- Có timeout cho từng job, giới hạn concurrency để không đè database hay API bên ngoài.\n- Theo dõi độ dài hàng đợi, tuổi job cũ nhất, tỉ lệ lỗi.\n\nCron/job định kỳ:\n- Khi chạy nhiều instance, cron trong mỗi instance sẽ chạy trùng. Dùng một scheduler duy nhất (Kubernetes CronJob, cloud scheduler), hoặc khoá phân tán trước khi chạy, hoặc job lặp của chính queue (BullMQ repeatable job).\n- Job định kỳ nên xử lý theo khoảng dữ liệu (từ mốc lần trước) thay vì \"mọi thứ tới giờ\", để chạy lại hay chạy bù được.",
+      "en": "Move work to the background when it is slow, may fail transiently, or the user does not need to wait: sending email, generating PDFs, image processing, third-party API calls, data syncs. The request just records the job and returns (often 202 Accepted with an id to poll).\n\nJob queues (BullMQ, Sidekiq, Celery, or SQS, RabbitMQ):\n- Jobs live in durable storage (Redis with persistence, a DB, a broker), never only in the web process's memory.\n- A worker takes a job and acks only after finishing. If it dies midway, the job returns after the visibility timeout, so a job can run more than once: make jobs idempotent (check whether it was done, use an idempotency key).\n- Bounded retries with increasing backoff; after the limit, move to a dead letter queue for a human.\n- Per-job timeouts and a concurrency limit so you do not overwhelm the database or external APIs.\n- Monitor queue length, age of the oldest job and failure rate.\n\nCron/scheduled jobs:\n- With several instances, an in-process cron runs once per instance. Use a single scheduler (Kubernetes CronJob, a cloud scheduler), take a distributed lock before running, or use the queue's own repeatable jobs (BullMQ).\n- Process a data range (since the last checkpoint) rather than \"everything up to now\", so runs can be retried or backfilled."
+    },
+    "example": {
+      "vi": "Đăng ký tài khoản mất 4 giây vì phải gửi email xác nhận qua SMTP chậm. Chuyển gửi email vào hàng đợi: API trả về ngay, worker gửi email và tự retry khi SMTP lỗi. Sau này deploy 3 instance thì cron \"gửi báo cáo 8 giờ sáng\" bắn 3 email cho mỗi khách, nên phải chuyển sang Kubernetes CronJob chạy một lần.",
+      "en": "Sign-up took 4 seconds because it sent a confirmation email through a slow SMTP server. Moving email to a queue made the API return instantly, with the worker sending and retrying on SMTP errors. Later, with 3 instances, the \"8am report\" cron sent every customer 3 emails, so it moved to a single Kubernetes CronJob."
+    },
+    "tip": {
+      "vi": "Hai ý dễ ghi điểm: job có thể chạy lại nên phải idempotent, và cron trong code sẽ chạy trùng khi scale ngang.",
+      "en": "Two points that score well: jobs can rerun so they must be idempotent, and in-code cron runs multiple times once you scale horizontally."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao cho người dùng biết tiến độ của một job dài như xuất báo cáo?",
+        "en": "How do you show users the progress of a long job such as a report export?"
+      },
+      {
+        "vi": "Job gọi API bên thứ ba bị rate limit thì bạn cấu hình worker thế nào?",
+        "en": "How do you configure workers when a job calls a rate-limited third-party API?"
+      }
+    ]
   },
   {
     "id": "backend-mq-outbox",
@@ -1131,6 +1226,38 @@
     "source": "https://owasp.org/www-project-top-ten/"
   },
   {
+    "id": "backend-observability-structured-logging",
+    "level": "junior",
+    "topic": "Observability",
+    "q": {
+      "vi": "Structured logging và correlation ID là gì? Log thế nào để lần ra được một request đi qua nhiều service?",
+      "en": "What are structured logging and correlation IDs? How should you log so one request can be traced across several services?"
+    },
+    "a": {
+      "vi": "Structured logging là ghi log dạng dữ liệu có trường cố định (thường là JSON) thay vì câu văn tự do. Nhờ vậy hệ thống log (Loki, Elasticsearch, CloudWatch) lọc và đếm được theo trường: level, service, userId, orderId, durationMs.\n\nCorrelation ID (request ID) là một mã gắn cho mỗi request ngay từ điểm vào (gateway hoặc service đầu tiên), truyền tiếp qua header (như X-Request-ID hoặc traceparent của W3C) sang mọi service và message, và có mặt trong mọi dòng log. Khi có lỗi, chỉ cần tìm theo một ID là thấy toàn bộ hành trình của request đó.\n\nThực hành tốt:\n- Mỗi dòng log có: thời gian, level, service, request ID, thông điệp ngắn cố định (\"order created\") và dữ liệu ở trường riêng, không nối vào chuỗi.\n- Dùng level đúng: error cho lỗi cần xử lý, warn cho bất thường, info cho sự kiện nghiệp vụ, debug tắt ở production.\n- Không log mật khẩu, token, số thẻ, dữ liệu cá nhân; che hoặc bỏ đi.\n- Trả request ID về cho client trong response header để người dùng hoặc support báo lại.\n- Kết hợp với tracing (OpenTelemetry) để có cả thời gian từng bước, và với metric để biết khi nào cần đi đọc log.",
+      "en": "Structured logging means writing logs as data with fixed fields (usually JSON) instead of free text. Log systems (Loki, Elasticsearch, CloudWatch) can then filter and count by field: level, service, userId, orderId, durationMs.\n\nA correlation ID (request ID) is an id assigned to each request at the entry point (gateway or first service), passed on in a header (such as X-Request-ID or the W3C traceparent) to every service and message, and present in every log line. When something fails, searching one id shows the request's whole journey.\n\nGood practice:\n- Every line has: time, level, service, request ID, a short fixed message (\"order created\") and data in separate fields, not concatenated into the string.\n- Use levels properly: error for things needing action, warn for anomalies, info for business events, debug off in production.\n- Never log passwords, tokens, card numbers or personal data; mask or drop them.\n- Return the request ID to the client in a response header so users or support can report it.\n- Combine with tracing (OpenTelemetry) for per-step timing, and with metrics to know when to go read logs."
+    },
+    "example": {
+      "vi": "Khách báo \"thanh toán lỗi lúc 14 giờ\". Log dạng chữ tự do ở 4 service, mỗi giờ hàng trăm nghìn dòng, tìm cả buổi không ra. Khi đã có request ID, support xin mã hiện trên màn hình lỗi, dev lọc một lần ra đủ 12 dòng log từ gateway tới service thanh toán và thấy ngay lỗi timeout khi gọi cổng VNPay.",
+      "en": "A customer reports \"payment failed around 2pm\". Free-text logs across 4 services, hundreds of thousands of lines an hour, take all afternoon to search. With request IDs, support asks for the code shown on the error screen, a developer filters once, sees all 12 log lines from gateway to payment service, and finds the timeout calling the payment provider."
+    },
+    "code": "import pino from \"pino\";\nimport { randomUUID } from \"node:crypto\";\n\nconst logger = pino(); // ghi JSON ra stdout\n\napp.use((req, res, next) => {\n  const requestId = req.get(\"x-request-id\") ?? randomUUID();\n  res.set(\"x-request-id\", requestId);\n  req.log = logger.child({ requestId, service: \"orders\" });\n  next();\n});\n\n// Thông điệp cố định, dữ liệu ở trường riêng\nreq.log.info({ orderId, amount }, \"order created\");\n// {\"level\":30,\"requestId\":\"…\",\"service\":\"orders\",\"orderId\":42,\"amount\":150000,\"msg\":\"order created\"}",
+    "tip": {
+      "vi": "Nói rõ ID phải được truyền tiếp sang service khác và vào message queue, không chỉ sinh ra ở một nơi.",
+      "en": "Stress that the ID must be propagated to other services and into queue messages, not just generated in one place."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao truyền request ID qua một message queue tới worker?",
+        "en": "How do you carry the request ID through a message queue to a worker?"
+      },
+      {
+        "vi": "Log quá nhiều làm tốn tiền lưu trữ thì bạn giảm thế nào?",
+        "en": "Logging volume is driving up storage costs. How do you reduce it?"
+      }
+    ]
+  },
+  {
     "id": "backend-observability-logs-metrics-traces",
     "level": "mid",
     "topic": "Observability",
@@ -1229,6 +1356,37 @@
     "source": "https://www.pgbouncer.org/"
   },
   {
+    "id": "backend-scaling-websocket",
+    "level": "mid",
+    "topic": "Scaling",
+    "q": {
+      "vi": "Làm tính năng real-time (thông báo, chat) bằng WebSocket. Khi chạy nhiều instance phía sau load balancer thì scale thế nào?",
+      "en": "You build real-time features (notifications, chat) with WebSockets. How do you scale them across many instances behind a load balancer?"
+    },
+    "a": {
+      "vi": "WebSocket là kết nối lâu dài, có trạng thái: mỗi user gắn với đúng một instance. Khó khăn khi scale là tin nhắn phát ra ở instance A phải tới được user đang nối với instance B.\n\nCách làm thường gặp:\n- Load balancer hỗ trợ WebSocket (nâng cấp HTTP Upgrade, timeout idle đủ dài). Sticky session chỉ cần nếu dùng thư viện có fallback long-polling (Socket.IO).\n- Có một lớp pub/sub chung: Redis Pub/Sub, NATS hoặc Kafka. Instance nào cần gửi thì publish vào kênh (theo user hoặc theo phòng chat), mọi instance subscribe và đẩy xuống các kết nối của mình. Socket.IO có sẵn Redis adapter làm đúng việc này.\n- Lưu \"user đang nối ở đâu\" (presence) trong Redis có TTL, nếu cần gửi có chọn lọc.\n- Tin nhắn quan trọng vẫn lưu DB trước; WebSocket chỉ là kênh giao nhanh. Client mất kết nối thì khi nối lại sẽ tải tin bị lỡ theo mốc thời gian hoặc id cuối cùng.\n- Heartbeat (ping/pong) để phát hiện kết nối chết, client tự nối lại với backoff ngẫu nhiên để tránh hàng nghìn client nối lại cùng một giây sau khi deploy.\n- Xác thực khi bắt tay (token trong cookie hoặc query ngắn hạn), kiểm tra quyền mỗi khi join phòng.\n- Giới hạn số kết nối mỗi instance, theo dõi số kết nối và độ trễ đẩy tin; deploy thì rút kết nối từ từ (connection draining).\n\nNếu chỉ cần server đẩy xuống một chiều (thông báo, tiến độ job), SSE đơn giản hơn và đi qua HTTP bình thường.",
+      "en": "A WebSocket is a long-lived, stateful connection: each user is attached to exactly one instance. The scaling problem is that a message produced on instance A must reach a user connected to instance B.\n\nCommon approach:\n- A load balancer that supports WebSockets (HTTP Upgrade, long enough idle timeout). Sticky sessions are only needed if your library falls back to long polling (Socket.IO).\n- A shared pub/sub layer: Redis Pub/Sub, NATS or Kafka. Whichever instance needs to send publishes to a channel (per user or per room), every instance subscribes and pushes to its own connections. Socket.IO's Redis adapter does exactly this.\n- Store presence (\"which instance is this user on\") in Redis with a TTL if you need targeted delivery.\n- Important messages are still saved to the DB first; WebSocket is only the fast delivery channel. A client that reconnects fetches missed messages since its last timestamp or id.\n- Heartbeats (ping/pong) to detect dead connections, and client reconnects with randomised backoff so thousands of clients do not reconnect in the same second after a deploy.\n- Authenticate during the handshake (cookie or a short-lived token), and check permissions on every room join.\n- Cap connections per instance, monitor connection counts and push latency, and drain connections gradually on deploy.\n\nIf you only need one-way server push (notifications, job progress), SSE is simpler and runs over plain HTTP."
+    },
+    "example": {
+      "vi": "App giao đồ ăn hiển thị vị trí tài xế theo thời gian thực. Lúc chỉ có 1 server thì chạy ổn; lên 4 server sau load balancer thì khách nối vào server 1 không thấy tài xế cập nhật, vì vị trí được nhận ở server 3. Thêm Redis Pub/Sub theo kênh mã đơn hàng là mọi server đều nhận và đẩy xuống đúng khách.",
+      "en": "A food delivery app shows the driver's location in real time. With one server it worked; with 4 servers behind a load balancer, a customer connected to server 1 saw no updates because locations arrived on server 3. Adding Redis Pub/Sub keyed by order id let every server receive and push to the right customer."
+    },
+    "tip": {
+      "vi": "Chốt ý: WebSocket chỉ là kênh giao, nguồn sự thật vẫn là database, và client phải tự bù tin bị lỡ khi nối lại.",
+      "en": "Close with: WebSocket is only a delivery channel, the database stays the source of truth, and clients must catch up on missed messages after reconnecting."
+    },
+    "followUps": [
+      {
+        "vi": "Khi nào bạn chọn SSE hoặc polling thay vì WebSocket?",
+        "en": "When would you choose SSE or polling over WebSockets?"
+      },
+      {
+        "vi": "Deploy phiên bản mới mà không làm hàng chục nghìn kết nối rớt cùng lúc thì làm thế nào?",
+        "en": "How do you deploy without dropping tens of thousands of connections at once?"
+      }
+    ]
+  },
+  {
     "id": "backend-scaling-rate-limiting",
     "level": "senior",
     "topic": "Scaling",
@@ -1320,6 +1478,37 @@
       {
         "vi": "Bạn sẽ tách service đầu tiên ra khỏi monolith như thế nào?",
         "en": "How would you extract the first service from a monolith?"
+      }
+    ]
+  },
+  {
+    "id": "backend-arch-distributed-transactions-saga",
+    "level": "senior",
+    "topic": "Architecture",
+    "q": {
+      "vi": "Một nghiệp vụ cần cập nhật dữ liệu ở nhiều microservice (đơn hàng, thanh toán, kho). Làm sao giữ dữ liệu nhất quán? So sánh 2PC và Saga.",
+      "en": "One business operation must update data in several microservices (orders, payments, inventory). How do you keep data consistent? Compare 2PC and Saga."
+    },
+    "a": {
+      "vi": "Mỗi service có database riêng nên không có một transaction ACID bao trùm. Có hai hướng chính:\n\n2PC (two-phase commit): một coordinator hỏi mọi bên \"chuẩn bị được không\", tất cả đồng ý thì mới commit. Đảm bảo nhất quán mạnh nhưng các bên phải giữ lock trong lúc chờ, coordinator chết là mọi bên kẹt, và nhiều hệ thống (message broker, API bên ngoài) không hỗ trợ. Vì vậy hiếm khi dùng giữa các microservice.\n\nSaga: chia nghiệp vụ thành chuỗi transaction cục bộ, mỗi bước commit ngay trong service của nó. Nếu một bước sau thất bại thì chạy các bước bù (compensating transaction) theo chiều ngược lại: hoàn tiền, trả hàng về kho, huỷ đơn. Dữ liệu chỉ nhất quán sau cùng (eventual consistency).\n\nHai kiểu điều phối:\n- Choreography: mỗi service nghe event và tự làm bước tiếp theo (OrderCreated → Payment trừ tiền → PaymentDone → Inventory giữ hàng). Ít thành phần, nhưng luồng khó nhìn khi có nhiều bước.\n- Orchestration: một orchestrator (code riêng hoặc Temporal, AWS Step Functions) gọi từng bước và quyết định bù. Dễ theo dõi, dễ test hơn, đổi lại có thêm một thành phần.\n\nNhững điểm phải làm đúng:\n- Mỗi bước và mỗi bước bù phải idempotent vì message có thể giao lặp.\n- Gửi event cùng lúc với thay đổi DB bằng outbox để không mất event.\n- Thiết kế trạng thái trung gian rõ ràng (PENDING_PAYMENT) và cho người dùng thấy, vì có lúc dữ liệu chưa khớp.\n- Có bước không bù được (đã gửi email, đã giao hàng): đặt nó ở cuối saga.",
+      "en": "Each service owns its database, so no single ACID transaction spans them. Two main approaches:\n\n2PC (two-phase commit): a coordinator asks every participant \"can you prepare?\" and commits only if all agree. Strong consistency, but participants hold locks while waiting, a dead coordinator leaves everyone stuck, and many systems (message brokers, external APIs) do not support it. So it is rarely used between microservices.\n\nSaga: split the operation into a sequence of local transactions, each committing in its own service. If a later step fails, run compensating transactions in reverse: refund, return stock, cancel the order. Data becomes consistent eventually.\n\nTwo coordination styles:\n- Choreography: each service listens to events and performs the next step (OrderCreated → Payment charges → PaymentDone → Inventory reserves). Fewer moving parts, but the flow is hard to see with many steps.\n- Orchestration: an orchestrator (your own code, or Temporal, AWS Step Functions) calls each step and decides on compensation. Easier to follow and test, at the cost of one more component.\n\nWhat you must get right:\n- Every step and every compensation must be idempotent, because messages can be redelivered.\n- Publish events together with DB changes using an outbox so none are lost.\n- Model explicit intermediate states (PENDING_PAYMENT) and show them to users, since data is temporarily out of sync.\n- Some steps cannot be undone (email sent, parcel shipped): put them at the end of the saga."
+    },
+    "example": {
+      "vi": "Đặt vé xem phim: giữ ghế ở service rạp, trừ tiền ở service thanh toán, rồi xuất vé. Nếu trừ tiền thất bại thì bước bù là nhả ghế ra để người khác đặt. Nếu đã trừ tiền mà xuất vé lỗi thì bước bù là hoàn tiền và báo cho khách, chứ không có cách \"rollback\" như trong một database.",
+      "en": "Booking a cinema ticket: hold the seat in the cinema service, charge in the payment service, then issue the ticket. If the charge fails, the compensation releases the seat. If the charge succeeds but issuing fails, the compensation refunds and notifies the customer; there is no database-style rollback."
+    },
+    "tip": {
+      "vi": "Nêu được bước bù cụ thể cho từng bước và nhấn mạnh idempotency là phần phân biệt người đã làm saga thật.",
+      "en": "Naming a concrete compensation for each step and stressing idempotency is what separates people who have actually built sagas."
+    },
+    "followUps": [
+      {
+        "vi": "Bước bù cũng thất bại thì bạn xử lý thế nào?",
+        "en": "What do you do when a compensation itself fails?"
+      },
+      {
+        "vi": "Khi nào bạn chọn orchestration thay vì choreography?",
+        "en": "When would you choose orchestration over choreography?"
       }
     ]
   }

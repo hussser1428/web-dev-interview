@@ -23,7 +23,7 @@ export default async function RoadmapIndex() {
                 <span className="flex-1 text-lg font-semibold">{t.tracks[tr]}</span>
                 <span className="tagc">{fmt(t.roadmap.topics, { n: topics.length })}</span>
               </div>
-              <p className="line-clamp-2 min-h-[2lh] text-xs text-muted">{topics.map((x) => x.topic).join(" → ")}</p>
+              <p className="flex-1 text-[13px] leading-relaxed text-muted">{topics.map((x) => x.topic).join(" → ")}</p>
               <GroupProgress ids={byTrack(tr).map((q) => q.id)} label={t.roadmap.done} />
             </Link>
           );

@@ -11,6 +11,10 @@
       "vi": "Đây không phải lúc kể tiểu sử. Trả lời trong 1-2 phút theo công thức Hiện tại – Quá khứ – Tương lai:\n- Hiện tại: bạn là ai, vai trò, công nghệ chính (vd \"Mình là backend developer 2 năm kinh nghiệm, chủ yếu làm Java Spring và PostgreSQL\").\n- Quá khứ: 1-2 thành tựu liên quan nhất tới vị trí đang ứng tuyển, có số liệu (vd \"tối ưu API giảm latency từ 800 ms xuống 200 ms\").\n- Tương lai: vì sao bạn quan tâm đến vị trí này.\nSinh viên/intern: thay kinh nghiệm bằng đồ án, project cá nhân, cuộc thi, hoạt động ngoại khoá.\nTránh: đọc lại CV, kể quê quán và sở thích dài dòng, nói quá 3 phút, học thuộc lòng nghe như robot. Nếu phỏng vấn bằng tiếng Anh với công ty nước ngoài, hãy luyện trước bản tiếng Anh và nói chậm, rõ.",
       "en": "This is not the time for your life story. Answer in 1-2 minutes using Present – Past – Future:\n- Present: who you are, your role, your main technologies (e.g. \"I'm a backend developer with 2 years of experience, mainly Java Spring and PostgreSQL\").\n- Past: 1-2 achievements most relevant to the role, with numbers (e.g. \"optimized an API, cutting latency from 800 ms to 200 ms\").\n- Future: why you are interested in this position.\nStudents/interns: replace work experience with capstone projects, personal projects, competitions, extracurricular activities.\nAvoid: reading your CV aloud, long stories about your hometown and hobbies, going over 3 minutes, a memorized script that sounds robotic. If the interview is in English with a foreign company, rehearse the English version and speak slowly and clearly."
     },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Em là Minh, backend developer 2 năm kinh nghiệm, chủ yếu làm Java Spring và PostgreSQL ở một công ty outsource cho khách Nhật. Project gần nhất em làm module thanh toán cho một chuỗi bán lẻ, tối ưu API checkout từ khoảng 1,2 giây xuống 300 ms. Em muốn chuyển sang môi trường product để được theo một sản phẩm lâu dài, nên vị trí backend ở đội payment của anh chị rất phù hợp.\"",
+      "en": "Sample answer: \"I'm Minh, a backend developer with two years of experience, mostly Java Spring and PostgreSQL at an outsourcing company serving Japanese clients. On my latest project I built the payment module for a retail chain and cut the checkout API from about 1.2 seconds to 300 ms. I want to move into product work and own something long-term, so this backend role on your payments team is a great fit.\""
+    },
     "tip": {
       "vi": "Kết thúc bằng một 'móc câu' dẫn tới project bạn muốn được hỏi sâu.",
       "en": "End with a 'hook' that leads to the project you want to be asked about."
@@ -37,6 +41,10 @@
     "a": {
       "vi": "Interviewer muốn biết bạn có tìm hiểu và có động lực thật, hay chỉ rải CV khắp nơi. Trả lời với 3 ý:\n- Sản phẩm/công ty: một điều cụ thể bạn biết (sản phẩm bạn từng dùng, bài viết trên tech blog, quy mô người dùng, thị trường).\n- Vai trò: công việc khớp với kỹ năng và hướng phát triển của bạn ra sao.\n- Văn hoá/con người: cách làm việc bạn đánh giá cao (code review, mentoring, môi trường quốc tế).\nVí dụ ngắn: \"Mình dùng app của anh chị để chuyển tiền hằng ngày, từng đọc bài blog về việc tách monolith sang microservices và thấy bài toán scale rất thú vị. Vị trí này dùng Go và Kafka, đúng hướng mình đang theo đuổi.\"\nTránh: chỉ nói về lương cao, \"công ty lớn, ổn định\", hoặc một câu chung chung dùng được cho mọi công ty.",
       "en": "The interviewer wants to know whether you did your research and are genuinely motivated, or just sent your CV everywhere. Answer with 3 points:\n- Product/company: something specific you know (a product you've used, a tech blog post, the user base, the market).\n- Role: how the job fits your skills and growth direction.\n- Culture/people: ways of working you value (code review, mentoring, an international environment).\nShort example: \"I use your app to transfer money every day, I read your blog post about splitting the monolith into microservices and found the scaling problem fascinating. This role uses Go and Kafka, exactly the direction I'm pursuing.\"\nAvoid: talking only about high pay, \"big, stable company\", or a generic line that would fit any company."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Em dùng app của công ty để đặt đồ ăn gần như mỗi tuần, và em đọc bài blog kỹ thuật của team về việc chuyển hệ thống đơn hàng sang event-driven. Em thích việc team đo hiệu quả bằng số liệu thật, và vị trí này đúng mảng em muốn phát triển: hệ thống chịu tải lớn. Em nghĩ kinh nghiệm tối ưu query và cache của em đóng góp được ngay.\"",
+      "en": "Sample answer: \"I order food through your app almost every week, and I read your engineering blog post about moving the order system to an event-driven design. I like that the team measures impact with real numbers, and this role is exactly the area I want to grow in: high-traffic systems. I think my experience optimising queries and caching can contribute right away.\""
     },
     "tip": {
       "vi": "Dành 15 phút đọc tech blog hoặc trang tuyển dụng của công ty trước buổi phỏng vấn để có một chi tiết cụ thể.",
@@ -65,6 +73,10 @@
       "vi": "Nguyên tắc: tích cực, hướng về tương lai, trung thực nhưng không than phiền.\n- Nói về điều bạn đang tìm kiếm thay vì điều bạn muốn chạy trốn: \"Mình đã học được nhiều ở công ty hiện tại, giờ muốn làm sản phẩm có quy mô lớn hơn / thử thách kỹ thuật sâu hơn / môi trường quốc tế.\"\n- Nếu lý do là layoff, dự án đóng cửa hay lương: nói thẳng, ngắn gọn, không cảm xúc (\"Dự án bị dừng do tái cấu trúc, cả team bị ảnh hưởng\").\n- Nếu bạn nhảy việc nhiều (khá phổ biến ở thị trường IT Việt Nam): giải thích lý do hợp lý cho từng lần và cho thấy bạn đang tìm nơi gắn bó lâu dài.\nTránh: nói xấu sếp, đồng nghiệp hay công ty cũ — interviewer sẽ nghĩ sau này bạn cũng nói về họ như vậy. Đừng bịa lý do vì có thể bị kiểm tra reference.",
       "en": "Principles: positive, forward-looking, honest without complaining.\n- Talk about what you are looking for rather than what you are running from: \"I've learned a lot at my current company; now I want to work on a product at a larger scale / with deeper technical challenges / in an international environment.\"\n- If the reason is a layoff, a cancelled project or pay: say it directly, briefly, without emotion (\"The project was stopped during a restructuring, and the whole team was affected\").\n- If you have changed jobs often (quite common in Vietnam's IT market): give a reasonable explanation for each move and show that you are looking for a long-term place.\nAvoid: badmouthing your boss, colleagues or former company — the interviewer will assume you'll talk about them the same way later. Don't invent reasons, because references may be checked."
     },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Hai năm ở công ty hiện tại em học được rất nhiều về quy trình và làm việc với khách hàng. Nhưng các dự án outsource thường kết thúc sau 6–9 tháng, em chưa có cơ hội theo một sản phẩm đủ lâu để thấy tác động của những quyết định kỹ thuật mình đưa ra. Em muốn tìm một môi trường product để làm được điều đó.\" — không chê công ty cũ, nói về điều mình hướng tới.",
+      "en": "Sample answer: \"In two years at my current company I've learned a lot about process and working with clients. But outsourcing projects usually end after 6–9 months, so I haven't been able to stay with a product long enough to see the impact of my technical decisions. I'm looking for a product environment where I can.\" — no criticism of the old employer, focus on what you are moving towards."
+    },
     "tip": {
       "vi": "Chuẩn bị sẵn một câu trả lời 2-3 câu và luyện cho đến khi nói ra bình thản, không ngập ngừng.",
       "en": "Prepare a 2-3 sentence answer and practice it until you can say it calmly without hesitation."
@@ -92,6 +104,10 @@
       "vi": "Họ kiểm tra hai điều: bạn có định hướng không, và định hướng đó có khớp với những gì vị trí này mang lại không.\n- Ngắn hạn (1-2 năm): làm chủ công việc — nắm vững domain, đóng góp độc lập, lên được mid-level.\n- Dài hạn (3-5 năm): một hướng đi rõ ràng — chuyên sâu kỹ thuật (senior/staff, kiến trúc) hoặc quản lý (tech lead, engineering manager) — kèm lý do.\n- Kết nối: vị trí này giúp bạn đi đúng hướng thế nào, và bạn đã làm gì để chuẩn bị (học, chứng chỉ, project).\nVí dụ: \"Trong 2 năm tới mình muốn trở thành backend engineer có thể tự thiết kế và vận hành một service. Xa hơn mình hướng đến tech lead, nên hiện mình đang tập review code và hướng dẫn intern.\"\nTránh: \"Em chưa nghĩ tới\", \"muốn mở công ty riêng\" (nghe như sắp rời đi), hoặc mục tiêu không liên quan đến vị trí.",
       "en": "They check two things: whether you have a direction, and whether it matches what this role can offer.\n- Short term (1-2 years): master the job — know the domain well, contribute independently, reach mid-level.\n- Long term (3-5 years): a clear path — technical depth (senior/staff, architecture) or management (tech lead, engineering manager) — with your reasons.\n- Connection: how this role moves you in that direction, and what you are already doing to prepare (studying, certifications, projects).\nExample: \"In the next 2 years I want to become a backend engineer who can design and operate a service on my own. Further out I'm aiming for tech lead, so I'm already practicing code reviews and mentoring interns.\"\nAvoid: \"I haven't thought about it\", \"I want to start my own company\" (sounds like you'll leave soon), or goals unrelated to the role."
     },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Trong 1–2 năm tới em muốn vững về thiết kế hệ thống backend: tự thiết kế và chịu trách nhiệm một service từ đầu tới production, kể cả monitoring và on-call. Sau đó em muốn đi theo hướng tech lead, hướng dẫn được các bạn junior. Vị trí này có cả hai thứ đó nên em rất quan tâm.\"",
+      "en": "Sample answer: \"Over the next 1–2 years I want to be solid at backend system design: designing and owning a service from scratch to production, monitoring and on-call included. After that I'd like to move towards a tech-lead path and guide junior developers. This role offers both, which is why I'm very interested.\""
+    },
     "tip": {
       "vi": "Cho thấy hành động bạn đang làm cho mục tiêu, không chỉ nêu mục tiêu.",
       "en": "Show the actions you're already taking toward the goal, not just the goal itself."
@@ -108,6 +124,192 @@
     ]
   },
   {
+    "id": "behavioral-strengths-weaknesses",
+    "level": "intern",
+    "topic": "Introduction",
+    "q": {
+      "vi": "Điểm mạnh và điểm yếu của bạn là gì?",
+      "en": "What are your strengths and weaknesses?"
+    },
+    "a": {
+      "vi": "Câu này kiểm tra bạn có tự nhìn nhận được bản thân không, không phải tìm người hoàn hảo.\n\nĐiểm mạnh: chọn 1–2 điểm liên quan tới công việc và chứng minh bằng ví dụ có số liệu. \"Em chăm chỉ, ham học hỏi\" ai cũng nói được; \"em hay viết tài liệu cho team, trang hướng dẫn setup của em giúp người mới vào chạy được dự án trong nửa ngày thay vì 2 ngày\" thì đáng tin.\n\nĐiểm yếu: chọn một điểm có thật, không phải điểm yếu chết người với vị trí đó, và quan trọng nhất là đang làm gì để cải thiện.\n\nTránh:\n- \"Điểm yếu của em là quá cầu toàn / làm việc quá chăm\" — người phỏng vấn nghe câu này hàng trăm lần, biết đó là né tránh.\n- Nêu điểm yếu là kỹ năng cốt lõi của vị trí (ứng tuyển backend mà nói \"em yếu SQL\").\n- Nói không có điểm yếu nào.",
+      "en": "This checks self-awareness, not whether you are perfect.\n\nStrengths: pick 1–2 relevant to the job and back them with an example with numbers. \"I'm hard-working and eager to learn\" anyone can say; \"I write documentation for the team — my setup guide gets new joiners running the project in half a day instead of two\" is believable.\n\nWeakness: pick a real one that is not fatal for the role, and above all say what you are doing about it.\n\nAvoid:\n- \"My weakness is being a perfectionist / working too hard\" — interviewers hear it hundreds of times and know it is a dodge.\n- A weakness that is the role's core skill (applying for backend and saying \"I'm weak at SQL\").\n- Claiming no weaknesses."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Điểm mạnh của em là debug có hệ thống: lần gần nhất em tìm ra lỗi trừ tiền hai lần bằng cách đối chiếu log theo mã đơn, trong khi team đã đoán mò cả tuần. Điểm yếu là em hay ngại nói trước đám đông, nên trong buổi demo em thường nói lan man. Mấy tháng nay em xin trình bày demo sprint mỗi 2 tuần và chuẩn bị 3 ý chính trước, giờ em tự tin hơn nhiều.\"",
+      "en": "Sample answer: \"My strength is systematic debugging: most recently I found a double-charge bug by matching logs by order id, after the team had been guessing for a week. My weakness is public speaking — I used to ramble in demos. For a few months I've volunteered to present the sprint demo every two weeks and prepare three key points beforehand, and I'm much more confident now.\""
+    },
+    "tip": {
+      "vi": "Với điểm yếu, dành 80% thời lượng nói về việc bạn đang làm để cải thiện — đó mới là phần được chấm điểm.",
+      "en": "For the weakness, spend 80% of the time on what you are doing to improve — that is the part being scored."
+    },
+    "followUps": [
+      {
+        "vi": "Đồng nghiệp cũ sẽ mô tả bạn thế nào?",
+        "en": "How would your former colleagues describe you?"
+      },
+      {
+        "vi": "Kể một lần điểm yếu đó gây ra vấn đề trong công việc.",
+        "en": "Tell me about a time that weakness caused a problem at work."
+      }
+    ]
+  },
+  {
+    "id": "behavioral-fresher-no-experience",
+    "level": "intern",
+    "topic": "Introduction",
+    "q": {
+      "vi": "Bạn chưa có kinh nghiệm đi làm. Vì sao chúng tôi nên chọn bạn?",
+      "en": "You have no work experience. Why should we choose you?"
+    },
+    "a": {
+      "vi": "Người phỏng vấn fresher không mong bạn có kinh nghiệm; họ muốn thấy bạn học nhanh, làm đến nơi đến chốn và có tiềm năng phát triển.\n\nThay \"kinh nghiệm đi làm\" bằng bằng chứng tương đương:\n- Project cá nhân hoặc đồ án có người dùng thật, có link GitHub và link chạy được.\n- Những gì bạn tự học được ngoài chương trình, kèm kết quả cụ thể.\n- Thực tập, freelance nhỏ, đóng góp open source, cuộc thi lập trình.\n- Cách bạn làm việc nhóm trong đồ án: phân việc, dùng Git, review code cho nhau.\n\nKết thúc bằng việc nối những điều đó với nhu cầu của vị trí: \"vị trí này dùng React và Node.js, em đã làm 2 project với stack này\".\n\nTránh: xin lỗi vì không có kinh nghiệm, nói chung chung \"em ham học hỏi, chịu khó\" mà không có ví dụ.",
+      "en": "Interviewers hiring freshers do not expect experience; they want evidence you learn fast, finish what you start and have potential.\n\nReplace \"work experience\" with equivalent evidence:\n- Personal or capstone projects with real users, a GitHub link and a working demo.\n- What you taught yourself beyond the curriculum, with concrete results.\n- Internships, small freelance jobs, open-source contributions, programming contests.\n- How you worked as a team on projects: splitting work, using Git, reviewing each other's code.\n\nFinish by tying it to the role: \"this role uses React and Node.js, and I've built two projects on that stack\".\n\nAvoid: apologising for having no experience, or generic \"I'm eager to learn and hard-working\" without examples."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Em chưa đi làm chính thức, nhưng đồ án tốt nghiệp của em là một app đặt lịch cho tiệm cắt tóc gần trường, hiện có khoảng 200 lượt đặt mỗi tháng. Em tự làm backend bằng Node.js, triển khai lên VPS và sửa lỗi khi chủ tiệm báo. Nhóm 4 người dùng Git flow và review code cho nhau. Vị trí này dùng đúng stack đó, và em muốn được học thêm cách làm sản phẩm ở quy mô lớn hơn.\"",
+      "en": "Sample answer: \"I haven't had a formal job, but my graduation project is a booking app for a barber shop near my university, now handling about 200 bookings a month. I built the Node.js backend myself, deployed it to a VPS and fixed bugs when the owner reported them. Our team of four used a Git workflow and reviewed each other's code. This role uses the same stack, and I want to learn how to build products at a larger scale.\""
+    },
+    "tip": {
+      "vi": "Mang theo (hoặc để sẵn trong CV) link project chạy được — một sản phẩm thật nói nhiều hơn mọi lời tự giới thiệu.",
+      "en": "Bring (or put in your CV) a link to a working project — a real product says more than any self-description."
+    },
+    "followUps": [
+      {
+        "vi": "Phần khó nhất trong project đó là gì và bạn đã giải quyết thế nào?",
+        "en": "What was the hardest part of that project and how did you solve it?"
+      },
+      {
+        "vi": "Bạn tự học lập trình bằng cách nào?",
+        "en": "How do you teach yourself programming?"
+      }
+    ]
+  },
+  {
+    "id": "behavioral-introduce-in-english",
+    "level": "junior",
+    "topic": "Introduction",
+    "q": {
+      "vi": "Phỏng vấn với công ty nước ngoài: giới thiệu bản thân và kể về project của bạn bằng tiếng Anh thế nào cho tốt?",
+      "en": "Interviewing with a foreign company: how do you introduce yourself and describe your project well in English?"
+    },
+    "a": {
+      "vi": "Người phỏng vấn chấm khả năng trao đổi công việc rõ ràng, không chấm giọng như người bản xứ: chuẩn bị sẵn phần giới thiệu 60–90 giây và từ vựng cho chính project của mình, nói câu ngắn, rõ ý, và không nghe rõ thì hỏi lại.\n\nNhiều công ty outsource làm cho khách Mỹ, Úc, Nhật, Singapore hoặc công ty nước ngoài tại Việt Nam có một vòng hoặc cả buổi phỏng vấn bằng tiếng Anh.\n\nCách chuẩn bị:\n- Viết sẵn phần giới thiệu 60–90 giây theo khung hiện tại – quá khứ – tương lai, tập nói to nhiều lần (không học thuộc từng chữ).\n- Chuẩn bị từ vựng cho project của mình: tên các thành phần, việc mình làm, con số kết quả (\"reduced response time from 1.2 seconds to 300 milliseconds\").\n- Câu ngắn, rõ ý hơn câu dài phức tạp. Dùng thì quá khứ khi kể việc đã làm.\n- Không nghe rõ thì hỏi lại: \"Sorry, could you repeat the question?\" hoặc \"Do you mean…?\" — tốt hơn trả lời sai câu hỏi.\n- Cần thời gian nghĩ thì nói: \"Let me think for a moment.\"\n\nTránh: dịch từng chữ từ tiếng Việt trong đầu, im lặng lâu, hoặc chuyển sang tiếng Việt khi chưa được đề nghị.",
+      "en": "Interviewers score whether you can discuss work clearly, not whether you sound native: prepare a 60–90 second introduction and vocabulary for your own project, use short clear sentences, and ask again when you did not catch something.\n\nMany outsourcing companies serving clients in the US, Australia, Japan or Singapore, and foreign companies in Vietnam, run one round or the whole interview in English.\n\nPreparation:\n- Draft a 60–90 second introduction using present – past – future and practise it aloud many times (without memorising word for word).\n- Prepare vocabulary for your own project: component names, what you did, result numbers (\"reduced response time from 1.2 seconds to 300 milliseconds\").\n- Short, clear sentences beat long complex ones. Use the past tense for what you did.\n- If you did not catch something, ask: \"Sorry, could you repeat the question?\" or \"Do you mean…?\" — better than answering the wrong question.\n- If you need time: \"Let me think for a moment.\"\n\nAvoid: translating word by word from Vietnamese in your head, long silences, or switching to Vietnamese unless invited."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"I'm a backend developer with two years of experience, mainly Java Spring and PostgreSQL. In my last project, I built the payment module for a retail chain. The checkout API was slow, so I added caching and fixed several slow queries, which reduced the response time from about 1.2 seconds to 300 milliseconds. Now I'm looking for a product company where I can work on systems with more traffic.\"",
+      "en": "Sample answer: \"I'm a backend developer with two years of experience, mainly Java Spring and PostgreSQL. In my last project, I built the payment module for a retail chain. The checkout API was slow, so I added caching and fixed several slow queries, which reduced the response time from about 1.2 seconds to 300 milliseconds. Now I'm looking for a product company where I can work on systems with more traffic.\""
+    },
+    "tip": {
+      "vi": "Ghi âm phần giới thiệu bằng điện thoại và nghe lại: bạn sẽ tự phát hiện chỗ ngập ngừng và từ hay đọc sai.",
+      "en": "Record your introduction on your phone and listen back: you will spot your hesitations and mispronounced words yourself."
+    },
+    "followUps": [
+      {
+        "vi": "Can you explain the architecture of that project?",
+        "en": "Can you explain the architecture of that project?"
+      },
+      {
+        "vi": "How do you usually communicate with clients in a different time zone?",
+        "en": "How do you usually communicate with clients in a different time zone?"
+      }
+    ]
+  },
+  {
+    "id": "behavioral-job-hopping-gaps",
+    "level": "junior",
+    "topic": "Introduction",
+    "q": {
+      "vi": "CV của bạn đổi việc 3 lần trong 2 năm (hoặc có khoảng trống 6 tháng). Bạn giải thích thế nào?",
+      "en": "Your CV shows three jobs in two years (or a six-month gap). How do you explain it?"
+    },
+    "a": {
+      "vi": "Người phỏng vấn lo một điều: tuyển bạn xong vài tháng bạn lại đi, công đào tạo mất trắng. Hãy trả lời trung thực, ngắn gọn và cho thấy lựa chọn lần này đã được cân nhắc.\n\n- Có lý do khách quan thì nói rõ: dự án kết thúc, công ty cắt giảm nhân sự, công ty đóng cửa.\n- Lý do chủ quan thì nhận và nêu bài học: \"lần đó em chọn việc chủ yếu vì lương, sau đó nhận ra môi trường không hợp\".\n- Khoảng trống thì nói đã làm gì: học thêm (có kết quả cụ thể), chăm sóc gia đình, project cá nhân, freelance.\n- Kết lại bằng việc vì sao vị trí này phù hợp lâu dài với bạn.\n\nTránh: nói xấu công ty cũ, bịa lý do, hoặc trả lời vòng vo khiến người nghe nghi ngờ hơn.",
+      "en": "The interviewer has one worry: you leave a few months after joining and their onboarding is wasted. Answer honestly, briefly, and show this choice is deliberate.\n\n- If there were external reasons, say so: the project ended, layoffs, the company closed.\n- If the reasons were your own, own them and share the lesson: \"that time I chose mainly for salary and then realised the environment did not suit me\".\n- For a gap, say what you did: studied (with concrete results), family care, personal projects, freelancing.\n- Close with why this role fits you for the long term.\n\nAvoid: badmouthing former employers, inventing reasons, or evasive answers that make the listener more suspicious."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Công ty đầu tiên của em cắt giảm 30% nhân sự sau 7 tháng. Công ty thứ hai em chọn vì mức lương cao hơn, nhưng em chủ yếu làm bảo trì một hệ thống cũ, không học được thêm, nên em nghỉ sau 8 tháng — đó là bài học về việc chọn việc chỉ vì lương. Lần này em tìm hiểu kỹ về team và lộ trình sản phẩm trước khi ứng tuyển, và em muốn gắn bó ít nhất vài năm.\"",
+      "en": "Sample answer: \"My first company cut 30% of staff after seven months. I chose the second for higher pay, but I mostly maintained an old system and stopped learning, so I left after eight months — a lesson about choosing jobs only for salary. This time I researched the team and product roadmap carefully before applying, and I want to stay for several years.\""
+    },
+    "tip": {
+      "vi": "Giữ phần giải thích dưới 1 phút rồi chuyển sang điều bạn mang lại cho vị trí — nói càng dài càng giống đang bào chữa.",
+      "en": "Keep the explanation under a minute, then move on to what you bring to the role — the longer you talk, the more it sounds like an excuse."
+    },
+    "followUps": [
+      {
+        "vi": "Điều gì sẽ khiến bạn rời công ty này?",
+        "en": "What would make you leave this company?"
+      },
+      {
+        "vi": "Trong khoảng thời gian nghỉ, bạn đã học được gì cụ thể?",
+        "en": "What exactly did you learn during the gap?"
+      }
+    ]
+  },
+  {
+    "id": "behavioral-outsource-vs-product",
+    "level": "junior",
+    "topic": "Introduction",
+    "q": {
+      "vi": "Vì sao bạn muốn chuyển từ công ty outsource sang công ty product (hoặc ngược lại)?",
+      "en": "Why do you want to move from an outsourcing company to a product company (or the other way round)?"
+    },
+    "a": {
+      "vi": "Câu hỏi rất hay gặp ở thị trường Việt Nam, nơi phần lớn kỹ sư bắt đầu ở công ty outsource. Người phỏng vấn muốn biết bạn hiểu đúng sự khác nhau và không mang kỳ vọng sai.\n\nKhác biệt thường gặp:\n- Outsource: làm nhiều dự án, nhiều domain, theo yêu cầu khách; quy trình và giao tiếp khách hàng tốt; nhưng ít khi quyết định sản phẩm và dự án thường ngắn.\n- Product: theo một sản phẩm lâu dài, tự chịu trách nhiệm hệ thống chạy production, đo tác động bằng số liệu người dùng; đổi lại phải tự xác định vấn đề, on-call, và kỳ vọng về ownership cao hơn.\n\nTrả lời tốt: nêu điều bạn đã học được ở môi trường cũ (không chê bai), và điều cụ thể bạn muốn ở môi trường mới, kèm bằng chứng bạn đã bắt đầu chuẩn bị cho nó.",
+      "en": "Very common in Vietnam, where most engineers start at outsourcing companies. The interviewer wants to know you understand the difference and are not coming with the wrong expectations.\n\nTypical differences:\n- Outsourcing: many projects and domains, driven by client requirements; strong process and client communication; but rarely deciding the product, and projects are often short.\n- Product: one product long-term, owning the system in production, measuring impact with user data; in exchange you must define problems yourself, go on call, and ownership expectations are higher.\n\nA good answer: say what you learned in the old environment (no criticism), and what concrete thing you want in the new one, with evidence you have started preparing for it."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Ở công ty outsource em học được cách làm việc với khách hàng và giao đúng hạn qua 5 dự án khác nhau. Nhưng em chưa bao giờ thấy được một tính năng mình làm ảnh hưởng tới người dùng ra sao sau 6 tháng. Em muốn tự theo dõi số liệu và chịu trách nhiệm hệ thống trên production, nên thời gian qua em đã tự làm monitoring cho project cá nhân và đọc các bài postmortem của các công ty lớn.\"",
+      "en": "Sample answer: \"At my outsourcing company I learned to work with clients and deliver on time across five projects. But I never saw how a feature I built affected users six months later. I want to track the metrics and own the system in production myself, so recently I set up monitoring for my side project and have been reading postmortems from large companies.\""
+    },
+    "tip": {
+      "vi": "Không nói \"outsource chỉ code theo yêu cầu, không học được gì\" — người phỏng vấn có thể chính là người từng làm outsource.",
+      "en": "Do not say \"outsourcing is just coding to spec, you learn nothing\" — your interviewer may well have come from outsourcing."
+    },
+    "followUps": [
+      {
+        "vi": "Bạn đã sẵn sàng cho việc on-call và xử lý sự cố ngoài giờ chưa?",
+        "en": "Are you ready for on-call and handling incidents outside working hours?"
+      },
+      {
+        "vi": "Kinh nghiệm outsource giúp gì cho bạn ở công ty product?",
+        "en": "How does your outsourcing experience help you at a product company?"
+      }
+    ]
+  },
+  {
+    "id": "behavioral-career-switch",
+    "level": "junior",
+    "topic": "Introduction",
+    "q": {
+      "vi": "Bạn chuyển sang IT từ ngành khác (hoặc chuyển từ tester/QA sang developer). Vì sao, và bạn đã chuẩn bị gì?",
+      "en": "You moved into IT from another field (or from tester/QA to developer). Why, and how did you prepare?"
+    },
+    "a": {
+      "vi": "Người phỏng vấn muốn biết hai điều: quyết định của bạn nghiêm túc hay chỉ là trào lưu, và bạn đã có đủ nền tảng chưa.\n\n- Lý do: một câu chuyện cụ thể khiến bạn chuyển (ví dụ tự viết script tự động hoá báo cáo ở công việc cũ và thấy thích) thuyết phục hơn \"ngành IT lương cao\".\n- Bằng chứng chuẩn bị: khoá học đã hoàn thành, project có thể xem được, thời gian tự học đều đặn, chứng chỉ nếu có.\n- Biến kinh nghiệm cũ thành lợi thế: người từ kế toán hiểu nghiệp vụ tài chính; tester có tư duy edge case và biết viết test; người từ bán hàng giao tiếp tốt với khách.\n- Thành thật về điểm còn thiếu và kế hoạch bù đắp.",
+      "en": "The interviewer wants two things: is your decision serious or a fad, and do you have enough foundation yet.\n\n- Reason: a concrete story that made you switch (say, writing a script to automate reports at your old job and loving it) convinces more than \"IT pays well\".\n- Evidence of preparation: completed courses, projects anyone can look at, steady self-study, certifications if any.\n- Turn your old experience into an advantage: ex-accountants understand finance domains; testers think in edge cases and write tests; ex-salespeople communicate well with clients.\n- Be honest about gaps and your plan to close them."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Em làm kế toán 3 năm, mỗi cuối tháng mất 2 ngày gộp số liệu từ 12 file Excel. Em tự học Python để viết script làm việc đó trong 10 phút, và từ đó em muốn làm phần mềm. Một năm qua em học backend, làm 2 project có trên GitHub, trong đó có một app quản lý chi tiêu. Em nghĩ hiểu biết về nghiệp vụ kế toán giúp em làm tốt ở các sản phẩm fintech như của công ty.\"",
+      "en": "Sample answer: \"I was an accountant for three years, and every month-end took two days merging data from 12 Excel files. I taught myself Python to script it in 10 minutes, and that's when I wanted to build software. Over the past year I've studied backend development and built two projects on GitHub, including an expense-tracking app. I think my accounting knowledge helps on fintech products like yours.\""
+    },
+    "tip": {
+      "vi": "Nói ra con số thời gian bạn đã tự học (ví dụ \"khoảng 15 giờ mỗi tuần trong 12 tháng\") — nó cho thấy sự nghiêm túc rõ hơn mọi lời hứa.",
+      "en": "State how long you have studied (e.g. \"about 15 hours a week for 12 months\") — it shows commitment more clearly than any promise."
+    },
+    "followUps": [
+      {
+        "vi": "Phần nào trong lập trình bạn thấy khó nhất khi mới chuyển ngành?",
+        "en": "What did you find hardest about programming when you switched?"
+      },
+      {
+        "vi": "Bạn có chấp nhận bắt đầu ở mức lương thấp hơn công việc cũ không?",
+        "en": "Would you accept starting at a lower salary than your previous job?"
+      }
+    ]
+  },
+  {
     "id": "behavioral-proudest-project",
     "level": "junior",
     "topic": "Past Experience",
@@ -118,6 +320,10 @@
     "a": {
       "vi": "Chọn project có độ khó kỹ thuật và vai trò rõ ràng của bạn, rồi kể theo STAR:\n- Situation: project là gì, cho ai, quy mô (số người dùng, team mấy người).\n- Task: bạn phụ trách phần nào, bài toán khó nằm ở đâu.\n- Action: quyết định kỹ thuật bạn đưa ra và vì sao (vd thêm Redis cache, viết lại query, đưa xử lý nặng vào queue), cách bạn phối hợp với người khác.\n- Result: kết quả đo được (giảm 60% thời gian tải trang, phục vụ 50.000 user, ra mắt đúng hạn) + bài học.\nDùng \"mình\" cho phần bạn làm, \"team\" cho phần chung — interviewer cần biết chính bạn đã làm gì.\nChuẩn bị để bị hỏi sâu: kiến trúc, trade-off, nếu làm lại sẽ khác gì.\nTránh: chọn project quá đơn giản, chỉ liệt kê công nghệ mà không có kết quả, hoặc nhận công của cả team.",
       "en": "Pick a project with real technical difficulty and a clear role for you, then tell it with STAR:\n- Situation: what the project was, who it was for, its scale (number of users, team size).\n- Task: which part you owned, where the hard problem was.\n- Action: the technical decisions you made and why (e.g. adding a Redis cache, rewriting queries, moving heavy work into a queue), how you collaborated with others.\n- Result: measurable outcomes (60% faster page loads, serving 50,000 users, shipped on time) + lessons learned.\nSay \"I\" for your part and \"the team\" for shared work — the interviewer needs to know what you personally did.\nBe ready to go deep: architecture, trade-offs, what you would do differently.\nAvoid: choosing a project that is too simple, listing technologies without results, or taking credit for the whole team's work."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"(S) Hệ thống báo cáo doanh thu của khách mất 15 phút mỗi lần chạy, kế toán phải đợi tới cuối ngày. (T) Em được giao tìm cách làm nhanh hơn. (A) Em đo bằng EXPLAIN, thấy 3 query quét toàn bảng; em thêm index phù hợp, chuyển phần tổng hợp sang một bảng tính trước chạy mỗi đêm, và viết test so kết quả với bản cũ. (R) Báo cáo còn 20 giây, khách mở rộng hợp đồng thêm module khác.\"",
+      "en": "Sample answer: \"(S) The client's revenue report took 15 minutes per run, so accounting waited until the end of the day. (T) I was asked to speed it up. (A) I profiled with EXPLAIN, found three queries doing full scans, added the right indexes, moved the aggregation into a nightly precomputed table, and wrote tests comparing results with the old version. (R) The report dropped to 20 seconds and the client extended the contract to another module.\""
     },
     "tip": {
       "vi": "Chuẩn bị sẵn 4-5 câu chuyện STAR có số liệu; một câu chuyện tốt có thể dùng cho nhiều câu hỏi khác nhau.",
@@ -146,6 +352,10 @@
       "vi": "Câu này đánh giá cách bạn debug có hệ thống, không phải bug \"ghê\" đến mức nào. Kể theo STAR, tập trung vào Action:\n- Situation: triệu chứng và ảnh hưởng (vd thỉnh thoảng đơn hàng bị trừ tiền hai lần, chỉ xảy ra trên production).\n- Task: vai trò của bạn và mức độ khẩn cấp.\n- Action: quy trình — thu thập log/metrics, tìm cách tái hiện, khoanh vùng bằng cách đặt giả thuyết và loại trừ dần, tìm ra root cause (vd client retry khi timeout nhưng API không idempotent), sửa lỗi và viết test.\n- Result: bug được xử lý, số liệu cải thiện; và cách bạn ngăn nó tái diễn (thêm idempotency key, alert, viết postmortem, chia sẻ cho team).\nTránh: bug quá tầm thường (gõ sai tên biến), sửa xong mà không hiểu vì sao, hoặc đổ lỗi cho người viết code cũ.",
       "en": "This question evaluates how systematically you debug, not how \"scary\" the bug was. Tell it with STAR, focusing on Action:\n- Situation: the symptom and its impact (e.g. orders were occasionally charged twice, only in production).\n- Task: your role and how urgent it was.\n- Action: your process — gathering logs/metrics, finding a way to reproduce, narrowing down by forming hypotheses and ruling them out, finding the root cause (e.g. the client retried on timeout but the API wasn't idempotent), fixing it and writing tests.\n- Result: the bug was resolved, metrics improved; and how you prevented it from coming back (an idempotency key, alerts, a postmortem, sharing with the team).\nAvoid: trivial bugs (a mistyped variable name), fixing it without understanding why, or blaming whoever wrote the old code."
     },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Thỉnh thoảng có đơn bị trừ tiền hai lần, chỉ trên production, khoảng 3 đơn mỗi ngày. Em gom log theo mã đơn, thấy hai request thanh toán cách nhau đúng 10 giây — đúng bằng timeout của app. Hoá ra app tự retry khi timeout mà API thanh toán không chống trùng. Em thêm Idempotency-Key, viết test tái hiện, và đặt alert khi một đơn có hai giao dịch. Từ đó không còn ca nào.\"",
+      "en": "Sample answer: \"Occasionally orders were charged twice, only in production, about three a day. I grouped logs by order id and saw two payment requests exactly 10 seconds apart — the app's timeout. The app retried on timeout and the payment API had no dedup. I added an Idempotency-Key, wrote a test reproducing it, and set an alert for any order with two transactions. No cases since.\""
+    },
     "tip": {
       "vi": "Nói rõ từng giả thuyết bạn đã loại trừ — interviewer chấm điểm quá trình tư duy hơn là kết quả.",
       "en": "Spell out each hypothesis you ruled out — the interviewer scores the thinking process more than the outcome."
@@ -172,6 +382,10 @@
     "a": {
       "vi": "Họ muốn thấy bạn có phương pháp tự học và biến kiến thức thành kết quả. Kể theo STAR:\n- Situation/Task: vì sao phải học (dự án chuyển sang Kubernetes, nhận task dùng Kafka trong 2 tuần).\n- Action: học có hệ thống — đọc tài liệu chính thức, nhất là phần khái niệm, làm một prototype nhỏ, đọc code có sẵn trong công ty, hỏi người có kinh nghiệm đúng lúc với câu hỏi đã chuẩn bị, ghi chú lại. Có thể dùng công cụ AI để học nhanh nhưng luôn kiểm chứng lại với docs.\n- Result: hoàn thành task đúng hạn, viết tài liệu nội bộ hoặc hướng dẫn lại cho team.\nVí dụ: \"Trong 10 ngày mình học Terraform để chuyển hạ tầng sang IaC: 2 ngày đọc docs và làm lab, sau đó viết module cho môi trường staging và nhờ anh DevOps review. Kết quả là thời gian dựng môi trường giảm từ 1 ngày xuống 30 phút.\"\nTránh: trả lời chung chung \"em xem YouTube\" mà không có kết quả cụ thể.",
       "en": "They want to see that you have a method for self-learning and can turn knowledge into results. Tell it with STAR:\n- Situation/Task: why you had to learn it (the project moved to Kubernetes, you got a task using Kafka within 2 weeks).\n- Action: learn systematically — read the official docs, especially the concepts section, build a small prototype, read existing code in the company, ask experienced people at the right moment with prepared questions, take notes. You can use AI tools to learn faster but always verify against the docs.\n- Result: you delivered on time and wrote internal documentation or taught the team.\nExample: \"In 10 days I learned Terraform to move our infrastructure to IaC: 2 days reading docs and doing labs, then I wrote modules for the staging environment and asked our DevOps engineer to review. As a result, setting up an environment went from 1 day to 30 minutes.\"\nAvoid: a vague \"I watched YouTube\" with no concrete outcome."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Dự án cần làm app Flutter trong 6 tuần mà team chưa ai biết Flutter. Tuần đầu em làm theo tài liệu chính thức và dựng một màn hình thật của dự án thay vì làm bài tập mẫu; em ghi lại các lỗi hay gặp thành một trang hướng dẫn cho team. Tới tuần thứ ba cả team ra được bản demo cho khách, và app lên store đúng hạn.\"",
+      "en": "Sample answer: \"The project needed a Flutter app in six weeks and nobody on the team knew Flutter. In week one I followed the official docs and built a real screen from the project instead of toy exercises, and I wrote up the common pitfalls as a guide for the team. By week three we demoed to the client, and the app shipped to the stores on time.\""
     },
     "tip": {
       "vi": "Mô tả phương pháp học của bạn thành các bước rõ ràng; đó là kỹ năng họ thực sự đang tuyển.",
@@ -200,6 +414,10 @@
       "vi": "Interviewer đánh giá sự trung thực, tinh thần trách nhiệm và khả năng rút kinh nghiệm. Chọn một sai lầm thật, hậu quả vừa phải và đã được khắc phục. Kể theo STAR:\n- Situation: bối cảnh ngắn gọn.\n- Task: trách nhiệm của bạn.\n- Action: sai ở đâu — nhận trách nhiệm rõ ràng (\"mình đã chạy migration mà không test trên dữ liệu giống production\"); rồi bạn xử lý thế nào (báo ngay cho team, rollback, khắc phục dữ liệu).\n- Result: thiệt hại được giới hạn ra sao, và quan trọng nhất là thay đổi lâu dài: quy trình mới (checklist cho migration, staging có dữ liệu thật), thói quen mới của bạn.\nTỉ lệ hợp lý: khoảng 30% kể sai lầm, 70% kể cách khắc phục và bài học.\nTránh: \"điểm yếu giả\" (\"em quá cầu toàn\"), đổ lỗi cho người khác, chọn sai lầm liên quan đến đạo đức, hoặc kể mà không có bài học.",
       "en": "The interviewer evaluates honesty, ownership and the ability to learn. Pick a real mistake with moderate consequences that has been fixed. Tell it with STAR:\n- Situation: brief context.\n- Task: your responsibility.\n- Action: what went wrong — own it clearly (\"I ran a migration without testing it on production-like data\"); then how you handled it (told the team immediately, rolled back, repaired the data).\n- Result: how the damage was contained and, most importantly, the lasting change: a new process (a migration checklist, staging with realistic data), a new habit of yours.\nA good ratio: about 30% on the mistake, 70% on the fix and the lesson.\nAvoid: a \"fake weakness\" (\"I'm too much of a perfectionist\"), blaming others, a mistake involving ethics, or a story with no lesson."
     },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Em từng chạy script cập nhật dữ liệu trên production mà quên điều kiện WHERE theo khách hàng, làm sai giá của khoảng 2.000 sản phẩm trong 20 phút. Em báo leader ngay, khôi phục từ bản backup gần nhất và đối chiếu lại với log. Sau đó em đề xuất quy định: script trên production phải chạy thử trên bản sao, có người review và bọc trong transaction. Team áp dụng từ đó tới giờ.\"",
+      "en": "Sample answer: \"I once ran a data-update script on production without the customer filter in the WHERE clause, mispricing about 2,000 products for 20 minutes. I told my lead immediately, restored from the latest backup and reconciled against the logs. Afterwards I proposed a rule: production scripts must run on a copy first, be reviewed, and be wrapped in a transaction. The team still follows it.\""
+    },
     "tip": {
       "vi": "Câu 'đây là lỗi của mình' nói sớm và rõ ràng tạo được niềm tin hơn bất kỳ lời giải thích nào.",
       "en": "Saying 'this was my mistake' early and plainly builds more trust than any explanation."
@@ -226,6 +444,10 @@
     "a": {
       "vi": "Trả lời theo STAR:\n- Situation: bối cảnh ngắn gọn (dự án, vai trò của bạn).\n- Task: điểm bất đồng cụ thể là gì, vì sao quan trọng.\n- Action: bạn đã làm gì — lắng nghe lý do của đối phương, đưa dữ liệu/bản thử nghiệm thay vì cảm tính, đề xuất phương án dung hoà, chấp nhận quyết định chung.\n- Result: kết quả đo được + bạn học được gì.\nVí dụ: bạn và đồng nghiệp tranh luận nên dùng PostgreSQL hay MongoDB cho module mới → cả hai liệt kê các truy vấn chính, bạn làm benchmark nhỏ với dữ liệu mẫu, team chọn PostgreSQL với cột JSONB cho phần dữ liệu linh hoạt → module chạy ổn và cả hai rút ra cách ra quyết định dựa trên dữ liệu.\nTránh: chê bai người khác, câu chuyện mà bạn luôn đúng, hoặc nói \"tôi chưa bao giờ bất đồng\".",
       "en": "Answer with STAR:\n- Situation: brief context (project, your role).\n- Task: the specific disagreement and why it mattered.\n- Action: what you did — listened to their reasoning, brought data or a prototype instead of opinions, proposed a compromise, committed to the final decision.\n- Result: a measurable outcome + what you learned.\nExample: you and a teammate argue over PostgreSQL vs MongoDB for a new module → you both list the main queries, you run a small benchmark with sample data, the team picks PostgreSQL with a JSONB column for the flexible part → the module runs well and you both learn to make decisions based on data.\nAvoid: blaming others, stories where you are always right, or \"I've never disagreed with anyone\"."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Em và một bạn frontend bất đồng về việc API trả toàn bộ dữ liệu hay phân trang. Thay vì tranh luận, em đề nghị đo thử: với 5.000 sản phẩm, trả hết mất 4 giây và 3 MB. Hai bên thống nhất phân trang kiểu cursor, em làm thêm endpoint tìm kiếm để bạn ấy không phải lọc ở client. Chúng em vẫn làm việc vui vẻ sau đó.\"",
+      "en": "Sample answer: \"A frontend colleague and I disagreed on whether the API should return all data or paginate. Instead of arguing, I suggested we measure: with 5,000 products, returning everything took 4 seconds and 3 MB. We agreed on cursor pagination, and I added a search endpoint so they did not have to filter on the client. We kept working well together afterwards.\""
     },
     "tip": {
       "vi": "Cho thấy bạn tách vấn đề khỏi con người: bất đồng về giải pháp, nhưng quan hệ làm việc vẫn tốt sau đó.",
@@ -254,6 +476,10 @@
       "vi": "Thông điệp cần truyền tải: bạn dám nói lên quan điểm nhưng tôn trọng người ra quyết định — \"disagree and commit\".\nVí dụ theo STAR:\n- Situation: manager muốn bỏ qua viết test để kịp release.\n- Task: bạn lo ngại rủi ro bug ở module thanh toán.\n- Action: nói chuyện riêng thay vì phản đối giữa cuộc họp; trình bày bằng dữ liệu (số incident lần trước, thời gian fix); đề xuất phương án trung gian (chỉ viết test cho luồng thanh toán, phần còn lại bổ sung sau release). Nếu manager vẫn giữ quyết định, bạn làm hết sức theo quyết định đó và ghi nhận rủi ro bằng văn bản.\n- Result: hai bên thống nhất phương án trung gian, release đúng hạn, không có lỗi thanh toán.\nLưu ý văn hoá: nhiều công ty Việt Nam ngại phản biện sếp, còn công ty quốc tế đánh giá cao góp ý thẳng thắn có lý lẽ — hãy cho thấy bạn làm được điều đó một cách tế nhị.\nTránh: \"Sếp nói gì em làm nấy\", hoặc kể chuyện bạn lén làm trái quyết định.",
       "en": "The message to convey: you speak up, but you respect the decision maker — \"disagree and commit\".\nExample with STAR:\n- Situation: your manager wanted to skip writing tests to make a release.\n- Task: you were worried about bugs in the payment module.\n- Action: you talked privately instead of objecting in the middle of a meeting; presented data (the number of past incidents, time to fix); proposed a middle ground (test only the payment flow, add the rest after release). If the manager still kept the decision, you would give it your best and document the risk in writing.\n- Result: you agreed on the middle ground, released on time, with no payment bugs.\nCultural note: many Vietnamese companies avoid challenging the boss, while international companies value direct, reasoned feedback — show that you can do it tactfully.\nAvoid: \"I just do whatever my boss says\", or a story where you secretly went against the decision."
     },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Manager muốn bỏ phần viết test để kịp deadline. Em nói riêng với anh ấy, đưa số liệu: sprint trước 3 bug lọt lên production ở đúng phần không có test, mỗi bug tốn khoảng 1 ngày sửa. Em đề xuất chỉ viết test cho luồng thanh toán, bỏ qua phần ít rủi ro. Anh ấy đồng ý. Nếu anh ấy vẫn quyết bỏ thì em sẽ làm theo, nhưng ghi rõ rủi ro trong ticket.\"",
+      "en": "Sample answer: \"My manager wanted to skip tests to hit a deadline. I spoke to him privately with data: last sprint three bugs reached production in exactly the untested area, each costing about a day. I proposed testing only the payment flow and skipping low-risk parts. He agreed. Had he still decided to skip them, I would have followed the decision but recorded the risk in the ticket.\""
+    },
     "tip": {
       "vi": "Cụm 'disagree and commit' kèm một ví dụ cụ thể là cách trả lời được các công ty quốc tế đánh giá cao.",
       "en": "'Disagree and commit' backed by a concrete example is the answer international companies value."
@@ -280,6 +506,10 @@
     "a": {
       "vi": "Chuẩn bị cả hai chiều.\nNhận feedback (STAR):\n- Situation/Task: tech lead nhận xét PR của bạn quá lớn và khó review.\n- Action: lắng nghe, không phản bác ngay, hỏi lại để hiểu rõ, rồi thay đổi cụ thể (chia PR dưới ~400 dòng, viết mô tả và hướng dẫn test rõ ràng).\n- Result: thời gian review giảm rõ rệt, và bạn chủ động xin feedback định kỳ.\nGóp ý cho người khác:\n- Riêng tư, kịp thời, cụ thể; dựa trên hành vi và tác động theo mô hình SBI (Situation – Behavior – Impact), không phán xét con người.\n- Ví dụ: đồng nghiệp hay merge mà không chạy test → nói riêng, đưa ví dụ cụ thể về lỗi đã xảy ra, cùng thống nhất bật CI bắt buộc trước khi merge.\nTránh: \"Em chưa bao giờ nhận feedback tiêu cực\", tỏ ra phòng thủ, hoặc kể chuyện góp ý công khai làm người khác mất mặt.",
       "en": "Prepare both directions.\nReceiving feedback (STAR):\n- Situation/Task: your tech lead said your PRs were too large and hard to review.\n- Action: you listened, didn't push back immediately, asked questions to understand, then made concrete changes (splitting PRs under ~400 lines, writing clear descriptions and test instructions).\n- Result: review time dropped noticeably, and you started asking for feedback regularly.\nGiving feedback:\n- Private, timely, specific; based on behavior and impact using the SBI model (Situation – Behavior – Impact), never judging the person.\n- Example: a teammate often merged without running tests → you talked privately, gave a concrete example of a bug it caused, and together agreed to make CI mandatory before merging.\nAvoid: \"I've never received negative feedback\", being defensive, or a story where you criticized someone publicly and embarrassed them."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Leader góp ý pull request của em quá lớn, khó review. Lúc đầu em hơi khó chịu, nhưng thấy đúng là có PR 2.000 dòng nằm chờ cả tuần. Em chuyển sang chia PR dưới 400 dòng, thời gian review còn trung bình nửa ngày. Lần em góp ý cho một bạn junior, em nói riêng, chỉ vào đúng đoạn code cụ thể và gợi ý cách sửa, không nói chung chung kiểu \"code bẩn\".\"",
+      "en": "Sample answer: \"My lead said my pull requests were too big to review. I was a little defensive at first, but one 2,000-line PR had indeed waited a whole week. I switched to PRs under 400 lines and review time dropped to about half a day. When I gave feedback to a junior, I did it privately, pointed at specific code and suggested a fix, rather than vague comments like \"messy code\".\""
     },
     "tip": {
       "vi": "Kết thúc bằng hành động cụ thể bạn đã thay đổi sau feedback — đó là bằng chứng bạn thực sự tiếp thu.",
@@ -308,6 +538,10 @@
       "vi": "Họ muốn biết bạn có tự quản lý được không và có giao tiếp rõ ràng khi không ngồi cạnh nhau không. Nêu cách làm cụ thể kèm một ví dụ thật:\n- Giao tiếp chủ động: cập nhật tiến độ hằng ngày, báo sớm khi bị blocked, ưu tiên viết (ticket, tài liệu, mô tả PR) để người ở múi giờ khác cũng đọc được.\n- Tin nhắn đủ bối cảnh: viết rõ vấn đề, đã thử gì, cần gì — thay vì nhắn \"anh ơi\" rồi chờ.\n- Quản lý thời gian: giờ làm cố định, các khối thời gian tập trung, công cụ như Jira, Notion, Slack.\n- Gắn kết: bật camera khi họp, tham gia hoạt động online của team.\nVí dụ: \"Ở dự án cho khách hàng Nhật và Úc, team lệch múi giờ 2-4 tiếng. Mình viết daily update cuối ngày và chuẩn bị câu hỏi trước giờ overlap, nhờ vậy không bị trễ việc vì chờ trả lời.\"\nTránh: chỉ nói \"em tự giác lắm\" mà không có cách làm cụ thể.",
       "en": "They want to know whether you can manage yourself and communicate clearly when you're not sitting together. Describe concrete practices with a real example:\n- Proactive communication: daily progress updates, flagging blockers early, favoring writing (tickets, docs, PR descriptions) so people in other time zones can read it too.\n- Messages with full context: state the problem, what you tried, what you need — instead of sending \"hi\" and waiting.\n- Time management: fixed working hours, focus blocks, tools like Jira, Notion, Slack.\n- Connection: camera on in meetings, joining the team's online activities.\nExample: \"On a project for Japanese and Australian clients, the team was 2-4 hours apart. I wrote an end-of-day update and prepared questions before the overlap hours, so work never stalled waiting for answers.\"\nAvoid: just saying \"I'm very self-disciplined\" without concrete practices."
     },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Em làm remote với khách ở Nhật lệch 2 tiếng. Mỗi sáng em cập nhật tiến độ bằng một tin ngắn: hôm qua làm gì, hôm nay làm gì, đang vướng gì. Câu hỏi nào cần trả lời trong ngày thì em gửi trước 10 giờ để khách kịp trả lời. Em giữ giờ làm cố định và để trạng thái rõ ràng trên Slack, nên team biết lúc nào có thể gọi em.\"",
+      "en": "Sample answer: \"I work remotely with a client in Japan, two hours ahead. Every morning I post a short update: what I did yesterday, what I'm doing today, what's blocking me. Anything needing an answer that day I send before 10 a.m. so they can reply in time. I keep fixed hours and a clear Slack status, so the team knows when they can reach me.\""
+    },
     "tip": {
       "vi": "Nhắc đến giao tiếp bất đồng bộ bằng văn bản là điểm cộng lớn với công ty quốc tế làm việc phân tán.",
       "en": "Mentioning written, asynchronous communication is a big plus for distributed international companies."
@@ -324,6 +558,161 @@
     ]
   },
   {
+    "id": "behavioral-client-changing-requirements",
+    "level": "mid",
+    "topic": "Working with Clients",
+    "q": {
+      "vi": "Khách hàng thay đổi yêu cầu khi chỉ còn 3 ngày tới deadline. Bạn xử lý thế nào?",
+      "en": "The client changes the requirements three days before the deadline. How do you handle it?"
+    },
+    "a": {
+      "vi": "Chuyện rất thường gặp ở dự án outsource. Người phỏng vấn muốn thấy bạn không im lặng làm thêm giờ cho kịp, cũng không từ chối thẳng, mà làm rõ đánh đổi để khách tự quyết định.\n\n1. Hiểu rõ thay đổi và lý do: đôi khi điều khách thật sự cần nhỏ hơn yêu cầu ban đầu.\n2. Ước lượng ảnh hưởng: thêm bao nhiêu công, ảnh hưởng tới phần nào, rủi ro gì.\n3. Đưa ra các lựa chọn: giữ deadline và giảm phạm vi; giữ phạm vi và dời deadline; làm phần quan trọng nhất trước, phần còn lại ở bản sau.\n4. Báo cho PM/leader và thống nhất với khách bằng văn bản (email, ticket), không chỉ nói miệng trong buổi họp.\n5. Sau dự án, đề xuất cách giảm rủi ro lần sau: demo sớm hơn, chốt phạm vi rõ hơn.\n\nTránh: nhận hết mà không nói gì rồi trễ hạn hoặc làm ẩu; đổ lỗi cho khách.",
+      "en": "Very common on outsourcing projects. The interviewer wants to see you neither silently work overtime to cope nor refuse outright, but make the trade-offs clear so the client can decide.\n\n1. Understand the change and the reason: sometimes what they really need is smaller than the request.\n2. Estimate the impact: extra effort, affected parts, risks.\n3. Offer options: keep the deadline and cut scope; keep the scope and move the deadline; deliver the most important part first and the rest in the next release.\n4. Inform your PM/lead and agree with the client in writing (email, ticket), not just verbally in a meeting.\n5. After the project, propose how to lower the risk next time: earlier demos, clearer scope sign-off.\n\nAvoid: silently accepting everything, then missing the date or cutting corners; blaming the client."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Ba ngày trước khi bàn giao, khách muốn thêm xuất báo cáo ra PDF. Em ước lượng cần khoảng 3 ngày công kèm test. Em gửi PM hai lựa chọn: bàn giao đúng hạn kèm xuất Excel (đã có sẵn) và PDF vào tuần sau, hoặc dời bàn giao 2 ngày. Khách chọn phương án đầu. Em ghi lại thống nhất trong email, và đề xuất từ dự án sau sẽ demo cho khách vào giữa sprint.\"",
+      "en": "Sample answer: \"Three days before handover, the client wanted PDF export for reports. I estimated about three days including tests. I gave the PM two options: hand over on time with the existing Excel export and add PDF the next week, or move handover by two days. The client chose the first. I recorded the agreement in an email and proposed mid-sprint demos from the next project on.\""
+    },
+    "tip": {
+      "vi": "Câu then chốt nên nói: \"em đưa ra lựa chọn kèm đánh đổi để khách quyết định\" — cho thấy bạn hiểu phạm vi, thời gian và chất lượng không thể cùng giữ nguyên.",
+      "en": "The key line: \"I gave options with trade-offs so the client could decide\" — it shows you know scope, time and quality cannot all stay fixed."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu PM vẫn yêu cầu làm đủ mà không dời deadline thì sao?",
+        "en": "What if the PM still demands everything without moving the deadline?"
+      },
+      {
+        "vi": "Bạn ghi nhận change request thế nào để tránh tranh cãi về sau?",
+        "en": "How do you record change requests to avoid disputes later?"
+      }
+    ]
+  },
+  {
+    "id": "behavioral-client-angry-incident",
+    "level": "mid",
+    "topic": "Working with Clients",
+    "q": {
+      "vi": "Hệ thống gặp lỗi trên production và khách hàng phàn nàn rất gay gắt. Bạn làm gì?",
+      "en": "The system fails in production and the client complains very angrily. What do you do?"
+    },
+    "a": {
+      "vi": "Câu này đánh giá sự bình tĩnh và cách bạn ưu tiên: khắc phục ảnh hưởng trước, giải thích sau.\n\n1. Ghi nhận và phản hồi nhanh: xác nhận đã biết sự cố và đang xử lý, kể cả khi chưa biết nguyên nhân. Im lặng là điều làm khách giận hơn.\n2. Giảm ảnh hưởng ngay: rollback, tắt tính năng lỗi, chuyển sang phương án tạm.\n3. Cập nhật định kỳ (ví dụ mỗi 30 phút) cho tới khi xong, kể cả khi chưa có tiến triển.\n4. Sau khi ổn định: gửi báo cáo ngắn gồm chuyện gì đã xảy ra, ảnh hưởng, nguyên nhân, đã sửa gì và sẽ làm gì để không lặp lại.\n5. Không tranh luận khi khách đang giận; không đổ lỗi cho đồng nghiệp hay bên thứ ba trước mặt khách.",
+      "en": "This tests composure and priorities: limit the damage first, explain later.\n\n1. Acknowledge quickly: confirm you know about the incident and are on it, even before knowing the cause. Silence is what makes clients angrier.\n2. Reduce impact immediately: roll back, disable the faulty feature, switch to a workaround.\n3. Update regularly (say every 30 minutes) until resolved, even when there is no progress.\n4. Once stable: send a short report on what happened, the impact, the cause, what was fixed and what will prevent a repeat.\n5. Do not argue while the client is angry; do not blame colleagues or third parties in front of the client."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Sau một lần deploy, khách hàng không đăng nhập được vào app trong giờ cao điểm và khách gọi điện rất bức xúc. Em xác nhận với khách trong 5 phút rằng team đang xử lý, rollback về bản trước sau 15 phút, rồi cập nhật cho khách khi hệ thống đã chạy lại. Hôm sau em gửi báo cáo: lỗi do một cấu hình sai giữa staging và production, và team bổ sung bước kiểm tra cấu hình tự động trước khi deploy. Khách sau đó cảm ơn vì được thông báo rõ ràng.\"",
+      "en": "Sample answer: \"After a deploy, users could not log in during peak hours and the client called, very upset. Within five minutes I confirmed we were on it, rolled back within 15 minutes and told the client once the system was back. The next day I sent a report: a configuration mismatch between staging and production, and we added an automated config check before deploys. The client later thanked us for the clear communication.\""
+    },
+    "tip": {
+      "vi": "Nhấn mạnh thứ tự \"giảm ảnh hưởng → thông báo → tìm nguyên nhân → phòng ngừa\" — đó là cách các team vận hành tốt xử lý sự cố.",
+      "en": "Stress the order \"reduce impact → communicate → find the cause → prevent\" — that is how mature operations teams handle incidents."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu lỗi là do chính bạn gây ra thì bạn nói với khách thế nào?",
+        "en": "If the bug was your own fault, how do you tell the client?"
+      },
+      {
+        "vi": "Một báo cáo sự cố gửi khách nên gồm những phần nào?",
+        "en": "What should an incident report to a client contain?"
+      }
+    ]
+  },
+  {
+    "id": "behavioral-estimate-pressure",
+    "level": "mid",
+    "topic": "Working with Clients",
+    "q": {
+      "vi": "Bạn ước lượng một tính năng mất 2 tuần, nhưng PM hoặc khách muốn xong trong 1 tuần. Bạn làm gì?",
+      "en": "You estimate a feature at two weeks, but the PM or client wants it in one. What do you do?"
+    },
+    "a": {
+      "vi": "Người phỏng vấn muốn thấy bạn bảo vệ được ước lượng bằng lý lẽ, nhưng vẫn linh hoạt tìm cách đáp ứng mục tiêu kinh doanh.\n\n- Giải thích ước lượng bằng các phần việc cụ thể (API, giao diện, test, tích hợp, rủi ro chưa rõ), không chỉ nói \"em thấy cần 2 tuần\".\n- Hỏi lý do của hạn 1 tuần: có sự kiện, có hợp đồng, hay chỉ là mong muốn? Điều đó quyết định mức độ linh hoạt.\n- Đưa ra lựa chọn: bản tối thiểu trong 1 tuần (cắt phần nào), thêm người (thường không nhanh hơn ngay vì cần thời gian làm quen), hoặc giữ 2 tuần.\n- Không hứa điều mình biết là không làm được — ước lượng bị ép thấp xuống rồi trễ hạn còn tệ hơn nói thật từ đầu.\n- Ghi lại rủi ro nếu cuối cùng vẫn phải làm theo hạn ngắn.",
+      "en": "The interviewer wants to see you defend an estimate with reasons while staying flexible about the business goal.\n\n- Explain the estimate through concrete pieces of work (API, UI, tests, integration, unknown risks), not just \"I feel it needs two weeks\".\n- Ask why one week: an event, a contract, or just a wish? That decides how much flexibility there is.\n- Offer options: a minimal version in one week (cutting what), adding people (rarely faster at first because of ramp-up), or keeping two weeks.\n- Do not promise what you know you cannot deliver — an estimate squeezed down and then missed is worse than the truth up front.\n- Record the risks if you still have to work to the shorter deadline."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"PM cần tính năng đổi điểm thưởng trong 1 tuần vì có chương trình khuyến mãi dịp 11/11. Em chia ra: API đổi điểm 3 ngày, màn hình 2 ngày, chống gian lận và test 4 ngày. Em đề xuất bản đầu chỉ cho đổi điểm lấy voucher cố định và giới hạn mỗi người một lần mỗi ngày, phần chống gian lận đầy đủ làm sau. Bản đó lên kịp chương trình, phần còn lại hoàn thiện tuần sau.\"",
+      "en": "Sample answer: \"The PM needed reward-point redemption in one week for an 11/11 promotion. I broke it down: redemption API 3 days, UI 2 days, anti-fraud and testing 4 days. I proposed a first version allowing only fixed vouchers and one redemption per person per day, with full anti-fraud later. That version made the promotion, and the rest was finished the following week.\""
+    },
+    "tip": {
+      "vi": "Câu \"em không giảm ước lượng, em giảm phạm vi\" ngắn gọn và cho thấy bạn hiểu cách làm việc với PM.",
+      "en": "\"I don't reduce the estimate, I reduce the scope\" is short and shows you know how to work with PMs."
+    },
+    "followUps": [
+      {
+        "vi": "Bạn ước lượng công việc như thế nào cho chính xác hơn?",
+        "en": "How do you make your estimates more accurate?"
+      },
+      {
+        "vi": "Kể một lần ước lượng của bạn sai nhiều. Vì sao?",
+        "en": "Tell me about a time your estimate was badly off. Why?"
+      }
+    ]
+  },
+  {
+    "id": "behavioral-foreign-client-communication",
+    "level": "junior",
+    "topic": "Working with Clients",
+    "q": {
+      "vi": "Bạn làm việc với khách hàng nước ngoài khi tiếng Anh (hoặc tiếng Nhật) chưa tốt và lệch múi giờ thế nào?",
+      "en": "How do you work with foreign clients when your English (or Japanese) is not strong and time zones differ?"
+    },
+    "a": {
+      "vi": "Người phỏng vấn ở công ty outsource rất quan tâm câu này vì hiểu lầm yêu cầu là nguyên nhân lớn khiến dự án phải làm lại.\n\nCách làm hiệu quả:\n- Ưu tiên văn bản: viết lại yêu cầu bằng lời của mình và gửi khách xác nhận (\"My understanding is… Is that correct?\").\n- Dùng hình ảnh: ảnh chụp màn hình, mockup, video ngắn quay màn hình thay cho đoạn giải thích dài.\n- Chuẩn bị trước buổi họp: liệt kê câu hỏi, gửi agenda; sau họp gửi biên bản ngắn với các quyết định và việc cần làm.\n- Lệch múi giờ: gửi câu hỏi trước khi khách hết giờ làm, gom câu hỏi lại thay vì gửi từng cái, cập nhật tiến độ mỗi ngày để khách thức dậy là thấy.\n- Không hiểu thì hỏi lại, không đoán.\n- Chủ động cải thiện ngôn ngữ và cho thấy kết quả cụ thể.",
+      "en": "Outsourcing interviewers care a lot about this, because misunderstood requirements are a major cause of rework.\n\nWhat works:\n- Prefer writing: restate requirements in your own words and ask the client to confirm (\"My understanding is… Is that correct?\").\n- Use visuals: screenshots, mockups, short screen recordings instead of long explanations.\n- Prepare meetings: list questions and send an agenda; afterwards send brief minutes with decisions and action items.\n- Time zones: send questions before the client's day ends, batch them rather than sending one at a time, and post daily progress so they see it when they wake up.\n- If you do not understand, ask — do not guess.\n- Work on the language actively and show concrete results."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Dự án gần nhất của em làm với khách Úc, nhanh hơn Việt Nam 3–4 tiếng. Tiếng Anh nói của em lúc đầu chưa tốt, nên sau mỗi buổi họp em gửi email tóm tắt 3–5 gạch đầu dòng để khách xác nhận. Có lần nhờ vậy khách phát hiện em hiểu sai cách tính phí ship trước khi em code. Em cũng học thêm tiếng Anh giao tiếp, sau 6 tháng em tự chủ trì được buổi demo hàng tuần.\"",
+      "en": "Sample answer: \"My last project was with an Australian client, 3–4 hours ahead of Vietnam. My spoken English was weak at first, so after every meeting I emailed a 3–5 bullet summary for the client to confirm. Once that caught my misunderstanding of the shipping-fee rules before I wrote any code. I also took English classes, and after six months I was running the weekly demo myself.\""
+    },
+    "tip": {
+      "vi": "Nêu một lần cụ thể việc xác nhận bằng văn bản đã giúp tránh làm sai — đó là bằng chứng thuyết phục hơn \"em giao tiếp tốt\".",
+      "en": "Cite one specific time a written confirmation prevented a mistake — far more convincing than \"I communicate well\"."
+    },
+    "followUps": [
+      {
+        "vi": "Khách hàng không trả lời câu hỏi của bạn suốt 2 ngày, bạn làm gì?",
+        "en": "The client hasn't answered your question for two days. What do you do?"
+      },
+      {
+        "vi": "Bạn sẽ trình bày một rủi ro kỹ thuật cho khách không rành kỹ thuật thế nào?",
+        "en": "How would you explain a technical risk to a non-technical client?"
+      }
+    ]
+  },
+  {
+    "id": "behavioral-japanese-client-horenso",
+    "level": "junior",
+    "topic": "Working with Clients",
+    "q": {
+      "vi": "Làm việc với khách hàng Nhật có gì khác? \"Horenso\" là gì và bạn áp dụng thế nào?",
+      "en": "What is different about working with Japanese clients? What is \"horenso\" and how do you apply it?"
+    },
+    "a": {
+      "vi": "Horenso (報連相) là nguyên tắc chủ động báo cáo, liên lạc và bàn bạc. Với khách Nhật, điều quan trọng nhất là báo vấn đề sớm kèm phương án, cùng với chất lượng, đúng hẹn và tài liệu rõ ràng.\n\nNhiều công ty phần mềm ở Việt Nam làm cho khách Nhật, nên câu này hay xuất hiện ở các vị trí developer và BrSE.\n\nHorenso (報連相) là ghép của ba việc:\n- Hō (báo cáo): chủ động báo kết quả và tiến độ cho cấp trên/khách, kể cả khi mọi thứ ổn.\n- Ren (liên lạc): chia sẻ thông tin cho những người liên quan, ví dụ thay đổi lịch, vấn đề phát sinh.\n- Sō (bàn bạc): hỏi ý kiến trước khi tự quyết những việc chưa chắc chắn.\n\nĐặc điểm thường gặp khi làm với khách Nhật:\n- Coi trọng chất lượng và đúng hẹn; lỗi nhỏ ở giao diện hay tài liệu cũng được để ý.\n- Tài liệu chi tiết (thiết kế, test case, báo cáo) và quy trình rõ ràng.\n- Báo xấu sớm được đánh giá cao hơn nhiều so với giấu tới phút cuối.\n- Ra quyết định thường cần thời gian và sự đồng thuận của nhiều người.",
+      "en": "Horenso (報連相) is the habit of proactively reporting, informing and consulting. With Japanese clients what matters most is raising problems early with options, along with quality, punctuality and clear documentation.\n\nMany Vietnamese software companies work for Japanese clients, so this comes up for developer and BrSE roles.\n\nHorenso (報連相) combines three habits:\n- Hō (report): proactively report results and progress to your superior/client, even when all is well.\n- Ren (inform): share information with everyone affected, e.g. schedule changes or new issues.\n- Sō (consult): ask for input before deciding things you are unsure about.\n\nCommon traits of Japanese clients:\n- Strong focus on quality and punctuality; small UI or documentation flaws get noticed.\n- Detailed documents (designs, test cases, reports) and clear processes.\n- Bad news raised early is valued far more than hiding it until the last minute.\n- Decisions often take time and consensus among several people."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Ở dự án cho khách Nhật, giữa sprint em phát hiện thư viện xuất file Excel không hỗ trợ font tiếng Nhật trên một số máy. Em báo ngay cho BrSE trong ngày, kèm ảnh chụp lỗi và hai phương án xử lý, chứ không đợi tới buổi review cuối sprint. Khách chọn phương án đổi thư viện và dời 2 ngày; họ đánh giá cao việc được báo sớm.\"",
+      "en": "Sample answer: \"On a project for a Japanese client, mid-sprint I found the Excel export library could not render Japanese fonts on some machines. I reported it to our BrSE the same day with screenshots and two options, instead of waiting for the end-of-sprint review. The client chose to switch libraries and slip two days, and appreciated being told early.\""
+    },
+    "tip": {
+      "vi": "Ví dụ \"báo vấn đề sớm kèm phương án\" là cách thể hiện horenso thuyết phục nhất, hơn là chỉ đọc định nghĩa ba chữ.",
+      "en": "An example of \"raising a problem early with options\" demonstrates horenso far better than reciting the three words."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu bạn biết sẽ trễ deadline, bạn báo khách Nhật khi nào và như thế nào?",
+        "en": "If you know you will miss a deadline, when and how do you tell a Japanese client?"
+      },
+      {
+        "vi": "BrSE là gì và developer làm việc với BrSE ra sao?",
+        "en": "What is a BrSE and how do developers work with one?"
+      }
+    ]
+  },
+  {
     "id": "behavioral-tight-deadline",
     "level": "mid",
     "topic": "Execution",
@@ -334,6 +723,10 @@
     "a": {
       "vi": "Điều cần thể hiện: bình tĩnh, ưu tiên đúng, minh bạch về rủi ro — không phải \"thức trắng mấy đêm\".\nVí dụ theo STAR:\n- Situation: khách hàng yêu cầu ra mắt tính năng khuyến mãi trước chiến dịch 11/11, chỉ còn 1 tuần.\n- Task: bạn phụ trách phần backend.\n- Action: chia nhỏ công việc, xác định phần bắt buộc (MVP) và phần làm sau, thống nhất phạm vi với PM; báo rủi ro từ sớm; giảm rủi ro kỹ thuật bằng feature flag và tập trung test luồng chính; phối hợp chặt với QA.\n- Result: ra mắt đúng hạn với phạm vi cốt lõi, phần còn lại hoàn thành tuần sau; sau đó bạn đề xuất cải thiện cách ước lượng để tránh lặp lại.\nTránh: tự hào vì làm quá giờ liên tục, hy sinh chất lượng mà không báo ai, hoặc kể chuyện trễ hạn mà không có bài học.",
       "en": "What to show: calm, the right priorities, transparency about risk — not \"pulling all-nighters\".\nExample with STAR:\n- Situation: a client required a promotion feature to launch before the 11/11 campaign, with only 1 week left.\n- Task: you owned the backend.\n- Action: broke the work down, identified the must-haves (MVP) and what could come later, agreed on scope with the PM; raised risks early; reduced technical risk with a feature flag and focused testing on the main flow; worked closely with QA.\n- Result: launched on time with the core scope, the rest was done the following week; afterwards you proposed better estimation to avoid a repeat.\nAvoid: bragging about constant overtime, sacrificing quality without telling anyone, or a story about missing the deadline with no lesson."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Khách cần tính năng xuất hoá đơn điện tử trong 1 tuần thay vì 3 tuần vì quy định mới có hiệu lực. Em liệt kê các phần việc cùng PM, thống nhất bản đầu chỉ cần xuất hoá đơn đơn lẻ, phần xuất hàng loạt làm tuần sau. Em báo tiến độ mỗi ngày và nêu rủi ro sớm. Bản đầu lên đúng hạn, phần còn lại xong sau 8 ngày.\"",
+      "en": "Sample answer: \"The client needed e-invoicing in one week instead of three because a new regulation took effect. I broke down the work with the PM and we agreed the first release would cover single invoices, with bulk export the week after. I reported progress daily and raised risks early. The first release shipped on time and the rest followed eight days later.\""
     },
     "tip": {
       "vi": "Nhấn mạnh việc thương lượng phạm vi với PM; cắt scope có chủ đích là kỹ năng được đánh giá rất cao.",
@@ -362,6 +755,10 @@
       "vi": "Trình bày một cách làm rõ ràng rồi minh hoạ bằng ví dụ:\n- Đánh giá theo tác động và mức khẩn cấp: sự cố production ảnh hưởng người dùng > việc đang chặn người khác > feature theo roadmap > cải tiến nội bộ.\n- Ước lượng công sức: việc nhỏ mà gỡ được cho nhiều người thì làm trước.\n- Minh bạch: khi hai stakeholder cùng đòi gấp, không tự chọn ngầm mà đưa danh sách cho manager/PM cùng quyết định, rồi báo cho người bị lùi lịch.\n- Biết nói \"không\" hoặc \"chưa\" một cách lịch sự, kèm phương án thay thế.\nVí dụ STAR: cùng lúc có bug thanh toán, yêu cầu số liệu gấp từ team sales và task của sprint → bạn xử lý bug trước, gửi sales số liệu tạm trong 15 phút, báo PM lùi task sprint 1 ngày; kết quả: không mất doanh thu và mọi người đều nắm tình hình.\nTránh: \"em làm hết cùng lúc\", hoặc ưu tiên theo người nói to nhất.",
       "en": "Present a clear method, then illustrate it with an example:\n- Assess impact and urgency: production incidents affecting users > work blocking others > roadmap features > internal improvements.\n- Estimate effort: small tasks that unblock many people come first.\n- Transparency: when two stakeholders both claim urgency, don't silently pick one; bring the list to your manager/PM to decide together, then tell whoever gets pushed back.\n- Be able to say \"no\" or \"not yet\" politely, with an alternative.\nSTAR example: a payment bug, an urgent data request from the sales team and a sprint task land at once → you fix the bug first, send sales interim numbers in 15 minutes, and tell the PM the sprint task slips by 1 day; result: no lost revenue and everyone knows the status.\nAvoid: \"I do everything at once\", or prioritizing whoever is loudest."
     },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Cùng một sáng, em có bug production làm khách không thanh toán được, một tính năng sắp tới hạn demo và yêu cầu review code. Em xử lý bug thanh toán trước vì đang mất tiền, nhắn PM rằng demo có thể trễ nửa ngày, còn việc review thì nhờ một đồng nghiệp khác. Em luôn ưu tiên theo ảnh hưởng tới người dùng và hạn chót thật, và báo rõ cho những người bị ảnh hưởng.\"",
+      "en": "Sample answer: \"One morning I had a production bug blocking payments, a feature due for a demo, and a code review request. I fixed the payment bug first because we were losing money, told the PM the demo might slip half a day, and asked a colleague to take the review. I prioritise by user impact and real deadlines, and I tell everyone affected.\""
+    },
     "tip": {
       "vi": "Nêu tiêu chí ưu tiên của bạn thành một thứ tự rõ ràng; interviewer muốn thấy khung tư duy, không chỉ câu chuyện.",
       "en": "State your prioritization criteria as a clear order; interviewers want a framework, not just a story."
@@ -389,6 +786,10 @@
       "vi": "Họ đánh giá khả năng tự làm rõ vấn đề và tiến lên mà không chờ mọi thứ hoàn hảo.\nVí dụ theo STAR:\n- Situation: PM giao \"làm dashboard cho đội vận hành\", không có spec.\n- Task: cần ra bản đầu tiên trong 2 tuần.\n- Action: hỏi \"vấn đề thật là gì\" — nói chuyện với 2-3 người dùng cuối để biết họ cần ra quyết định gì; viết một tài liệu ngắn ghi giả định và phạm vi rồi xin xác nhận; làm mockup để lấy feedback sớm; giao hàng theo từng vòng lặp ngắn.\n- Result: bản đầu chỉ có 3 chỉ số quan trọng nhưng được dùng hằng ngày, tránh được việc làm thừa nhiều tính năng không ai dùng.\nTránh: chờ người khác làm rõ hết mới bắt đầu, hoặc tự đoán rồi làm một mạch mà không xác nhận với ai.",
       "en": "They evaluate whether you can clarify the problem yourself and move forward without waiting for perfection.\nExample with STAR:\n- Situation: the PM asked you to \"build a dashboard for the operations team\", with no spec.\n- Task: deliver the first version within 2 weeks.\n- Action: ask \"what is the real problem\" — talk to 2-3 end users to learn which decisions they need to make; write a short doc of assumptions and scope and get it confirmed; build a mockup to get feedback early; deliver in short iterations.\n- Result: the first version had only 3 key metrics but was used daily, avoiding a pile of features nobody would use.\nAvoid: waiting for others to clarify everything before starting, or guessing and building straight through without checking with anyone."
     },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Em nhận yêu cầu \"làm trang báo cáo cho quản lý\" mà không có thiết kế. Em hẹn 15 phút với người dùng thật, hỏi họ đang dùng Excel thế nào và 3 con số họ xem mỗi sáng. Em vẽ nhanh một bản phác thảo, gửi xác nhận trước khi code. Nhờ vậy bản đầu tiên đúng ý, không phải làm lại.\"",
+      "en": "Sample answer: \"I was asked to \"build a report page for managers\" with no design. I booked 15 minutes with an actual user, asked how they used Excel today and which three numbers they checked every morning. I sketched a quick wireframe and got it confirmed before coding. The first version hit the mark with no rework.\""
+    },
     "tip": {
       "vi": "Cụm 'ghi giả định ra văn bản và xin xác nhận' là hành động cụ thể khiến câu trả lời trở nên đáng tin.",
       "en": "'Writing down assumptions and getting them confirmed' is the concrete action that makes the answer credible."
@@ -405,6 +806,130 @@
     ]
   },
   {
+    "id": "behavioral-overtime",
+    "level": "junior",
+    "topic": "Work Culture",
+    "q": {
+      "vi": "Bạn nghĩ sao về việc làm thêm giờ (OT)? Nếu dự án cần OT nhiều thì sao?",
+      "en": "What do you think about overtime (OT)? What if the project needs a lot of it?"
+    },
+    "a": {
+      "vi": "Câu này kiểm tra thái độ và sự thực tế: người phỏng vấn không muốn nghe \"em OT thoải mái\" (khó tin, và có thể là dấu hiệu bạn quản lý thời gian kém), cũng không muốn nghe \"em không bao giờ OT\".\n\nTrả lời cân bằng:\n- Sẵn sàng OT khi thật sự cần: sự cố production, giai đoạn trước khi phát hành.\n- Nhưng OT kéo dài là dấu hiệu kế hoạch có vấn đề; bạn sẽ góp ý về ước lượng và phạm vi để giảm nó, thay vì coi là chuyện bình thường.\n- Nêu cách bạn làm việc hiệu quả trong giờ để hạn chế OT không cần thiết.\n\nĐây cũng là lúc bạn hỏi lại về văn hoá của công ty: \"Trung bình team có OT không, và OT được tính thế nào?\" — câu trả lời giúp bạn tránh một môi trường không phù hợp.",
+      "en": "This tests attitude and realism: interviewers do not want \"I'm happy to do lots of OT\" (hard to believe, and possibly a sign of poor time management), nor \"I never do overtime\".\n\nA balanced answer:\n- Willing to work overtime when it is truly needed: production incidents, the run-up to a release.\n- But sustained overtime signals a planning problem; you would raise estimates and scope to reduce it rather than treat it as normal.\n- Mention how you work efficiently during hours to avoid unnecessary overtime.\n\nIt is also your chance to ask about the culture: \"How often does the team work overtime, and how is it compensated?\" — the answer helps you avoid a bad fit."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Khi có sự cố hay tuần trước khi phát hành, em sẵn sàng ở lại xử lý — dự án trước em từng thức tới 1 giờ sáng để khôi phục hệ thống thanh toán. Nhưng nếu tháng nào cũng phải OT thì em nghĩ cần xem lại ước lượng và phạm vi, và em sẽ chủ động đề xuất điều đó với leader. Anh chị cho em hỏi, trung bình team mình OT có thường xuyên không ạ?\"",
+      "en": "Sample answer: \"For incidents or the week before a release I'm happy to stay — on my last project I worked until 1 a.m. restoring the payment system. But if we needed overtime every month, I think we should revisit estimates and scope, and I'd raise that with my lead. May I ask how often the team usually works overtime?\""
+    },
+    "tip": {
+      "vi": "Kết bằng một câu hỏi ngược về văn hoá OT của team — vừa tự nhiên, vừa giúp bạn đánh giá công ty.",
+      "en": "End by asking about the team's overtime culture — natural, and it helps you evaluate the company."
+    },
+    "followUps": [
+      {
+        "vi": "Lần gần nhất bạn phải OT là vì sao?",
+        "en": "Why did you last have to work overtime?"
+      },
+      {
+        "vi": "Bạn làm gì để không phải OT vì việc của mình bị trễ?",
+        "en": "What do you do to avoid overtime caused by your own delays?"
+      }
+    ]
+  },
+  {
+    "id": "behavioral-stress-burnout",
+    "level": "mid",
+    "topic": "Work Culture",
+    "q": {
+      "vi": "Bạn xử lý áp lực công việc thế nào? Bạn đã bao giờ bị burnout chưa?",
+      "en": "How do you handle work pressure? Have you ever burned out?"
+    },
+    "a": {
+      "vi": "Người phỏng vấn muốn biết bạn có cách giữ hiệu suất ổn định lâu dài, và biết lên tiếng khi khối lượng việc không còn hợp lý.\n\nTrả lời tốt gồm:\n- Cách cụ thể bạn quản lý áp lực: chia việc nhỏ, ưu tiên rõ ràng, nói sớm khi quá tải, giữ giờ nghỉ.\n- Một ví dụ thật về giai đoạn căng thẳng và cách bạn vượt qua.\n- Nếu từng burnout: có thể kể ngắn gọn, nhấn vào việc bạn nhận ra dấu hiệu và đã thay đổi gì. Thành thật ở mức vừa phải được đánh giá cao hơn tỏ ra không bao giờ mệt.\n\nTránh: \"em không bao giờ bị áp lực\" (khó tin), hoặc kể quá nhiều chi tiết cá nhân không liên quan tới công việc.",
+      "en": "The interviewer wants to know you can sustain performance over time and will speak up when workload stops being reasonable.\n\nA good answer includes:\n- Concrete ways you manage pressure: breaking work down, clear priorities, flagging overload early, protecting breaks.\n- A real example of a stressful period and how you got through it.\n- If you have burned out: tell it briefly, focusing on spotting the signs and what you changed. Measured honesty beats pretending you never get tired.\n\nAvoid: \"I never feel pressure\" (hard to believe), or too many personal details unrelated to work."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Có giai đoạn em vừa làm 2 dự án vừa trực sự cố, liên tục làm tới khuya và bắt đầu mắc lỗi ẩu trong code. Em nhận ra và nói với leader, kèm danh sách việc đang giữ. Team chuyển một dự án cho người khác và chia lịch trực đều hơn. Từ đó mỗi sáng thứ Hai em rà lại khối lượng việc và báo sớm nếu thấy quá tải.\"",
+      "en": "Sample answer: \"At one point I was on two projects plus incident duty, working late every night and starting to make careless mistakes. I noticed and told my lead, with a list of everything I was holding. The team moved one project to someone else and spread the on-call rota more evenly. Since then I review my workload every Monday morning and flag overload early.\""
+    },
+    "tip": {
+      "vi": "Điểm cộng là cho thấy bạn \"báo sớm kèm thông tin cụ thể\" thay vì cố chịu tới khi làm hỏng việc.",
+      "en": "The plus point is showing you \"flag early with specifics\" instead of pushing through until work suffers."
+    },
+    "followUps": [
+      {
+        "vi": "Bạn làm gì khi cả team đang chịu áp lực, không chỉ riêng bạn?",
+        "en": "What do you do when the whole team is under pressure, not just you?"
+      },
+      {
+        "vi": "Dấu hiệu nào cho bạn biết mình đang quá tải?",
+        "en": "What signs tell you that you are overloaded?"
+      }
+    ]
+  },
+  {
+    "id": "behavioral-legacy-code",
+    "level": "junior",
+    "topic": "Work Culture",
+    "q": {
+      "vi": "Bạn được giao bảo trì một hệ thống cũ, code rối, không có tài liệu và không ai muốn đụng vào. Bạn làm gì?",
+      "en": "You are assigned to maintain an old, messy system with no documentation that nobody wants to touch. What do you do?"
+    },
+    "a": {
+      "vi": "Phần lớn công việc thật là sửa và mở rộng code có sẵn, nên người phỏng vấn muốn thấy thái độ tích cực và cách tiếp cận an toàn.\n\n- Hiểu trước khi sửa: chạy được ở local, đọc luồng chính, hỏi người từng làm (nếu còn), xem log và lịch sử commit.\n- Viết test cho phần sắp sửa trước khi sửa, để biết mình không làm hỏng hành vi cũ.\n- Cải thiện dần theo nguyên tắc \"để code sạch hơn lúc mình nhận\": mỗi lần sửa một chỗ thì dọn thêm một chút, không viết lại toàn bộ khi chưa thật cần.\n- Ghi lại những gì học được thành tài liệu cho người sau.\n- Đề xuất viết lại có kế hoạch chỉ khi có số liệu (tần suất lỗi, thời gian sửa) và chia thành từng bước.\n\nTránh: chê code cũ, đòi viết lại từ đầu ngay.",
+      "en": "Most real work is changing and extending existing code, so the interviewer wants a positive attitude and a safe approach.\n\n- Understand before changing: run it locally, trace the main flow, ask whoever built it (if they are still around), read logs and commit history.\n- Write tests for the part you are about to change first, so you know you have not broken existing behaviour.\n- Improve gradually, \"leave the code cleaner than you found it\": tidy a little each time you touch something, do not rewrite everything without real need.\n- Document what you learn for whoever comes next.\n- Propose a planned rewrite only with data (bug frequency, time to fix) and split into steps.\n\nAvoid: trashing the old code, or demanding a rewrite from scratch straight away."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Em nhận bảo trì hệ thống tính lương viết bằng PHP từ 8 năm trước, không có test. Tuần đầu em vẽ lại luồng tính lương và viết 40 test so kết quả với bảng lương tháng trước. Nhờ vậy khi sửa lỗi tính phụ cấp, em chắc chắn không làm sai phần khác. Sau 3 tháng, thời gian xử lý một yêu cầu sửa giảm từ khoảng 3 ngày xuống 1 ngày, và team có tài liệu để người mới vào làm được.\"",
+      "en": "Sample answer: \"I took over an eight-year-old PHP payroll system with no tests. In the first week I mapped the payroll flow and wrote 40 tests comparing results with last month's payroll. So when I fixed an allowance bug, I knew nothing else broke. After three months, a change request went from about three days to one, and the team had documentation a newcomer could work from.\""
+    },
+    "tip": {
+      "vi": "Câu \"em viết test cho hành vi hiện tại trước, rồi mới sửa\" là dấu hiệu rõ nhất của một người làm việc với code cũ an toàn.",
+      "en": "\"I write tests for the current behaviour first, then change it\" is the clearest sign of someone who handles legacy code safely."
+    },
+    "followUps": [
+      {
+        "vi": "Khi nào bạn đề xuất viết lại hệ thống thay vì sửa tiếp?",
+        "en": "When would you propose rewriting the system rather than continuing to patch it?"
+      },
+      {
+        "vi": "Bạn tìm hiểu một codebase lớn lạ thế nào trong tuần đầu?",
+        "en": "How do you get to grips with a large unfamiliar codebase in your first week?"
+      }
+    ]
+  },
+  {
+    "id": "behavioral-teammate-low-quality",
+    "level": "junior",
+    "topic": "Work Culture",
+    "q": {
+      "vi": "Một đồng nghiệp thường xuyên viết code chất lượng thấp, không viết test, làm ảnh hưởng tới phần việc của bạn. Bạn xử lý thế nào?",
+      "en": "A colleague regularly writes low-quality code without tests, and it affects your work. How do you handle it?"
+    },
+    "a": {
+      "vi": "Câu này kiểm tra cách bạn giải quyết vấn đề với người khác mà không làm căng thẳng quan hệ.\n\n- Nói chuyện trực tiếp, riêng tư trước, không phàn nàn với người khác hay lên leader ngay.\n- Nói về vấn đề cụ thể và ảnh hưởng, không phán xét con người: \"PR tuần trước làm hỏng phần xuất báo cáo, mình mất nửa ngày sửa\" thay vì \"code của bạn tệ quá\".\n- Tìm hiểu nguyên nhân: có thể họ bị ép tiến độ, chưa quen công nghệ, hoặc không biết tiêu chuẩn của team.\n- Đề xuất giải pháp chung cho cả team thay vì nhắm vào một người: checklist review, CI chặn khi test không qua, pair programming.\n- Chỉ báo leader khi đã thử trao đổi mà không cải thiện và ảnh hưởng tới dự án.",
+      "en": "This tests how you resolve problems with people without souring the relationship.\n\n- Talk directly and privately first, rather than complaining to others or going straight to the lead.\n- Talk about the specific problem and impact, not the person: \"last week's PR broke the report export and I spent half a day fixing it\" instead of \"your code is terrible\".\n- Find out why: they may be under deadline pressure, new to the technology, or unaware of team standards.\n- Propose team-wide fixes rather than targeting one person: a review checklist, CI that blocks failing tests, pair programming.\n- Involve the lead only after talking has not helped and the project is affected."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Một bạn trong team hay merge code không có test, hai lần làm hỏng API em đang dùng. Em hỏi riêng bạn ấy và biết bạn ấy đang bị giao cùng lúc 3 việc gấp. Em đề xuất với team bật CI bắt buộc test phải qua mới được merge, và em ngồi pair với bạn ấy viết test cho module khó nhất. Sau một tháng không còn lỗi kiểu đó, và quan hệ của bọn em vẫn tốt.\"",
+      "en": "Sample answer: \"A teammate often merged untested code and twice broke an API I depended on. I asked them privately and learned they were juggling three urgent tasks. I proposed the team require passing CI before merge, and I paired with them to write tests for the hardest module. After a month those bugs stopped, and we still get on well.\""
+    },
+    "tip": {
+      "vi": "Thể hiện bạn tìm hiểu nguyên nhân trước khi kết luận — người phỏng vấn đánh giá cao sự đồng cảm đi kèm giải pháp hệ thống.",
+      "en": "Show you looked for the cause before judging — interviewers value empathy paired with a systemic fix."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu người đó là senior hơn bạn thì sao?",
+        "en": "What if that person is more senior than you?"
+      },
+      {
+        "vi": "Bạn góp ý trong code review thế nào để người nhận không khó chịu?",
+        "en": "How do you give code-review feedback without upsetting the recipient?"
+      }
+    ]
+  },
+  {
     "id": "behavioral-salary-expectations",
     "level": "junior",
     "topic": "Salary & Closing",
@@ -415,6 +940,10 @@
     "a": {
       "vi": "Chuẩn bị trước: tìm hiểu mặt bằng lương theo vị trí, cấp bậc, thành phố (báo cáo lương của TopDev, ITviec, hỏi người trong ngành), và tự xác định mức tối thiểu bạn chấp nhận.\nCách trả lời tế nhị:\n- Nếu bị hỏi quá sớm, có thể hỏi lại khung ngân sách: \"Em muốn hiểu thêm về phạm vi công việc; anh chị có thể chia sẻ khung lương cho vị trí này không ạ?\"\n- Khi phải đưa con số: đưa một khoảng có cơ sở, mức thấp của khoảng vẫn là mức bạn hài lòng: \"Dựa trên kinh nghiệm và mặt bằng thị trường, em mong muốn khoảng 25-30 triệu gross.\"\n- Nói rõ gross hay net (ở Việt Nam rất hay nhầm), và hỏi tổng đãi ngộ: lương tháng 13, thưởng, bảo hiểm, chế độ remote, cổ phiếu.\n- Công ty nước ngoài có thể trả theo USD — hỏi rõ hình thức hợp đồng và trách nhiệm đóng thuế.\nTránh: \"bao nhiêu cũng được\", đưa con số quá xa thị trường, hoặc nói sai mức lương hiện tại.",
       "en": "Prepare in advance: research salary ranges by role, level and city (TopDev and ITviec salary reports, asking people in the industry), and decide your own minimum.\nHow to answer tactfully:\n- If asked too early, you can ask about their budget: \"I'd like to understand the scope a bit more; could you share the salary range for this role?\"\n- When you must give a number: give a well-grounded range whose lower end you are still happy with: \"Based on my experience and the market, I'm looking for around 25-30 million VND gross.\"\n- Make clear whether it's gross or net (often confused in Vietnam), and ask about the total package: 13th-month salary, bonuses, insurance, remote policy, equity.\n- Foreign companies may pay in USD — ask about the contract type and who is responsible for tax.\nAvoid: \"anything is fine\", a number far from the market, or misstating your current salary."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Dựa trên kinh nghiệm 2 năm với Java và mặt bằng thị trường cho vị trí tương tự, em mong muốn khoảng 25–28 triệu gross. Em cũng quan tâm tới tổng gói đãi ngộ như lương tháng 13, bảo hiểm và ngân sách học tập, nên rất sẵn lòng trao đổi thêm.\" — đưa một khoảng có căn cứ, nói rõ gross hay net.",
+      "en": "Sample answer: \"Based on two years of Java experience and market rates for similar roles, I'm looking for around 25–28 million VND gross. I also care about the overall package, such as a 13th-month salary, insurance and a learning budget, so I'm happy to discuss further.\" — give a reasoned range and say whether it is gross or net."
     },
     "tip": {
       "vi": "Luôn nói rõ gross hay net khi đưa con số — một chi tiết nhỏ có thể làm lệch vài triệu mỗi tháng.",
@@ -432,6 +961,99 @@
     ]
   },
   {
+    "id": "behavioral-current-salary",
+    "level": "junior",
+    "topic": "Salary & Closing",
+    "q": {
+      "vi": "Mức lương hiện tại của bạn là bao nhiêu?",
+      "en": "What is your current salary?"
+    },
+    "a": {
+      "vi": "Ở Việt Nam câu này được hỏi rất thường xuyên, và nhiều công ty dùng lương hiện tại làm mốc để đưa offer. Bạn có quyền không tiết lộ, nhưng nên trả lời khéo thay vì từ chối thẳng.\n\nCác cách trả lời:\n- Nếu lương hiện tại hợp lý với thị trường: nói thật, kèm tổng thu nhập (lương gross, thưởng, lương tháng 13) chứ không chỉ con số lương cơ bản.\n- Nếu lương hiện tại thấp hơn thị trường (thường gặp ở công ty đầu tiên): chuyển trọng tâm sang mức mong muốn và lý do, ví dụ \"lương hiện tại phản ánh vị trí fresher cách đây 2 năm; với kinh nghiệm hiện tại em mong muốn khoảng…\".\n- Luôn nói rõ gross hay net.\n\nTránh: nói dối về con số (công ty có thể yêu cầu xác minh qua bảng lương hoặc sổ bảo hiểm), hoặc từ chối cộc lốc.",
+      "en": "In Vietnam this is asked very often, and many companies anchor their offer on your current pay. You may decline to share it, but answer tactfully rather than refusing flatly.\n\nOptions:\n- If your current pay is fair for the market: say it, with total compensation (gross salary, bonus, 13th-month pay), not just base salary.\n- If it is below market (common at a first job): shift the focus to your expectation and why, e.g. \"my current salary reflects a fresher role two years ago; with my current experience I'm looking for around…\".\n- Always state gross or net.\n\nAvoid: lying about the number (companies may ask for payslips or social-insurance records), or a blunt refusal."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Hiện tại em nhận 18 triệu gross mỗi tháng, cộng lương tháng 13. Mức đó là từ khi em vào công ty với vai trò fresher 2 năm trước, và đã không còn phản ánh khối lượng việc em đang làm — em đang phụ trách module thanh toán. Với vị trí này em mong muốn khoảng 25–28 triệu gross.\"",
+      "en": "Sample answer: \"I currently earn 18 million VND gross per month plus a 13th-month salary. That dates from joining as a fresher two years ago and no longer reflects my work — I now own the payment module. For this role I'm looking for around 25–28 million gross.\""
+    },
+    "tip": {
+      "vi": "Chuẩn bị trước con số tổng thu nhập một năm (lương × 12 + tháng 13 + thưởng) — dễ so sánh offer hơn chỉ nhìn lương tháng.",
+      "en": "Work out your annual total (salary × 12 + 13th month + bonus) beforehand — offers are easier to compare than on monthly pay alone."
+    },
+    "followUps": [
+      {
+        "vi": "Vì sao mức mong muốn của bạn cao hơn lương hiện tại nhiều như vậy?",
+        "en": "Why is your expectation so much higher than your current salary?"
+      },
+      {
+        "vi": "Ngoài lương, bạn quan tâm những phúc lợi nào?",
+        "en": "Besides salary, which benefits matter to you?"
+      }
+    ]
+  },
+  {
+    "id": "behavioral-offer-negotiation",
+    "level": "mid",
+    "topic": "Salary & Closing",
+    "q": {
+      "vi": "Bạn nhận offer thấp hơn mong muốn, hoặc đang có offer khác cao hơn. Bạn thương lượng thế nào?",
+      "en": "You get an offer below your expectation, or you hold a higher competing offer. How do you negotiate?"
+    },
+    "a": {
+      "vi": "Thương lượng lương là chuyện bình thường; làm khéo không làm mất offer.\n\nChuẩn bị:\n- Hiểu rõ gross và net: gross là lương trước khi trừ bảo hiểm bắt buộc của người lao động (khoảng 10,5% gồm BHXH, BHYT, BHTN) và thuế thu nhập cá nhân; net là số tiền thực nhận.\n- So tổng gói: lương tháng 13, thưởng hiệu suất, bảo hiểm sức khoẻ, ngân sách học tập, làm remote, số ngày phép.\n- Có con số mong muốn và mức tối thiểu chấp nhận được.\n\nKhi thương lượng:\n- Cảm ơn và thể hiện mong muốn làm việc trước, rồi mới nêu con số và lý do (kinh nghiệm, mặt bằng thị trường, offer khác).\n- Có offer khác thì nói thật, không dùng làm lời đe doạ: \"Em có một offer khác ở mức X, nhưng em thích team của anh chị hơn. Anh chị có thể xem lại mức lương không?\"\n- Nếu lương không tăng được, hỏi các phần khác: thưởng ký hợp đồng, xét tăng lương sau thử việc, thêm ngày phép.\n- Xin thời gian suy nghĩ một cách lịch sự là chuyện bình thường.",
+      "en": "Negotiating salary is normal; done well, it does not cost you the offer.\n\nPrepare:\n- Know gross versus net: gross is pay before the employee's mandatory insurance (about 10.5%: social, health and unemployment insurance) and personal income tax; net is what you take home.\n- Compare the whole package: 13th-month pay, performance bonus, health insurance, learning budget, remote work, leave days.\n- Have a target number and a minimum you would accept.\n\nWhen negotiating:\n- Thank them and show you want the job first, then give your number and reasons (experience, market rates, other offers).\n- If you have another offer, say so honestly, not as a threat: \"I have another offer at X, but I prefer your team. Could you review the salary?\"\n- If base pay cannot move, ask about other parts: a sign-on bonus, a salary review after probation, extra leave.\n- Politely asking for time to think is normal."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Em cảm ơn anh chị về offer, em rất muốn tham gia team. Mức 24 triệu gross hơi thấp so với mong muốn của em, vì em đang có một offer khác ở 27 triệu gross. Anh chị có thể xem xét mức 27 triệu, hoặc đánh giá tăng lương sau khi hết thử việc 2 tháng được không ạ?\" — kết quả có thể là 26 triệu kèm cam kết xét lương sau thử việc.",
+      "en": "Sample answer: \"Thank you for the offer — I'd really like to join the team. 24 million gross is a little below my expectation, as I have another offer at 27 million gross. Could you consider 27 million, or a salary review after the two-month probation?\" — the result might be 26 million with a committed post-probation review."
+    },
+    "tip": {
+      "vi": "Luôn hỏi lại con số là gross hay net trước khi so sánh — chênh lệch giữa hai cách tính có thể tới vài triệu mỗi tháng.",
+      "en": "Always confirm whether a figure is gross or net before comparing — the gap can be several million VND a month."
+    },
+    "followUps": [
+      {
+        "vi": "Bạn quyết định giữa hai offer dựa trên những tiêu chí nào?",
+        "en": "What criteria do you use to choose between two offers?"
+      },
+      {
+        "vi": "Nếu công ty không thay đổi offer, bạn có nhận không?",
+        "en": "If the company won't change the offer, would you still accept?"
+      }
+    ]
+  },
+  {
+    "id": "behavioral-notice-period",
+    "level": "junior",
+    "topic": "Salary & Closing",
+    "q": {
+      "vi": "Khi nào bạn có thể bắt đầu đi làm? Bạn bàn giao công việc ở chỗ cũ thế nào?",
+      "en": "When can you start? How will you hand over your current work?"
+    },
+    "a": {
+      "vi": "Câu này nghe đơn giản nhưng cho thấy bạn có chuyên nghiệp với công ty cũ hay không — cách bạn rời chỗ cũ là cách bạn sẽ rời chỗ mới.\n\n- Nắm rõ thời gian báo trước: theo Bộ luật Lao động 2019, người lao động nghỉ việc phải báo trước ít nhất 45 ngày với hợp đồng không xác định thời hạn, 30 ngày với hợp đồng xác định thời hạn 12–36 tháng, và 3 ngày làm việc với hợp đồng dưới 12 tháng; hợp đồng hoặc nội quy công ty có thể có quy định cụ thể hơn.\n- Đưa ra ngày dự kiến thực tế, đừng hứa đi làm ngay tuần sau nếu thật ra phải báo trước 30 ngày.\n- Nêu kế hoạch bàn giao: tài liệu, chuyển giao cho người thay thế, hoàn thành việc dở dang.\n- Có thể linh hoạt: thương lượng với công ty cũ để nghỉ sớm hơn nếu bàn giao xong, nhưng không bỏ ngang.",
+      "en": "It sounds simple, but it shows whether you are professional with your current employer — how you leave them is how you would leave the next one.\n\n- Know your notice period: under Vietnam's 2019 Labour Code, employees must give at least 45 days' notice on an indefinite-term contract, 30 days on a 12–36-month fixed-term contract, and 3 working days on a contract under 12 months; your contract or company rules may specify more.\n- Give a realistic start date; do not promise next week if you actually owe 30 days' notice.\n- Describe your handover plan: documentation, transferring to a replacement, finishing work in progress.\n- Be flexible: you can negotiate an earlier release once handover is done, but never walk out."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Hợp đồng của em là không xác định thời hạn nên em cần báo trước 45 ngày. Nếu nhận offer trong tuần này, em có thể bắt đầu từ ngày 15 tháng sau. Trong thời gian đó em sẽ viết tài liệu cho module thanh toán em đang phụ trách và bàn giao cho bạn thay thế; nếu bàn giao xong sớm, em sẽ xin công ty cho nghỉ sớm hơn.\"",
+      "en": "Sample answer: \"My contract is indefinite-term, so I need to give 45 days' notice. If I accept this week, I can start on the 15th of next month. Meanwhile I'll document the payment module I own and hand it over to my replacement; if that finishes early, I'll ask to leave sooner.\""
+    },
+    "tip": {
+      "vi": "Một kế hoạch bàn giao cụ thể làm người phỏng vấn yên tâm rằng bạn sẽ không bỏ ngang dự án của họ trong tương lai.",
+      "en": "A concrete handover plan reassures the interviewer that you would not abandon their project in the future either."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu công ty cũ đề nghị tăng lương để giữ bạn lại thì sao?",
+        "en": "What if your current company offers a raise to keep you?"
+      },
+      {
+        "vi": "Bạn có thể bắt đầu sớm hơn không?",
+        "en": "Could you start earlier?"
+      }
+    ]
+  },
+  {
     "id": "behavioral-questions-for-interviewer",
     "level": "intern",
     "topic": "Salary & Closing",
@@ -442,6 +1064,10 @@
     "a": {
       "vi": "Luôn chuẩn bị 2-3 câu hỏi — trả lời \"không ạ\" dễ bị hiểu là ít quan tâm. Chọn câu hỏi cho thấy bạn nghĩ về công việc thật:\n- Về công việc: \"Một tuần làm việc điển hình của vị trí này như thế nào?\", \"Sau 3 tháng đầu, người làm tốt vị trí này sẽ đạt được gì?\"\n- Về team và kỹ thuật: \"Team có bao nhiêu người, quy trình code review và deploy ra sao?\", \"Thách thức kỹ thuật lớn nhất của team hiện nay là gì?\"\n- Về phát triển: \"Công ty hỗ trợ học tập và mentoring như thế nào?\", \"Việc đánh giá và thăng tiến diễn ra ra sao?\"\n- Kết thúc: \"Các bước tiếp theo của quy trình là gì ạ?\"\nHỏi đúng người: câu hỏi kỹ thuật cho engineer, câu hỏi chính sách cho HR.\nTránh: hỏi những gì đã có trên website, hỏi ngay về lương và ngày nghỉ ở vòng kỹ thuật đầu tiên, hoặc hỏi \"em có đậu không ạ?\".",
       "en": "Always prepare 2-3 questions — answering \"no\" can come across as a lack of interest. Pick questions that show you are thinking about the real job:\n- About the work: \"What does a typical week in this role look like?\", \"After the first 3 months, what would someone doing well in this role have achieved?\"\n- About the team and tech: \"How big is the team, and how do code review and deployment work?\", \"What is the team's biggest technical challenge right now?\"\n- About growth: \"How does the company support learning and mentoring?\", \"How do performance reviews and promotions work?\"\n- Closing: \"What are the next steps in the process?\"\nAsk the right person: technical questions for engineers, policy questions for HR.\nAvoid: asking things already on the website, jumping to salary and vacation days in the first technical round, or asking \"did I pass?\"."
+    },
+    "example": {
+      "vi": "Câu hỏi mẫu nên hỏi: \"Một ngày làm việc điển hình của người ở vị trí này trông như thế nào?\", \"Trong 3 tháng đầu, anh chị mong em đạt được điều gì?\", \"Thách thức kỹ thuật lớn nhất team đang gặp là gì?\", \"Team review code và deploy như thế nào?\". Tránh hỏi câu đã có trên website hoặc chỉ hỏi về lương và ngày nghỉ ngay vòng đầu.",
+      "en": "Good questions to ask: \"What does a typical day look like in this role?\", \"What would you expect me to achieve in the first three months?\", \"What is the biggest technical challenge the team faces?\", \"How does the team review code and deploy?\". Avoid questions answered on the website, or asking only about salary and leave in the first round."
     },
     "tip": {
       "vi": "Một câu hỏi tiếp nối điều interviewer vừa nói trong buổi phỏng vấn gây ấn tượng hơn mọi câu hỏi soạn sẵn.",
@@ -465,6 +1091,10 @@
     "a": {
       "vi": "Ownership là thấy vấn đề và chủ động giải quyết đến cùng, kể cả khi không ai giao.\nVí dụ theo STAR:\n- Situation: build CI của cả team mất 25 phút, ai cũng than nhưng không ai phụ trách.\n- Task: không phải task của bạn, nhưng nó làm chậm mọi người mỗi ngày.\n- Action: đo đạc để tìm nguyên nhân (test chạy tuần tự, không cache dependency), đề xuất với lead và xin thời gian, làm thử trên một nhánh, rồi viết tài liệu hướng dẫn team.\n- Result: build còn 8 phút, tiết kiệm hàng chục giờ mỗi tuần cho team; bạn được giao làm đầu mối cải thiện developer experience.\nĐiểm quan trọng: chủ động nhưng minh bạch — báo cho người liên quan, không bỏ bê task chính, không \"vượt mặt\" người đang phụ trách.\nTránh: kể chuyện làm thay việc người khác mà không thông báo, hoặc đồng nhất ownership với làm thêm giờ.",
       "en": "Ownership means spotting a problem and proactively seeing it through, even when nobody assigned it.\nExample with STAR:\n- Situation: the team's CI build took 25 minutes; everyone complained but nobody owned it.\n- Task: not your task, but it slowed everyone down every day.\n- Action: you measured to find the causes (tests running sequentially, no dependency caching), proposed a fix to your lead and asked for time, tried it on a branch, then documented it for the team.\n- Result: the build dropped to 8 minutes, saving the team dozens of hours a week; you were made the point person for developer experience improvements.\nKey point: proactive but transparent — inform the people involved, don't neglect your main tasks, don't go around the current owner.\nAvoid: stories about doing someone else's work without telling them, or equating ownership with overtime."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Em không thuộc team DevOps, nhưng thấy mỗi lần deploy mất 40 phút vì các bước làm tay. Em viết một pipeline CI tự build, chạy test và deploy lên staging, rồi demo cho team. Thời gian deploy còn 8 phút, và team DevOps nhận lại để duy trì. Em hỏi leader trước khi làm để chắc không đụng tới ưu tiên của sprint.\"",
+      "en": "Sample answer: \"I'm not on the DevOps team, but every deploy took 40 minutes of manual steps. I wrote a CI pipeline that built, tested and deployed to staging, then demoed it to the team. Deploys dropped to 8 minutes and the DevOps team took over maintaining it. I checked with my lead first so it would not clash with sprint priorities.\""
     },
     "tip": {
       "vi": "Lượng hoá tác động lên cả team (giờ tiết kiệm, số người được lợi) để câu chuyện có sức nặng.",
@@ -493,6 +1123,10 @@
       "vi": "Câu này kiểm tra bạn có nhân rộng tác động qua người khác hay không — yêu cầu cốt lõi của vị trí senior.\nVí dụ theo STAR:\n- Situation: một junior mới vào, PR thường bị trả lại nhiều lần và ngại đặt câu hỏi.\n- Task: bạn được giao kèm cặp để họ làm việc độc lập trong 3 tháng.\n- Action: tìm hiểu mục tiêu và điểm yếu của họ; giao task vừa sức và tăng độ khó dần; pair programming ở các task đầu; review code bằng câu hỏi gợi mở thay vì sửa hộ; 1-1 hằng tuần; tạo môi trường an toàn để hỏi.\n- Result: sau 3 tháng họ tự nhận task cỡ vừa, số vòng review giảm một nửa, và sau đó chính họ hướng dẫn intern mới.\nNói thêm bạn học được gì về cách mentor (mỗi người cần cách hỗ trợ khác nhau).\nTránh: kể như thể bạn làm hết cho họ, hoặc chỉ nói chung chung \"em hay giúp mọi người\".",
       "en": "This checks whether you multiply your impact through others — a core requirement for senior roles.\nExample with STAR:\n- Situation: a new junior's PRs were often sent back several times, and they were hesitant to ask questions.\n- Task: you were asked to mentor them to work independently within 3 months.\n- Action: learned their goals and weak spots; gave tasks matched to their level with gradually increasing difficulty; pair programmed on the first tasks; reviewed code with guiding questions instead of fixing it for them; held weekly 1-1s; created a safe space to ask.\n- Result: after 3 months they took on medium tasks on their own, review rounds were cut in half, and later they mentored a new intern themselves.\nAdd what you learned about mentoring (different people need different kinds of support).\nAvoid: telling it as if you did everything for them, or vaguely saying \"I often help people\"."
     },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Một bạn fresher mới vào hay bị PR trả lại nhiều lần. Em hẹn 30 phút mỗi tuần, cùng bạn ấy đọc lại các góp ý và lập một checklist nhỏ trước khi gửi PR: test, đặt tên, xử lý lỗi. Em cũng giao cho bạn ấy tự làm một tính năng nhỏ từ đầu tới cuối. Sau 2 tháng, số lần PR bị trả lại giảm từ khoảng 4 xuống 1, và bạn ấy bắt đầu review cho người mới khác.\"",
+      "en": "Sample answer: \"A new fresher's PRs kept getting sent back. I set up 30 minutes a week to go through review comments together and we built a small pre-PR checklist: tests, naming, error handling. I also gave them a small feature to own end to end. After two months, PRs went from about four rounds of changes to one, and they started reviewing for the next new hire.\""
+    },
     "tip": {
       "vi": "Đo kết quả bằng sự tiến bộ của người được mentor, không phải bằng công sức bạn bỏ ra.",
       "en": "Measure success by the mentee's progress, not by the effort you put in."
@@ -519,6 +1153,10 @@
     "a": {
       "vi": "Câu này đánh giá khả năng influence without authority — rất quan trọng với senior và tech lead.\nVí dụ theo STAR:\n- Situation: mỗi service trong công ty log một kiểu, mỗi sự cố mất hàng giờ để truy vết.\n- Task: bạn muốn chuẩn hoá structured logging và distributed tracing, nhưng mỗi team có ưu tiên riêng.\n- Action: thu thập dữ liệu (thời gian xử lý sự cố, các incident cụ thể); viết RFC ngắn nêu vấn đề, phương án, chi phí, và lắng nghe phản biện để chỉnh đề xuất; làm thử với một team để có kết quả thật; giảm công sức cho người khác bằng thư viện dùng chung và hướng dẫn; tìm người ủng hộ ở mỗi team.\n- Result: phần lớn service áp dụng trong 2 quý, thời gian tìm nguyên nhân sự cố giảm rõ rệt.\nTránh: áp đặt bằng cách \"nhờ sếp ép\", hoặc bỏ qua ý kiến phản đối thay vì điều chỉnh đề xuất.",
       "en": "This evaluates your ability to influence without authority — very important for senior engineers and tech leads.\nExample with STAR:\n- Situation: every service in the company logged differently, and each incident took hours to trace.\n- Task: you wanted to standardize structured logging and distributed tracing, but each team had its own priorities.\n- Action: gathered data (incident resolution times, specific incidents); wrote a short RFC covering the problem, options and cost, and listened to pushback to refine the proposal; piloted with one team to get real results; lowered the effort for others with a shared library and guides; found a champion in each team.\n- Result: most services adopted it within 2 quarters, and the time to find incident root causes dropped noticeably.\nAvoid: forcing it through by \"getting the boss to mandate it\", or ignoring objections instead of adjusting the proposal."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Em muốn các team cùng dùng một định dạng log có trace_id để điều tra sự cố nhanh hơn, nhưng em không quản lý team nào. Em làm thử trên service của mình, rồi trong buổi postmortem tiếp theo cho mọi người thấy tìm nguyên nhân mất 10 phút thay vì 2 tiếng. Em viết sẵn thư viện để mỗi team chỉ cần thêm 3 dòng. Trong một quý, 6/8 team đã áp dụng.\"",
+      "en": "Sample answer: \"I wanted every team to log in one format with a trace_id so incidents could be investigated faster, but I managed none of them. I piloted it on my own service, and at the next postmortem showed the root cause took 10 minutes to find instead of 2 hours. I packaged a library so each team needed only three lines. Within a quarter, 6 of 8 teams had adopted it.\""
     },
     "tip": {
       "vi": "Nhắc đến pilot với một team trước khi mở rộng — bằng chứng thực tế thuyết phục hơn mọi slide.",

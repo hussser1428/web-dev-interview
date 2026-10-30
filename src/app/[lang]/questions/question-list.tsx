@@ -124,7 +124,7 @@ export default function QuestionList({ lang, t, trackNames, levelNames, items }:
               key={q.id}
               href={`/${lang}/questions/${q.id}${qs ? `?${qs}` : ""}`}
               scroll={false}
-              className={`relative flex shrink-0 gap-3 border-b border-line px-5 py-3.25 ${
+              className={`relative flex shrink-0 gap-3 border-b border-line px-5 py-2.75 ${
                 active
                   ? "bg-brand-soft before:absolute before:inset-y-0 before:left-0 before:w-0.75 before:bg-[image:var(--grad)]"
                   : "hover:bg-panel2"
@@ -132,7 +132,7 @@ export default function QuestionList({ lang, t, trackNames, levelNames, items }:
             >
               <Status done={isDone(s)} due={due} />
               <div className="min-w-0 flex-1">
-                <div className="mb-1.25 line-clamp-2 text-sm font-medium leading-[1.55]">{q.title}</div>
+                <div className="mb-0.5 line-clamp-2 text-sm font-medium leading-normal">{q.title}</div>
                 <div className="flex flex-wrap items-center gap-1.5 text-xs text-subtle">
                   {!track && (
                     <>

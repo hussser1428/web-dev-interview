@@ -256,6 +256,38 @@
     ]
   },
   {
+    "id": "devops-net-nginx-reverse-proxy",
+    "level": "junior",
+    "topic": "Networking",
+    "q": {
+      "vi": "Dùng Nginx làm reverse proxy trước một app Node.js hoặc Java: cấu hình cơ bản thế nào, và vì sao phải chuyển tiếp các header như X-Forwarded-For?",
+      "en": "Using Nginx as a reverse proxy in front of a Node.js or Java app: what is the basic configuration, and why forward headers such as X-Forwarded-For?"
+    },
+    "a": {
+      "vi": "Reverse proxy đứng trước app, nhận request từ internet rồi chuyển vào app chạy ở cổng nội bộ. Nginx thường đảm nhận:\n- Terminate TLS: giữ certificate (thường từ Let's Encrypt), app phía sau chỉ cần nói HTTP.\n- Phục vụ file tĩnh, nén gzip/brotli, cache, giới hạn dung lượng request (client_max_body_size), rate limit cơ bản.\n- Chuyển tới nhiều bản app (upstream) và cân bằng tải, hoặc định tuyến theo domain và đường dẫn.\n\nVì sao cần chuyển tiếp header: với app, mọi request giờ đều đến từ 127.0.0.1 qua HTTP. Nếu không chuyển tiếp, app không biết IP thật của người dùng (log, rate limit, chống gian lận sai), không biết request gốc là HTTPS (tạo link redirect sai, cookie Secure không được đặt), và không biết domain gốc.\n- Host: domain người dùng gọi.\n- X-Forwarded-For: chuỗi IP đã đi qua; X-Real-IP: IP client.\n- X-Forwarded-Proto: http hay https.\nPhía app phải bật chế độ tin proxy (trust proxy trong Express, server.forward-headers-strategy trong Spring Boot), và chỉ tin header này khi request thật sự đến từ proxy của mình, nếu không người dùng tự giả IP được.\n\nHay quên:\n- WebSocket cần thêm header Upgrade và Connection.\n- Timeout (proxy_read_timeout) cho request dài.\n- Kiểm tra cấu hình bằng nginx -t trước khi reload, và reload (nginx -s reload) thay vì restart để không rớt kết nối.",
+      "en": "A reverse proxy sits in front of the app, takes requests from the internet and forwards them to the app on an internal port. Nginx typically handles:\n- TLS termination: it holds the certificate (often from Let's Encrypt), so the app behind only speaks HTTP.\n- Static files, gzip/brotli compression, caching, request size limits (client_max_body_size) and basic rate limiting.\n- Forwarding to several app instances (upstream) with load balancing, or routing by domain and path.\n\nWhy forward headers: to the app, every request now comes from 127.0.0.1 over HTTP. Without forwarding, the app does not know the user's real IP (logs, rate limits and fraud checks go wrong), does not know the original request was HTTPS (wrong redirect URLs, Secure cookies not set) and does not know the original domain.\n- Host: the domain the user called.\n- X-Forwarded-For: the chain of IPs passed through; X-Real-IP: the client IP.\n- X-Forwarded-Proto: http or https.\nThe app must be told to trust the proxy (trust proxy in Express, server.forward-headers-strategy in Spring Boot), and only trust these headers when the request really comes from your proxy, otherwise users can spoof their IP.\n\nOften forgotten:\n- WebSockets need the Upgrade and Connection headers.\n- Timeouts (proxy_read_timeout) for long requests.\n- Test the config with nginx -t before reloading, and reload (nginx -s reload) instead of restarting so connections are not dropped."
+    },
+    "example": {
+      "vi": "App Express sau Nginx có rate limit 100 request/phút theo IP. Vừa lên production thì toàn bộ người dùng bị chặn cùng lúc, vì app thấy mọi request đều từ 127.0.0.1 nên coi như một người. Thêm proxy_set_header X-Forwarded-For bên Nginx và app.set(\"trust proxy\", 1) bên Express thì rate limit tính đúng theo từng người.",
+      "en": "An Express app behind Nginx rate-limited to 100 requests per minute per IP. Right after going live every user was blocked at once, because the app saw all requests from 127.0.0.1 and treated them as one person. Adding proxy_set_header X-Forwarded-For in Nginx and app.set(\"trust proxy\", 1) in Express made the limit apply per user."
+    },
+    "code": "server {\n    listen 443 ssl;\n    server_name api.shop.vn;\n    ssl_certificate     /etc/letsencrypt/live/api.shop.vn/fullchain.pem;\n    ssl_certificate_key /etc/letsencrypt/live/api.shop.vn/privkey.pem;\n    client_max_body_size 10m;\n\n    location / {\n        proxy_pass http://127.0.0.1:3000;\n        proxy_set_header Host              $host;\n        proxy_set_header X-Real-IP         $remote_addr;\n        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n    location /ws/ {                       # WebSocket\n        proxy_pass http://127.0.0.1:3000;\n        proxy_http_version 1.1;\n        proxy_set_header Upgrade    $http_upgrade;\n        proxy_set_header Connection \"upgrade\";\n    }\n}",
+    "tip": {
+      "vi": "Kể lỗi \"mọi request đều từ 127.0.0.1\" là cách nhanh nhất cho thấy bạn hiểu vì sao cần X-Forwarded-For.",
+      "en": "Telling the \"every request comes from 127.0.0.1\" story is the quickest way to show why X-Forwarded-For matters."
+    },
+    "followUps": [
+      {
+        "vi": "Vì sao app không nên tin X-Forwarded-For từ mọi nguồn?",
+        "en": "Why must the app not trust X-Forwarded-For from any source?"
+      },
+      {
+        "vi": "Có cloud load balancer rồi thì còn cần Nginx không?",
+        "en": "If you already have a cloud load balancer, do you still need Nginx?"
+      }
+    ]
+  },
+  {
     "id": "devops-net-tls-handshake",
     "level": "mid",
     "topic": "Networking",
@@ -411,6 +443,38 @@
       {
         "vi": "cgroups giới hạn những tài nguyên nào?",
         "en": "Which resources can cgroups limit?"
+      }
+    ]
+  },
+  {
+    "id": "devops-docker-compose-networking",
+    "level": "junior",
+    "topic": "Docker",
+    "q": {
+      "vi": "Docker Compose dùng để làm gì? Các container nói chuyện với nhau qua mạng thế nào, và vì sao trong container không gọi database bằng localhost được?",
+      "en": "What is Docker Compose for? How do containers talk to each other, and why can't you reach the database via localhost inside a container?"
+    },
+    "a": {
+      "vi": "Docker Compose khai báo nhiều container chạy cùng nhau trong một file YAML (app, database, Redis, queue), rồi bật tắt cả cụm bằng một lệnh docker compose up / down. Rất hợp cho môi trường dev, test tích hợp và các server nhỏ chạy một máy.\n\nMạng:\n- Compose tạo một mạng riêng cho project; mỗi service được đăng ký DNS theo tên service. App gọi database bằng host db:5432, không phải localhost.\n- Trong container, localhost là chính container đó. Database chạy ở container khác nên localhost:5432 không có gì cả. Đây là lỗi hay gặp nhất khi chuyển từ chạy trực tiếp sang chạy bằng Docker.\n- ports: \"5432:5432\" chỉ để mở cổng ra máy host (cho bạn dùng công cụ quản lý DB từ máy). Các container nói chuyện với nhau không cần ports, và ở server không nên mở cổng database ra ngoài.\n- Muốn từ container gọi dịch vụ đang chạy trên máy host thì dùng host.docker.internal (Docker Desktop; trên Linux cần khai báo extra_hosts).\n\nNhững phần hay dùng thêm:\n- volumes để dữ liệu database không mất khi xoá container.\n- depends_on kèm healthcheck (condition: service_healthy) để app chờ database thật sự sẵn sàng, không chỉ là đã khởi động.\n- env_file hoặc environment cho cấu hình; secret thật không commit vào repo.\n- Profiles hoặc file override riêng cho dev.\n\nCompose không tự phục hồi khi máy chết, không scale qua nhiều máy; tới mức đó thì chuyển sang Kubernetes hoặc dịch vụ container của cloud.",
+      "en": "Docker Compose declares several containers that run together in one YAML file (app, database, Redis, queue) and starts or stops the whole set with docker compose up / down. It suits development, integration tests and small single-server deployments.\n\nNetworking:\n- Compose creates a private network for the project, and each service gets a DNS name equal to its service name. The app reaches the database at db:5432, not localhost.\n- Inside a container, localhost is that container itself. The database runs in another container, so localhost:5432 has nothing there. This is the most common mistake when moving from running directly to running in Docker.\n- ports: \"5432:5432\" only exposes the port to the host machine (so your DB tool on the laptop can connect). Containers talking to each other do not need ports, and on a server you should not expose the database at all.\n- To reach a service running on the host from a container, use host.docker.internal (Docker Desktop; on Linux add extra_hosts).\n\nCommonly added:\n- volumes so database data survives container removal.\n- depends_on with a healthcheck (condition: service_healthy) so the app waits until the database is actually ready, not merely started.\n- env_file or environment for configuration; real secrets are not committed.\n- Profiles or an override file for dev.\n\nCompose does not recover from machine failure or scale across machines; at that point move to Kubernetes or a cloud container service."
+    },
+    "example": {
+      "vi": "Bạn mới vào team clone repo, chạy docker compose up là có đủ PostgreSQL, Redis và API giống hệt máy mọi người, khỏi mất cả ngày cài từng thứ. Lỗi đầu tiên hay gặp: file .env vẫn để DATABASE_URL trỏ localhost từ hồi chạy trực tiếp, nên API báo \"connection refused\"; đổi thành db là chạy.",
+      "en": "A new teammate clones the repo, runs docker compose up and gets the same PostgreSQL, Redis and API as everyone else, instead of a day of installing things. The classic first error: .env still points DATABASE_URL at localhost from the pre-Docker days, so the API reports \"connection refused\"; changing it to db fixes it."
+    },
+    "code": "services:\n  api:\n    build: .\n    environment:\n      DATABASE_URL: postgres://app:secret@db:5432/app   # tên service, không phải localhost\n      REDIS_URL: redis://redis:6379\n    ports: [\"3000:3000\"]\n    depends_on:\n      db: { condition: service_healthy }\n  db:\n    image: postgres:17\n    environment: { POSTGRES_USER: app, POSTGRES_PASSWORD: secret, POSTGRES_DB: app }\n    volumes: [\"pgdata:/var/lib/postgresql/data\"]\n    healthcheck:\n      test: [\"CMD-SHELL\", \"pg_isready -U app\"]\n      interval: 5s\n  redis:\n    image: redis:7\nvolumes:\n  pgdata:",
+    "tip": {
+      "vi": "Giải thích được \"localhost trong container là chính container đó\" là ý người phỏng vấn muốn nghe nhất ở câu này.",
+      "en": "Explaining that localhost inside a container means the container itself is the key point interviewers want here."
+    },
+    "followUps": [
+      {
+        "vi": "depends_on không có healthcheck thì vì sao app vẫn lỗi kết nối lúc khởi động?",
+        "en": "Without a healthcheck, why does the app still fail to connect at startup despite depends_on?"
+      },
+      {
+        "vi": "Có nên dùng Docker Compose cho production không? Khi nào thì được?",
+        "en": "Should you use Docker Compose in production? When is it acceptable?"
       }
     ]
   },
@@ -742,6 +806,38 @@
     ]
   },
   {
+    "id": "devops-cicd-helm-gitops",
+    "level": "mid",
+    "topic": "CI/CD",
+    "q": {
+      "vi": "Helm là gì? GitOps (Argo CD, Flux) khác cách để CI chạy kubectl apply lên cluster ở điểm nào?",
+      "en": "What is Helm? How does GitOps (Argo CD, Flux) differ from having CI run kubectl apply against the cluster?"
+    },
+    "a": {
+      "vi": "Helm là trình quản lý gói cho Kubernetes. Một chart là bộ template YAML (Deployment, Service, Ingress…) có tham số; mỗi môi trường chỉ cần một file values khác nhau (số replica, image tag, domain). Helm còn quản lý release: cài, nâng cấp, xem lịch sử, rollback về phiên bản trước. Ngoài ra có thể dùng chart có sẵn cho PostgreSQL, Redis, ingress-nginx. Một lựa chọn khác không cần template là Kustomize (vá YAML gốc theo từng môi trường).\n\nCách push (CI deploy): pipeline build image rồi chạy kubectl apply hoặc helm upgrade thẳng lên cluster. Đơn giản, nhưng CI phải giữ quyền admin vào cluster, trạng thái thật của cluster có thể lệch so với Git nếu ai đó sửa tay, và khó biết đang chạy đúng phiên bản nào.\n\nGitOps (pull): Git là nguồn sự thật cho trạng thái mong muốn của cluster. Một agent chạy trong cluster (Argo CD, Flux) liên tục so sánh cluster với repo cấu hình và tự kéo thay đổi về áp dụng.\n- Deploy = merge một pull request đổi image tag hoặc values; có review và lịch sử đầy đủ.\n- Rollback = revert commit.\n- Phát hiện và tự sửa drift khi có người kubectl sửa tay.\n- CI không cần quyền vào cluster; chỉ build image và cập nhật repo cấu hình.\n- Dễ quản lý nhiều cluster và môi trường.\n\nĐánh đổi: thêm một hệ thống phải vận hành, secret không được để dạng thô trong Git (cần Sealed Secrets, SOPS hoặc External Secrets), và cần tách repo code với repo cấu hình cho gọn.",
+      "en": "Helm is a package manager for Kubernetes. A chart is a set of parameterised YAML templates (Deployment, Service, Ingress…); each environment only needs a different values file (replicas, image tag, domain). Helm also manages releases: install, upgrade, history and rollback to a previous revision. You can reuse community charts for PostgreSQL, Redis or ingress-nginx. A template-free alternative is Kustomize (patching base YAML per environment).\n\nPush style (CI deploys): the pipeline builds the image and runs kubectl apply or helm upgrade directly against the cluster. Simple, but CI holds admin credentials to the cluster, the live state can drift from Git when someone edits by hand, and it is hard to tell which version is really running.\n\nGitOps (pull): Git is the source of truth for the cluster's desired state. An agent inside the cluster (Argo CD, Flux) continuously compares the cluster with the config repo and pulls changes in.\n- Deploying = merging a pull request that changes the image tag or values, with review and full history.\n- Rollback = reverting a commit.\n- Drift from manual kubectl edits is detected and corrected.\n- CI needs no cluster access; it only builds images and updates the config repo.\n- Easier to manage many clusters and environments.\n\nTrade-offs: one more system to operate, secrets cannot sit in Git in plain text (use Sealed Secrets, SOPS or External Secrets), and code and config repos are best kept separate."
+    },
+    "example": {
+      "vi": "Một đêm có người dùng kubectl edit tăng memory limit để chữa cháy rồi quên ghi lại; tuần sau CI deploy bản mới, limit quay về giá trị cũ và service lại bị OOMKilled. Sau khi chuyển sang Argo CD, mọi thay đổi phải đi qua pull request vào repo cấu hình, và Argo CD báo ngay khi cluster lệch so với Git.",
+      "en": "One night someone used kubectl edit to raise a memory limit as a quick fix and never recorded it; the next week CI deployed a new version, the limit reverted and the service was OOMKilled again. After moving to Argo CD every change goes through a pull request to the config repo, and Argo CD flags any drift between the cluster and Git immediately."
+    },
+    "code": "# values-prod.yaml: chỉ khác môi trường ở đây, template dùng chung\nreplicaCount: 4\nimage:\n  repository: registry.shop.vn/orders-api\n  tag: \"1.42.0\"          # CI cập nhật dòng này qua pull request\ningress:\n  host: api.shop.vn\nresources:\n  limits: { memory: 512Mi }\n\n# Cài hoặc nâng cấp, xem lịch sử, rollback\n# helm upgrade --install orders ./chart -f values-prod.yaml\n# helm history orders\n# helm rollback orders 41",
+    "tip": {
+      "vi": "Nói được lợi ích \"CI không cần quyền vào cluster\" và \"rollback bằng revert commit\" cho thấy bạn hiểu GitOps hơn mức định nghĩa.",
+      "en": "\"CI no longer needs cluster credentials\" and \"rollback by reverting a commit\" show you understand GitOps beyond the definition."
+    },
+    "followUps": [
+      {
+        "vi": "Secret trong mô hình GitOps được quản lý thế nào?",
+        "en": "How are secrets managed in a GitOps setup?"
+      },
+      {
+        "vi": "Helm và Kustomize, bạn chọn cái nào cho team nhỏ?",
+        "en": "Helm or Kustomize: which would you choose for a small team?"
+      }
+    ]
+  },
+  {
     "id": "devops-iac-terraform-state",
     "level": "mid",
     "topic": "Infrastructure as Code",
@@ -871,6 +967,37 @@
       }
     ],
     "source": "https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html"
+  },
+  {
+    "id": "devops-cloud-serverless",
+    "level": "mid",
+    "topic": "Cloud",
+    "q": {
+      "vi": "Serverless (AWS Lambda, Google Cloud Functions, Cloud Run) phù hợp khi nào? Cold start và các giới hạn cần biết là gì?",
+      "en": "When is serverless (AWS Lambda, Google Cloud Functions, Cloud Run) a good fit? What are cold starts and the limits to know?"
+    },
+    "a": {
+      "vi": "Serverless là chạy code mà không quản lý server: nhà cung cấp tự cấp máy, tự scale theo số request (kể cả về 0 khi không ai dùng), và tính tiền theo thời gian chạy thật cùng số lần gọi.\n\nHợp với:\n- Tải không đều hoặc thấp: API nội bộ, webhook, job theo lịch, xử lý file khi được upload lên storage, bot.\n- Xử lý theo sự kiện: message từ queue, thay đổi trong database, event từ storage.\n- Team nhỏ muốn ít việc vận hành.\n\nCold start: khi chưa có bản nào đang chạy sẵn, nền tảng phải khởi động môi trường mới và nạp code, làm request đầu chậm thêm từ khoảng trăm mili giây tới vài giây tuỳ ngôn ngữ và kích thước gói (Java, .NET thường chậm hơn Node.js, Python, Go). Giảm bằng cách: gói nhỏ, ít thư viện nặng, khởi tạo kết nối bên ngoài hàm xử lý để tái dùng, provisioned concurrency hoặc min instances (trả tiền giữ sẵn), SnapStart cho Java trên Lambda.\n\nGiới hạn cần biết (ví dụ Lambda):\n- Thời gian chạy tối đa 15 phút mỗi lần gọi; việc dài hơn phải chia nhỏ hoặc dùng container, Step Functions.\n- Bộ nhớ có giới hạn và CPU cấp theo bộ nhớ; ổ đĩa tạm nhỏ, không giữ trạng thái giữa các lần gọi.\n- Concurrency tăng vọt có thể làm cạn connection của database: dùng connection pooler (RDS Proxy, PgBouncer) hoặc database kiểu serverless.\n- Tải cao và đều đặn thì thường đắt hơn chạy container hay VM.\n- Debug, chạy local và theo dõi khó hơn; dễ bị gắn chặt vào một nhà cung cấp.\n\nCloud Run là kiểu ở giữa: chạy container bất kỳ, scale về 0, một instance phục vụ nhiều request cùng lúc, nên nhẹ chuyện cold start và connection hơn.",
+      "en": "Serverless means running code without managing servers: the provider allocates machines, scales with request volume (down to zero when idle) and bills for actual execution time and invocations.\n\nGood fit for:\n- Spiky or low traffic: internal APIs, webhooks, scheduled jobs, processing files when uploaded to storage, bots.\n- Event-driven processing: queue messages, database changes, storage events.\n- Small teams that want little operational work.\n\nCold start: when no warm instance exists, the platform must start a new environment and load your code, adding from roughly a hundred milliseconds to several seconds depending on language and package size (Java and .NET are usually slower than Node.js, Python or Go). Reduce it with small packages and few heavy libraries, creating external connections outside the handler so they are reused, provisioned concurrency or min instances (paying to keep instances warm), and SnapStart for Java on Lambda.\n\nLimits to know (Lambda as an example):\n- At most 15 minutes per invocation; longer work must be split or moved to containers or Step Functions.\n- Limited memory with CPU allocated in proportion; small temporary disk; no state kept between invocations.\n- Concurrency spikes can exhaust database connections: use a connection pooler (RDS Proxy, PgBouncer) or a serverless-style database.\n- High, steady load is usually more expensive than containers or VMs.\n- Harder to debug, run locally and observe; easy to become locked into one provider.\n\nCloud Run sits in between: it runs any container, scales to zero, and one instance serves many concurrent requests, which eases cold starts and connection pressure."
+    },
+    "example": {
+      "vi": "Shop nhỏ cần tạo ảnh thumbnail mỗi khi người bán đăng ảnh sản phẩm, mỗi ngày vài trăm ảnh, có hôm khuyến mãi lên vài chục nghìn. Một hàm Lambda kích hoạt bởi S3 xử lý việc này, tháng thường tốn chưa tới một bữa cà phê, ngày cao điểm tự scale. Nhưng khi chuyển cả API chính sang Lambda, ngày sale có hàng nghìn bản chạy cùng lúc làm PostgreSQL hết connection, phải thêm RDS Proxy.",
+      "en": "A small shop must create thumbnails whenever sellers upload product photos: a few hundred a day, tens of thousands on promotion days. An S3-triggered Lambda handles it for less than the price of a coffee in a normal month and scales itself on peak days. But when the main API also moved to Lambda, thousands of concurrent instances on a sale day exhausted PostgreSQL's connections, and RDS Proxy had to be added."
+    },
+    "tip": {
+      "vi": "Đừng chỉ khen serverless; nêu rõ khi nào nó đắt hơn và vấn đề connection database khi scale mạnh sẽ được đánh giá cao.",
+      "en": "Do not just praise serverless; saying when it becomes more expensive and the database connection problem under heavy scaling earns credit."
+    },
+    "followUps": [
+      {
+        "vi": "Một job xử lý mất 40 phút thì bạn chạy nó trên serverless thế nào?",
+        "en": "A job takes 40 minutes. How would you run it in a serverless setup?"
+      },
+      {
+        "vi": "So sánh chi phí Lambda và một container chạy liên tục thì bạn tính thế nào?",
+        "en": "How would you compare the cost of Lambda against an always-on container?"
+      }
+    ]
   },
   {
     "id": "devops-cloud-cost-control",

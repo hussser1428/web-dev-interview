@@ -6,7 +6,7 @@ import Bar from "@/components/bar";
 import type { Dict } from "@/i18n";
 import { hue, ratingColor } from "@/lib/catalog";
 import { updateProgress, useProgress } from "@/lib/progress";
-import { buildQueue, isDue, rate, ratingKey, today, type Rating } from "@/lib/srs";
+import { buildQueue, rate, ratingKey, type Rating } from "@/lib/srs";
 import { fmt, type Locale } from "@/locales";
 
 const MAX = 20;
@@ -16,7 +16,7 @@ type Props = { lang: Locale; t: Dict["flashcards"]; ratings: Dict["ratings"]; ca
 
 export default function Session({ lang, t, ratings, cards }: Props) {
   const p = useProgress();
-  const [queue, setQueue] = useState<string[] | null>(null); // null = chưa bắt đầu
+  const [queue, setQueue] = useState<string[] | null>(null); // null = chưa dựng hàng đợi
   const [idx, setIdx] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [requeued, setRequeued] = useState<Set<string>>(new Set());
@@ -49,20 +49,16 @@ export default function Session({ lang, t, ratings, cards }: Props) {
 
   if (!p) return null;
 
+  // Vào là ôn luôn: dựng hàng đợi một lần khi đã đọc được tiến độ, rồi giữ cố định suốt phiên.
   if (!queue) {
-    const ids = cards.map((c) => c.id);
-    const next = buildQueue(ids, p, MAX);
-    const due = next.filter((id) => isDue(p.q[id], today())).length;
+    setQueue(buildQueue(cards.map((c) => c.id), p, MAX));
+    return null;
+  }
+
+  if (!queue.length) {
     return (
       <div className="card flex flex-col items-start gap-4">
-        {next.length ? (
-          <>
-            <p>{fmt(t.summary, { total: next.length, due, max: MAX })}</p>
-            <button className="btn" onClick={() => setQueue(next)}>▶ {t.start}</button>
-          </>
-        ) : (
-          <p className="text-lg">{t.nothing}</p>
-        )}
+        <p className="text-lg">{t.nothing}</p>
         <Link href={`/${lang}/flashcards`} className="text-sm text-muted hover:text-fg">{t.back}</Link>
       </div>
     );

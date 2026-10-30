@@ -19,12 +19,10 @@ export default function TrackPicker({ lang, t, tracks }: Props) {
         const due = p ? ids.filter((id) => isDue(p.q[id], now)).length : 0;
         const fresh = p ? ids.filter((id) => !isDone(p.q[id])).length : ids.length;
         return (
-          <Link key={track} href={`/${lang}/flashcards/${track}`} className="card flex flex-col gap-3 hover:border-brand">
-            <div className="flex items-center gap-3" style={hue(trackColor[track])}>
-              <span className="chipi solid"><Icon name={trackIcon[track]} /></span>
-              <span className="font-semibold">{name}</span>
-            </div>
-            <div className="flex gap-2" style={hue(trackColor[track])}>
+          <Link key={track} href={`/${lang}/flashcards/${track}`} className="card flex items-center gap-3 px-4 py-3.5 hover:border-brand" style={hue(trackColor[track])}>
+            <span className="chipi solid"><Icon name={trackIcon[track]} /></span>
+            <span className="min-w-0 flex-1 truncate font-semibold">{name}</span>
+            <div className="flex flex-col items-end gap-1">
               <span className="tagc" style={hue(due ? dueColor : ["#5b6576", "#5b6576"])}>{fmt(t.due, { n: due })}</span>
               <span className="tagc">{fmt(t.fresh, { n: fresh })}</span>
             </div>

@@ -131,6 +131,38 @@
     ]
   },
   {
+    "id": "mobile-accessibility",
+    "level": "junior",
+    "topic": "UI",
+    "q": {
+      "vi": "Accessibility trên mobile: cần làm gì để người dùng TalkBack, VoiceOver hoặc người cần chữ lớn dùng được app?",
+      "en": "Mobile accessibility: what must you do so people using TalkBack, VoiceOver or large text can use your app?"
+    },
+    "a": {
+      "vi": "Các việc cơ bản nhất:\n\n- Nhãn cho trình đọc màn hình: nút chỉ có icon phải có contentDescription (Android), accessibilityLabel (iOS, React Native) hoặc Semantics label (Flutter). Ảnh trang trí thì ẩn khỏi trình đọc để không gây nhiễu.\n- Vai trò và trạng thái: báo đây là nút, ô chọn đang bật hay tắt, tab đang chọn. Component chuẩn của hệ thống thường có sẵn; tự vẽ component thì phải khai báo.\n- Kích thước chạm tối thiểu khoảng 44×44 pt trên iOS và 48×48 dp trên Android.\n- Chữ co giãn: dùng đơn vị theo cài đặt hệ thống (sp, Dynamic Type), không cố định chiều cao khung chứa chữ; thử với cỡ chữ lớn nhất xem layout có vỡ hay bị cắt chữ không.\n- Độ tương phản màu đủ (tối thiểu 4.5:1 cho chữ thường) và không chỉ dùng màu để truyền ý nghĩa (lỗi thì có cả chữ hoặc icon).\n- Thứ tự đọc hợp lý, gom các phần liên quan thành một nhóm (tên sản phẩm, giá, đánh giá đọc một lần).\n- Thông báo thay đổi động: lỗi form, toast, kết quả tải xong cần được trình đọc màn hình đọc lên.\n- Tôn trọng cài đặt giảm chuyển động (Reduce Motion).\n\nKiểm tra: bật TalkBack, VoiceOver và tự dùng các luồng chính; Accessibility Scanner (Android), Accessibility Inspector (Xcode); thêm kiểm tra tự động trong UI test.",
+      "en": "The essentials:\n\n- Labels for screen readers: icon-only buttons need contentDescription (Android), accessibilityLabel (iOS, React Native) or a Semantics label (Flutter). Hide decorative images from the reader to avoid noise.\n- Roles and states: announce that it is a button, whether a checkbox is on or off, which tab is selected. Standard components usually do this; custom-drawn ones must declare it.\n- Minimum touch targets of about 44×44 pt on iOS and 48×48 dp on Android.\n- Scalable text: use system-scaled units (sp, Dynamic Type), never fix the height of text containers, and test at the largest font size for broken layouts or clipped text.\n- Sufficient colour contrast (at least 4.5:1 for body text) and never colour alone to convey meaning (errors also get text or an icon).\n- A sensible reading order, grouping related elements (product name, price and rating read together).\n- Announce dynamic changes: form errors, toasts and load completion should be read out.\n- Respect the Reduce Motion setting.\n\nTesting: turn on TalkBack and VoiceOver and walk through the main flows yourself; Accessibility Scanner (Android), Accessibility Inspector (Xcode); add automated checks to UI tests."
+    },
+    "example": {
+      "vi": "App ngân hàng có nút \"Chuyển tiền\" chỉ là một icon mũi tên. Với TalkBack, người khiếm thị nghe \"nút, không có nhãn\" và không biết bấm vào đâu. Thêm nhãn \"Chuyển tiền\", tăng vùng chạm lên 48dp và cho số dư co theo cỡ chữ hệ thống thì người lớn tuổi để chữ to cũng đọc được mà không bị cắt số.",
+      "en": "A banking app's \"Transfer\" button is just an arrow icon. With TalkBack, a blind user hears \"button, unlabelled\" and has no idea what it does. Adding a \"Transfer\" label, a 48dp touch area and a balance that scales with system font size also lets older users with large text read it without the number being clipped."
+    },
+    "code": "// Jetpack Compose\nIconButton(onClick = onTransfer, modifier = Modifier.size(48.dp)) {\n    Icon(Icons.Default.Send, contentDescription = \"Chuyển tiền\")\n}\n\n// SwiftUI\nButton(action: transfer) { Image(systemName: \"arrow.right\") }\n    .accessibilityLabel(\"Chuyển tiền\")\n\n// Flutter\nSemantics(label: \"Chuyển tiền\", button: true, child: transferIcon)",
+    "tip": {
+      "vi": "Kể việc bạn đã tự bật TalkBack hay VoiceOver để thử luồng chính sẽ thuyết phục hơn liệt kê lý thuyết.",
+      "en": "Saying you switched on TalkBack or VoiceOver and tried the main flows yourself is more convincing than listing theory."
+    },
+    "followUps": [
+      {
+        "vi": "Component tự vẽ trên Canvas thì làm cho trình đọc màn hình hiểu thế nào?",
+        "en": "How do you make a Canvas-drawn custom component understandable to screen readers?"
+      },
+      {
+        "vi": "Làm sao đưa kiểm tra accessibility vào CI?",
+        "en": "How do you add accessibility checks to CI?"
+      }
+    ]
+  },
+  {
     "id": "mobile-compose-recomposition",
     "level": "mid",
     "topic": "UI",
@@ -156,6 +188,69 @@
       { "vi": "LaunchedEffect và rememberCoroutineScope khác nhau thế nào?", "en": "How do LaunchedEffect and rememberCoroutineScope differ?" }
     ],
     "source": "https://developer.android.com/develop/ui/compose/lifecycle"
+  },
+  {
+    "id": "mobile-navigation",
+    "level": "junior",
+    "topic": "Navigation",
+    "q": {
+      "vi": "Navigation trong app mobile hoạt động thế nào (stack, tab, modal)? Truyền dữ liệu giữa các màn hình ra sao và hay gặp lỗi gì?",
+      "en": "How does navigation work in a mobile app (stack, tabs, modals)? How do you pass data between screens and what goes wrong?"
+    },
+    "a": {
+      "vi": "Các kiểu điều hướng chính:\n- Stack: mở màn hình mới đè lên màn cũ, nút Back gỡ ra (danh sách → chi tiết).\n- Tab: vài khu vực ngang hàng ở thanh dưới, thường mỗi tab có stack riêng và giữ nguyên trạng thái khi chuyển tab.\n- Modal/bottom sheet: một tác vụ tạm thời (lọc, xác nhận), đóng là quay về đúng chỗ cũ.\n\nThư viện thường dùng: Navigation Compose (Android), NavigationStack (SwiftUI), go_router (Flutter), React Navigation hoặc Expo Router (React Native).\n\nTruyền dữ liệu:\n- Chỉ truyền id hoặc tham số nhỏ qua route, màn hình đích tự tải dữ liệu từ repository hay cache. Truyền cả object lớn dễ vượt giới hạn (Android Bundle) và làm dữ liệu cũ khi được cập nhật ở nơi khác.\n- Trả kết quả về màn trước (chọn địa chỉ xong quay lại) bằng cơ chế có sẵn: savedStateHandle trên Android, callback hoặc state dùng chung, giá trị trả về của Navigator.pop trong Flutter.\n- Trạng thái dùng chung nhiều màn (giỏ hàng, user đăng nhập) để ở tầng state chung, không truyền qua lại.\n\nLỗi hay gặp:\n- Back stack sai: sau đăng nhập hoặc thanh toán xong vẫn bấm Back quay lại được màn cũ. Phải xoá các màn đó khỏi stack.\n- Bấm nhanh hai lần mở hai màn chồng nhau.\n- Mất trạng thái khi xoay màn hình hoặc app bị hệ điều hành giết, vì tham số không được lưu lại.\n- Nút Back vật lý trên Android và cử chỉ vuốt trên iOS cho kết quả khác nhau.\n- Route đặt rải rác, khó hỗ trợ deep link về sau; nên khai báo tập trung.",
+      "en": "Main navigation patterns:\n- Stack: a new screen goes on top, Back pops it (list → detail).\n- Tabs: a few peer sections in the bottom bar, each usually with its own stack that keeps state when switching tabs.\n- Modal/bottom sheet: a temporary task (filters, confirmation); closing returns exactly where you were.\n\nCommon libraries: Navigation Compose (Android), NavigationStack (SwiftUI), go_router (Flutter), React Navigation or Expo Router (React Native).\n\nPassing data:\n- Pass only an id or small parameters through the route and let the destination load data from a repository or cache. Passing big objects risks size limits (Android Bundle) and stale data when it changes elsewhere.\n- Return a result to the previous screen (pick an address, come back) using the built-in mechanism: savedStateHandle on Android, a callback or shared state, Navigator.pop's return value in Flutter.\n- State shared by many screens (cart, logged-in user) belongs in a shared state layer, not passed back and forth.\n\nCommon bugs:\n- Wrong back stack: after login or checkout, Back still returns to the old screen. Remove those screens from the stack.\n- Double taps opening two copies of a screen.\n- Lost state after rotation or process death because parameters were not saved.\n- Android's hardware Back and iOS swipe-back behaving differently.\n- Routes scattered across the code, making deep links hard later; declare them centrally."
+    },
+    "example": {
+      "vi": "App đặt xe: sau khi thanh toán thành công, người dùng bấm Back thì lại thấy màn hình thanh toán và bấm \"Trả tiền\" thêm lần nữa. Sửa bằng cách khi sang màn \"Đặt xe thành công\" thì xoá các màn chọn xe và thanh toán khỏi back stack, Back sẽ về thẳng trang chủ.",
+      "en": "A ride-hailing app: after a successful payment, pressing Back showed the payment screen again and users tapped \"Pay\" a second time. The fix was clearing the vehicle-selection and payment screens from the back stack when opening \"Booking confirmed\", so Back goes straight home."
+    },
+    "code": "// Navigation Compose: sang màn thành công và xoá luồng thanh toán khỏi back stack\nnavController.navigate(\"booking/success/$bookingId\") {\n    popUpTo(\"home\") { inclusive = false }\n    launchSingleTop = true\n}\n\n// Flutter go_router: chỉ truyền id, màn đích tự tải dữ liệu\ncontext.push('/products/$productId');",
+    "tip": {
+      "vi": "Nói rõ nguyên tắc \"chỉ truyền id qua route\" và ví dụ back stack sau thanh toán là hai điểm thực tế dễ ghi điểm.",
+      "en": "\"Pass only ids through routes\" and the post-checkout back stack example are two practical points that score well."
+    },
+    "followUps": [
+      {
+        "vi": "Mỗi tab giữ back stack riêng thì cài đặt thế nào?",
+        "en": "How do you give each tab its own back stack?"
+      },
+      {
+        "vi": "Màn hình cần đăng nhập mới xem được thì chặn ở đâu trong navigation?",
+        "en": "Where in the navigation do you guard screens that require login?"
+      }
+    ]
+  },
+  {
+    "id": "mobile-deep-links",
+    "level": "mid",
+    "topic": "Navigation",
+    "q": {
+      "vi": "Deep link, Universal Links (iOS) và App Links (Android) là gì? Xử lý thế nào khi app chưa cài hoặc người dùng chưa đăng nhập?",
+      "en": "What are deep links, Universal Links (iOS) and App Links (Android)? How do you handle a link when the app is not installed or the user is not logged in?"
+    },
+    "a": {
+      "vi": "Deep link là đường link mở thẳng tới một màn hình cụ thể trong app (một sản phẩm, một đơn hàng) thay vì trang chủ.\n\nHai loại:\n- Custom scheme (myapp://product/42): dễ làm nhưng app nào cũng đăng ký được cùng scheme, không mở được nếu chưa cài app, và nhiều ứng dụng chặn.\n- Link https đã xác minh: Universal Links (iOS) và App Links (Android). Bạn đặt file chứng minh sở hữu domain trên website (apple-app-site-association, assetlinks.json); hệ điều hành kiểm tra rồi mở thẳng app khi người dùng bấm https://shop.vn/p/42. Chưa cài app thì link vẫn mở website bình thường. Đây là cách nên dùng.\n\nXử lý trong app:\n- Khai báo mọi route ở một chỗ và ánh xạ đường dẫn tới route (thư viện navigation thường hỗ trợ sẵn).\n- Kiểm tra tham số từ link như dữ liệu không tin cậy: id không tồn tại, không có quyền xem thì báo lỗi gọn hoặc đưa về trang phù hợp.\n- Chưa đăng nhập: lưu link đang chờ, đưa qua màn đăng nhập, xong thì mở tiếp đúng màn hình đó.\n- Dựng back stack hợp lý: mở chi tiết sản phẩm từ link thì Back nên về trang chủ của app, không thoát app.\n- Xử lý cả lúc app đang chạy và lúc app khởi động từ link (cold start).\n\nChưa cài app (deferred deep link): người dùng bấm link, được đưa tới store, cài xong mở app vẫn tới đúng sản phẩm. Hệ điều hành không làm sẵn việc này; cần dịch vụ attribution (Branch, AppsFlyer, Adjust) hoặc Install Referrer trên Android.\n\nThử nghiệm: adb shell am start với URL trên Android, xcrun simctl openurl trên iOS, và thử bấm link trong Zalo, Messenger, Gmail vì mỗi app xử lý link một kiểu.",
+      "en": "A deep link opens a specific screen inside the app (a product, an order) instead of the home screen.\n\nTwo kinds:\n- Custom schemes (myapp://product/42): easy, but any app can claim the same scheme, nothing opens if the app is not installed, and many apps block them.\n- Verified https links: Universal Links (iOS) and App Links (Android). You host a file proving domain ownership (apple-app-site-association, assetlinks.json); the OS verifies it and opens the app directly when the user taps https://shop.vn/p/42. Without the app installed, the link simply opens the website. This is the recommended approach.\n\nInside the app:\n- Declare every route in one place and map paths to routes (navigation libraries usually support this).\n- Treat link parameters as untrusted input: unknown ids or missing permissions get a clean error or a sensible fallback.\n- Not logged in: store the pending link, show login, then continue to that exact screen.\n- Build a sensible back stack: opening a product from a link, Back should go to the app's home, not exit the app.\n- Handle both a running app and a cold start from the link.\n\nNot installed (deferred deep link): the user taps a link, goes to the store, installs, and on first open still lands on the right product. The OS does not do this for you; it needs an attribution service (Branch, AppsFlyer, Adjust) or the Install Referrer on Android.\n\nTesting: adb shell am start with the URL on Android, xcrun simctl openurl on iOS, and tap links inside Zalo, Messenger and Gmail, since each app handles links differently."
+    },
+    "example": {
+      "vi": "Chiến dịch email gửi link giảm giá cho một đôi giày. Bản đầu dùng myapp://, người dùng bấm trong Gmail thì không có gì xảy ra, ai chưa cài app thì gặp trang lỗi. Chuyển sang App Links và Universal Links với https://shop.vn/p/123: đã cài thì mở thẳng trang sản phẩm, chưa cài thì vào trang web có nút tải app.",
+      "en": "An email campaign linked to a discounted pair of shoes. The first version used myapp://; tapping it in Gmail did nothing, and people without the app hit an error page. Switching to App Links and Universal Links with https://shop.vn/p/123 opened the product page directly when installed and the website with a download button otherwise."
+    },
+    "tip": {
+      "vi": "Nhắc tới trường hợp chưa đăng nhập và việc kiểm tra tham số link như dữ liệu không tin cậy cho thấy bạn nghĩ cả tới bảo mật.",
+      "en": "Covering the logged-out case and treating link parameters as untrusted input shows you think about security too."
+    },
+    "followUps": [
+      {
+        "vi": "Vì sao Universal Link đôi khi mở website thay vì mở app?",
+        "en": "Why does a Universal Link sometimes open the website instead of the app?"
+      },
+      {
+        "vi": "Đo được bao nhiêu người cài app từ một chiến dịch link thì cần gì?",
+        "en": "What do you need to measure how many installs came from a link campaign?"
+      }
+    ]
   },
   {
     "id": "mobile-flutter-architecture",
@@ -260,6 +355,38 @@
     ]
   },
   {
+    "id": "mobile-flutter-state-management",
+    "level": "mid",
+    "topic": "State Management",
+    "q": {
+      "vi": "Flutter: so sánh setState, Provider, Riverpod và Bloc. Bạn chọn thế nào cho một app thật?",
+      "en": "Flutter: compare setState, Provider, Riverpod and Bloc. How do you choose for a real app?"
+    },
+    "a": {
+      "vi": "- setState: trạng thái nằm trong một StatefulWidget. Đủ cho trạng thái cục bộ của một widget (ô nhập, tab đang chọn, animation). Dùng cho trạng thái dùng chung thì phải đẩy lên cha và truyền xuống nhiều tầng, rebuild rộng.\n- Provider: bọc InheritedWidget cho dễ dùng, cung cấp object (thường là ChangeNotifier) cho cây con. Đơn giản, phổ biến, nhưng phụ thuộc vào BuildContext, dễ gặp lỗi không tìm thấy provider, và notifyListeners rebuild mọi widget đang nghe.\n- Riverpod: cùng tác giả với Provider, khắc phục các điểm yếu đó. Provider khai báo toàn cục, không phụ thuộc context, kiểm tra lúc compile, tự huỷ khi không dùng (autoDispose), có sẵn kiểu cho dữ liệu bất đồng bộ (AsyncValue gồm loading, error, data), dễ override khi test.\n- Bloc/Cubit: tách hẳn logic khỏi UI. Cubit gọi hàm rồi emit state mới; Bloc nhận event và trả về state qua stream. Mọi thay đổi đi theo một luồng rõ ràng, dễ log, dễ test, hợp team lớn và nghiệp vụ phức tạp; đổi lại viết nhiều code hơn.\n\nChọn:\n- App nhỏ, prototype: setState kết hợp Provider là đủ.\n- App vừa và lớn, nhiều dữ liệu bất đồng bộ: Riverpod.\n- Team đông, cần quy ước chặt và luồng state dễ kiểm tra: Bloc.\nQuan trọng hơn thư viện: state bất biến, tách logic khỏi widget, chỉ rebuild phần cần (select, BlocSelector, Consumer đặt đúng chỗ), và cả team dùng một cách thống nhất.",
+      "en": "- setState: state lives inside one StatefulWidget. Fine for local widget state (an input, the selected tab, animations). For shared state you must lift it up and pass it down many levels, causing wide rebuilds.\n- Provider: a friendlier wrapper around InheritedWidget that exposes an object (often a ChangeNotifier) to a subtree. Simple and widespread, but tied to BuildContext, prone to provider-not-found errors, and notifyListeners rebuilds every listener.\n- Riverpod: by Provider's author, fixing those weaknesses. Providers are declared globally, do not depend on context, are compile-time safe, dispose automatically when unused (autoDispose), have built-in async types (AsyncValue for loading, error, data) and are easy to override in tests.\n- Bloc/Cubit: fully separates logic from UI. A Cubit exposes methods that emit new states; a Bloc receives events and outputs states as a stream. Every change follows one clear path that is easy to log and test, suiting large teams and complex domains, at the cost of more code.\n\nChoosing:\n- Small app or prototype: setState plus Provider is enough.\n- Medium to large app with lots of async data: Riverpod.\n- Large team needing strict conventions and auditable state flow: Bloc.\nMore important than the library: immutable state, logic separated from widgets, rebuilding only what is needed (select, BlocSelector, well-placed Consumers), and one consistent approach across the team."
+    },
+    "example": {
+      "vi": "App thương mại điện tử viết bằng setState: số lượng trong giỏ ở icon trên thanh tiêu đề không cập nhật khi thêm hàng từ trang chi tiết, vì hai màn hình giữ hai bản trạng thái riêng. Chuyển giỏ hàng thành một Cubit dùng chung: thêm hàng ở đâu thì icon, trang giỏ và nút thanh toán cùng cập nhật, và viết được unit test cho logic tính tiền mà không cần dựng UI.",
+      "en": "An e-commerce app built with setState: the cart badge in the app bar did not update when adding items from the product page, because the two screens held separate copies of the state. Turning the cart into a shared Cubit made the badge, cart page and checkout button update together, and the pricing logic became unit-testable without building any UI."
+    },
+    "code": "// Cubit: logic giỏ hàng tách khỏi UI\nclass CartCubit extends Cubit<List<Item>> {\n  CartCubit() : super(const []);\n  void add(Item item) => emit([...state, item]); // state mới, không sửa list cũ\n}\n\n// Chỉ rebuild badge khi số lượng đổi\nBlocSelector<CartCubit, List<Item>, int>(\n  selector: (items) => items.length,\n  builder: (context, count) => Badge(label: Text('$count'), child: const Icon(Icons.shopping_cart)),\n)",
+    "tip": {
+      "vi": "Đừng tranh luận thư viện nào tốt nhất; nói tiêu chí chọn theo quy mô team và app, rồi nhấn mạnh state bất biến và rebuild có chọn lọc.",
+      "en": "Do not argue which library is best; give selection criteria by team and app size, then stress immutable state and selective rebuilds."
+    },
+    "followUps": [
+      {
+        "vi": "Vì sao state nên bất biến? Sửa trực tiếp một List trong state thì lỗi gì xảy ra?",
+        "en": "Why should state be immutable? What breaks if you mutate a List in state directly?"
+      },
+      {
+        "vi": "Test một Bloc có gọi API thì bạn làm thế nào?",
+        "en": "How do you test a Bloc that calls an API?"
+      }
+    ]
+  },
+  {
     "id": "mobile-main-thread",
     "level": "intern",
     "topic": "Concurrency",
@@ -311,6 +438,38 @@
       { "vi": "Cold Flow và hot Flow khác nhau ra sao?", "en": "What is the difference between cold and hot Flows?" }
     ],
     "source": "https://developer.android.com/kotlin/coroutines"
+  },
+  {
+    "id": "mobile-background-work",
+    "level": "mid",
+    "topic": "Concurrency",
+    "q": {
+      "vi": "Chạy tác vụ nền trên mobile (đồng bộ dữ liệu, upload ảnh) thế nào? WorkManager trên Android, BGTaskScheduler trên iOS, và hệ điều hành giới hạn những gì?",
+      "en": "How do you run background work on mobile (syncing, photo upload)? WorkManager on Android, BGTaskScheduler on iOS, and what limits do the OSes impose?"
+    },
+    "a": {
+      "vi": "Hệ điều hành ưu tiên pin và hiệu năng, nên app ở nền gần như không được chạy tuỳ ý. Thread hay coroutine bạn tự tạo sẽ dừng khi app bị đưa về nền hoặc bị giết.\n\nAndroid:\n- WorkManager cho việc cần chắc chắn hoàn thành dù app đóng hay máy khởi động lại: đồng bộ, upload log, gửi dữ liệu chờ. Đặt điều kiện (có mạng, đang sạc, pin không yếu), retry với backoff, job định kỳ tối thiểu 15 phút, unique work để không xếp trùng.\n- Việc người dùng đang chờ và cần chạy ngay (phát nhạc, chỉ đường, upload video lớn đang hiện tiến độ) dùng foreground service kèm thông báo. Android 14 trở đi phải khai báo loại foreground service.\n- Doze và App Standby khiến việc nền bị dồn lại chạy theo đợt; một số hãng máy còn giết app mạnh tay hơn.\n\niOS:\n- BGTaskScheduler: BGAppRefreshTask (cập nhật nhẹ, vài chục giây) và BGProcessingTask (việc nặng hơn, thường chạy khi sạc và có mạng). Hệ điều hành tự quyết định lúc chạy dựa trên thói quen dùng app; không đảm bảo giờ chính xác.\n- Background URLSession: upload, download vẫn tiếp tục khi app bị treo hoặc đóng; hệ thống đánh thức app khi xong.\n- beginBackgroundTask: xin thêm ít thời gian để hoàn tất việc đang dở khi người dùng vừa thoát app.\n- Silent push có thể đánh thức app nhưng bị giới hạn tần suất.\n\nNguyên tắc chung: lưu việc cần làm vào hàng đợi bền (database cục bộ), viết tác vụ idempotent vì có thể bị dừng và chạy lại, chia nhỏ việc lớn, và báo tiến độ cho người dùng khi họ đang chờ.",
+      "en": "OSes prioritise battery and performance, so backgrounded apps can hardly run whenever they like. Threads or coroutines you start yourself stop when the app is backgrounded or killed.\n\nAndroid:\n- WorkManager for work that must finish even if the app closes or the device reboots: syncing, log upload, sending queued data. Set constraints (network, charging, battery not low), retry with backoff, periodic work at a 15-minute minimum, and unique work to avoid duplicates.\n- Work the user is actively waiting for and that must run now (music playback, navigation, a large video upload showing progress) uses a foreground service with a notification. From Android 14 you must declare the foreground service type.\n- Doze and App Standby batch background work into windows; some manufacturers kill apps even more aggressively.\n\niOS:\n- BGTaskScheduler: BGAppRefreshTask (light refresh, tens of seconds) and BGProcessingTask (heavier work, usually while charging with network). The OS decides when to run based on usage patterns; there is no exact schedule.\n- Background URLSession: uploads and downloads continue while the app is suspended or closed; the system wakes the app when they finish.\n- beginBackgroundTask: request a little extra time to finish in-flight work right after the user leaves the app.\n- Silent pushes can wake the app but are rate-limited.\n\nGeneral rules: persist pending work in a durable queue (local database), make tasks idempotent since they may be stopped and rerun, split large jobs, and show progress when the user is waiting."
+    },
+    "example": {
+      "vi": "App chấm công cho nhân viên bán hàng chụp ảnh tại cửa hàng rồi tải lên. Bản đầu upload trong một coroutine thường, nhân viên tắt màn hình là upload dừng, cuối ngày thiếu hàng trăm ảnh. Chuyển sang lưu ảnh vào hàng đợi cục bộ cộng WorkManager với điều kiện có mạng (Android) và background URLSession (iOS): ảnh tự lên khi có sóng, kể cả khi đã đóng app.",
+      "en": "An attendance app has field sales staff photograph stores and upload them. The first version uploaded in a plain coroutine; locking the screen stopped the upload and hundreds of photos were missing each day. Queuing photos locally plus WorkManager with a network constraint (Android) and background URLSession (iOS) made them upload whenever signal returned, even with the app closed."
+    },
+    "code": "// Android: đồng bộ định kỳ khi có mạng, không xếp trùng\nval request = PeriodicWorkRequestBuilder<SyncWorker>(15, TimeUnit.MINUTES)\n    .setConstraints(\n        Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()\n    )\n    .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)\n    .build()\n\nWorkManager.getInstance(context)\n    .enqueueUniquePeriodicWork(\"sync\", ExistingPeriodicWorkPolicy.KEEP, request)",
+    "tip": {
+      "vi": "Nói rõ \"hệ điều hành quyết định lúc chạy, không có giờ chính xác\" và phân biệt WorkManager với foreground service.",
+      "en": "State clearly that the OS decides when work runs, with no exact timing, and distinguish WorkManager from foreground services."
+    },
+    "followUps": [
+      {
+        "vi": "Người dùng cần nhắc việc đúng 7 giờ sáng thì dùng gì thay cho tác vụ nền?",
+        "en": "A reminder must fire at exactly 7am. What do you use instead of background work?"
+      },
+      {
+        "vi": "Làm sao biết tác vụ nền có thật sự chạy trên máy người dùng?",
+        "en": "How do you know background work is actually running on users' devices?"
+      }
+    ]
   },
   {
     "id": "mobile-networking-bad-network",
@@ -465,6 +624,37 @@
     "followUps": [
       { "vi": "Làm sao theo dõi jank của người dùng thật trên production?", "en": "How do you monitor jank for real users in production?" },
       { "vi": "Overdraw là gì và kiểm tra bằng cách nào?", "en": "What is overdraw and how do you check for it?" }
+    ]
+  },
+  {
+    "id": "mobile-image-loading",
+    "level": "mid",
+    "topic": "Performance",
+    "q": {
+      "vi": "Hiển thị hàng trăm ảnh trong danh sách mà không giật và không tràn bộ nhớ thì làm thế nào?",
+      "en": "How do you show hundreds of images in a list without jank or running out of memory?"
+    },
+    "a": {
+      "vi": "Ảnh là nguyên nhân phổ biến nhất gây giật và crash vì hết bộ nhớ trên mobile. Một ảnh 4000×3000 giải nén ra khoảng 48 MB trong RAM (4 byte mỗi điểm ảnh), dù file JPEG chỉ 3 MB.\n\nCách làm:\n- Dùng thư viện tải ảnh thay vì tự viết: Coil hoặc Glide (Android), Kingfisher hoặc SDWebImage (iOS), cached_network_image (Flutter), expo-image hoặc FastImage (React Native). Chúng lo cache, huỷ request khi ô bị cuộn qua, giải mã ở thread nền.\n- Lấy đúng kích thước: server hoặc CDN ảnh trả bản resize theo kích thước hiển thị (thumbnail 300px cho lưới, ảnh to khi mở chi tiết), định dạng WebP hoặc AVIF. Phía app giải mã xuống đúng kích thước view (downsampling).\n- Hai tầng cache: bộ nhớ (giới hạn theo phần trăm RAM) để cuộn lên xuống không tải lại, và đĩa để mở lại app vẫn nhanh. Dùng URL có version để đổi ảnh thì không bị cache cũ.\n- Danh sách phải dùng ô tái sử dụng (LazyColumn, RecyclerView, UICollectionView, ListView.builder, FlatList, FlashList) và đặt sẵn kích thước ô để layout không nhảy khi ảnh về.\n- Placeholder hoặc ảnh mờ (blurhash) trong lúc tải, ảnh lỗi thì có ảnh thay thế.\n- Tải trước vài ảnh sắp hiện (prefetch), và huỷ những ảnh đã cuộn qua.\n- Đo bằng công cụ: Android Studio Profiler, Xcode Instruments, Flutter DevTools để xem bộ nhớ và frame bị trễ.",
+      "en": "Images are the most common cause of jank and out-of-memory crashes on mobile. A 4000×3000 photo decodes to about 48 MB of RAM (4 bytes per pixel), even if the JPEG file is only 3 MB.\n\nHow:\n- Use an image library instead of rolling your own: Coil or Glide (Android), Kingfisher or SDWebImage (iOS), cached_network_image (Flutter), expo-image or FastImage (React Native). They handle caching, cancel requests for cells scrolled past, and decode off the main thread.\n- Fetch the right size: the server or an image CDN returns versions resized for display (300px thumbnails in a grid, a large image on the detail screen) in WebP or AVIF. On the device, decode down to the view size (downsampling).\n- Two cache layers: memory (capped as a share of RAM) so scrolling back does not reload, and disk so reopening the app is fast. Use versioned URLs so changed images are not served stale.\n- Lists must recycle cells (LazyColumn, RecyclerView, UICollectionView, ListView.builder, FlatList, FlashList) and reserve cell sizes so the layout does not jump when images arrive.\n- Placeholders or a blurred preview (blurhash) while loading, and a fallback image on error.\n- Prefetch the next few images and cancel ones already scrolled past.\n- Measure: Android Studio Profiler, Xcode Instruments, Flutter DevTools for memory and dropped frames."
+    },
+    "example": {
+      "vi": "Trang danh sách bất động sản tải thẳng ảnh gốc 5 MB từ máy ảnh của môi giới, cuộn được 30 tin là app trên máy Android tầm trung bị văng. Thêm bước resize trên server ra bản 400px WebP khoảng 30 KB cho danh sách và dùng Coil để cache: cuộn mượt, lượng dữ liệu tải giảm hơn 90% và hết crash.",
+      "en": "A property listings page loaded agents' original 5 MB camera photos directly; after scrolling 30 listings the app crashed on mid-range Android phones. Adding server-side resizing to 400px WebP versions of about 30 KB for the list and caching with Coil made scrolling smooth, cut data transfer by more than 90% and ended the crashes."
+    },
+    "tip": {
+      "vi": "Con số \"ảnh 12 megapixel tốn khoảng 48 MB RAM khi giải nén\" giúp bạn giải thích rất thuyết phục vì sao phải resize.",
+      "en": "The figure \"a 12-megapixel photo takes about 48 MB of RAM decoded\" makes a very convincing case for resizing."
+    },
+    "followUps": [
+      {
+        "vi": "Cache ảnh trên đĩa nên giới hạn và dọn như thế nào?",
+        "en": "How should the on-disk image cache be capped and cleaned?"
+      },
+      {
+        "vi": "Ảnh người dùng vừa đổi avatar mà app vẫn hiện ảnh cũ thì sửa thế nào?",
+        "en": "A user changes their avatar but the app still shows the old one. How do you fix it?"
+      }
     ]
   },
   {

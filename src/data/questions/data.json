@@ -52,6 +52,38 @@
     ]
   },
   {
+    "id": "data-sql-null-pitfalls",
+    "level": "junior",
+    "topic": "SQL",
+    "q": {
+      "vi": "NULL trong SQL hoạt động thế nào? Kể những bẫy hay gặp khi lọc, đếm và tính trung bình.",
+      "en": "How does NULL behave in SQL? Name the common traps when filtering, counting and averaging."
+    },
+    "a": {
+      "vi": "NULL nghĩa là \"không biết giá trị\", không phải 0 hay chuỗi rỗng. So sánh bất kỳ thứ gì với NULL (kể cả NULL = NULL) cho kết quả UNKNOWN, và WHERE chỉ giữ dòng có điều kiện TRUE. Từ đó sinh ra các bẫy:\n\n- WHERE status <> 'cancelled' bỏ luôn các dòng status là NULL. Muốn giữ phải viết thêm OR status IS NULL, hoặc dùng IS DISTINCT FROM.\n- Kiểm tra NULL phải dùng IS NULL / IS NOT NULL, không dùng = NULL.\n- NOT IN (subquery) mà subquery có một giá trị NULL thì kết quả rỗng. Dùng NOT EXISTS an toàn hơn.\n- COUNT(*) đếm mọi dòng, COUNT(col) bỏ qua NULL. SUM, AVG, MIN, MAX đều bỏ qua NULL, nên AVG(discount) là trung bình của các dòng có giảm giá, không phải của tất cả đơn. Muốn tính NULL là 0 thì AVG(COALESCE(discount, 0)).\n- SUM trên tập toàn NULL trả về NULL chứ không phải 0.\n- LEFT JOIN sinh ra NULL ở các cột bảng phải; lọc bảng phải trong WHERE (WHERE r.col = 'x') sẽ biến nó thành INNER JOIN. Đặt điều kiện đó trong ON.\n- GROUP BY gom mọi NULL vào một nhóm; ORDER BY đặt NULL đầu hay cuối tuỳ database (dùng NULLS LAST nếu cần chắc chắn).\n- Phép tính với NULL ra NULL: price * quantity, hay nối chuỗi với || ở PostgreSQL.\n\nCách phòng: đặt NOT NULL và DEFAULT cho cột không được thiếu, và khi viết query luôn tự hỏi \"cột này có NULL không\".",
+      "en": "NULL means \"unknown\", not 0 or an empty string. Comparing anything with NULL (even NULL = NULL) yields UNKNOWN, and WHERE keeps only rows whose condition is TRUE. That produces the traps:\n\n- WHERE status <> 'cancelled' also drops rows whose status is NULL. To keep them add OR status IS NULL, or use IS DISTINCT FROM.\n- Test for NULL with IS NULL / IS NOT NULL, never = NULL.\n- NOT IN (subquery) returns nothing if the subquery contains a single NULL. NOT EXISTS is safer.\n- COUNT(*) counts all rows, COUNT(col) skips NULLs. SUM, AVG, MIN and MAX all skip NULLs, so AVG(discount) averages only discounted orders, not all orders. To treat NULL as 0 use AVG(COALESCE(discount, 0)).\n- SUM over only NULLs returns NULL, not 0.\n- A LEFT JOIN produces NULLs in the right table's columns; filtering the right table in WHERE (WHERE r.col = 'x') turns it into an INNER JOIN. Put that condition in ON.\n- GROUP BY puts all NULLs into one group; ORDER BY places NULLs first or last depending on the database (use NULLS LAST to be sure).\n- Arithmetic with NULL yields NULL: price * quantity, or string concatenation with || in PostgreSQL.\n\nPrevention: use NOT NULL and DEFAULT for columns that must be present, and always ask \"can this column be NULL?\" while writing a query."
+    },
+    "example": {
+      "vi": "Báo cáo \"tỉ lệ đơn bị huỷ\" ra 4% trong khi đội vận hành nói khoảng 10%. Nguyên nhân: đơn chưa xử lý có status NULL, và query đếm đơn không huỷ bằng WHERE status <> 'cancelled' nên bỏ sót cả nghìn đơn ở mẫu số. Thêm COALESCE(status, 'pending') thì số liệu khớp.",
+      "en": "The \"cancellation rate\" report showed 4% while operations said about 10%. Unprocessed orders had a NULL status, and the query counting non-cancelled orders used WHERE status <> 'cancelled', silently dropping thousands of orders from the denominator. Adding COALESCE(status, 'pending') fixed the numbers."
+    },
+    "code": "-- Bỏ sót dòng status IS NULL\nSELECT count(*) FROM orders WHERE status <> 'cancelled';\n-- Đúng\nSELECT count(*) FROM orders WHERE status IS DISTINCT FROM 'cancelled';\n\n-- Trả về rỗng nếu blocked_users.user_id có NULL\nSELECT * FROM users WHERE id NOT IN (SELECT user_id FROM blocked_users);\n-- An toàn\nSELECT * FROM users u\nWHERE NOT EXISTS (SELECT 1 FROM blocked_users b WHERE b.user_id = u.id);\n\n-- Trung bình trên tất cả đơn, coi không giảm giá là 0\nSELECT avg(coalesce(discount, 0)) FROM orders;",
+    "tip": {
+      "vi": "Bẫy NOT IN với NULL và LEFT JOIN bị biến thành INNER JOIN là hai ví dụ người phỏng vấn rất hay hỏi tiếp.",
+      "en": "NOT IN with a NULL and a LEFT JOIN silently becoming an INNER JOIN are two follow-ups interviewers love."
+    },
+    "followUps": [
+      {
+        "vi": "COUNT(DISTINCT col) có đếm NULL không?",
+        "en": "Does COUNT(DISTINCT col) count NULL?"
+      },
+      {
+        "vi": "Khi nào bạn chủ động cho phép một cột NULL trong thiết kế bảng?",
+        "en": "When would you deliberately allow a column to be NULL in a schema?"
+      }
+    ]
+  },
+  {
     "id": "data-sql-duplicates",
     "level": "junior",
     "topic": "SQL",
@@ -186,6 +218,38 @@
     "source": "https://pandas.pydata.org/docs/user_guide/groupby.html"
   },
   {
+    "id": "data-pandas-groupby-merge-performance",
+    "level": "mid",
+    "topic": "Python & pandas",
+    "q": {
+      "vi": "Trong pandas, dùng groupby và merge thế nào cho đúng? Xử lý file lớn mà không tràn RAM và không chạy chậm ra sao?",
+      "en": "How do you use groupby and merge correctly in pandas? How do you handle large files without running out of memory or being slow?"
+    },
+    "a": {
+      "vi": "groupby: chia DataFrame theo khoá rồi tổng hợp từng nhóm. Nên dùng named aggregation (agg với tên cột kết quả) cho dễ đọc; transform khi cần gắn giá trị của nhóm trở lại từng dòng (ví dụ tỉ trọng đơn hàng trong doanh thu của khách).\n\nmerge: giống JOIN trong SQL (how = left, inner, outer). Bẫy lớn nhất là khoá bên phải bị trùng làm số dòng tăng vọt mà không báo lỗi. Dùng validate=\"many_to_one\" để pandas báo lỗi khi không đúng quan hệ mong muốn, và indicator=True để xem dòng nào không khớp.\n\nHiệu năng:\n- Tránh vòng lặp Python và apply theo từng dòng; dùng phép toán vector hoá trên cả cột (nhanh hơn hàng chục tới hàng trăm lần).\n- Chỉ đọc cột cần (usecols), chỉ định dtype: cột chuỗi ít giá trị khác nhau đổi sang category, số nguyên nhỏ dùng int32 hoặc int8.\n- Đọc theo khúc (chunksize) rồi tổng hợp dần nếu file lớn hơn RAM.\n- Ưu tiên Parquet thay vì CSV: đọc nhanh hơn, giữ kiểu dữ liệu, đọc được một phần cột.\n- Kiểm tra bộ nhớ bằng df.info(memory_usage=\"deep\").\n- Dữ liệu vượt khả năng một máy, hoặc cần nhanh hơn nhiều: chuyển sang Polars, DuckDB, hoặc đẩy tính toán xuống warehouse bằng SQL.",
+      "en": "groupby: split a DataFrame by key and aggregate each group. Prefer named aggregation (agg with output column names) for readability; use transform when you need the group's value back on every row (e.g. each order's share of the customer's revenue).\n\nmerge: works like a SQL JOIN (how = left, inner, outer). The big trap is duplicate keys on the right side silently multiplying rows. Use validate=\"many_to_one\" so pandas raises when the relationship is not what you expect, and indicator=True to see which rows did not match.\n\nPerformance:\n- Avoid Python loops and row-wise apply; use vectorised operations on whole columns (tens to hundreds of times faster).\n- Read only needed columns (usecols) and set dtypes: low-cardinality strings become category, small integers int32 or int8.\n- Read in chunks (chunksize) and aggregate incrementally when the file is bigger than RAM.\n- Prefer Parquet to CSV: faster to read, keeps types, can read a subset of columns.\n- Check memory with df.info(memory_usage=\"deep\").\n- When data outgrows one machine or you need far more speed: move to Polars, DuckDB, or push the computation into the warehouse with SQL."
+    },
+    "example": {
+      "vi": "Notebook tính doanh thu theo tỉnh từ file đơn hàng 3 GB chạy 40 phút rồi tràn RAM. Sửa lại: chỉ đọc 4 cột cần, cột tỉnh dạng category, bỏ apply tính thành tiền từng dòng mà nhân hai cột trực tiếp. Bộ nhớ giảm từ 9 GB còn 1,2 GB và chạy trong 2 phút. Sau đó phát hiện merge với bảng khách bị nhân dòng vì có khách trùng mã, nhờ thêm validate.",
+      "en": "A notebook computing revenue by province from a 3 GB orders file ran 40 minutes then ran out of memory. Fix: read only the 4 needed columns, make province a category, and replace a row-wise apply with direct column multiplication. Memory fell from 9 GB to 1.2 GB and it ran in 2 minutes. Adding validate then revealed the customer merge was duplicating rows because of duplicate customer ids."
+    },
+    "code": "import pandas as pd\n\norders = pd.read_parquet(\"orders.parquet\", columns=[\"order_id\", \"user_id\", \"price\", \"qty\"])\nusers = pd.read_parquet(\"users.parquet\", columns=[\"user_id\", \"province\"])\nusers[\"province\"] = users[\"province\"].astype(\"category\")\n\norders[\"amount\"] = orders[\"price\"] * orders[\"qty\"]          # vector hoá, không apply\ndf = orders.merge(users, on=\"user_id\", how=\"left\", validate=\"many_to_one\")\n\nby_province = df.groupby(\"province\", observed=True).agg(\n    orders=(\"order_id\", \"count\"),\n    revenue=(\"amount\", \"sum\"),\n)\ndf[\"share\"] = df[\"amount\"] / df.groupby(\"user_id\")[\"amount\"].transform(\"sum\")",
+    "tip": {
+      "vi": "Nhắc validate trong merge và việc bỏ apply theo dòng là hai điểm cho thấy bạn đã gặp lỗi thật với pandas.",
+      "en": "Mentioning merge validate and removing row-wise apply shows you have hit real pandas problems."
+    },
+    "followUps": [
+      {
+        "vi": "Khi nào bạn chuyển từ pandas sang Polars hoặc DuckDB?",
+        "en": "When would you switch from pandas to Polars or DuckDB?"
+      },
+      {
+        "vi": "Tính trung bình động 7 ngày theo từng khách bằng pandas thế nào?",
+        "en": "How do you compute a 7-day rolling average per customer in pandas?"
+      }
+    ]
+  },
+  {
     "id": "data-oltp-vs-olap",
     "level": "intern",
     "topic": "Data Modeling",
@@ -310,6 +374,38 @@
     "followUps": [
       { "vi": "dbt giải quyết vấn đề gì?", "en": "What problem does dbt solve?" },
       { "vi": "Bạn xử lý PII trong pipeline ELT thế nào?", "en": "How do you handle PII in an ELT pipeline?" }
+    ]
+  },
+  {
+    "id": "data-dbt-basics",
+    "level": "junior",
+    "topic": "Data Pipelines",
+    "q": {
+      "vi": "dbt là gì và giải quyết vấn đề gì trong ELT? Model, ref() và test trong dbt hoạt động thế nào?",
+      "en": "What is dbt and what problem does it solve in ELT? How do models, ref() and tests work in dbt?"
+    },
+    "a": {
+      "vi": "dbt (data build tool) là công cụ cho bước T trong ELT: dữ liệu thô đã nằm trong warehouse (BigQuery, Snowflake, Redshift, PostgreSQL), dbt giúp biến đổi nó bằng SQL nhưng theo cách làm phần mềm: có version control, test, tài liệu và review.\n\nCác khái niệm chính:\n- Model: mỗi file .sql là một câu SELECT. dbt chạy nó và tạo ra bảng hoặc view trong warehouse (materialization: view, table, incremental, ephemeral).\n- ref('ten_model'): tham chiếu model khác thay vì viết cứng tên bảng. dbt dựa vào ref để dựng đồ thị phụ thuộc (DAG), chạy đúng thứ tự, và đổi được schema giữa môi trường dev, prod.\n- source(): khai báo bảng thô đầu vào, có thể kiểm tra độ tươi (freshness).\n- Test: khai báo trong file YAML như unique, not_null, accepted_values, relationships; hoặc viết SQL tuỳ ý trả về các dòng lỗi.\n- Incremental model: chỉ xử lý dữ liệu mới thay vì dựng lại cả bảng, dùng cho bảng sự kiện lớn.\n- Docs: dbt sinh trang tài liệu và lineage từ chính mã nguồn.\n\nCách tổ chức thường gặp: staging (làm sạch, đổi tên cột từ nguồn) → intermediate → marts (bảng fact, dimension cho báo cáo). dbt không tự lấy dữ liệu về (bước E, L do Fivetran, Airbyte, script riêng) và không phải là orchestrator, thường được Airflow hoặc dbt Cloud gọi chạy theo lịch.",
+      "en": "dbt (data build tool) handles the T in ELT: raw data already sits in the warehouse (BigQuery, Snowflake, Redshift, PostgreSQL), and dbt transforms it with SQL but the software-engineering way: version control, tests, documentation and review.\n\nKey concepts:\n- Model: each .sql file is one SELECT. dbt runs it and creates a table or view in the warehouse (materialization: view, table, incremental, ephemeral).\n- ref('model_name'): reference another model instead of hard-coding a table name. dbt uses ref to build the dependency graph (DAG), run in the right order, and switch schemas between dev and prod.\n- source(): declare raw input tables, optionally with freshness checks.\n- Tests: declared in YAML such as unique, not_null, accepted_values, relationships, or any SQL that returns failing rows.\n- Incremental models: process only new data instead of rebuilding the whole table, for large event tables.\n- Docs: dbt generates documentation and lineage from the code itself.\n\nCommon layout: staging (clean and rename source columns) → intermediate → marts (fact and dimension tables for reporting). dbt does not extract or load data (Fivetran, Airbyte or your own scripts do that) and is not an orchestrator; Airflow or dbt Cloud usually runs it on a schedule."
+    },
+    "example": {
+      "vi": "Đội data có 60 câu SQL báo cáo copy qua lại, mỗi câu tự tính \"doanh thu thuần\" một kiểu nên số trên hai dashboard lệch nhau. Chuyển sang dbt: định nghĩa doanh thu thuần một lần trong model fct_orders, các báo cáo đều ref tới nó, test not_null và unique chạy mỗi sáng nên lỗi trùng đơn bị bắt trước khi sếp mở dashboard.",
+      "en": "A data team had 60 copy-pasted report queries, each computing \"net revenue\" differently, so two dashboards disagreed. With dbt, net revenue is defined once in the fct_orders model, every report refs it, and not_null and unique tests run each morning, catching duplicate orders before managers open the dashboard."
+    },
+    "code": "-- models/marts/fct_orders.sql\nselect\n  o.order_id,\n  o.customer_id,\n  o.amount - coalesce(o.discount, 0) as net_amount,\n  c.province\nfrom {{ ref('stg_orders') }} o\nleft join {{ ref('stg_customers') }} c using (customer_id)\n\n# models/marts/schema.yml\nmodels:\n  - name: fct_orders\n    columns:\n      - name: order_id\n        tests: [unique, not_null]\n      - name: customer_id\n        tests:\n          - relationships:\n              to: ref('stg_customers')\n              field: customer_id",
+    "tip": {
+      "vi": "Nói được dbt chỉ lo bước T, không lấy dữ liệu và không thay orchestrator, cho thấy bạn hiểu nó nằm ở đâu trong pipeline.",
+      "en": "Saying dbt only handles the T, neither extracts data nor replaces an orchestrator, shows you know where it fits."
+    },
+    "followUps": [
+      {
+        "vi": "Incremental model xử lý dữ liệu đến muộn (late data) thế nào?",
+        "en": "How does an incremental model handle late-arriving data?"
+      },
+      {
+        "vi": "Bạn sẽ chia staging, intermediate và marts theo tiêu chí gì?",
+        "en": "How would you decide what goes into staging, intermediate and marts?"
+      }
     ]
   },
   {
@@ -498,6 +594,37 @@
     "source": "https://kafka.apache.org/documentation/"
   },
   {
+    "id": "data-stream-processing-windows",
+    "level": "senior",
+    "topic": "Kafka",
+    "q": {
+      "vi": "Trong stream processing (Flink, Kafka Streams, Spark Structured Streaming), event time, window, watermark và exactly-once là gì?",
+      "en": "In stream processing (Flink, Kafka Streams, Spark Structured Streaming), what are event time, windows, watermarks and exactly-once?"
+    },
+    "a": {
+      "vi": "Event time và processing time: event time là lúc sự kiện thật sự xảy ra (ghi trong dữ liệu), processing time là lúc hệ thống xử lý nó. Điện thoại mất mạng có thể gửi sự kiện trễ vài phút tới vài giờ, nên tính theo processing time sẽ cho kết quả sai. Báo cáo nghiệp vụ gần như luôn cần event time.\n\nWindow: cách chia luồng vô hạn thành từng phần để tổng hợp.\n- Tumbling: cửa sổ cố định không chồng nhau (doanh thu mỗi 5 phút).\n- Sliding/hopping: cửa sổ chồng nhau (tổng 10 phút gần nhất, cập nhật mỗi phút).\n- Session: gom theo đợt hoạt động, đóng khi người dùng im lặng quá một khoảng.\n\nWatermark: mốc mà hệ thống tin rằng \"các sự kiện có event time trước mốc này đã tới gần đủ\". Khi watermark vượt qua cuối cửa sổ thì cửa sổ được đóng và xuất kết quả. Watermark chặt thì kết quả nhanh nhưng bỏ sót sự kiện trễ; lỏng thì chính xác hơn nhưng chậm. Sự kiện tới sau đó được bỏ, ghi ra luồng riêng, hoặc cập nhật lại kết quả (allowed lateness).\n\nExactly-once: mỗi sự kiện ảnh hưởng tới kết quả đúng một lần dù có lỗi và chạy lại. Thực tế đạt được bằng checkpoint trạng thái cùng offset đọc (Flink), transaction của Kafka khi đọc-xử lý-ghi trong Kafka, hoặc ghi ra đích idempotent (upsert theo khoá). Ra hệ thống bên ngoài không hỗ trợ transaction thì thường chỉ có at-least-once, cần đích idempotent để bù.\n\nTrạng thái (state) như bộ đếm theo cửa sổ được lưu trong state backend và checkpoint định kỳ, nên khởi động lại không mất tiến độ.",
+      "en": "Event time vs processing time: event time is when the event actually happened (recorded in the data), processing time is when the system handles it. A phone that was offline can send events minutes or hours late, so computing by processing time gives wrong results. Business reporting almost always needs event time.\n\nWindows split an infinite stream into pieces to aggregate:\n- Tumbling: fixed, non-overlapping (revenue every 5 minutes).\n- Sliding/hopping: overlapping (total of the last 10 minutes, updated every minute).\n- Session: grouped by bursts of activity, closed after a period of inactivity.\n\nA watermark is the point at which the system believes \"events with event time before this have nearly all arrived\". When the watermark passes a window's end, the window closes and emits. A tight watermark gives fast results but drops late events; a loose one is more accurate but slower. Events arriving afterwards are dropped, sent to a side output, or update the result (allowed lateness).\n\nExactly-once: every event affects the result exactly once despite failures and replays. In practice it comes from checkpointing state together with read offsets (Flink), Kafka transactions for read-process-write within Kafka, or idempotent sinks (upsert by key). Writing to external systems without transactions usually gives at-least-once, compensated by an idempotent sink.\n\nState such as per-window counters lives in a state backend and is checkpointed periodically, so restarts do not lose progress."
+    },
+    "example": {
+      "vi": "Dashboard đếm đơn mỗi phút trong đợt flash sale tụt mạnh ở phút thứ 3 rồi phút thứ 4 lại cao bất thường. Lý do: hệ thống gom theo processing time, và Kafka consumer bị chậm 40 giây nên đơn của phút 3 bị tính sang phút 4. Chuyển sang event time cùng watermark 1 phút thì biểu đồ khớp với số đơn thật trong database.",
+      "en": "A per-minute order dashboard during a flash sale dipped sharply in minute 3 and spiked in minute 4. The pipeline grouped by processing time, and a 40-second consumer lag pushed minute-3 orders into minute 4. Switching to event time with a 1-minute watermark made the chart match the real order counts in the database."
+    },
+    "tip": {
+      "vi": "Đánh đổi giữa độ trễ và độ chính xác khi chọn watermark là ý mà người phỏng vấn cấp senior muốn nghe.",
+      "en": "The latency-versus-accuracy trade-off when choosing a watermark is what senior interviewers want to hear."
+    },
+    "followUps": [
+      {
+        "vi": "Ghi kết quả stream ra PostgreSQL thì bạn làm thế nào để không bị đếm trùng khi job khởi động lại?",
+        "en": "Writing stream results to PostgreSQL, how do you avoid double counting after a job restart?"
+      },
+      {
+        "vi": "Trạng thái của job lớn tới hàng trăm GB thì vận hành thế nào?",
+        "en": "How do you operate a job whose state grows to hundreds of GB?"
+      }
+    ]
+  },
+  {
     "id": "data-airflow-dag",
     "level": "junior",
     "topic": "Orchestration",
@@ -630,6 +757,37 @@
     ]
   },
   {
+    "id": "data-stats-basics-analyst",
+    "level": "junior",
+    "topic": "Analytics",
+    "q": {
+      "vi": "Mean, median và percentile khác nhau thế nào, khi nào dùng cái nào? p-value hiểu đúng là gì?",
+      "en": "How do mean, median and percentiles differ and when do you use each? What does a p-value really mean?"
+    },
+    "a": {
+      "vi": "Mean (trung bình cộng) bị kéo mạnh bởi giá trị cực đoan. Median (trung vị) là giá trị ở giữa khi sắp xếp, không bị vài điểm lớn làm lệch. Percentile p90, p95, p99 cho biết 90%, 95%, 99% giá trị nhỏ hơn hoặc bằng mức đó.\n\nKhi nào dùng:\n- Dữ liệu lệch, có đuôi dài (thu nhập, giá trị đơn hàng, thời gian phản hồi): báo median và percentile, có thể kèm mean.\n- Cần tổng (doanh thu) hoặc tính trên mọi phần tử: mean vẫn cần, vì mean × số lượng = tổng.\n- Hiệu năng hệ thống: p95, p99 quan trọng hơn mean, vì người dùng chậm nhất mới là người bỏ đi.\n- Luôn nhìn phân phối (histogram) trước khi chọn một con số.\n\np-value: giả sử thực ra không có khác biệt (giả thuyết H0 đúng), p-value là xác suất thấy kết quả lệch ít nhất như dữ liệu đang thấy. p nhỏ (thường dưới 0,05) nghĩa là dữ liệu khó xảy ra nếu không có khác biệt, nên ta bác bỏ H0.\n\nHiểu sai hay gặp:\n- p-value không phải xác suất H0 đúng, cũng không phải xác suất kết quả là ngẫu nhiên.\n- p nhỏ không có nghĩa là khác biệt lớn hay đáng làm; phải xem kích thước hiệu ứng và khoảng tin cậy.\n- Xem kết quả liên tục rồi dừng khi thấy p < 0,05 (peeking), hoặc thử nhiều chỉ số cùng lúc, làm tăng mạnh tỉ lệ kết luận sai.",
+      "en": "The mean is pulled hard by extreme values. The median is the middle value when sorted and is not skewed by a few large points. Percentiles p90, p95, p99 tell you 90%, 95%, 99% of values are at or below that level.\n\nWhen to use which:\n- Skewed, long-tailed data (income, order value, response time): report the median and percentiles, optionally with the mean.\n- When you need totals (revenue) or every item counts: the mean still matters, since mean × count = total.\n- System performance: p95 and p99 matter more than the mean, because the slowest users are the ones who leave.\n- Always look at the distribution (histogram) before picking one number.\n\np-value: assuming there is actually no difference (H0 true), the p-value is the probability of seeing a result at least as extreme as the data shows. A small p (often below 0.05) means the data would be unlikely with no difference, so we reject H0.\n\nCommon misreadings:\n- The p-value is not the probability H0 is true, nor the probability the result is due to chance.\n- A small p does not mean a large or worthwhile effect; look at effect size and the confidence interval.\n- Checking results continuously and stopping when p < 0.05 (peeking), or testing many metrics at once, sharply raises the false-positive rate."
+    },
+    "example": {
+      "vi": "Sếp hỏi \"khách trung bình chi bao nhiêu mỗi đơn\". Mean là 1,8 triệu vì có vài doanh nghiệp đặt đơn 200 triệu, trong khi median chỉ 320 nghìn. Nếu dùng mean để thiết kế ngưỡng freeship thì gần như không khách lẻ nào chạm tới; báo cả hai số và histogram thì cuộc họp quyết định nhanh hơn.",
+      "en": "A manager asks how much a typical customer spends per order. The mean is 1.8 million VND because a few businesses place 200-million orders, while the median is only 320 thousand. A free-shipping threshold based on the mean would be out of reach for almost every individual shopper; showing both numbers and a histogram made the decision quick."
+    },
+    "tip": {
+      "vi": "Câu \"p-value không phải xác suất giả thuyết đúng\" là điểm phân biệt người hiểu thống kê và người chỉ thuộc ngưỡng 0,05.",
+      "en": "\"The p-value is not the probability the hypothesis is true\" separates people who understand statistics from those who only know the 0.05 cutoff."
+    },
+    "followUps": [
+      {
+        "vi": "Khoảng tin cậy 95% nghĩa là gì?",
+        "en": "What does a 95% confidence interval mean?"
+      },
+      {
+        "vi": "Vì sao trung bình của p99 latency giữa các server lại là con số sai?",
+        "en": "Why is averaging p99 latency across servers wrong?"
+      }
+    ]
+  },
+  {
     "id": "data-ab-testing",
     "level": "mid",
     "topic": "Analytics",
@@ -703,6 +861,37 @@
     "followUps": [
       { "vi": "Bạn xử lý event bị gửi trùng hoặc đến muộn vài ngày từ thiết bị offline thế nào?", "en": "How do you handle duplicate events or events arriving days late from offline devices?" },
       { "vi": "Chi phí tăng gấp đôi sau 6 tháng, bạn tối ưu ở đâu trước?", "en": "Costs doubled after 6 months; where do you optimize first?" }
+    ]
+  },
+  {
+    "id": "data-governance-pii",
+    "level": "mid",
+    "topic": "Platform Design",
+    "q": {
+      "vi": "Xử lý dữ liệu cá nhân (PII) trong data platform thế nào? Data governance gồm những gì?",
+      "en": "How do you handle personal data (PII) in a data platform? What does data governance cover?"
+    },
+    "a": {
+      "vi": "PII là dữ liệu xác định được một người: họ tên, số điện thoại, email, CCCD, địa chỉ, số tài khoản, vị trí, và cả các tổ hợp như ngày sinh kèm mã bưu chính. Ở Việt Nam cần tuân theo Nghị định 13/2023/NĐ-CP và Luật Bảo vệ dữ liệu cá nhân (có hiệu lực từ 1/1/2026); khách hàng ở châu Âu thì có thêm GDPR.\n\nCách làm trong data platform:\n- Phân loại và gắn nhãn cột nhạy cảm ngay khi dữ liệu vào (data catalog như DataHub, Unity Catalog, BigQuery policy tags).\n- Thu thập tối thiểu: không đưa vào warehouse những gì phân tích không cần.\n- Tách hoặc biến đổi PII sớm: hash có salt hoặc tokenize để vẫn join được theo khách mà không thấy số điện thoại thật; che một phần (masking) khi hiển thị.\n- Phân quyền theo cột và theo dòng: analyst thấy bản đã che, chỉ vài người có lý do mới xem bản gốc; mọi truy cập được ghi log.\n- Mã hoá khi lưu và khi truyền, quản lý khoá tập trung.\n- Thời hạn lưu trữ: tự xoá hoặc ẩn danh dữ liệu cũ theo chính sách.\n- Quyền của người dùng: phải tìm và xoá hoặc sửa được dữ liệu của một người trên mọi bảng, kể cả bản sao và backup, nên cần biết lineage.\n- Môi trường dev, test dùng dữ liệu giả hoặc đã ẩn danh, không copy dữ liệu thật.\n\nData governance rộng hơn bảo mật: ai sở hữu từng bộ dữ liệu, định nghĩa chỉ số thống nhất, chất lượng dữ liệu, catalog và lineage, chính sách truy cập và lưu trữ, cùng quy trình xin quyền và xử lý sự cố.",
+      "en": "PII is data that can identify a person: name, phone number, email, national ID, address, bank account, location, and combinations such as birth date plus postcode. In Vietnam, Decree 13/2023/ND-CP and the Personal Data Protection Law (in force from 1 January 2026) apply; European customers add GDPR.\n\nIn a data platform:\n- Classify and tag sensitive columns at ingestion (a data catalog such as DataHub, Unity Catalog, BigQuery policy tags).\n- Collect the minimum: do not load into the warehouse what analysis does not need.\n- Separate or transform PII early: salted hashing or tokenisation so you can still join by customer without seeing real phone numbers; partial masking for display.\n- Column- and row-level access: analysts see masked data, only a few people with a reason see raw values, and every access is logged.\n- Encrypt at rest and in transit, with centrally managed keys.\n- Retention: automatically delete or anonymise old data per policy.\n- Data subject rights: you must be able to find and delete or correct one person's data across every table, including copies and backups, which requires lineage.\n- Dev and test environments use synthetic or anonymised data, never copies of production.\n\nData governance is broader than security: who owns each dataset, consistent metric definitions, data quality, catalog and lineage, access and retention policies, and processes for access requests and incidents."
+    },
+    "example": {
+      "vi": "Một ví điện tử để nguyên số điện thoại và số CCCD trong bảng giao dịch trên warehouse, cả 40 analyst đều query được và xuất ra file Excel. Sau đợt rà soát, cột số điện thoại được thay bằng mã hash có salt để vẫn đếm khách quay lại, CCCD chuyển sang bảng riêng chỉ đội tuân thủ xem được, và mọi lần xuất dữ liệu đều được ghi log.",
+      "en": "An e-wallet kept raw phone numbers and national ID numbers in its warehouse transactions table, queryable and exportable to Excel by all 40 analysts. After a review, phone numbers became salted hashes so returning customers could still be counted, ID numbers moved to a separate table only the compliance team could read, and every export was logged."
+    },
+    "tip": {
+      "vi": "Nhắc tới yêu cầu xoá dữ liệu của một người trên mọi bảng và bản sao cho thấy bạn hiểu vì sao cần lineage.",
+      "en": "Mentioning deleting one person's data across every table and copy shows you understand why lineage matters."
+    },
+    "followUps": [
+      {
+        "vi": "Hash số điện thoại không có salt có an toàn không? Vì sao?",
+        "en": "Is hashing phone numbers without a salt safe? Why?"
+      },
+      {
+        "vi": "Người dùng yêu cầu xoá tài khoản thì dữ liệu của họ trong backup xử lý thế nào?",
+        "en": "When a user asks to delete their account, what happens to their data in backups?"
+      }
     ]
   }
 ]

@@ -21,6 +21,9 @@ assert.deepEqual(annotate("slo viết thường không phải SLO", m, ctx()), [
 assert.deepEqual(annotate("podcast", m, ctx()), ["podcast"]);
 assert.deepEqual(annotate("(SLO).", m, ctx()), ["(", { t: "SLO", g: "slo" }, ")."]);
 assert.deepEqual(annotate("Loadđ", m, ctx()), ["Loadđ"]);
+// Dính dấu chấm với chữ là tên file/thuộc tính: "load.html", "x.load" không khớp; cuối câu "load." vẫn khớp.
+assert.deepEqual(annotate("load.html x.load", m, ctx()), ["load.html x.load"]);
+assert.deepEqual(annotate("Hết load.", m, ctx()), ["Hết ", { t: "load", g: "load" }, "."]);
 
 // Chỉ đánh dấu lần đầu, seen dùng chung giữa các đoạn của cùng một đáp án.
 const c = ctx();

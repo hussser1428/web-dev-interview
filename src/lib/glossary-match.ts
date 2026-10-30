@@ -27,8 +27,9 @@ export function makeMatcher(entries: Entry[]) {
   for (const e of entries)
     for (const form of e.match) forms.set(form.toLowerCase(), { id: e.id, form, exact: /[A-Z]/.test(form) && form === form.toUpperCase() });
   // Cụm dài trước để "load balancer" thắng "load"; ranh giới là ký tự không phải chữ/số (kể cả chữ có dấu tiếng Việt).
+  // Dính dấu chấm với chữ/số (index.html, req.session) là tên file/thuộc tính, không phải thuật ngữ.
   const alt = [...forms.values()].map((f) => f.form).sort((a, b) => b.length - a.length).map(escape).join("|");
-  const re = new RegExp(`(?<![\\p{L}\\p{N}])(?:${alt})(?![\\p{L}\\p{N}])`, "giu");
+  const re = new RegExp(`(?<![\\p{L}\\p{N}]|[\\p{L}\\p{N}]\\.)(?:${alt})(?![\\p{L}\\p{N}]|\\.[\\p{L}\\p{N}])`, "giu");
   return { re, forms, byId: new Map(entries.map((e) => [e.id, e])) };
 }
 

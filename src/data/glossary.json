@@ -752,7 +752,8 @@
     "id": "ci-cd",
     "term": "CI/CD",
     "match": [
-      "CI/CD"
+      "CI/CD",
+      "CI"
     ],
     "see": "devops-cicd-pipeline-design",
     "full": {
@@ -826,7 +827,8 @@
     "term": "Distributed tracing",
     "match": [
       "distributed tracing",
-      "tracing"
+      "tracing",
+      "OpenTelemetry"
     ],
     "def": {
       "vi": "Gắn một trace ID cho mỗi request và ghi lại thời gian ở từng service nó đi qua, để biết chậm hay lỗi ở đâu.",
@@ -1238,7 +1240,8 @@
     "term": "Dynamic programming",
     "match": [
       "dynamic programming",
-      "quy hoạch động"
+      "quy hoạch động",
+      "DP"
     ],
     "full": {
       "vi": "quy hoạch động",
@@ -1683,5 +1686,2424 @@
       "vi": "\"Trang checkout chậm 4 giây (S), em được giao tối ưu (T), em thêm index và cache (A), còn 0,8 giây và tỉ lệ chốt đơn tăng 6% (R).\"",
       "en": "\"Checkout took 4 seconds (S), I was asked to fix it (T), I added an index and a cache (A), it dropped to 0.8 s and conversion rose 6% (R).\""
     }
+  },
+  {
+    "id": "brse",
+    "term": "BrSE",
+    "full": {
+      "vi": "Bridge System Engineer · kỹ sư cầu nối",
+      "en": "Bridge System Engineer"
+    },
+    "match": [
+      "BrSE"
+    ],
+    "def": {
+      "vi": "Kỹ sư làm cầu nối giữa khách hàng (thường là Nhật) và team phát triển ở Việt Nam: hiểu yêu cầu, dịch tài liệu, trao đổi kỹ thuật bằng tiếng của khách.",
+      "en": "An engineer bridging the client (often Japanese) and the development team in Vietnam: understanding requirements, translating documents and discussing technical points in the client's language."
+    },
+    "see": "behavioral-japanese-client-horenso",
+    "tracks": [
+      "behavioral"
+    ]
+  },
+  {
+    "id": "horenso",
+    "term": "Horenso",
+    "full": {
+      "vi": "報連相 · báo cáo, liên lạc, bàn bạc",
+      "en": "報連相 · report, inform, consult"
+    },
+    "match": [
+      "horenso"
+    ],
+    "def": {
+      "vi": "Nguyên tắc làm việc phổ biến ở công ty Nhật: chủ động báo cáo tiến độ, chia sẻ thông tin cho người liên quan, và hỏi ý kiến trước khi tự quyết việc chưa chắc chắn.",
+      "en": "A common Japanese workplace principle: proactively report progress, share information with those affected, and consult before deciding uncertain matters."
+    },
+    "see": "behavioral-japanese-client-horenso",
+    "tracks": [
+      "behavioral"
+    ]
+  },
+  {
+    "id": "overtime",
+    "term": "OT",
+    "full": {
+      "vi": "Overtime · làm thêm giờ",
+      "en": "Overtime"
+    },
+    "match": [
+      "OT"
+    ],
+    "def": {
+      "vi": "Thời gian làm việc ngoài giờ quy định. OT thỉnh thoảng khi có sự cố là bình thường; OT kéo dài thường là dấu hiệu kế hoạch hoặc ước lượng có vấn đề.",
+      "en": "Work beyond normal hours. Occasional overtime for incidents is normal; sustained overtime usually signals a planning or estimation problem."
+    },
+    "see": "behavioral-overtime",
+    "tracks": [
+      "behavioral"
+    ]
+  },
+  {
+    "id": "gross-salary",
+    "term": "Lương gross / net",
+    "match": [
+      "gross"
+    ],
+    "def": {
+      "vi": "Gross là lương trước khi trừ bảo hiểm bắt buộc của người lao động (khoảng 10,5%) và thuế thu nhập cá nhân; net là số tiền thực nhận. Luôn hỏi rõ con số là gross hay net trước khi so sánh offer.",
+      "en": "Gross is pay before the employee's mandatory insurance (about 10.5%) and personal income tax; net is take-home pay. Always confirm which one a figure is before comparing offers."
+    },
+    "example": {
+      "vi": "Hai offer 25 triệu gross và 25 triệu net chênh nhau vài triệu mỗi tháng tiền thực nhận.",
+      "en": "Offers of 25 million gross and 25 million net differ by several million VND a month in take-home pay."
+    },
+    "see": "behavioral-offer-negotiation",
+    "tracks": [
+      "behavioral"
+    ]
+  },
+  {
+    "id": "sql",
+    "term": "SQL / relational DB",
+    "full": {
+      "vi": "Structured Query Language",
+      "en": "Structured Query Language"
+    },
+    "match": [
+      "SQL",
+      "relational DB",
+      "relational database"
+    ],
+    "see": "backend-nosql-when",
+    "def": {
+      "vi": "Relational DB lưu dữ liệu thành các bảng (hàng, cột) nối với nhau qua khoá, như PostgreSQL, MySQL, SQL Server. SQL là ngôn ngữ để truy vấn và sửa dữ liệu trong các bảng đó.",
+      "en": "A relational DB stores data as tables (rows and columns) linked by keys, e.g. PostgreSQL, MySQL, SQL Server. SQL is the language used to query and change data in those tables."
+    },
+    "example": {
+      "vi": "Giống file Excel nhiều sheet: sheet Khách hàng và sheet Đơn hàng nối với nhau qua cột mã khách. SQL là câu lệnh kiểu \"lấy mọi đơn tháng này của khách ở Hà Nội\".",
+      "en": "Like a spreadsheet with several sheets: Customers and Orders linked by a customer ID column. SQL is a command such as \"get every order this month from customers in Hanoi\"."
+    },
+    "related": [
+      "nosql",
+      "join",
+      "acid"
+    ]
+  },
+  {
+    "id": "nosql",
+    "term": "NoSQL",
+    "full": {
+      "vi": "Not only SQL",
+      "en": "Not only SQL"
+    },
+    "match": [
+      "NoSQL"
+    ],
+    "see": "backend-nosql-when",
+    "def": {
+      "vi": "Nhóm database không lưu theo bảng quan hệ: key-value, document, wide-column, graph. Thường đổi join và ràng buộc chặt lấy khả năng scale ngang và schema linh hoạt.",
+      "en": "Databases that do not store data as relational tables: key-value, document, wide-column, graph. They usually trade joins and strict constraints for horizontal scaling and a flexible schema."
+    },
+    "example": {
+      "vi": "Shop online: Redis giữ giỏ hàng, MongoDB lưu catalog vì áo có size, màu còn laptop có RAM, CPU; còn đơn hàng và thanh toán vẫn để PostgreSQL.",
+      "en": "An online shop: Redis holds carts, MongoDB stores the catalog because shirts have size and colour while laptops have RAM and CPU; orders and payments stay in PostgreSQL."
+    },
+    "related": [
+      "sql",
+      "key-value",
+      "document-db",
+      "wide-column",
+      "eventual-consistency"
+    ]
+  },
+  {
+    "id": "key-value",
+    "term": "Key-value store",
+    "match": [
+      "key-value"
+    ],
+    "see": "backend-nosql-when",
+    "def": {
+      "vi": "Database lưu cặp khoá → giá trị. Chỉ tra được theo khoá nhưng cực nhanh, như Redis, DynamoDB.",
+      "en": "A database of key → value pairs. You can only look things up by key, but it is extremely fast, e.g. Redis, DynamoDB."
+    },
+    "example": {
+      "vi": "Tủ gửi đồ ở siêu thị: đưa số thẻ là lấy đúng ngăn, nhưng không hỏi được \"ngăn nào đang có áo đỏ\".",
+      "en": "A supermarket locker: hand over the ticket number and you get the right box, but you cannot ask \"which box holds a red jacket\"."
+    },
+    "related": [
+      "nosql",
+      "cache"
+    ],
+    "tracks": [
+      "backend",
+      "data",
+      "system-design"
+    ]
+  },
+  {
+    "id": "document-db",
+    "term": "Document DB",
+    "match": [
+      "document DB",
+      "document database",
+      "document store"
+    ],
+    "see": "backend-nosql-when",
+    "def": {
+      "vi": "Database lưu mỗi bản ghi là một document JSON có thể lồng nhau, các document không bắt buộc cùng cấu trúc, như MongoDB, Firestore.",
+      "en": "A database that stores each record as a JSON document that can be nested, and documents need not share the same structure, e.g. MongoDB, Firestore."
+    },
+    "example": {
+      "vi": "Mỗi khách một bìa hồ sơ riêng: bìa này có thêm giấy bảo hành, bìa kia không, mở một bìa là thấy đủ thông tin của khách đó.",
+      "en": "One folder per customer: this one has a warranty card, that one does not, and opening a folder shows everything about that customer."
+    },
+    "related": [
+      "nosql",
+      "schema"
+    ],
+    "tracks": [
+      "backend",
+      "data",
+      "system-design"
+    ]
+  },
+  {
+    "id": "wide-column",
+    "term": "Wide-column DB",
+    "match": [
+      "wide-column"
+    ],
+    "see": "backend-nosql-when",
+    "def": {
+      "vi": "Database chia dữ liệu theo partition key ra nhiều máy, mỗi hàng có thể có rất nhiều cột. Ghi khối lượng cực lớn nhưng phải thiết kế bảng theo đúng câu query sẽ chạy, như Cassandra, Bigtable.",
+      "en": "A database that spreads data across machines by partition key, where each row can have very many columns. It handles huge write volumes but tables must be designed around the exact queries, e.g. Cassandra, Bigtable."
+    },
+    "example": {
+      "vi": "Sổ chấm công mỗi nhân viên một trang, mỗi ngày ghi thêm một cột. Muốn xem theo phòng ban thì phải lập thêm một sổ khác.",
+      "en": "A timesheet with one page per employee and a new column each day. To view by department you have to keep a second book."
+    },
+    "related": [
+      "nosql",
+      "sharding"
+    ],
+    "tracks": [
+      "backend",
+      "data",
+      "system-design"
+    ]
+  },
+  {
+    "id": "join",
+    "term": "JOIN",
+    "match": [
+      "join",
+      "joins"
+    ],
+    "see": "backend-db-sql-joins",
+    "def": {
+      "vi": "Phép ghép dòng của hai bảng theo cột chung, ví dụ nối bảng đơn hàng với bảng khách hàng qua customer_id.",
+      "en": "Combining rows of two tables on a shared column, e.g. linking orders to customers via customer_id."
+    },
+    "example": {
+      "vi": "Danh sách lớp và bảng điểm ghép theo mã học sinh để ra bảng điểm có cả tên.",
+      "en": "Joining a class list and a score sheet on student ID to get scores with names."
+    },
+    "related": [
+      "sql"
+    ],
+    "tracks": [
+      "backend",
+      "data",
+      "system-design"
+    ]
+  },
+  {
+    "id": "schema",
+    "term": "Schema",
+    "match": [
+      "schema",
+      "schemas"
+    ],
+    "def": {
+      "vi": "Bản mô tả cấu trúc dữ liệu: có những bảng hoặc trường nào, kiểu gì, ràng buộc gì. SQL bắt khai báo schema trước; document DB cho mỗi bản ghi một cấu trúc (schema linh hoạt).",
+      "en": "The description of how data is structured: which tables or fields, which types, which constraints. SQL requires the schema up front; a document DB lets each record differ (flexible schema)."
+    },
+    "example": {
+      "vi": "Mẫu đơn in sẵn các ô Họ tên, Ngày sinh, Số điện thoại: ai điền cũng phải theo đúng các ô đó.",
+      "en": "A printed form with boxes for name, date of birth and phone: everyone must fill in exactly those boxes."
+    },
+    "related": [
+      "sql",
+      "migration"
+    ],
+    "tracks": [
+      "backend",
+      "data",
+      "system-design"
+    ]
+  },
+  {
+    "id": "full-text-search",
+    "term": "Full-text search",
+    "match": [
+      "full-text search",
+      "full-text"
+    ],
+    "see": "system-design-search-indexing",
+    "def": {
+      "vi": "Tìm theo từ ngữ trong văn bản thay vì khớp nguyên chuỗi: tách từ, bỏ dấu, xếp hạng theo mức liên quan, dựa trên inverted index (Elasticsearch, OpenSearch).",
+      "en": "Searching by words in text rather than exact string matches: tokenising, normalising, ranking by relevance, built on an inverted index (Elasticsearch, OpenSearch)."
+    },
+    "example": {
+      "vi": "Gõ \"ao khoac nam\" vẫn ra \"Áo khoác nam\", sản phẩm khớp nhiều từ hơn được xếp lên đầu.",
+      "en": "Typing \"mens jacket\" still finds \"Men's Jacket\", and products matching more words rank first."
+    }
+  },
+  {
+    "id": "time-series",
+    "term": "Time-series",
+    "match": [
+      "time-series",
+      "time series"
+    ],
+    "def": {
+      "vi": "Dữ liệu là chuỗi giá trị theo thời gian, như CPU mỗi 15 giây hay giá cổ phiếu mỗi phút. Thường chỉ ghi thêm và truy vấn theo khoảng thời gian.",
+      "en": "Data that is a sequence of values over time, such as CPU every 15 seconds or a stock price every minute. Usually append-only and queried by time range."
+    },
+    "example": {
+      "vi": "Đồng hồ điện ghi số mỗi giờ; bạn hay hỏi \"tuần trước dùng bao nhiêu\" chứ không sửa số cũ.",
+      "en": "An electricity meter logs a reading every hour; you ask \"how much did we use last week\" and never edit old readings."
+    }
+  },
+  {
+    "id": "polyglot-persistence",
+    "term": "Polyglot persistence",
+    "match": [
+      "polyglot persistence"
+    ],
+    "def": {
+      "vi": "Dùng nhiều loại database trong cùng một hệ thống, mỗi loại cho phần dữ liệu hợp với nó nhất.",
+      "en": "Using several kinds of database in one system, each for the data it suits best."
+    },
+    "example": {
+      "vi": "PostgreSQL cho đơn hàng, Redis cho session, Elasticsearch cho ô tìm kiếm sản phẩm.",
+      "en": "PostgreSQL for orders, Redis for sessions, Elasticsearch for the product search box."
+    },
+    "related": [
+      "sql",
+      "nosql"
+    ]
+  },
+  {
+    "id": "jsonb",
+    "term": "JSONB",
+    "match": [
+      "JSONB"
+    ],
+    "def": {
+      "vi": "Kiểu cột của PostgreSQL lưu JSON ở dạng nhị phân, query và đánh index được vào bên trong JSON, nên PostgreSQL dùng được như document DB ở mức vừa phải.",
+      "en": "A PostgreSQL column type that stores JSON in binary form and can query and index inside it, so PostgreSQL can serve as a modest document DB."
+    },
+    "related": [
+      "document-db",
+      "sql"
+    ]
+  },
+  {
+    "id": "api",
+    "term": "API",
+    "full": {
+      "vi": "Application Programming Interface",
+      "en": "Application Programming Interface"
+    },
+    "match": [
+      "API",
+      "APIs"
+    ],
+    "see": "backend-api-rest-design",
+    "def": {
+      "vi": "Giao diện để một chương trình gọi chức năng của chương trình khác theo quy ước định sẵn: gửi request đúng định dạng, nhận response đúng định dạng. Thường nói tới web API, tức frontend hoặc app gọi backend qua HTTP.",
+      "en": "An interface that lets one program call another's functionality by an agreed contract: send a request in the right format, get a response in the right format. Usually means a web API, where a frontend or app calls a backend over HTTP."
+    },
+    "example": {
+      "vi": "Thực đơn nhà hàng: khách không vào bếp, chỉ gọi món theo thực đơn và nhận món ra.",
+      "en": "A restaurant menu: customers never enter the kitchen, they order from the menu and get the dish."
+    },
+    "related": [
+      "endpoint",
+      "http",
+      "api-gateway"
+    ]
+  },
+  {
+    "id": "http",
+    "term": "HTTP / HTTPS",
+    "full": {
+      "vi": "HyperText Transfer Protocol",
+      "en": "HyperText Transfer Protocol"
+    },
+    "match": [
+      "HTTP",
+      "HTTPS"
+    ],
+    "see": "backend-http-methods-idempotency",
+    "def": {
+      "vi": "Giao thức mà trình duyệt, app và server dùng để gửi request và nhận response trên web. HTTPS là HTTP chạy bên trong kết nối mã hoá TLS.",
+      "en": "The protocol browsers, apps and servers use to send requests and receive responses on the web. HTTPS is HTTP inside a TLS-encrypted connection."
+    },
+    "example": {
+      "vi": "Như gửi thư theo mẫu chuẩn: ngoài phong bì ghi phương thức (GET, POST), địa chỉ và header, bên trong là nội dung. HTTPS là thư được bỏ trong hộp có khoá.",
+      "en": "Like mail in a standard format: the envelope carries the method (GET, POST), address and headers, the letter inside is the body. HTTPS puts the letter in a locked box."
+    },
+    "related": [
+      "tls",
+      "header",
+      "api"
+    ]
+  },
+  {
+    "id": "tls",
+    "term": "TLS",
+    "full": {
+      "vi": "Transport Layer Security",
+      "en": "Transport Layer Security"
+    },
+    "match": [
+      "TLS",
+      "SSL",
+      "TLS/SSL"
+    ],
+    "see": "devops-net-tls-handshake",
+    "def": {
+      "vi": "Giao thức mã hoá kết nối giữa client và server, đồng thời xác thực server qua certificate. SSL là tên các phiên bản cũ, nay đã được thay bằng TLS.",
+      "en": "The protocol that encrypts the connection between client and server and authenticates the server via a certificate. SSL is the name of the old versions, now replaced by TLS."
+    },
+    "example": {
+      "vi": "Biểu tượng ổ khoá trên thanh địa chỉ: người ở giữa, như wifi quán cà phê, chỉ thấy dữ liệu đã mã hoá.",
+      "en": "The padlock in the address bar: someone in the middle, like café wifi, only sees encrypted data."
+    },
+    "related": [
+      "http"
+    ]
+  },
+  {
+    "id": "tcp-udp",
+    "term": "TCP / UDP",
+    "match": [
+      "TCP",
+      "UDP"
+    ],
+    "see": "devops-net-tcp-vs-udp",
+    "def": {
+      "vi": "Hai giao thức truyền dữ liệu qua mạng. TCP thiết lập kết nối, đảm bảo dữ liệu đến đủ và đúng thứ tự (web, API, database). UDP gửi luôn không cần xác nhận, nhanh hơn nhưng có thể mất gói (gọi video, game, DNS).",
+      "en": "Two transport protocols. TCP sets up a connection and guarantees complete, ordered delivery (web, APIs, databases). UDP just sends without acknowledgement, faster but packets can be lost (video calls, games, DNS)."
+    },
+    "example": {
+      "vi": "TCP như gửi bưu phẩm có ký nhận, thiếu thì gửi lại; UDP như phát loa thông báo, ai nghe sót thì thôi.",
+      "en": "TCP is registered mail with a signature and resends; UDP is a loudspeaker announcement, if you miss it you miss it."
+    }
+  },
+  {
+    "id": "dns",
+    "term": "DNS",
+    "full": {
+      "vi": "Domain Name System",
+      "en": "Domain Name System"
+    },
+    "match": [
+      "DNS"
+    ],
+    "see": "devops-net-dns-resolution",
+    "def": {
+      "vi": "Hệ thống đổi tên miền (google.com) thành địa chỉ IP mà máy tính dùng để kết nối.",
+      "en": "The system that turns domain names (google.com) into the IP addresses computers connect to."
+    },
+    "example": {
+      "vi": "Danh bạ điện thoại: bạn nhớ tên \"Mẹ\", điện thoại tự tra ra số để gọi.",
+      "en": "A phone's contact list: you remember \"Mum\", the phone looks up the number to dial."
+    }
+  },
+  {
+    "id": "header",
+    "term": "HTTP header",
+    "match": [
+      "header",
+      "headers"
+    ],
+    "see": "backend-http-caching-headers",
+    "def": {
+      "vi": "Các dòng thông tin đi kèm request hoặc response HTTP, nằm ngoài phần nội dung chính: kiểu dữ liệu (Content-Type), token đăng nhập (Authorization), chỉ dẫn cache (Cache-Control)…",
+      "en": "Lines of metadata attached to an HTTP request or response, separate from the body: data type (Content-Type), login token (Authorization), caching rules (Cache-Control)…"
+    },
+    "example": {
+      "vi": "Những dòng ghi ngoài phong bì như người gửi, \"hàng dễ vỡ\", \"giao trước 10h\": không phải đồ bên trong nhưng quyết định cách xử lý gói hàng.",
+      "en": "What is written on the outside of a parcel, like sender, \"fragile\", \"deliver before 10am\": not the contents, but it decides how the parcel is handled."
+    },
+    "related": [
+      "http"
+    ],
+    "tracks": [
+      "backend",
+      "devops",
+      "system-design"
+    ]
+  },
+  {
+    "id": "cookie-session",
+    "term": "Cookie / session",
+    "match": [
+      "cookie",
+      "cookies",
+      "session ID",
+      "session IDs",
+      "session-based",
+      "sticky session",
+      "sticky sessions"
+    ],
+    "see": "backend-auth-authn-authz-sessions",
+    "def": {
+      "vi": "Cookie là mẩu dữ liệu nhỏ mà server nhờ trình duyệt lưu, và trình duyệt tự gửi kèm mỗi request tới đúng domain đó. Session là trạng thái đăng nhập của người dùng lưu ở server, thường nhận diện bằng session ID nằm trong cookie.",
+      "en": "A cookie is a small piece of data the server asks the browser to store, which the browser sends back automatically with every request to that domain. A session is the user's login state kept on the server, usually identified by a session ID stored in a cookie."
+    },
+    "example": {
+      "vi": "Gửi xe: bạn giữ vé (cookie chứa session ID), nhà xe giữ sổ ghi vé nào là xe nào (session).",
+      "en": "A parking garage: you keep the ticket (a cookie holding the session ID), the garage keeps the book of which ticket is which car (the session)."
+    },
+    "related": [
+      "jwt",
+      "csrf"
+    ],
+    "tracks": [
+      "backend",
+      "frontend",
+      "cs",
+      "system-design"
+    ]
+  },
+  {
+    "id": "production",
+    "term": "Production / staging",
+    "match": [
+      "production",
+      "staging"
+    ],
+    "def": {
+      "vi": "Production là môi trường thật mà người dùng đang dùng. Staging là bản sao gần giống production để kiểm thử lần cuối trước khi phát hành. Dev hay local là môi trường trên máy của lập trình viên.",
+      "en": "Production is the live environment real users are on. Staging is a near-copy of production for final testing before release. Dev or local is the developer's own machine."
+    },
+    "example": {
+      "vi": "Tổng duyệt trên sân khấu trống (staging) trước đêm diễn có khán giả thật (production).",
+      "en": "A dress rehearsal on an empty stage (staging) before opening night with a real audience (production)."
+    },
+    "related": [
+      "deploy",
+      "rollback"
+    ]
+  },
+  {
+    "id": "deploy",
+    "term": "Deploy",
+    "match": [
+      "deploy",
+      "deploys",
+      "deployment",
+      "deployments"
+    ],
+    "see": "devops-cicd-blue-green-canary",
+    "def": {
+      "vi": "Đưa một phiên bản code mới lên chạy ở một môi trường như staging hay production. Trong Kubernetes, Deployment còn là tên object quản lý số bản chạy của một ứng dụng.",
+      "en": "Putting a new version of the code live in an environment such as staging or production. In Kubernetes, Deployment is also the object that manages how many copies of an app run."
+    },
+    "example": {
+      "vi": "Thay thực đơn khi nhà hàng vẫn đang mở cửa: phải đổi sao cho khách đang ăn không bị gián đoạn.",
+      "en": "Changing the menu while the restaurant is open: it must happen without disturbing diners."
+    },
+    "related": [
+      "production",
+      "ci-cd",
+      "canary",
+      "rollback"
+    ]
+  },
+  {
+    "id": "metric",
+    "term": "Metric",
+    "match": [
+      "metric",
+      "metrics"
+    ],
+    "see": "backend-observability-logs-metrics-traces",
+    "def": {
+      "vi": "Con số đo theo thời gian để theo dõi hệ thống: số request mỗi giây, tỉ lệ lỗi, latency p95, CPU… Dùng để vẽ dashboard và đặt cảnh báo.",
+      "en": "A number measured over time to watch a system: requests per second, error rate, p95 latency, CPU… Used for dashboards and alerts."
+    },
+    "example": {
+      "vi": "Đồng hồ trên táp-lô xe: tốc độ, xăng, nhiệt độ máy, nhìn một cái là biết xe có ổn không.",
+      "en": "A car's dashboard gauges: speed, fuel, engine temperature, one glance tells you if the car is fine."
+    },
+    "related": [
+      "observability",
+      "sli",
+      "latency"
+    ],
+    "tracks": [
+      "backend",
+      "devops",
+      "system-design",
+      "frontend",
+      "mobile"
+    ]
+  },
+  {
+    "id": "db-index",
+    "term": "Index (database)",
+    "match": [
+      "index",
+      "indexes",
+      "indices"
+    ],
+    "see": "backend-db-index",
+    "def": {
+      "vi": "Cấu trúc dữ liệu phụ, thường là B-tree, giúp database tìm dòng theo một cột mà không phải quét cả bảng. Đổi lại tốn thêm chỗ và làm thao tác ghi chậm hơn.",
+      "en": "An auxiliary data structure, usually a B-tree, that lets the database find rows by a column without scanning the whole table. The cost is extra storage and slower writes."
+    },
+    "example": {
+      "vi": "Mục lục cuối sách: tra \"Kafka\" là ra ngay trang 120, khỏi lật từng trang.",
+      "en": "The index at the back of a book: look up \"Kafka\" and go straight to page 120 instead of flipping every page."
+    },
+    "related": [
+      "sql",
+      "cardinality"
+    ],
+    "tracks": [
+      "backend",
+      "data",
+      "system-design"
+    ]
+  },
+  {
+    "id": "inverted-index",
+    "term": "Inverted index",
+    "match": [
+      "inverted index"
+    ],
+    "see": "system-design-search-indexing",
+    "def": {
+      "vi": "Index cho tìm kiếm văn bản: với mỗi từ, lưu danh sách tài liệu chứa từ đó. Tìm theo từ chỉ cần tra danh sách thay vì đọc từng tài liệu.",
+      "en": "An index for text search: for each word, store the list of documents containing it. Searching a word means reading that list instead of every document."
+    },
+    "example": {
+      "vi": "Phần tra cứu cuối sách giáo khoa: \"quang hợp: trang 12, 45, 78\".",
+      "en": "The index of a textbook: \"photosynthesis: pages 12, 45, 78\"."
+    },
+    "related": [
+      "full-text-search"
+    ]
+  },
+  {
+    "id": "partition",
+    "term": "Partition",
+    "match": [
+      "partition",
+      "partitions",
+      "partition key",
+      "partitioning"
+    ],
+    "see": "data-partitioning",
+    "def": {
+      "vi": "Chia một bảng, một topic hay một tập dữ liệu lớn thành nhiều phần theo một khoá (ngày, user_id…) để xử lý song song và chỉ đọc phần cần thiết.",
+      "en": "Splitting a large table, topic or dataset into parts by a key (date, user_id…) so work runs in parallel and only the needed part is read."
+    },
+    "example": {
+      "vi": "Tủ hồ sơ chia ngăn theo năm: tìm hoá đơn năm 2024 thì chỉ mở đúng ngăn 2024.",
+      "en": "A filing cabinet with one drawer per year: to find a 2024 invoice you open only the 2024 drawer."
+    },
+    "related": [
+      "sharding",
+      "data-skew"
+    ],
+    "tracks": [
+      "backend",
+      "data"
+    ]
+  },
+  {
+    "id": "kafka",
+    "term": "Kafka",
+    "match": [
+      "Kafka"
+    ],
+    "see": "data-kafka-basics",
+    "def": {
+      "vi": "Nền tảng lưu và truyền luồng sự kiện phân tán: producer ghi sự kiện vào topic, nhiều consumer đọc độc lập. Sự kiện được giữ lại theo thời gian cấu hình nên có thể đọc lại.",
+      "en": "A distributed platform for storing and streaming events: producers write events to a topic and many consumers read independently. Events are retained for a configured time, so they can be replayed."
+    },
+    "example": {
+      "vi": "Băng ghi hình camera: sự kiện được ghi nối tiếp, ai cần thì tua lại xem từ thời điểm mình muốn mà không ảnh hưởng người khác.",
+      "en": "A CCTV recording: events are appended in order, and anyone can rewind to the moment they need without affecting others."
+    },
+    "related": [
+      "message-queue",
+      "partition"
+    ]
+  },
+  {
+    "id": "kubernetes",
+    "term": "Kubernetes",
+    "match": [
+      "Kubernetes",
+      "K8s"
+    ],
+    "see": "devops-k8s-pod-deployment",
+    "def": {
+      "vi": "Hệ thống điều phối container: chạy ứng dụng trên một cụm máy, giữ đủ số bản chạy, khởi động lại khi lỗi, cân bằng tải và đưa phiên bản mới lên dần dần.",
+      "en": "A container orchestrator: runs apps across a cluster of machines, keeps the desired number of copies, restarts them on failure, balances load and rolls out new versions gradually."
+    },
+    "example": {
+      "vi": "Quản lý chuỗi nhà hàng: bạn chỉ nói \"ca tối luôn cần 5 đầu bếp\", quản lý tự tìm người thay khi có người nghỉ.",
+      "en": "A restaurant chain manager: you just say \"the evening shift always needs 5 cooks\", and the manager finds a replacement whenever someone is off."
+    },
+    "related": [
+      "container",
+      "kubernetes-pod"
+    ]
+  },
+  {
+    "id": "trade-off",
+    "term": "Trade-off",
+    "match": [
+      "trade-off",
+      "trade-offs",
+      "tradeoff",
+      "tradeoffs"
+    ],
+    "def": {
+      "vi": "Sự đánh đổi: được cái này thì mất cái kia, ví dụ nhanh hơn nhưng tốn bộ nhớ hơn. Phỏng vấn thường chấm việc bạn nêu được trade-off, không chỉ đưa ra một đáp án.",
+      "en": "Gaining one thing at the cost of another, e.g. faster but using more memory. Interviews often score whether you can state the trade-offs, not just give one answer."
+    },
+    "example": {
+      "vi": "Máy bay nhanh nhưng đắt, xe khách rẻ nhưng lâu: không có lựa chọn tốt nhất cho mọi chuyến đi.",
+      "en": "Flying is fast but expensive, the bus is cheap but slow: no option is best for every trip."
+    }
+  },
+  {
+    "id": "api-gateway",
+    "term": "API gateway",
+    "match": [
+      "API gateway",
+      "API gateways"
+    ],
+    "def": {
+      "vi": "Cổng vào chung đứng trước nhiều service: nhận mọi request từ client, xác thực, rate limit rồi chuyển tới đúng service phía sau.",
+      "en": "A single entry point in front of many services: it receives every client request, authenticates, rate-limits, then forwards to the right service."
+    },
+    "example": {
+      "vi": "Quầy lễ tân toà nhà: kiểm tra thẻ khách rồi chỉ đúng phòng cần tới.",
+      "en": "A building's reception desk: checks your pass, then sends you to the right room."
+    },
+    "related": [
+      "api",
+      "rate-limit",
+      "reverse-proxy"
+    ]
+  },
+  {
+    "id": "async-await",
+    "term": "async/await",
+    "match": [
+      "async/await",
+      "async",
+      "await"
+    ],
+    "see": "frontend-js-promise-async",
+    "def": {
+      "vi": "Cách viết code bất đồng bộ mà trông như tuần tự: hàm async trả về Promise, còn await tạm dừng hàm đó để chờ kết quả mà không chặn cả chương trình.",
+      "en": "A way to write asynchronous code that reads like sequential code: an async function returns a Promise, and await pauses that function for a result without blocking the whole program."
+    },
+    "example": {
+      "vi": "Gọi món xong thì về bàn ngồi nói chuyện, món xong phục vụ mang ra, không phải đứng chờ ở quầy.",
+      "en": "Order, then go back to your table and chat; the waiter brings the food when it is ready, you do not stand at the counter."
+    },
+    "related": [
+      "event-loop",
+      "callback"
+    ],
+    "tracks": [
+      "frontend",
+      "backend",
+      "cs",
+      "mobile"
+    ]
+  },
+  {
+    "id": "script-async-defer",
+    "term": "async / defer (thẻ script)",
+    "match": [
+      "async và defer",
+      "async and defer",
+      "async vs defer"
+    ],
+    "see": "frontend-perf-critical-rendering-path",
+    "def": {
+      "vi": "Hai thuộc tính của thẻ <script> để tải JavaScript mà không chặn việc đọc HTML. async chạy ngay khi tải xong, không theo thứ tự; defer đợi HTML đọc xong rồi chạy đúng thứ tự khai báo.",
+      "en": "Two <script> attributes that download JavaScript without blocking HTML parsing. async runs as soon as it arrives, in any order; defer waits until the HTML is parsed, then runs in document order."
+    },
+    "example": {
+      "vi": "async như người giao hàng tới đâu đưa luôn tới đó; defer như gom đủ hàng rồi cuối ngày giao lần lượt theo danh sách.",
+      "en": "async is a courier handing over each parcel the moment it arrives; defer collects them all and delivers in list order at the end of the day."
+    },
+    "tracks": [
+      "frontend"
+    ]
+  },
+  {
+    "id": "test-levels",
+    "term": "Unit / integration / E2E test",
+    "match": [
+      "unit test",
+      "unit tests",
+      "integration test",
+      "integration tests",
+      "E2E",
+      "end-to-end test",
+      "end-to-end tests"
+    ],
+    "see": "backend-testing-unit-integration-mocks",
+    "def": {
+      "vi": "Unit test kiểm tra riêng một hàm hay class và chạy rất nhanh. Integration test kiểm tra vài phần chạy cùng nhau, ví dụ code với database thật. E2E test đi qua cả hệ thống như người dùng thật: mở trình duyệt, bấm nút.",
+      "en": "A unit test checks one function or class in isolation and runs very fast. An integration test checks several parts working together, e.g. code with a real database. An E2E test goes through the whole system like a real user: open the browser, click buttons."
+    },
+    "example": {
+      "vi": "Sửa xe: thử riêng bugi (unit), nổ máy thử cả động cơ (integration), rồi chạy một vòng ngoài đường (E2E).",
+      "en": "Fixing a car: test the spark plug alone (unit), start the whole engine (integration), then take it for a drive (E2E)."
+    },
+    "related": [
+      "mock"
+    ]
+  },
+  {
+    "id": "side-effect",
+    "term": "Side effect",
+    "match": [
+      "side effect",
+      "side effects",
+      "side-effect",
+      "side-effects"
+    ],
+    "def": {
+      "vi": "Tác động ra ngoài phạm vi của hàm: ghi database, gọi API, sửa biến toàn cục, ghi log, đổi DOM. Hàm không có side effect (pure function) dễ test và dễ đoán hơn.",
+      "en": "Any effect beyond a function's own result: writing to a database, calling an API, changing a global, logging, touching the DOM. Functions without side effects (pure functions) are easier to test and reason about."
+    },
+    "example": {
+      "vi": "Hỏi \"mấy giờ rồi\" là không có side effect; nhờ ai đó chỉnh lại đồng hồ thì có.",
+      "en": "Asking \"what time is it\" has no side effect; asking someone to reset the clock does."
+    }
+  },
+  {
+    "id": "outbox",
+    "term": "Outbox pattern",
+    "match": [
+      "outbox",
+      "outbox pattern",
+      "transactional outbox"
+    ],
+    "see": "backend-mq-outbox",
+    "def": {
+      "vi": "Ghi sự kiện cần gửi vào bảng outbox trong cùng transaction với dữ liệu nghiệp vụ, rồi một tiến trình khác đọc bảng đó và publish lên message queue. Nhờ vậy không xảy ra cảnh lưu DB thành công nhưng gửi message thất bại, hoặc ngược lại.",
+      "en": "Write the event to an outbox table in the same transaction as the business data, then a separate process reads that table and publishes to the message queue. This avoids saving to the DB but failing to send the message, or the reverse."
+    },
+    "example": {
+      "vi": "Kế toán ghi phiếu chi và cùng lúc ghi vào sổ \"việc cần báo\"; cuối ngày có người đọc sổ đó đi báo từng bên nên không sót việc nào.",
+      "en": "An accountant records a payment and, in the same entry, writes it into a \"to notify\" book; someone works through that book later, so nothing is missed."
+    },
+    "related": [
+      "transaction",
+      "message-queue"
+    ]
+  },
+  {
+    "id": "io",
+    "term": "I/O",
+    "full": {
+      "vi": "Input/Output",
+      "en": "Input/Output"
+    },
+    "match": [
+      "I/O"
+    ],
+    "def": {
+      "vi": "Thao tác vào ra: đọc ghi đĩa, gọi mạng, truy vấn database. Tác vụ I/O-bound chủ yếu là chờ I/O nên hợp với async; tác vụ CPU-bound chủ yếu là tính toán nên cần thêm core hoặc thread.",
+      "en": "Input/output: disk reads and writes, network calls, database queries. I/O-bound work mostly waits on I/O and suits async; CPU-bound work mostly computes and needs more cores or threads."
+    },
+    "example": {
+      "vi": "Đầu bếp chờ nồi nước sôi (I/O) thì tranh thủ thái rau được; còn lúc băm thịt (CPU) thì tay bận thật.",
+      "en": "A cook waiting for water to boil (I/O) can chop vegetables meanwhile; while mincing meat (CPU) their hands are genuinely busy."
+    },
+    "related": [
+      "async-await",
+      "thread"
+    ]
+  },
+  {
+    "id": "orm",
+    "term": "ORM",
+    "full": {
+      "vi": "Object-Relational Mapping",
+      "en": "Object-Relational Mapping"
+    },
+    "match": [
+      "ORM",
+      "ORMs"
+    ],
+    "def": {
+      "vi": "Thư viện cho phép thao tác database bằng object và method của ngôn ngữ lập trình thay vì viết SQL tay, như Prisma, Hibernate, Entity Framework, SQLAlchemy.",
+      "en": "A library that lets you work with the database through your language's objects and methods instead of hand-written SQL, e.g. Prisma, Hibernate, Entity Framework, SQLAlchemy."
+    },
+    "example": {
+      "vi": "Phiên dịch viên: bạn nói tiếng Việt (code), ORM dịch sang SQL cho database. Tiện, nhưng đôi khi dịch dài dòng, sinh ra lỗi N+1 query.",
+      "en": "An interpreter: you speak your language (code), the ORM translates it to SQL. Convenient, but sometimes the translation is wordy and causes N+1 queries."
+    },
+    "related": [
+      "sql",
+      "n-plus-one"
+    ]
+  },
+  {
+    "id": "cdc",
+    "term": "CDC",
+    "full": {
+      "vi": "Change Data Capture",
+      "en": "Change Data Capture"
+    },
+    "match": [
+      "CDC",
+      "change data capture"
+    ],
+    "def": {
+      "vi": "Bắt mọi thay đổi (insert, update, delete) của database bằng cách đọc log giao dịch của nó, rồi đẩy thành luồng sự kiện cho hệ thống khác, ví dụ Debezium đẩy sang Kafka.",
+      "en": "Capturing every change (insert, update, delete) in a database by reading its transaction log and streaming the changes to other systems, e.g. Debezium into Kafka."
+    },
+    "example": {
+      "vi": "Camera quay mọi lần ra vào kho, nên muốn biết hôm nay kho thay đổi gì thì xem lại băng, không cần kiểm kê cả kho.",
+      "en": "A camera records every movement in and out of the warehouse, so you review the footage instead of recounting all the stock."
+    },
+    "related": [
+      "kafka",
+      "replication"
+    ]
+  },
+  {
+    "id": "oauth-oidc",
+    "term": "OAuth 2.0 / OIDC",
+    "match": [
+      "OAuth",
+      "OAuth2",
+      "OAuth 2.0",
+      "OIDC",
+      "OpenID Connect"
+    ],
+    "see": "backend-auth-oauth2-oidc",
+    "def": {
+      "vi": "OAuth 2.0 là chuẩn cho phép một ứng dụng được cấp quyền truy cập tài nguyên thay người dùng mà không cần mật khẩu của họ. OIDC xây trên OAuth để xác thực danh tính, là nền tảng của nút \"Đăng nhập bằng Google\".",
+      "en": "OAuth 2.0 is the standard for granting an app access to resources on a user's behalf without their password. OIDC builds on OAuth to verify identity and powers \"Sign in with Google\"."
+    },
+    "example": {
+      "vi": "Đưa chìa khoá phụ cho nhân viên đậu xe: mở được xe để đậu nhưng không mở được cốp, và bạn không phải giao chìa chính.",
+      "en": "A valet key: it opens the car to park it but not the boot, and you never hand over your main key."
+    },
+    "related": [
+      "jwt"
+    ]
+  },
+  {
+    "id": "rbac",
+    "term": "RBAC / ABAC",
+    "full": {
+      "vi": "Role-Based Access Control",
+      "en": "Role-Based Access Control"
+    },
+    "match": [
+      "RBAC",
+      "ABAC"
+    ],
+    "see": "backend-auth-rbac-abac",
+    "def": {
+      "vi": "RBAC phân quyền theo vai trò: gán quyền cho role (admin, editor, viewer) rồi gán role cho người dùng. ABAC quyết định theo thuộc tính như phòng ban, giờ truy cập, ai là chủ dữ liệu.",
+      "en": "RBAC grants permissions to roles (admin, editor, viewer) and roles to users. ABAC decides by attributes such as department, time of access or who owns the data."
+    },
+    "example": {
+      "vi": "Thẻ ra vào theo chức vụ: bảo vệ mở được kho, kế toán mở được phòng tài chính.",
+      "en": "Access badges by job: security can open the warehouse, accountants can open the finance room."
+    }
+  },
+  {
+    "id": "gc",
+    "term": "Garbage collection",
+    "match": [
+      "garbage collection",
+      "garbage collector",
+      "GC"
+    ],
+    "see": "cs-lang-garbage-collection",
+    "def": {
+      "vi": "Cơ chế của runtime tự tìm và giải phóng vùng nhớ không còn được tham chiếu, để lập trình viên không phải giải phóng thủ công (Java, C#, Go, JavaScript).",
+      "en": "The runtime automatically finds and frees memory that is no longer referenced, so programmers do not free it by hand (Java, C#, Go, JavaScript)."
+    },
+    "example": {
+      "vi": "Nhân viên dọn bàn quán ăn: bàn nào khách đã rời thì dọn, bàn còn người ngồi thì để yên.",
+      "en": "A busser in a restaurant: clears tables whose diners have left and leaves occupied tables alone."
+    },
+    "related": [
+      "memory-leak"
+    ]
+  },
+  {
+    "id": "lru",
+    "term": "LRU / LFU",
+    "match": [
+      "LRU",
+      "LFU"
+    ],
+    "see": "dsa-design-lru-cache",
+    "def": {
+      "vi": "Chính sách chọn mục để loại bỏ khi cache đầy: LRU bỏ mục lâu nhất chưa được dùng, LFU bỏ mục ít được dùng nhất.",
+      "en": "Policies for what to evict when a cache is full: LRU drops the least recently used item, LFU drops the least frequently used one."
+    },
+    "example": {
+      "vi": "Dọn tủ quần áo: LRU bỏ món lâu nhất chưa mặc tới, LFU bỏ món cả năm mặc ít lần nhất.",
+      "en": "Clearing a wardrobe: LRU removes what you have not worn for the longest, LFU removes what you wore the fewest times this year."
+    },
+    "related": [
+      "cache"
+    ]
+  },
+  {
+    "id": "dag",
+    "term": "DAG",
+    "full": {
+      "vi": "Directed Acyclic Graph",
+      "en": "Directed Acyclic Graph"
+    },
+    "match": [
+      "DAG",
+      "DAGs"
+    ],
+    "see": "data-airflow-dag",
+    "def": {
+      "vi": "Đồ thị có hướng và không có chu trình. Trong data pipeline như Airflow, mỗi task là một node, mũi tên là phụ thuộc: task chỉ chạy khi các task trước nó đã xong.",
+      "en": "A directed graph with no cycles. In data pipelines such as Airflow, each task is a node and arrows are dependencies: a task runs only after the tasks before it finish."
+    },
+    "example": {
+      "vi": "Công thức nấu ăn: sơ chế xong mới xào, xào xong mới bày đĩa, không bước nào quay ngược lại bước trước.",
+      "en": "A recipe: prep before frying, fry before plating, and no step loops back to an earlier one."
+    }
+  },
+  {
+    "id": "ssr-csr",
+    "term": "SSR / CSR / SSG",
+    "match": [
+      "SSR",
+      "CSR",
+      "SSG",
+      "ISR"
+    ],
+    "see": "frontend-nextjs-rendering",
+    "def": {
+      "vi": "Các cách tạo HTML cho trang: SSR render trên server cho mỗi request; CSR gửi khung trống rồi JavaScript render trên trình duyệt; SSG render sẵn lúc build; ISR là SSG được làm mới định kỳ.",
+      "en": "Ways to produce a page's HTML: SSR renders on the server per request; CSR sends an empty shell and JavaScript renders in the browser; SSG renders at build time; ISR is SSG refreshed periodically."
+    },
+    "example": {
+      "vi": "SSR như nấu theo order, SSG như đồ ăn làm sẵn để trong tủ, CSR như giao nguyên liệu để khách tự nấu.",
+      "en": "SSR is cooking to order, SSG is pre-made meals in the fridge, CSR is delivering ingredients for the customer to cook."
+    },
+    "related": [
+      "hydration"
+    ],
+    "tracks": [
+      "frontend",
+      "system-design"
+    ]
+  },
+  {
+    "id": "web-vitals",
+    "term": "Core Web Vitals",
+    "match": [
+      "Core Web Vitals",
+      "LCP",
+      "INP",
+      "CLS",
+      "TTFB"
+    ],
+    "see": "frontend-perf-core-web-vitals",
+    "def": {
+      "vi": "Các chỉ số Google dùng để đo trải nghiệm trang: LCP (bao lâu nội dung chính hiện ra), INP (phản hồi thao tác có nhanh không), CLS (bố cục có nhảy lung tung không). TTFB là thời gian tới khi nhận byte đầu tiên từ server.",
+      "en": "Google's page-experience metrics: LCP (how soon the main content appears), INP (how quickly the page responds to input), CLS (how much the layout jumps). TTFB is the time to the first byte from the server."
+    },
+    "example": {
+      "vi": "Vào quán ăn: LCP là bao lâu có món chính, INP là gọi thêm thì phục vụ phản ứng nhanh không, CLS là ghế có bị kéo đi lúc bạn đang ngồi xuống không.",
+      "en": "At a restaurant: LCP is how soon the main dish arrives, INP is how fast staff respond when you order more, CLS is whether your chair gets moved as you sit down."
+    },
+    "tracks": [
+      "frontend"
+    ]
+  },
+  {
+    "id": "seo",
+    "term": "SEO",
+    "full": {
+      "vi": "Search Engine Optimization",
+      "en": "Search Engine Optimization"
+    },
+    "match": [
+      "SEO"
+    ],
+    "def": {
+      "vi": "Tối ưu trang để công cụ tìm kiếm hiểu nội dung và xếp hạng cao: HTML đúng ngữ nghĩa, tiêu đề, thẻ meta, tốc độ tải, nội dung có sẵn trong HTML từ server…",
+      "en": "Optimising pages so search engines understand and rank them well: semantic HTML, titles, meta tags, load speed, content present in the server HTML…"
+    },
+    "example": {
+      "vi": "Treo biển hiệu rõ ràng, đúng tên, để người đi đường (Google) biết quán bán gì.",
+      "en": "A clear, accurate shop sign so passers-by (Google) know what you sell."
+    },
+    "related": [
+      "ssr-csr"
+    ]
+  },
+  {
+    "id": "etl-elt",
+    "term": "ETL / ELT",
+    "match": [
+      "ETL",
+      "ELT"
+    ],
+    "see": "data-etl-vs-elt",
+    "def": {
+      "vi": "Hai cách đưa dữ liệu vào kho. ETL: lấy ra (Extract), biến đổi (Transform) rồi mới nạp (Load). ELT: nạp dữ liệu thô vào warehouse trước rồi biến đổi ngay trong đó bằng SQL.",
+      "en": "Two ways to load a data store. ETL: Extract, Transform, then Load. ELT: load raw data into the warehouse first, then transform it there with SQL."
+    },
+    "example": {
+      "vi": "ETL như rửa, thái rau ở chợ rồi mới mang về cất tủ; ELT là mang cả bó về tủ, cần nấu món gì mới sơ chế.",
+      "en": "ETL is washing and chopping vegetables at the market before storing them; ELT is storing the whole bunch and prepping only what each dish needs."
+    },
+    "related": [
+      "data-warehouse"
+    ]
+  },
+  {
+    "id": "oltp-olap",
+    "term": "OLTP / OLAP",
+    "match": [
+      "OLTP",
+      "OLAP"
+    ],
+    "see": "data-oltp-vs-olap",
+    "def": {
+      "vi": "OLTP phục vụ rất nhiều giao dịch nhỏ, đọc ghi từng dòng (đặt hàng, thanh toán). OLAP phục vụ truy vấn phân tích quét rất nhiều dòng để tổng hợp (doanh thu theo tháng).",
+      "en": "OLTP serves many small transactions reading and writing single rows (orders, payments). OLAP serves analytical queries that scan many rows to aggregate (revenue by month)."
+    },
+    "example": {
+      "vi": "Quầy thu ngân tính tiền từng khách (OLTP) và phòng kế toán cộng sổ cả tháng (OLAP).",
+      "en": "The cashier ringing up each customer (OLTP) versus accounting adding up the whole month (OLAP)."
+    },
+    "related": [
+      "data-warehouse"
+    ]
+  },
+  {
+    "id": "uuid",
+    "term": "UUID",
+    "full": {
+      "vi": "Universally Unique Identifier",
+      "en": "Universally Unique Identifier"
+    },
+    "match": [
+      "UUID",
+      "UUIDs",
+      "UUIDv4",
+      "UUIDv7"
+    ],
+    "see": "system-design-distributed-ids",
+    "def": {
+      "vi": "Mã định danh 128-bit có thể sinh ở bất kỳ máy nào mà gần như không bao giờ trùng, nên không cần một nơi cấp số tập trung. UUIDv7 có phần đầu là thời gian nên sắp xếp được và thân thiện với index hơn UUIDv4 ngẫu nhiên.",
+      "en": "A 128-bit identifier any machine can generate with practically no chance of collision, so no central number dispenser is needed. UUIDv7 starts with a timestamp, so it sorts and indexes better than random UUIDv4."
+    },
+    "example": {
+      "vi": "Mỗi người tự đặt mã đơn bằng một dãy số ngẫu nhiên cực dài: xác suất hai người trùng nhỏ tới mức bỏ qua được.",
+      "en": "Everyone picks their own order code from an extremely long random number: the chance of two matching is small enough to ignore."
+    },
+    "related": [
+      "db-index"
+    ]
+  },
+  {
+    "id": "dau-mau",
+    "term": "DAU / MAU",
+    "full": {
+      "vi": "Daily / Monthly Active Users",
+      "en": "Daily / Monthly Active Users"
+    },
+    "match": [
+      "DAU",
+      "MAU"
+    ],
+    "see": "data-metrics-definition",
+    "def": {
+      "vi": "Số người dùng hoạt động khác nhau trong một ngày (DAU) hoặc một tháng (MAU). Tỉ lệ DAU/MAU cho biết người dùng quay lại thường xuyên tới đâu.",
+      "en": "Distinct active users in a day (DAU) or a month (MAU). The DAU/MAU ratio shows how often users come back."
+    },
+    "example": {
+      "vi": "Phòng gym có 1.000 hội viên đến tập trong tháng (MAU) nhưng mỗi ngày chỉ khoảng 200 người tới (DAU).",
+      "en": "A gym where 1,000 members visit during the month (MAU) but only about 200 come on a given day (DAU)."
+    }
+  },
+  {
+    "id": "qps",
+    "term": "QPS / RPS",
+    "full": {
+      "vi": "Queries / Requests Per Second",
+      "en": "Queries / Requests Per Second"
+    },
+    "match": [
+      "QPS",
+      "RPS"
+    ],
+    "see": "system-design-back-of-envelope",
+    "def": {
+      "vi": "Số query hoặc request mỗi giây mà hệ thống phải xử lý, thường là con số đầu tiên cần ước lượng khi thiết kế hệ thống.",
+      "en": "How many queries or requests per second a system must handle, usually the first number to estimate in a system design."
+    },
+    "example": {
+      "vi": "10 triệu request mỗi ngày chia cho 86.400 giây là khoảng 115 QPS trung bình; giờ cao điểm thường gấp vài lần.",
+      "en": "10 million requests a day divided by 86,400 seconds is about 115 QPS on average; peak hours are usually several times that."
+    },
+    "related": [
+      "throughput"
+    ]
+  },
+  {
+    "id": "crdt",
+    "term": "CRDT",
+    "full": {
+      "vi": "Conflict-free Replicated Data Type",
+      "en": "Conflict-free Replicated Data Type"
+    },
+    "match": [
+      "CRDT",
+      "CRDTs"
+    ],
+    "see": "mobile-offline-first-sync",
+    "def": {
+      "vi": "Kiểu dữ liệu được thiết kế để nhiều bản sao sửa độc lập, kể cả khi offline, rồi gộp lại luôn ra cùng một kết quả mà không cần phân xử xung đột.",
+      "en": "A data type designed so several replicas can be edited independently, even offline, and always merge to the same result without conflict resolution."
+    },
+    "example": {
+      "vi": "Hai người cùng sửa một danh sách việc trên hai điện thoại lúc mất mạng; có mạng lại thì hai danh sách tự hợp nhất, không ai mất thay đổi.",
+      "en": "Two people edit the same to-do list on two phones while offline; once back online the lists merge and nobody loses their changes."
+    },
+    "related": [
+      "eventual-consistency"
+    ]
+  },
+  {
+    "id": "apns-fcm",
+    "term": "APNs / FCM",
+    "full": {
+      "vi": "Apple Push Notification service / Firebase Cloud Messaging",
+      "en": "Apple Push Notification service / Firebase Cloud Messaging"
+    },
+    "match": [
+      "APNs",
+      "FCM"
+    ],
+    "see": "mobile-push-notifications",
+    "def": {
+      "vi": "Dịch vụ của Apple (APNs) và Google (FCM) chuyển push notification tới thiết bị: server của bạn gửi tin tới chúng kèm device token, chúng giữ kết nối với máy và giao tin.",
+      "en": "Apple's (APNs) and Google's (FCM) services that deliver push notifications: your server sends the message with a device token, and they hold the connection to the device and deliver it."
+    },
+    "example": {
+      "vi": "Bưu điện trung tâm: bạn không tự đi tới từng nhà, chỉ gửi thư kèm địa chỉ cho bưu điện đi phát.",
+      "en": "A central post office: you do not walk to every house, you hand the letters and addresses to the post office."
+    }
+  },
+  {
+    "id": "mvvm",
+    "term": "MVC / MVVM",
+    "match": [
+      "MVC",
+      "MVVM",
+      "MVI",
+      "ViewModel",
+      "ViewModels"
+    ],
+    "see": "cs-pattern-mvc-mvvm",
+    "def": {
+      "vi": "Các cách chia code giao diện thành Model (dữ liệu, nghiệp vụ), View (hiển thị) và lớp ở giữa (Controller, ViewModel). Trong MVVM, ViewModel giữ trạng thái màn hình, View chỉ quan sát và vẽ lại khi trạng thái đổi.",
+      "en": "Ways to split UI code into Model (data, business logic), View (display) and a middle layer (Controller, ViewModel). In MVVM the ViewModel holds screen state and the View just observes and redraws when it changes."
+    },
+    "example": {
+      "vi": "Nhà hàng: bếp (Model) nấu, quầy chia món (ViewModel) xếp món theo bàn, phục vụ (View) chỉ bưng ra đúng thứ có trên quầy.",
+      "en": "A restaurant: the kitchen (Model) cooks, the pass (ViewModel) sorts dishes by table, and waiters (View) carry out exactly what is on the pass."
+    }
+  },
+  {
+    "id": "bundle",
+    "term": "Bundle / bundler",
+    "match": [
+      "bundle",
+      "bundles",
+      "bundler",
+      "bundlers"
+    ],
+    "see": "frontend-build-bundler",
+    "def": {
+      "vi": "Bundler (Vite, webpack, esbuild) gom nhiều file JS, CSS và thư viện thành vài file đã tối ưu (bundle) để trình duyệt tải nhanh. Bundle càng nhỏ thì trang càng nhanh.",
+      "en": "A bundler (Vite, webpack, esbuild) combines many JS and CSS files and libraries into a few optimised files (bundles) the browser loads quickly. Smaller bundles mean faster pages."
+    },
+    "example": {
+      "vi": "Đóng hàng: thay vì gửi 300 gói lẻ, gom thành vài thùng và bỏ bớt đồ thừa.",
+      "en": "Shipping: instead of 300 loose parcels, pack a few boxes and leave out what is not needed."
+    },
+    "related": [
+      "lazy-loading"
+    ],
+    "tracks": [
+      "frontend"
+    ]
+  },
+  {
+    "id": "llm-token",
+    "term": "Token (LLM)",
+    "match": [
+      "token",
+      "tokens"
+    ],
+    "see": "ai-tokenization",
+    "def": {
+      "vi": "Đơn vị văn bản mà LLM đọc và sinh ra, thường là một từ, một phần của từ hoặc dấu câu. Giá tiền, giới hạn context và tốc độ đều tính theo token.",
+      "en": "The unit of text an LLM reads and writes, usually a word, part of a word or a punctuation mark. Price, context limits and speed are all counted in tokens."
+    },
+    "example": {
+      "vi": "Tiếng Anh trung bình khoảng 4 ký tự một token; tiếng Việt có dấu thường tốn nhiều token hơn để nói cùng một ý.",
+      "en": "English averages about 4 characters per token; Vietnamese with diacritics usually needs more tokens for the same meaning."
+    },
+    "related": [
+      "llm"
+    ],
+    "tracks": [
+      "ai"
+    ]
+  },
+  {
+    "id": "learning-rate",
+    "term": "Learning rate",
+    "match": [
+      "learning rate"
+    ],
+    "def": {
+      "vi": "Độ dài mỗi bước cập nhật trọng số trong gradient descent. Quá lớn thì loss dao động hoặc phân kỳ; quá nhỏ thì mô hình học rất chậm.",
+      "en": "The size of each weight update step in gradient descent. Too large and the loss oscillates or diverges; too small and training is very slow."
+    },
+    "example": {
+      "vi": "Dò đường xuống núi trong sương: bước dài thì dễ trượt qua đáy thung lũng, bước ngắn thì rất lâu mới tới.",
+      "en": "Walking downhill in fog: long strides overshoot the valley floor, tiny steps take forever."
+    },
+    "related": [
+      "gradient-descent",
+      "loss"
+    ],
+    "tracks": [
+      "ai"
+    ]
+  },
+  {
+    "id": "loss",
+    "term": "Loss function",
+    "match": [
+      "loss function",
+      "loss functions",
+      "loss"
+    ],
+    "def": {
+      "vi": "Hàm đo mô hình dự đoán sai bao nhiêu so với đáp án thật, ví dụ MSE cho hồi quy, cross-entropy cho phân loại. Huấn luyện là đi tìm trọng số để loss nhỏ nhất.",
+      "en": "A function measuring how wrong the model's predictions are, e.g. MSE for regression, cross-entropy for classification. Training searches for the weights that minimise it."
+    },
+    "example": {
+      "vi": "Điểm trừ khi ném phi tiêu: càng xa tâm càng bị trừ nhiều, luyện tập là để tổng điểm trừ nhỏ nhất.",
+      "en": "Penalty points in darts: the further from the bullseye the bigger the penalty, and practice aims to minimise the total."
+    },
+    "related": [
+      "gradient-descent",
+      "learning-rate"
+    ],
+    "tracks": [
+      "ai"
+    ]
+  },
+  {
+    "id": "transformer",
+    "term": "Transformer",
+    "match": [
+      "Transformer",
+      "Transformers"
+    ],
+    "see": "ai-attention-transformer",
+    "def": {
+      "vi": "Kiến trúc mạng neural dựa trên attention: mỗi token xem xét mọi token khác để biết cái nào liên quan, và cả câu được xử lý song song. Đây là nền tảng của GPT, BERT, Gemini, Claude.",
+      "en": "A neural network architecture built on attention: each token looks at every other token to decide what is relevant, and the whole sequence is processed in parallel. It underlies GPT, BERT, Gemini and Claude."
+    },
+    "example": {
+      "vi": "Trong câu \"Con mèo không ăn vì nó no\", attention giúp mô hình biết \"nó\" là con mèo.",
+      "en": "In \"The cat didn't eat because it was full\", attention helps the model link \"it\" to the cat."
+    },
+    "related": [
+      "llm",
+      "llm-token"
+    ],
+    "tracks": [
+      "ai"
+    ]
+  },
+  {
+    "id": "chunking",
+    "term": "Chunking",
+    "match": [
+      "chunk",
+      "chunks",
+      "chunking"
+    ],
+    "see": "ai-rag-chunking",
+    "def": {
+      "vi": "Cắt tài liệu dài thành các đoạn nhỏ trước khi tạo embedding cho RAG. Đoạn quá to thì loãng ý, quá nhỏ thì mất ngữ cảnh.",
+      "en": "Splitting long documents into smaller pieces before embedding them for RAG. Pieces too large dilute meaning, too small lose context."
+    },
+    "example": {
+      "vi": "Cắt sách giáo khoa thành từng mục có tiêu đề để tra cứu, thay vì giữ nguyên cả chương hoặc tách từng câu lẻ.",
+      "en": "Splitting a textbook into titled sections for lookup, rather than whole chapters or single sentences."
+    },
+    "related": [
+      "rag",
+      "embedding"
+    ],
+    "tracks": [
+      "ai"
+    ]
+  },
+  {
+    "id": "precision-recall",
+    "term": "Precision / recall / F1",
+    "match": [
+      "precision",
+      "recall",
+      "F1",
+      "F1-score",
+      "F1 score"
+    ],
+    "see": "ai-precision-recall-f1",
+    "def": {
+      "vi": "Precision: trong các ca mô hình báo dương tính, bao nhiêu phần là đúng. Recall: trong các ca dương tính thật, mô hình bắt được bao nhiêu phần. F1 là trung bình điều hoà của hai số này.",
+      "en": "Precision: of the cases the model flags positive, how many are right. Recall: of the truly positive cases, how many the model catches. F1 is the harmonic mean of the two."
+    },
+    "example": {
+      "vi": "Lọc thư rác: precision thấp là thư thật bị đẩy vào spam; recall thấp là thư rác lọt vào hộp thư chính.",
+      "en": "A spam filter: low precision means real mail lands in spam; low recall means spam reaches your inbox."
+    },
+    "tracks": [
+      "ai",
+      "data"
+    ]
+  },
+  {
+    "id": "mixed-precision",
+    "term": "Mixed precision",
+    "match": [
+      "mixed precision"
+    ],
+    "def": {
+      "vi": "Huấn luyện hoặc chạy model bằng số thực 16-bit (fp16, bf16) ở phần lớn phép tính, giữ 32-bit ở chỗ cần chính xác, để nhanh hơn và tốn ít bộ nhớ GPU hơn mà gần như không giảm chất lượng.",
+      "en": "Training or running a model with 16-bit floats (fp16, bf16) for most operations and 32-bit where precision matters, making it faster and lighter on GPU memory with almost no quality loss."
+    },
+    "tracks": [
+      "ai"
+    ]
+  },
+  {
+    "id": "mcp",
+    "term": "MCP",
+    "full": {
+      "vi": "Model Context Protocol",
+      "en": "Model Context Protocol"
+    },
+    "match": [
+      "MCP"
+    ],
+    "see": "ai-mcp-protocol",
+    "def": {
+      "vi": "Giao thức mở để kết nối ứng dụng AI với công cụ và nguồn dữ liệu bên ngoài theo một chuẩn chung: viết một MCP server là nhiều ứng dụng AI dùng được.",
+      "en": "An open protocol for connecting AI apps to external tools and data sources in a standard way: write one MCP server and many AI apps can use it."
+    },
+    "example": {
+      "vi": "Như cổng USB-C cho AI: thiết bị nào theo chuẩn cũng cắm vào được, không cần dây riêng cho từng hãng.",
+      "en": "Like USB-C for AI: any device that follows the standard plugs in, no special cable per brand."
+    },
+    "related": [
+      "llm"
+    ]
+  },
+  {
+    "id": "rlhf",
+    "term": "RLHF",
+    "full": {
+      "vi": "Reinforcement Learning from Human Feedback",
+      "en": "Reinforcement Learning from Human Feedback"
+    },
+    "match": [
+      "RLHF"
+    ],
+    "see": "ai-llm-training-stages",
+    "def": {
+      "vi": "Bước huấn luyện LLM sau pretraining: người chấm xếp hạng các câu trả lời, mô hình học theo sở thích đó để trả lời hữu ích và an toàn hơn.",
+      "en": "A training stage after pretraining: people rank the model's answers and the model learns those preferences to become more helpful and safer."
+    },
+    "example": {
+      "vi": "Học viên nấu nhiều món, giám khảo chấm món nào ngon hơn, dần dần học viên nấu theo khẩu vị giám khảo.",
+      "en": "A trainee cooks several dishes, judges pick the better ones, and the trainee gradually cooks to the judges' taste."
+    },
+    "related": [
+      "llm",
+      "fine-tune"
+    ]
+  },
+  {
+    "id": "bm25",
+    "term": "BM25",
+    "match": [
+      "BM25"
+    ],
+    "see": "ai-hybrid-search-reranking",
+    "def": {
+      "vi": "Thuật toán xếp hạng tìm kiếm theo từ khoá kinh điển: tài liệu được điểm cao khi chứa nhiều từ của truy vấn, nhất là những từ hiếm trong toàn bộ kho. Dùng trong Elasticsearch và hybrid search.",
+      "en": "The classic keyword ranking algorithm: documents score high when they contain the query's words, especially words rare across the collection. Used in Elasticsearch and hybrid search."
+    },
+    "example": {
+      "vi": "Tìm \"lỗi thanh toán VNPay\": tài liệu chứa từ hiếm \"VNPay\" được ưu tiên hơn tài liệu chỉ có từ phổ biến \"lỗi\".",
+      "en": "Searching \"VNPay payment error\": documents containing the rare word \"VNPay\" outrank ones with only the common word \"error\"."
+    },
+    "related": [
+      "full-text-search",
+      "inverted-index"
+    ]
+  },
+  {
+    "id": "pull-request",
+    "term": "Pull request (PR)",
+    "match": [
+      "PR",
+      "PRs",
+      "pull request",
+      "pull requests",
+      "merge request"
+    ],
+    "see": "devops-git-branching-strategy",
+    "def": {
+      "vi": "Yêu cầu gộp một nhánh code vào nhánh chính, kèm mô tả thay đổi. Đồng đội review, CI chạy test, đạt yêu cầu thì mới được merge.",
+      "en": "A request to merge a branch into the main branch, with a description of the change. Teammates review and CI runs the tests before it can be merged."
+    },
+    "example": {
+      "vi": "Nộp bài cho thầy chấm trước khi dán lên bảng tin chung của lớp.",
+      "en": "Handing your work to the teacher to check before it goes on the class noticeboard."
+    },
+    "related": [
+      "ci-cd"
+    ],
+    "tracks": [
+      "backend",
+      "behavioral",
+      "cs",
+      "data",
+      "devops",
+      "frontend",
+      "mobile",
+      "system-design"
+    ]
+  },
+  {
+    "id": "l4-l7",
+    "term": "L4 / L7",
+    "match": [
+      "L4",
+      "L7",
+      "layer 4",
+      "layer 7"
+    ],
+    "see": "devops-net-l4-vs-l7-load-balancer",
+    "def": {
+      "vi": "Tầng 4 (transport: TCP, UDP) và tầng 7 (application: HTTP) trong mô hình OSI. Load balancer L4 chỉ nhìn IP và port; L7 đọc được URL, header, cookie nên định tuyến thông minh hơn.",
+      "en": "Layer 4 (transport: TCP, UDP) and layer 7 (application: HTTP) of the OSI model. An L4 load balancer sees only IPs and ports; an L7 one reads URLs, headers and cookies, so it can route smarter."
+    },
+    "example": {
+      "vi": "Bảo vệ L4 chỉ xem biển số xe để chỉ làn; bảo vệ L7 mở cả giấy tờ ra xem khách cần lên phòng nào.",
+      "en": "An L4 guard only looks at the licence plate to pick a lane; an L7 guard reads your papers to see which office you are visiting."
+    },
+    "related": [
+      "load-balancer",
+      "tcp-udp"
+    ],
+    "tracks": [
+      "backend",
+      "cs",
+      "devops",
+      "system-design"
+    ]
+  },
+  {
+    "id": "vpc",
+    "term": "VPC / subnet",
+    "full": {
+      "vi": "Virtual Private Cloud",
+      "en": "Virtual Private Cloud"
+    },
+    "match": [
+      "VPC",
+      "VPCs",
+      "subnet",
+      "subnets"
+    ],
+    "see": "devops-cloud-vpc-subnets",
+    "def": {
+      "vi": "Mạng riêng ảo của bạn trên cloud, chia thành các subnet: public subnet có đường ra internet, private subnet chỉ dùng nội bộ (database thường đặt ở đây).",
+      "en": "Your private virtual network in the cloud, split into subnets: public subnets have a route to the internet, private subnets are internal only (databases usually live there)."
+    },
+    "example": {
+      "vi": "Khu chung cư có cổng riêng: dãy ngoài mở cửa hàng ra phố (public subnet), dãy trong chỉ cư dân vào được (private subnet).",
+      "en": "A gated estate: the outer row has shops facing the street (public subnet), the inner blocks are residents only (private subnet)."
+    }
+  },
+  {
+    "id": "iam",
+    "term": "IAM",
+    "full": {
+      "vi": "Identity and Access Management",
+      "en": "Identity and Access Management"
+    },
+    "match": [
+      "IAM"
+    ],
+    "see": "devops-cloud-iam-least-privilege",
+    "def": {
+      "vi": "Hệ thống quản lý ai (người hoặc service) được làm gì với tài nguyên nào trên cloud. Nguyên tắc là least privilege: chỉ cấp đúng quyền cần dùng.",
+      "en": "The system that controls who (people or services) can do what to which cloud resources. The rule is least privilege: grant only the permissions actually needed."
+    },
+    "example": {
+      "vi": "Thẻ từ khách sạn: mỗi thẻ chỉ mở đúng phòng của mình và phòng gym, không mở được phòng khác.",
+      "en": "A hotel key card: it opens your room and the gym, not anyone else's room."
+    },
+    "related": [
+      "rbac"
+    ]
+  },
+  {
+    "id": "presigned-url",
+    "term": "Presigned URL",
+    "match": [
+      "presigned URL",
+      "presigned URLs",
+      "pre-signed URL",
+      "signed URL",
+      "signed URLs"
+    ],
+    "see": "backend-api-file-upload-presigned",
+    "def": {
+      "vi": "Đường link tới một file trên object storage đã được ký sẵn quyền và có hạn dùng ngắn, cho phép client upload hoặc tải trực tiếp mà không cần khoá truy cập. File lớn thường đi kèm multipart upload: chia phần, upload song song, hỏng phần nào gửi lại phần đó.",
+      "en": "A link to a file in object storage that is pre-signed with a permission and a short expiry, letting the client upload or download directly without access keys. Large files usually add multipart upload: split into parts, upload in parallel, retry only failed parts."
+    },
+    "example": {
+      "vi": "Vé vào cổng ghi sẵn tên khu và giờ hết hạn: ai cầm vé cũng vào được đúng khu đó trước giờ ghi trên vé.",
+      "en": "A ticket printed with one area and an expiry time: whoever holds it can enter that area until it expires."
+    },
+    "related": [
+      "object-storage"
+    ]
+  },
+  {
+    "id": "object-storage",
+    "term": "Object storage (S3)",
+    "match": [
+      "object storage",
+      "S3",
+      "Amazon S3"
+    ],
+    "def": {
+      "vi": "Kho lưu file dạng object (ảnh, video, backup, log) truy cập qua HTTP, dung lượng gần như không giới hạn và rất bền, như Amazon S3, Google Cloud Storage, Cloudflare R2. File nằm trong bucket, mỗi file có một key.",
+      "en": "Storage for files as objects (images, video, backups, logs) accessed over HTTP, practically unlimited and highly durable, e.g. Amazon S3, Google Cloud Storage, Cloudflare R2. Files live in buckets, each with a key."
+    },
+    "example": {
+      "vi": "Kho gửi đồ khổng lồ: mỗi món có một mã, đưa mã là lấy được, không cần biết món nằm ở kệ nào.",
+      "en": "A giant storage depot: each item has a code, give the code and you get it, without knowing which shelf it is on."
+    },
+    "related": [
+      "presigned-url",
+      "cdn"
+    ]
+  },
+  {
+    "id": "pub-sub",
+    "term": "Pub/Sub",
+    "full": {
+      "vi": "Publish/Subscribe",
+      "en": "Publish/Subscribe"
+    },
+    "match": [
+      "pub/sub",
+      "publish/subscribe"
+    ],
+    "def": {
+      "vi": "Mô hình gửi tin trong đó bên gửi (publisher) đẩy tin vào một kênh, mọi bên đang đăng ký (subscriber) kênh đó đều nhận được, hai bên không cần biết nhau. Redis Pub/Sub không lưu tin; Kafka, Google Pub/Sub thì lưu lại.",
+      "en": "A messaging pattern where publishers push messages to a channel and every subscriber of that channel receives them, without the two sides knowing each other. Redis Pub/Sub keeps nothing; Kafka and Google Pub/Sub retain messages."
+    },
+    "example": {
+      "vi": "Loa phát thanh của phường: ai đang nghe thì nhận tin, người phát không cần biết ai đang nghe.",
+      "en": "A neighbourhood loudspeaker: whoever is listening hears the message, and the announcer does not need to know who."
+    },
+    "related": [
+      "message-queue",
+      "kafka"
+    ]
+  },
+  {
+    "id": "websocket",
+    "term": "WebSocket / SSE",
+    "match": [
+      "WebSocket",
+      "WebSockets",
+      "Server-Sent Events",
+      "SSE"
+    ],
+    "see": "cs-net-polling-websocket",
+    "def": {
+      "vi": "WebSocket là kết nối hai chiều luôn mở giữa client và server, hai bên gửi tin cho nhau bất cứ lúc nào (chat, game, vị trí tài xế). SSE (Server-Sent Events) chỉ cho server đẩy xuống một chiều qua HTTP thường, đơn giản hơn khi chỉ cần thông báo.",
+      "en": "A WebSocket is a persistent two-way connection where client and server can send messages at any time (chat, games, driver location). SSE (Server-Sent Events) lets only the server push one way over plain HTTP, simpler when you just need notifications."
+    },
+    "example": {
+      "vi": "WebSocket như gọi điện thoại, hai bên nói qua lại; SSE như nghe đài, chỉ đài nói xuống.",
+      "en": "A WebSocket is a phone call with both sides talking; SSE is a radio broadcast that only flows one way."
+    },
+    "related": [
+      "pub-sub",
+      "http"
+    ]
+  },
+  {
+    "id": "saga",
+    "term": "Saga",
+    "match": [
+      "saga",
+      "sagas",
+      "compensating transaction",
+      "compensating transactions"
+    ],
+    "see": "backend-arch-distributed-transactions-saga",
+    "def": {
+      "vi": "Cách giữ dữ liệu nhất quán qua nhiều service: chia nghiệp vụ thành các transaction cục bộ nối tiếp, bước sau lỗi thì chạy các bước bù (compensating transaction) theo chiều ngược lại, như hoàn tiền, trả hàng về kho.",
+      "en": "A way to keep data consistent across services: split the operation into a chain of local transactions, and if a later step fails run compensating transactions in reverse, such as refunding or returning stock."
+    },
+    "example": {
+      "vi": "Đặt tour du lịch: đặt vé máy bay, đặt khách sạn; khách sạn hết phòng thì huỷ vé máy bay đã đặt thay vì để khách bị kẹt vé.",
+      "en": "Booking a trip: book the flight, then the hotel; if the hotel is full, cancel the flight instead of leaving the traveller with a useless ticket."
+    },
+    "related": [
+      "two-phase-commit",
+      "outbox",
+      "eventual-consistency"
+    ],
+    "tracks": [
+      "backend",
+      "system-design"
+    ]
+  },
+  {
+    "id": "two-phase-commit",
+    "term": "2PC",
+    "full": {
+      "vi": "Two-phase commit",
+      "en": "Two-phase commit"
+    },
+    "match": [
+      "2PC",
+      "two-phase commit"
+    ],
+    "see": "backend-arch-distributed-transactions-saga",
+    "def": {
+      "vi": "Giao thức commit phân tán hai bước: coordinator hỏi mọi bên \"chuẩn bị được chưa\", tất cả đồng ý mới cho commit. Nhất quán mạnh nhưng các bên phải giữ lock khi chờ, và coordinator chết là mọi bên bị kẹt.",
+      "en": "A two-step distributed commit: the coordinator asks every participant \"are you prepared?\" and commits only if all agree. Strongly consistent, but participants hold locks while waiting and a dead coordinator leaves everyone stuck."
+    },
+    "example": {
+      "vi": "Chủ hôn hỏi cả cô dâu và chú rể \"đồng ý không\"; chỉ khi cả hai cùng nói có thì mới tuyên bố thành hôn.",
+      "en": "An officiant asks both partners \"do you agree?\" and declares the marriage only when both say yes."
+    },
+    "related": [
+      "saga",
+      "transaction"
+    ]
+  },
+  {
+    "id": "dead-letter-queue",
+    "term": "Dead letter queue",
+    "match": [
+      "dead letter queue",
+      "dead-letter queue",
+      "dead letter queues",
+      "DLQ"
+    ],
+    "def": {
+      "vi": "Hàng đợi riêng chứa các message hoặc job đã thử xử lý quá số lần cho phép mà vẫn lỗi, để không chặn hàng đợi chính và để người xem lại, sửa rồi chạy lại.",
+      "en": "A separate queue holding messages or jobs that kept failing past the retry limit, so they do not block the main queue and someone can inspect, fix and replay them."
+    },
+    "example": {
+      "vi": "Bưu điện để riêng những thư không giao được vào một thùng, có người kiểm tra địa chỉ rồi gửi lại, thay vì cứ chở đi chở lại mãi.",
+      "en": "The post office puts undeliverable letters in a separate bin for someone to check the address and resend, instead of carrying them back and forth forever."
+    },
+    "related": [
+      "message-queue",
+      "retry-backoff"
+    ]
+  },
+  {
+    "id": "cron",
+    "term": "Cron / cron job",
+    "match": [
+      "cron",
+      "cron job",
+      "cron jobs",
+      "CronJob"
+    ],
+    "def": {
+      "vi": "Công cụ chạy lệnh theo lịch định sẵn (mỗi phút, 8 giờ sáng hằng ngày…) bằng biểu thức như \"0 8 * * *\". Kubernetes có CronJob làm việc tương tự trên cluster.",
+      "en": "A tool that runs commands on a schedule (every minute, 8am daily…) using expressions such as \"0 8 * * *\". Kubernetes CronJob does the same on a cluster."
+    },
+    "example": {
+      "vi": "Hẹn giờ nồi cơm: cài một lần, đến giờ là tự nấu.",
+      "en": "A rice cooker timer: set it once and it starts cooking on time."
+    }
+  },
+  {
+    "id": "delivery-guarantees",
+    "term": "At-least-once / exactly-once",
+    "match": [
+      "at-least-once",
+      "at-most-once",
+      "exactly-once"
+    ],
+    "see": "backend-mq-delivery-guarantees",
+    "def": {
+      "vi": "Mức đảm bảo giao message: at-most-once có thể mất nhưng không trùng; at-least-once không mất nhưng có thể trùng (phổ biến nhất, phía nhận phải idempotent); exactly-once là mỗi message chỉ có tác dụng một lần, khó và chỉ đạt được trong phạm vi hẹp.",
+      "en": "Message delivery guarantees: at-most-once may lose but never duplicates; at-least-once never loses but may duplicate (most common, so receivers must be idempotent); exactly-once means each message takes effect once, hard and only achievable in limited scopes."
+    },
+    "example": {
+      "vi": "Shipper không chắc đã giao chưa thì quay lại giao thêm lần nữa (at-least-once); người nhận kiểm tra mã đơn để không nhận hai lần.",
+      "en": "A courier unsure whether a parcel was delivered comes back again (at-least-once); the recipient checks the order number so they do not accept it twice."
+    },
+    "related": [
+      "idempotent",
+      "message-queue"
+    ]
+  },
+  {
+    "id": "structured-logging",
+    "term": "Structured logging",
+    "match": [
+      "structured logging",
+      "structured logs",
+      "structured log"
+    ],
+    "see": "backend-observability-structured-logging",
+    "def": {
+      "vi": "Ghi log dạng dữ liệu có trường cố định (thường là JSON) thay vì câu văn tự do, để hệ thống log lọc, đếm và tìm được theo từng trường như userId, orderId.",
+      "en": "Writing logs as data with fixed fields (usually JSON) instead of free text, so log systems can filter, count and search by fields such as userId or orderId."
+    },
+    "example": {
+      "vi": "Sổ ghi chép có kẻ cột Ngày, Khách, Số tiền thay vì ghi tràn lan từng dòng: muốn cộng tiền của một khách là làm được ngay.",
+      "en": "A ledger with columns for date, customer and amount instead of free-form notes: totalling one customer's spending is instant."
+    },
+    "related": [
+      "correlation-id",
+      "observability"
+    ]
+  },
+  {
+    "id": "correlation-id",
+    "term": "Correlation ID",
+    "match": [
+      "correlation ID",
+      "correlation IDs",
+      "request ID",
+      "request IDs",
+      "X-Request-ID"
+    ],
+    "see": "backend-observability-structured-logging",
+    "def": {
+      "vi": "Mã gắn cho một request ngay từ điểm vào và truyền tiếp qua mọi service, message, dòng log. Tìm theo một mã là thấy toàn bộ hành trình của request đó.",
+      "en": "An id attached to a request at the entry point and passed through every service, message and log line. Searching one id shows the request's whole journey."
+    },
+    "example": {
+      "vi": "Mã vận đơn của bưu kiện: qua bao nhiêu kho, tra một mã là thấy đường đi.",
+      "en": "A parcel's tracking number: however many depots it passes, one number shows its route."
+    },
+    "related": [
+      "structured-logging",
+      "distributed-tracing"
+    ]
+  },
+  {
+    "id": "dbt",
+    "term": "dbt",
+    "full": {
+      "vi": "data build tool",
+      "en": "data build tool"
+    },
+    "match": [
+      "dbt"
+    ],
+    "see": "data-dbt-basics",
+    "def": {
+      "vi": "Công cụ biến đổi dữ liệu trong warehouse bằng SQL theo cách làm phần mềm: mỗi model là một câu SELECT, có ref() để nối phụ thuộc, có test, tài liệu và version control.",
+      "en": "A tool for transforming warehouse data with SQL the software-engineering way: each model is a SELECT, ref() links dependencies, with tests, docs and version control."
+    },
+    "related": [
+      "etl-elt",
+      "data-warehouse"
+    ]
+  },
+  {
+    "id": "data-lineage",
+    "term": "Data lineage / data catalog",
+    "match": [
+      "lineage",
+      "data lineage",
+      "data catalog",
+      "data catalogs"
+    ],
+    "def": {
+      "vi": "Lineage cho biết dữ liệu của một bảng hay chỉ số đến từ đâu và đã qua những bước biến đổi nào. Data catalog là danh mục mọi bộ dữ liệu kèm mô tả, chủ sở hữu, mức nhạy cảm.",
+      "en": "Lineage shows where a table's or metric's data came from and which transformations it went through. A data catalog lists every dataset with descriptions, owners and sensitivity."
+    },
+    "example": {
+      "vi": "Truy xuất nguồn gốc rau: quét mã biết rau trồng ở đâu, sơ chế ở đâu, qua kho nào.",
+      "en": "Food traceability: scan a code to see where the vegetables were grown, processed and stored."
+    },
+    "related": [
+      "dbt"
+    ]
+  },
+  {
+    "id": "watermark",
+    "term": "Watermark (stream)",
+    "match": [
+      "watermark",
+      "watermarks"
+    ],
+    "see": "data-stream-processing-windows",
+    "def": {
+      "vi": "Mốc thời gian mà hệ thống stream tin rằng các sự kiện xảy ra trước mốc đó đã tới gần đủ. Khi watermark vượt qua cuối một cửa sổ thì cửa sổ được đóng và xuất kết quả.",
+      "en": "The point in time before which a streaming system believes nearly all events have arrived. When the watermark passes a window's end, the window closes and emits its result."
+    },
+    "example": {
+      "vi": "Thầy chấm bài hẹn \"sau 5 phút hết giờ thì thu bài\": ai nộp trễ hơn nữa thì không được tính vào điểm của buổi đó.",
+      "en": "A teacher collects papers five minutes after time is up: anything later does not count for that session."
+    },
+    "related": [
+      "event-time"
+    ],
+    "tracks": [
+      "data"
+    ]
+  },
+  {
+    "id": "event-time",
+    "term": "Event time / processing time",
+    "match": [
+      "event time",
+      "processing time"
+    ],
+    "see": "data-stream-processing-windows",
+    "def": {
+      "vi": "Event time là lúc sự kiện thật sự xảy ra (ghi trong dữ liệu); processing time là lúc hệ thống xử lý nó. Sự kiện có thể tới trễ, nên báo cáo nghiệp vụ thường phải tính theo event time.",
+      "en": "Event time is when the event actually happened (recorded in the data); processing time is when the system handles it. Events can arrive late, so business reports usually need event time."
+    },
+    "example": {
+      "vi": "Lá thư viết ngày 1 nhưng ngày 5 mới tới: ngày viết là event time, ngày nhận là processing time.",
+      "en": "A letter written on the 1st arrives on the 5th: the writing date is event time, the arrival date is processing time."
+    },
+    "related": [
+      "watermark"
+    ],
+    "tracks": [
+      "data"
+    ]
+  },
+  {
+    "id": "percentile",
+    "term": "Percentile (p95, p99)",
+    "match": [
+      "percentile",
+      "percentiles",
+      "p50",
+      "p90",
+      "p95",
+      "p99"
+    ],
+    "see": "data-stats-basics-analyst",
+    "def": {
+      "vi": "p95 là giá trị mà 95% số đo nhỏ hơn hoặc bằng nó. Với độ trễ, p95, p99 cho biết những người dùng chậm nhất phải chờ bao lâu, điều mà trung bình che mất.",
+      "en": "p95 is the value that 95% of measurements are at or below. For latency, p95 and p99 show how long the slowest users wait, which the average hides."
+    },
+    "example": {
+      "vi": "Trung bình xe buýt trễ 3 phút nghe ổn, nhưng p95 là 25 phút nghĩa là cứ 20 chuyến thì có một chuyến làm bạn trễ học.",
+      "en": "An average bus delay of 3 minutes sounds fine, but a p95 of 25 minutes means one trip in twenty makes you late for school."
+    },
+    "related": [
+      "latency"
+    ]
+  },
+  {
+    "id": "p-value",
+    "term": "p-value",
+    "match": [
+      "p-value",
+      "p-values"
+    ],
+    "see": "data-stats-basics-analyst",
+    "def": {
+      "vi": "Giả sử thật ra không có khác biệt, p-value là xác suất thấy kết quả lệch ít nhất như dữ liệu đang thấy. p nhỏ thì dữ liệu khó xảy ra nếu không có khác biệt. p-value không phải xác suất giả thuyết đúng.",
+      "en": "Assuming there is actually no difference, the p-value is the probability of seeing a result at least as extreme as the data shows. A small p means the data would be unlikely without a difference. It is not the probability the hypothesis is true."
+    },
+    "example": {
+      "vi": "Tung đồng xu 10 lần ra 9 mặt ngửa: nếu đồng xu cân thì chuyện này rất hiếm, nên bạn nghi đồng xu bị lệch.",
+      "en": "Flipping a coin 10 times and getting 9 heads: if the coin were fair this would be rare, so you suspect it is biased."
+    }
+  },
+  {
+    "id": "salt",
+    "term": "Salt / salting",
+    "match": [
+      "salt",
+      "salted",
+      "salting"
+    ],
+    "def": {
+      "vi": "Giá trị ngẫu nhiên thêm vào dữ liệu. Khi hash: thêm salt để cùng một mật khẩu hay số điện thoại không ra cùng một mã hash, khiến bảng hash dựng sẵn để dò ngược trở nên vô dụng. Trong Spark: salting là gắn thêm số ngẫu nhiên vào key bị lệch để chia một key quá nóng ra nhiều partition.",
+      "en": "A random value added to data. When hashing, a salt makes the same password or phone number produce different hashes, defeating precomputed lookup tables. In Spark, salting appends a random number to a skewed key so one hot key spreads across several partitions."
+    },
+    "example": {
+      "vi": "Số điện thoại Việt Nam chỉ có vài trăm triệu khả năng; hash không có salt thì kẻ gian hash thử hết là dò ra được.",
+      "en": "Vietnamese phone numbers have only a few hundred million possibilities; without a salt an attacker can hash them all and reverse the hashes."
+    },
+    "tracks": [
+      "backend",
+      "cs",
+      "data"
+    ]
+  },
+  {
+    "id": "deep-link",
+    "term": "Deep link",
+    "match": [
+      "deep link",
+      "deep links",
+      "deep linking",
+      "Universal Links",
+      "Universal Link",
+      "App Links",
+      "App Link"
+    ],
+    "see": "mobile-deep-links",
+    "def": {
+      "vi": "Đường link mở thẳng tới một màn hình cụ thể trong app thay vì trang chủ. Universal Links (iOS) và App Links (Android) là link https đã xác minh domain: có app thì mở app, chưa có thì mở website.",
+      "en": "A link that opens a specific screen in the app instead of the home screen. Universal Links (iOS) and App Links (Android) are domain-verified https links: they open the app if installed, otherwise the website."
+    },
+    "example": {
+      "vi": "Bấm link sản phẩm bạn bè gửi qua Zalo là app mua sắm mở đúng trang sản phẩm đó.",
+      "en": "Tapping a product link a friend sent you opens the shopping app right on that product page."
+    },
+    "related": [
+      "back-stack"
+    ]
+  },
+  {
+    "id": "back-stack",
+    "term": "Back stack",
+    "match": [
+      "back stack"
+    ],
+    "see": "mobile-navigation",
+    "def": {
+      "vi": "Chồng các màn hình đã mở theo thứ tự; nút Back gỡ màn trên cùng ra để về màn trước. Sau đăng nhập hay thanh toán thường phải xoá bớt màn khỏi back stack.",
+      "en": "The stack of opened screens in order; Back pops the top one to return to the previous screen. After login or checkout you usually remove screens from it."
+    },
+    "example": {
+      "vi": "Chồng đĩa: đặt đĩa mới lên trên, lấy ra thì lấy đĩa trên cùng trước.",
+      "en": "A stack of plates: new plates go on top, and you always take the top one first."
+    },
+    "tracks": [
+      "mobile"
+    ]
+  },
+  {
+    "id": "screen-reader",
+    "term": "Trình đọc màn hình",
+    "match": [
+      "screen reader",
+      "screen readers",
+      "TalkBack",
+      "VoiceOver",
+      "trình đọc màn hình"
+    ],
+    "see": "mobile-accessibility",
+    "def": {
+      "vi": "Phần mềm đọc to nội dung trên màn hình cho người khiếm thị: TalkBack (Android), VoiceOver (iOS, macOS). App cần nhãn, vai trò và thứ tự đọc đúng thì trình đọc mới mô tả được.",
+      "en": "Software that reads screen content aloud for blind users: TalkBack (Android), VoiceOver (iOS, macOS). Apps need proper labels, roles and reading order for it to describe them."
+    },
+    "example": {
+      "vi": "Nút chỉ có icon mũi tên mà không có nhãn thì TalkBack chỉ đọc được \"nút\", người dùng không biết nó làm gì.",
+      "en": "An arrow-icon button without a label is read by TalkBack as just \"button\", leaving users guessing."
+    }
+  },
+  {
+    "id": "foreground-service",
+    "term": "Foreground service",
+    "match": [
+      "foreground service",
+      "foreground services"
+    ],
+    "see": "mobile-background-work",
+    "def": {
+      "vi": "Dịch vụ chạy nền trên Android có thông báo hiển thị liên tục, dùng cho việc người dùng đang theo dõi như phát nhạc, chỉ đường, upload lớn. Hệ điều hành ít khi giết nó, nhưng phải khai báo loại và lý do dùng.",
+      "en": "An Android service that runs with a persistent notification, used for work the user is aware of such as music, navigation or big uploads. The OS rarely kills it, but you must declare its type and purpose."
+    },
+    "related": [
+      "main-thread"
+    ],
+    "tracks": [
+      "mobile"
+    ]
+  },
+  {
+    "id": "immutability",
+    "term": "Immutable",
+    "match": [
+      "immutable",
+      "immutability"
+    ],
+    "def": {
+      "vi": "Không bao giờ bị sửa sau khi tạo; muốn đổi thì tạo bản mới. Với state trong UI, nhờ vậy framework so sánh nhanh để biết cần vẽ lại gì và tránh lỗi một chỗ sửa làm chỗ khác đổi theo. Với HTTP cache, Cache-Control: immutable báo file không bao giờ đổi nên trình duyệt khỏi hỏi lại server.",
+      "en": "Never modified after creation; a change creates a new copy. For UI state, frameworks can cheaply detect what to redraw and you avoid one edit silently changing another place. For HTTP caching, Cache-Control: immutable says a file never changes, so the browser need not revalidate."
+    },
+    "example": {
+      "vi": "Sửa hợp đồng bằng phụ lục mới thay vì tẩy xoá bản gốc: bản cũ vẫn nguyên, ai cũng biết đâu là bản mới nhất.",
+      "en": "Amending a contract with a new annex instead of erasing the original: the old version stays intact and everyone knows which is latest."
+    },
+    "related": [
+      "side-effect"
+    ],
+    "tracks": [
+      "frontend",
+      "mobile",
+      "cs",
+      "backend"
+    ]
+  },
+  {
+    "id": "cold-start",
+    "term": "Cold start",
+    "match": [
+      "cold start",
+      "cold starts"
+    ],
+    "see": "devops-cloud-serverless",
+    "def": {
+      "vi": "Lần khởi động từ trạng thái chưa có gì chạy sẵn nên chậm hơn hẳn các lần sau: function serverless phải dựng môi trường và nạp code, app mobile mở khi chưa có trong bộ nhớ.",
+      "en": "Starting from nothing already running, which is much slower than later starts: a serverless function must set up its environment and load code, a mobile app opens when not in memory."
+    },
+    "example": {
+      "vi": "Xe máy để qua đêm trời lạnh phải đề vài lần mới nổ, chạy rồi thì tắt máy mở lại là nổ ngay.",
+      "en": "A motorbike left out on a cold night needs several tries to start; once warm it restarts instantly."
+    },
+    "related": [
+      "serverless"
+    ],
+    "tracks": [
+      "devops",
+      "backend",
+      "mobile",
+      "system-design"
+    ]
+  },
+  {
+    "id": "serverless",
+    "term": "Serverless",
+    "match": [
+      "serverless",
+      "AWS Lambda",
+      "Cloud Functions"
+    ],
+    "see": "devops-cloud-serverless",
+    "def": {
+      "vi": "Chạy code mà không quản lý server: nhà cung cấp tự cấp máy, tự scale theo số request (kể cả về 0) và tính tiền theo thời gian chạy thật, như AWS Lambda, Google Cloud Functions, Cloud Run.",
+      "en": "Running code without managing servers: the provider allocates machines, scales with requests (down to zero) and bills for actual run time, e.g. AWS Lambda, Google Cloud Functions, Cloud Run."
+    },
+    "example": {
+      "vi": "Gọi taxi thay vì mua ô tô: đi bao nhiêu trả bấy nhiêu, không lo bảo dưỡng, nhưng ngày nào cũng đi nhiều thì mua xe lại rẻ hơn.",
+      "en": "Taking taxis instead of buying a car: pay per trip, no maintenance, but if you drive a lot every day owning becomes cheaper."
+    },
+    "related": [
+      "cold-start"
+    ],
+    "tracks": [
+      "devops",
+      "backend",
+      "system-design",
+      "data"
+    ]
+  },
+  {
+    "id": "docker-compose",
+    "term": "Docker Compose",
+    "match": [
+      "Docker Compose"
+    ],
+    "see": "devops-docker-compose-networking",
+    "def": {
+      "vi": "Công cụ khai báo nhiều container chạy cùng nhau trong một file YAML (app, database, Redis) và bật tắt cả cụm bằng một lệnh. Các service gọi nhau bằng tên service, không phải localhost.",
+      "en": "A tool that declares several containers in one YAML file (app, database, Redis) and starts or stops them with one command. Services reach each other by service name, not localhost."
+    },
+    "related": [
+      "container"
+    ]
+  },
+  {
+    "id": "health-check",
+    "term": "Health check / probe",
+    "match": [
+      "health check",
+      "health checks",
+      "healthcheck",
+      "liveness probe",
+      "readiness probe"
+    ],
+    "see": "devops-k8s-probes",
+    "def": {
+      "vi": "Lời gọi kiểm tra định kỳ xem ứng dụng còn sống và sẵn sàng nhận request chưa. Trong Kubernetes, liveness probe lỗi thì container bị khởi động lại, readiness probe lỗi thì tạm không nhận traffic.",
+      "en": "A periodic check of whether an app is alive and ready for requests. In Kubernetes a failing liveness probe restarts the container, a failing readiness probe stops sending it traffic."
+    },
+    "example": {
+      "vi": "Y tá đi đo nhiệt độ từng giường mỗi giờ: ai sốt thì báo bác sĩ, ai chưa khoẻ thì chưa cho xuất viện.",
+      "en": "A nurse checking each patient's temperature hourly: fever gets a doctor, not-yet-well means no discharge."
+    },
+    "related": [
+      "kubernetes",
+      "load-balancer"
+    ]
+  },
+  {
+    "id": "helm",
+    "term": "Helm",
+    "match": [
+      "Helm",
+      "Helm chart",
+      "Helm charts"
+    ],
+    "see": "devops-cicd-helm-gitops",
+    "def": {
+      "vi": "Trình quản lý gói cho Kubernetes: chart là bộ template YAML có tham số, mỗi môi trường chỉ đổi file values. Helm còn quản lý phiên bản cài đặt và rollback.",
+      "en": "A package manager for Kubernetes: a chart is a set of parameterised YAML templates, and each environment only changes a values file. Helm also tracks releases and rollbacks."
+    },
+    "example": {
+      "vi": "Mẫu hợp đồng có chỗ trống: dùng chung một mẫu, mỗi khách chỉ điền tên, số tiền, ngày khác nhau.",
+      "en": "A contract template with blanks: one template for all, each customer fills in their own name, amount and date."
+    },
+    "related": [
+      "kubernetes",
+      "gitops"
+    ]
+  },
+  {
+    "id": "gitops",
+    "term": "GitOps",
+    "match": [
+      "GitOps",
+      "Argo CD",
+      "ArgoCD"
+    ],
+    "see": "devops-cicd-helm-gitops",
+    "def": {
+      "vi": "Cách vận hành coi Git là nguồn sự thật cho trạng thái của hệ thống: một agent trong cluster (Argo CD, Flux) liên tục so cluster với repo cấu hình và tự áp dụng thay đổi. Deploy là merge pull request, rollback là revert commit.",
+      "en": "Operating with Git as the source of truth for system state: an agent in the cluster (Argo CD, Flux) keeps comparing the cluster with the config repo and applies changes. Deploying is merging a pull request, rollback is reverting a commit."
+    },
+    "example": {
+      "vi": "Bản vẽ thiết kế nhà là chuẩn: thợ đối chiếu nhà với bản vẽ hằng ngày, ai tự ý sửa khác bản vẽ thì sửa lại cho đúng.",
+      "en": "The building plan is the standard: builders compare the house with it daily and undo any change that does not match."
+    },
+    "related": [
+      "helm",
+      "ci-cd",
+      "pull-request"
+    ]
+  },
+  {
+    "id": "collaborative-filtering",
+    "term": "Collaborative filtering",
+    "match": [
+      "collaborative filtering",
+      "content-based"
+    ],
+    "see": "ai-recommender-systems",
+    "def": {
+      "vi": "Gợi ý dựa trên hành vi của nhiều người: người giống bạn thích gì, món nào hay được mua cùng nhau. Content-based thì gợi ý dựa trên thuộc tính của món, giống những gì bạn đã thích.",
+      "en": "Recommending from many people's behaviour: what similar users liked, which items are bought together. Content-based instead recommends by item attributes similar to what you liked."
+    },
+    "example": {
+      "vi": "Collaborative: \"người mua sách này cũng mua sách kia\". Content-based: \"bạn thích truyện trinh thám, đây là một truyện trinh thám khác\".",
+      "en": "Collaborative: \"people who bought this book also bought that one\". Content-based: \"you like detective novels, here is another detective novel\"."
+    },
+    "related": [
+      "embedding"
+    ],
+    "tracks": [
+      "ai"
+    ]
+  },
+  {
+    "id": "auc",
+    "term": "ROC-AUC / PR-AUC",
+    "match": [
+      "ROC-AUC",
+      "PR-AUC",
+      "AUC",
+      "ROC"
+    ],
+    "see": "ai-roc-auc",
+    "def": {
+      "vi": "Chỉ số đánh giá model phân loại trên mọi ngưỡng: ROC-AUC là khả năng xếp ca dương lên trên ca âm; PR-AUC tập trung vào precision và recall, phản ánh đúng hơn khi lớp dương rất hiếm (gian lận, bệnh hiếm).",
+      "en": "Metrics that evaluate a classifier across all thresholds: ROC-AUC measures how well positives rank above negatives; PR-AUC focuses on precision and recall and is more telling when positives are rare (fraud, rare diseases)."
+    },
+    "related": [
+      "precision-recall"
+    ],
+    "tracks": [
+      "ai",
+      "data"
+    ]
+  },
+  {
+    "id": "multimodal",
+    "term": "Multimodal",
+    "match": [
+      "multimodal",
+      "multi-modal"
+    ],
+    "see": "ai-multimodal-models",
+    "def": {
+      "vi": "Model hiểu hoặc sinh nhiều loại dữ liệu cùng lúc: chữ, ảnh, âm thanh, video. Ảnh và âm thanh được mã hoá thành token đưa chung vào một Transformer với chữ.",
+      "en": "A model that understands or generates several data types together: text, images, audio, video. Images and audio are encoded into tokens fed into one Transformer alongside text."
+    },
+    "example": {
+      "vi": "Chụp ảnh hoá đơn rồi hỏi \"tổng tiền bao nhiêu, đã có VAT chưa\" và model đọc ảnh để trả lời.",
+      "en": "Photographing an invoice and asking \"what is the total, does it include VAT\" while the model reads the image to answer."
+    },
+    "related": [
+      "llm",
+      "ocr"
+    ],
+    "tracks": [
+      "ai"
+    ]
+  },
+  {
+    "id": "ocr",
+    "term": "OCR",
+    "full": {
+      "vi": "Optical Character Recognition",
+      "en": "Optical Character Recognition"
+    },
+    "match": [
+      "OCR"
+    ],
+    "def": {
+      "vi": "Nhận dạng chữ trong ảnh hoặc bản scan để chuyển thành văn bản máy đọc được. OCR truyền thống chỉ ra chữ; model multimodal còn hiểu được bố cục và ý nghĩa.",
+      "en": "Recognising text in images or scans and converting it to machine-readable text. Classic OCR only outputs text; multimodal models also understand layout and meaning."
+    },
+    "related": [
+      "multimodal"
+    ]
+  },
+  {
+    "id": "guardrails",
+    "term": "Guardrails",
+    "match": [
+      "guardrails",
+      "guardrail"
+    ],
+    "see": "ai-llm-guardrails",
+    "def": {
+      "vi": "Các lớp kiểm soát đặt quanh LLM: kiểm tra đầu vào, phân quyền dữ liệu và tool, kiểm tra đầu ra (schema, nội dung, nguồn trích dẫn), vì chỉ dặn trong prompt là không đủ chắc chắn.",
+      "en": "Control layers around an LLM: input checks, data and tool permissions, output checks (schema, content, citations), because prompt instructions alone are not reliable."
+    },
+    "example": {
+      "vi": "Lan can trên cầu: lái xe vẫn tự lái, nhưng lỡ tay thì lan can giữ xe không lao xuống sông.",
+      "en": "A bridge railing: the driver still steers, but if they slip the railing keeps the car out of the river."
+    },
+    "related": [
+      "prompt-injection",
+      "hallucination",
+      "red-teaming"
+    ],
+    "tracks": [
+      "ai"
+    ]
+  },
+  {
+    "id": "red-teaming",
+    "term": "Red teaming",
+    "match": [
+      "red teaming",
+      "red team"
+    ],
+    "def": {
+      "vi": "Chủ động đóng vai kẻ tấn công để tìm lỗ hổng: với LLM là thử prompt injection, dụ model nói sai chính sách, lộ dữ liệu, rồi giữ các ca đó thành bộ test chạy lại mỗi lần đổi prompt hoặc model.",
+      "en": "Deliberately playing the attacker to find weaknesses: for LLMs, trying prompt injection, coaxing policy violations or data leaks, then keeping those cases as a test set rerun whenever the prompt or model changes."
+    },
+    "example": {
+      "vi": "Ngân hàng thuê người thử lừa nhân viên giao dịch qua điện thoại để biết quy trình xác minh có lỗ hổng không.",
+      "en": "A bank hires people to try to trick its staff over the phone to see if the verification process has gaps."
+    },
+    "related": [
+      "guardrails"
+    ]
+  },
+  {
+    "id": "feature-store",
+    "term": "Feature store",
+    "match": [
+      "feature store",
+      "feature stores",
+      "training-serving skew"
+    ],
+    "see": "ai-ml-system-design-fraud",
+    "def": {
+      "vi": "Nơi lưu và phục vụ feature cho model, để feature dùng lúc huấn luyện và lúc chạy thật được tính theo cùng một cách. Nếu tính khác nhau (training-serving skew) thì model chạy thật kém hơn hẳn lúc thử.",
+      "en": "A system that stores and serves model features so training and live serving compute them the same way. If they differ (training-serving skew), the live model performs far worse than in testing."
+    },
+    "example": {
+      "vi": "Bếp trung tâm sơ chế nguyên liệu theo một công thức cho mọi chi nhánh, để món ở quán nào cũng giống món lúc thử nghiệm.",
+      "en": "A central kitchen preps ingredients to one recipe for every branch, so each restaurant's dish matches the test version."
+    },
+    "related": [
+      "inference"
+    ],
+    "tracks": [
+      "ai",
+      "data"
+    ]
   }
 ]

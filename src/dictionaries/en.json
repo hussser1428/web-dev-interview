@@ -5,6 +5,9 @@
     "speechLang": "en-US"
   },
   "nav": {
+    "more": "More",
+    "bankShort": "Questions",
+    "interviewShort": "Interview",
     "home": "Overview",
     "questions": "Question bank",
     "roadmap": "Learning paths",
@@ -152,9 +155,7 @@
     "subtitle": "Spaced repetition: hard cards come back soon, easy ones less often.",
     "due": "{n} due",
     "fresh": "{n} new",
-    "start": "Start review",
     "nothing": "Nothing left to review today 🎉",
-    "summary": "This session: {total} cards ({due} due, the rest are new). Up to {max} cards per session.",
     "flip": "Flip card",
     "progress": "Card {n}/{total}",
     "ratePrompt": "How did you do?",
