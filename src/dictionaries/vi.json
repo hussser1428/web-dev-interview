@@ -145,7 +145,8 @@
     "copied": "Đã chép",
     "due": "Đến hạn ôn",
     "inDays": "{n} ngày",
-    "back": "← Danh sách"
+    "back": "← Danh sách",
+    "example": "Ví dụ thực tế"
   },
   "flashcards": {
     "subtitle": "Ôn lặp lại ngắt quãng: câu khó quay lại sớm, câu dễ giãn dần.",

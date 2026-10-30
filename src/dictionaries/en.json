@@ -145,7 +145,8 @@
     "copied": "Copied",
     "due": "Due",
     "inDays": "{n}d",
-    "back": "← List"
+    "back": "← List",
+    "example": "Real-world example"
   },
   "flashcards": {
     "subtitle": "Spaced repetition: hard cards come back soon, easy ones less often.",

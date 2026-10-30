@@ -11,6 +11,8 @@ type Props = {
   lang: string;
   /** Đáp án đã đánh dấu thuật ngữ: đoạn đầu = bản trả lời ngắn, phần còn lại = giải thích thêm. */
   quick: Seg[];
+  /** Ví dụ thực tế (tuỳ chọn), hiện ngay dưới bản trả lời ngắn. */
+  example?: Seg[];
   rest: Seg[];
   terms: TermMap;
   termT: Dict["terms"];
@@ -19,7 +21,7 @@ type Props = {
   followUps: string[];
 };
 
-export default function AnswerTabs({ t, lang, quick, rest, terms, termT, code, tip, followUps }: Props) {
+export default function AnswerTabs({ t, lang, quick, example, rest, terms, termT, code, tip, followUps }: Props) {
   const [tab, setTab] = useState<"try" | "answer" | "followUps">("try");
   const [draft, setDraft] = useState("");
   const [copied, setCopied] = useState(false);
@@ -72,6 +74,18 @@ export default function AnswerTabs({ t, lang, quick, rest, terms, termT, code, t
               <p className="whitespace-pre-line"><Rich segs={quick} terms={terms} lang={lang} t={termT} /></p>
             </div>
           </div>
+
+          {example && (
+            <div className="flex gap-3 rounded-xl border border-[#bae6fd] bg-[#f0f9ff] px-4 py-3.25 leading-relaxed text-[#0c4a6e]">
+              <span className="grid size-8 shrink-0 place-items-center rounded-[9px] bg-[linear-gradient(135deg,#0284c7,#0d9488)] text-white">
+                <Icon name="target" />
+              </span>
+              <div>
+                <b className="text-[#0369a1]">{t.example}</b>
+                <p className="whitespace-pre-line"><Rich segs={example} terms={terms} lang={lang} t={termT} /></p>
+              </div>
+            </div>
+          )}
 
           {rest.length > 0 && (
             <p className="whitespace-pre-line leading-[1.7] text-[#334155]"><Rich segs={rest} terms={terms} lang={lang} t={termT} /></p>

@@ -34,6 +34,8 @@ function annotateQuestion(q: Question, lang: string) {
   return {
     title: annotate(pick(q.q, lang), matcher, { ...ctx, seen: new Set() }),
     quick: annotate(quick, matcher, answer),
+    // thứ tự đọc: trả lời ngắn → ví dụ → giải thích, nên thuật ngữ được đánh dấu ở chỗ gặp đầu tiên
+    example: q.example ? annotate(pick(q.example, lang), matcher, answer) : undefined,
     rest: annotate(rest.join("\n\n"), matcher, answer),
   };
 }
@@ -56,7 +58,7 @@ const termMap = (ids: string[], lang: string): TermMap => Object.fromEntries([..
 /** Dữ liệu cho trang chi tiết câu hỏi: các đoạn đã đánh dấu + thông tin những thuật ngữ có mặt. */
 export function richQuestion(q: Question, lang: string) {
   const segs = annotateQuestion(q, lang);
-  return { ...segs, terms: termMap(termIds(segs.title, segs.quick, segs.rest), lang) };
+  return { ...segs, terms: termMap(termIds(segs.title, segs.quick, segs.example ?? [], segs.rest), lang) };
 }
 
 // Thuật ngữ → các câu có nhắc tới (tính một lần lúc khởi động, gộp bản vi + en).
@@ -64,7 +66,7 @@ const appearsIn = new Map<string, Question[]>();
 for (const q of questions) {
   const ids = ["vi", "en"].flatMap((lang) => {
     const s = annotateQuestion(q, lang);
-    return termIds(s.title, s.quick, s.rest);
+    return termIds(s.title, s.quick, s.example ?? [], s.rest);
   });
   for (const id of new Set(ids)) appearsIn.set(id, [...(appearsIn.get(id) ?? []), q]);
 }

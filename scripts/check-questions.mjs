@@ -23,6 +23,7 @@ for (const track of tracks) {
     continue;
   }
   const byLevel = Object.fromEntries(levels.map((l) => [l, 0]));
+  let examples = 0;
   items.forEach((q, i) => {
     const at = `${file}[${i}] ${q?.id ?? ""}`;
     const err = (m) => errors.push(`${at}: ${m}`);
@@ -31,17 +32,19 @@ for (const track of tracks) {
     ids.add(q.id);
     if (!levels.includes(q.level)) err(`level phải là một trong ${levels.join(", ")}`);
     else byLevel[q.level]++;
+    if (q.example) examples++;
     if (!isText(q.topic)) err("thiếu topic");
     if (!isLocalized(q.q)) err(`q cần đủ ${locales.join(", ")}`);
     if (!isLocalized(q.a)) err(`a cần đủ ${locales.join(", ")}`);
     if (q.code !== undefined && !isText(q.code)) err("code phải là chuỗi");
     if (q.tip !== undefined && !isLocalized(q.tip)) err("tip cần đủ vi, en");
+    if (q.example !== undefined && !isLocalized(q.example)) err("example cần đủ vi, en");
     if (q.followUps !== undefined && !(Array.isArray(q.followUps) && q.followUps.every(isLocalized))) err("followUps phải là mảng {vi, en}");
     if (q.source !== undefined && !/^https:\/\/\S+$/.test(q.source)) err("source phải là URL https");
-    const extra = Object.keys(q).filter((k) => !["id", "level", "topic", "q", "a", "code", "tip", "followUps", "source"].includes(k));
+    const extra = Object.keys(q).filter((k) => !["id", "level", "topic", "q", "a", "example", "code", "tip", "followUps", "source"].includes(k));
     if (extra.length) err(`trường lạ: ${extra.join(", ")}`);
   });
-  console.log(`${track.padEnd(14)} ${String(items.length).padStart(3)}  ${levels.map((l) => `${l}:${byLevel[l]}`).join(" ")}`);
+  console.log(`${track.padEnd(14)} ${String(items.length).padStart(3)}  ${levels.map((l) => `${l}:${byLevel[l]}`).join(" ")}  ví dụ:${examples}/${items.length}`);
 }
 
 console.log(`tổng           ${String(ids.size).padStart(3)}`);

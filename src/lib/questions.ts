@@ -24,6 +24,8 @@ export type Question = {
   a: Localized;
   code?: string;
   tip?: Localized;
+  /** Ví dụ thực tế / so sánh đời thường, 2–4 câu. */
+  example?: Localized;
   followUps?: Localized[];
   source?: string;
 };

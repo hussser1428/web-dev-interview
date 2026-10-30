@@ -53,6 +53,7 @@ export default async function QuestionPage({ params }: PageProps<"/[lang]/questi
           t={t2}
           lang={lang}
           quick={rich.quick}
+          example={rich.example}
           rest={rich.rest}
           terms={rich.terms}
           termT={t.terms}
