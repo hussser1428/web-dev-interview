@@ -1,0 +1,1128 @@
+[
+  {
+    "id": "qa-qa-qc-testing",
+    "level": "intern",
+    "topic": "Testing Fundamentals",
+    "q": {
+      "vi": "QA, QC và testing khác nhau thế nào?",
+      "en": "What is the difference between QA, QC and testing?"
+    },
+    "a": {
+      "vi": "QA (Quality Assurance) là đảm bảo chất lượng bằng quy trình: làm sao để sản phẩm ít lỗi ngay từ đầu. Ví dụ đặt quy trình review yêu cầu, code review, tiêu chuẩn viết code, checklist trước khi release. QA hướng vào phòng ngừa và áp dụng cho cả team.\n\nQC (Quality Control) là kiểm soát chất lượng sản phẩm: kiểm tra sản phẩm đã làm ra có đạt yêu cầu không, tìm ra lỗi trước khi tới tay người dùng. QC hướng vào phát hiện.\n\nTesting là một hoạt động cụ thể bên trong QC: chạy phần mềm theo các test case hoặc khám phá để tìm lỗi và so sánh kết quả thực tế với kết quả mong đợi.\n\nTóm lại: QA là quy trình, QC là kiểm tra sản phẩm, testing là việc thực thi kiểm tra. Ở Việt Nam nhiều công ty gọi chung vị trí tester là \"QA\" hoặc \"QC\"; khi phỏng vấn nên nói được sự khác nhau, rồi hỏi lại vị trí đang tuyển nghiêng về phần nào.",
+      "en": "QA (Quality Assurance) ensures quality through process: making the product less defective from the start, e.g. requirement reviews, code reviews, coding standards, release checklists. QA is about prevention and covers the whole team.\n\nQC (Quality Control) checks the product itself: whether what was built meets requirements, finding defects before users do. QC is about detection.\n\nTesting is one concrete activity inside QC: running the software through test cases or exploration to find defects and compare actual with expected results.\n\nIn short: QA is the process, QC is checking the product, testing is executing the checks. Many Vietnamese companies call the tester role \"QA\" or \"QC\" interchangeably; in an interview, explain the difference and then ask which side the role leans towards."
+    },
+    "example": {
+      "vi": "Một nhà hàng: QA là quy định bếp phải rửa tay, bảo quản thực phẩm đúng nhiệt độ, công thức chuẩn; QC là bếp trưởng nếm món trước khi mang ra; testing là chính lần nếm thử đó với tiêu chí \"đủ mặn chưa, chín chưa\".",
+      "en": "A restaurant: QA is the rule that cooks wash hands, store food at the right temperature and follow standard recipes; QC is the head chef tasting each dish before it goes out; testing is that tasting itself against criteria like \"seasoned enough, cooked through\"."
+    },
+    "tip": {
+      "vi": "Một câu chốt dễ nhớ: QA phòng bệnh, QC chữa bệnh, testing là đi khám.",
+      "en": "A memorable close: QA prevents the illness, QC treats it, testing is the check-up."
+    },
+    "followUps": [
+      {
+        "vi": "Trong team của bạn, ai chịu trách nhiệm về chất lượng?",
+        "en": "In your team, who is responsible for quality?"
+      },
+      {
+        "vi": "Kể một hoạt động QA (không phải testing) mà bạn từng đề xuất.",
+        "en": "Name a QA activity (not testing) you have proposed."
+      }
+    ]
+  },
+  {
+    "id": "qa-verification-validation",
+    "level": "intern",
+    "topic": "Testing Fundamentals",
+    "q": {
+      "vi": "Verification và validation khác nhau thế nào?",
+      "en": "What is the difference between verification and validation?"
+    },
+    "a": {
+      "vi": "- Verification: \"Chúng ta có làm sản phẩm đúng cách không?\" Kiểm tra sản phẩm và tài liệu có khớp với đặc tả, thiết kế, tiêu chuẩn đã đặt ra. Thường là kiểm tra tĩnh, không cần chạy phần mềm: review tài liệu yêu cầu, review thiết kế, code review, walkthrough, inspection.\n- Validation: \"Chúng ta có làm đúng sản phẩm không?\" Kiểm tra phần mềm có thật sự đáp ứng nhu cầu của người dùng và mục đích kinh doanh. Thường là kiểm tra động, chạy phần mềm thật: system test, UAT, beta test.\n\nHai việc bổ sung cho nhau. Một tính năng có thể qua verification (làm đúng từng dòng đặc tả) mà vẫn trượt validation (đặc tả hiểu sai nhu cầu, người dùng không dùng được). Verification làm sớm giúp bắt lỗi khi sửa còn rẻ; validation đảm bảo cuối cùng sản phẩm có ích.",
+      "en": "- Verification: \"Are we building the product right?\" Checking that the product and documents match the specification, design and standards. Usually static, without running the software: requirement reviews, design reviews, code reviews, walkthroughs, inspections.\n- Validation: \"Are we building the right product?\" Checking that the software actually meets user needs and the business purpose. Usually dynamic, running the real software: system testing, UAT, beta testing.\n\nThey complement each other. A feature can pass verification (built exactly to every line of the spec) and still fail validation (the spec misunderstood the need, users cannot use it). Early verification catches defects while fixes are cheap; validation ensures the product is ultimately useful."
+    },
+    "example": {
+      "vi": "Đặc tả yêu cầu ô ngày sinh nhập theo dạng MM/DD/YYYY và dev làm đúng như vậy: qua verification. Nhưng người dùng Việt Nam quen DD/MM/YYYY nên nhập 05/04 thành tháng 5 ngày 4: trượt validation.",
+      "en": "The spec asks for birth date as MM/DD/YYYY and the developer builds exactly that: verification passes. But Vietnamese users write DD/MM/YYYY and enter 05/04 meaning 5 April, which becomes 4 May: validation fails."
+    },
+    "tip": {
+      "vi": "Dùng đúng cặp câu \"build the product right\" và \"build the right product\" rồi cho một ví dụ là đủ ghi điểm.",
+      "en": "Use the pair \"building the product right\" vs \"building the right product\" and add one example; that is enough."
+    },
+    "followUps": [
+      {
+        "vi": "Review tài liệu yêu cầu là verification hay validation?",
+        "en": "Is reviewing a requirements document verification or validation?"
+      },
+      {
+        "vi": "UAT thuộc loại nào? Vì sao?",
+        "en": "Which one is UAT? Why?"
+      }
+    ]
+  },
+  {
+    "id": "qa-stlc",
+    "level": "intern",
+    "topic": "Testing Fundamentals",
+    "q": {
+      "vi": "Vòng đời kiểm thử phần mềm (STLC) gồm những giai đoạn nào? Tester nên tham gia dự án từ lúc nào?",
+      "en": "What are the phases of the Software Testing Life Cycle (STLC)? When should testers join a project?"
+    },
+    "a": {
+      "vi": "Các giai đoạn thường gặp:\n1. Phân tích yêu cầu: đọc tài liệu, hỏi lại chỗ chưa rõ, xác định những gì test được và cần test.\n2. Lập kế hoạch test: phạm vi, chiến lược, nguồn lực, lịch, rủi ro, tiêu chí bắt đầu và kết thúc (entry/exit criteria).\n3. Thiết kế test case và chuẩn bị dữ liệu test.\n4. Chuẩn bị môi trường test: server, tài khoản, thiết bị, dữ liệu.\n5. Thực thi test: chạy test case, log bug, test lại (retest) khi dev sửa xong, chạy regression.\n6. Kết thúc test: báo cáo tổng kết, đánh giá chất lượng, rút kinh nghiệm, lưu trữ tài liệu.\n\nMỗi giai đoạn có đầu vào và đầu ra rõ ràng (ví dụ đầu ra của bước 3 là bộ test case đã được review). Trong Agile các bước này vẫn có nhưng lặp lại ngắn trong từng sprint.\n\nTester nên tham gia càng sớm càng tốt, từ lúc phân tích yêu cầu. Đọc tài liệu với con mắt tester sẽ phát hiện yêu cầu mâu thuẫn, thiếu trường hợp lỗi, không đo được. Sửa một dòng tài liệu rẻ hơn rất nhiều so với sửa code đã lên production. Đây chính là tinh thần shift-left.",
+      "en": "Typical phases:\n1. Requirement analysis: read the documents, clarify unclear points, identify what is testable and needs testing.\n2. Test planning: scope, strategy, resources, schedule, risks, entry and exit criteria.\n3. Test case design and test data preparation.\n4. Test environment setup: servers, accounts, devices, data.\n5. Test execution: run test cases, log bugs, retest fixes, run regression.\n6. Test closure: summary report, quality assessment, lessons learned, archiving.\n\nEach phase has clear inputs and outputs (e.g. phase 3 outputs reviewed test cases). In Agile the same steps happen in short loops within each sprint.\n\nTesters should join as early as possible, from requirement analysis. Reading requirements with a tester's eye uncovers contradictions, missing error cases and unmeasurable statements. Fixing one line in a document is far cheaper than fixing code already in production. That is the idea behind shift-left."
+    },
+    "example": {
+      "vi": "Lúc đọc tài liệu tính năng \"chuyển tiền\", tester hỏi: chuyển cho chính mình thì sao, số tiền có số lẻ không, quá hạn mức ngày thì báo gì. Ba câu hỏi đó khiến BA bổ sung ba quy tắc nghiệp vụ trước khi dev viết dòng code nào, thay vì phát hiện ra lúc test xong rồi mới sửa.",
+      "en": "While reading the \"money transfer\" spec, a tester asks: what about transferring to yourself, are decimal amounts allowed, what message appears above the daily limit. Those three questions make the BA add three business rules before any code is written, instead of discovering them after testing."
+    },
+    "tip": {
+      "vi": "Nhắc entry và exit criteria cùng việc tester vào từ khâu yêu cầu sẽ khác biệt với câu trả lời chỉ liệt kê tên giai đoạn.",
+      "en": "Mentioning entry and exit criteria and joining at the requirements stage sets you apart from answers that just list phase names."
+    },
+    "followUps": [
+      {
+        "vi": "Exit criteria của một đợt test thường gồm những gì?",
+        "en": "What do exit criteria for a test cycle usually include?"
+      },
+      {
+        "vi": "STLC khác SDLC thế nào?",
+        "en": "How does STLC differ from SDLC?"
+      }
+    ]
+  },
+  {
+    "id": "qa-black-white-grey-box",
+    "level": "intern",
+    "topic": "Testing Fundamentals",
+    "q": {
+      "vi": "Black-box, white-box và grey-box testing khác nhau thế nào?",
+      "en": "How do black-box, white-box and grey-box testing differ?"
+    },
+    "a": {
+      "vi": "- Black-box: test dựa trên yêu cầu và hành vi bên ngoài, không cần biết code bên trong. Nhập đầu vào, so đầu ra với kết quả mong đợi. Kỹ thuật thường dùng: phân vùng tương đương, giá trị biên, bảng quyết định, chuyển trạng thái. Phần lớn công việc của tester manual là black-box.\n- White-box: test dựa trên cấu trúc code: đi qua từng nhánh if/else, vòng lặp, đường xử lý lỗi. Đo bằng độ phủ code (statement coverage, branch coverage). Thường do developer làm qua unit test.\n- Grey-box: biết một phần bên trong như database, API, log, kiến trúc, nhưng vẫn test từ bên ngoài. Ví dụ test qua giao diện rồi query database kiểm tra dữ liệu lưu đúng chưa, hoặc đọc log để biết lỗi nằm ở service nào.\n\nTrong thực tế tester giỏi thường làm grey-box: biết SQL, đọc được API, xem được DevTools giúp viết bug report chính xác và tìm được lỗi mà chỉ nhìn giao diện sẽ bỏ qua.",
+      "en": "- Black-box: tests based on requirements and external behaviour, without knowing the code. Provide inputs, compare outputs with expected results. Typical techniques: equivalence partitioning, boundary values, decision tables, state transitions. Most manual testing is black-box.\n- White-box: tests based on code structure: every if/else branch, loop and error path, measured by code coverage (statement, branch). Usually done by developers through unit tests.\n- Grey-box: partial knowledge of internals such as the database, APIs, logs or architecture, while still testing from outside. E.g. test through the UI, then query the database to confirm the data was stored correctly, or read logs to see which service failed.\n\nIn practice good testers work grey-box: knowing SQL, reading APIs and using DevTools leads to precise bug reports and catches defects that UI-only testing misses."
+    },
+    "example": {
+      "vi": "Kiểm tra đổi số điện thoại trong hồ sơ: black-box là nhập số mới và thấy màn hình báo thành công; grey-box là kiểm thêm trong database xem số đã thật sự đổi chưa và bảng lịch sử thay đổi có ghi lại không, vì giao diện có thể báo thành công dù lưu thất bại.",
+      "en": "Testing a phone-number change: black-box means entering the new number and seeing a success message; grey-box also checks the database that the number really changed and the audit table recorded it, because the UI can report success even when saving failed."
+    },
+    "tip": {
+      "vi": "Kết thúc bằng việc bạn hay làm grey-box (SQL, API, log) sẽ cho người phỏng vấn thấy bạn không chỉ bấm giao diện.",
+      "en": "Ending with how you work grey-box (SQL, APIs, logs) shows the interviewer you do more than click through the UI."
+    },
+    "followUps": [
+      {
+        "vi": "Statement coverage và branch coverage khác nhau thế nào?",
+        "en": "How does statement coverage differ from branch coverage?"
+      },
+      {
+        "vi": "Tester manual có cần đọc code không?",
+        "en": "Does a manual tester need to read code?"
+      }
+    ]
+  },
+  {
+    "id": "qa-test-levels-types",
+    "level": "junior",
+    "topic": "Testing Fundamentals",
+    "q": {
+      "vi": "Các cấp độ kiểm thử (unit, integration, system, acceptance) là gì? Functional và non-functional testing khác nhau thế nào?",
+      "en": "What are the test levels (unit, integration, system, acceptance)? How does functional testing differ from non-functional testing?"
+    },
+    "a": {
+      "vi": "Cấp độ kiểm thử, từ nhỏ đến lớn:\n- Unit test: kiểm tra từng hàm, class riêng lẻ, thường do developer viết, chạy rất nhanh.\n- Integration test: kiểm tra các thành phần ghép với nhau: service với database, frontend gọi API, hệ thống gọi cổng thanh toán. Lỗi hay nằm ở chỗ nối.\n- System test: kiểm tra toàn bộ hệ thống hoàn chỉnh theo yêu cầu, trên môi trường giống thật. Đây là phần chính của tester.\n- Acceptance test (UAT): khách hàng hoặc người dùng cuối xác nhận phần mềm đáp ứng nhu cầu để nghiệm thu.\n\nLoại kiểm thử:\n- Functional: phần mềm làm đúng chức năng chưa: đăng nhập, tính tiền, gửi email, phân quyền.\n- Non-functional: phần mềm làm tốt tới đâu: hiệu năng (nhanh, chịu tải), bảo mật, khả năng sử dụng, tương thích trình duyệt và thiết bị, accessibility, độ tin cậy, khả năng phục hồi.\n\nHai cách chia này độc lập với nhau: ở cấp system có thể làm cả functional lẫn performance test. Nhiều tester chỉ nghĩ tới functional; nhắc non-functional cho thấy bạn nhìn chất lượng đầy đủ hơn.",
+      "en": "Test levels, small to large:\n- Unit tests: individual functions or classes, usually written by developers, very fast.\n- Integration tests: components working together: service with database, frontend calling the API, the system calling a payment gateway. Defects often hide at the seams.\n- System tests: the complete system against requirements in a production-like environment. This is the core of a tester's work.\n- Acceptance tests (UAT): the client or end users confirm the software meets their needs before sign-off.\n\nTest types:\n- Functional: does it do the right thing: login, pricing, sending email, permissions.\n- Non-functional: how well does it do it: performance (speed, load), security, usability, browser and device compatibility, accessibility, reliability, recoverability.\n\nThe two classifications are independent: at system level you can run both functional and performance tests. Many testers only think about functional; mentioning non-functional shows a fuller view of quality."
+    },
+    "example": {
+      "vi": "Tính năng đặt vé xe khách: unit test cho hàm tính giá theo tuyến; integration test cho việc giữ ghế gọi đúng API của nhà xe; system test đi trọn luồng tìm chuyến, chọn ghế, thanh toán; UAT do nhà xe tự đặt thử vài vé. Non-functional: dịp Tết hàng nghìn người cùng đặt thì trang có chịu nổi không.",
+      "en": "A coach-ticket booking feature: unit tests for the fare function per route; integration tests that seat holding calls the operator's API correctly; system tests for the full search, seat selection and payment flow; UAT where the operator books a few tickets. Non-functional: can the site cope when thousands book at once before Tết."
+    },
+    "tip": {
+      "vi": "Nhấn mạnh hai cách chia là độc lập và kể vài loại non-functional cụ thể là đủ ấn tượng ở cấp junior.",
+      "en": "Stressing that the two classifications are independent and naming a few concrete non-functional types is impressive enough at junior level."
+    },
+    "followUps": [
+      {
+        "vi": "Ai nên viết integration test trong team của bạn?",
+        "en": "Who should write integration tests in your team?"
+      },
+      {
+        "vi": "Test tương thích trình duyệt thì chọn trình duyệt và thiết bị nào?",
+        "en": "For compatibility testing, how do you choose browsers and devices?"
+      }
+    ]
+  },
+  {
+    "id": "qa-equivalence-boundary",
+    "level": "intern",
+    "topic": "Test Design",
+    "q": {
+      "vi": "Phân biệt kỹ thuật phân vùng tương đương và phân tích giá trị biên. Một ô cho nhập số tự nhiên từ 0 đến 100 thì bạn test những case nào?",
+      "en": "Explain equivalence partitioning and boundary value analysis. A field accepts whole numbers from 0 to 100: which cases do you test?"
+    },
+    "a": {
+      "vi": "Phân vùng tương đương: chia các giá trị đầu vào thành nhóm mà hệ thống xử lý giống nhau, mỗi nhóm chỉ cần thử một giá trị đại diện. Giảm số test case mà vẫn phủ đủ các kiểu đầu vào.\n\nPhân tích giá trị biên: lỗi hay xảy ra ở ranh giới (dev viết < thay vì <=), nên thử ngay tại biên và sát hai bên biên. Hai kỹ thuật thường dùng cùng nhau: phân vùng để biết có những nhóm nào, giá trị biên để chọn giá trị ở mép mỗi nhóm.\n\nVới ô nhập số tự nhiên 0–100:\n- Phân vùng hợp lệ: 0 đến 100, ví dụ 50.\n- Phân vùng không hợp lệ: nhỏ hơn 0 (ví dụ -5), lớn hơn 100 (ví dụ 150).\n- Giá trị biên: -1, 0, 1 và 99, 100, 101. Kết quả mong đợi: 0, 1, 99, 100 được chấp nhận; -1 và 101 bị từ chối kèm thông báo rõ ràng.\n- Không phải số tự nhiên: số thập phân (10.5), chữ (abc), ký tự đặc biệt, khoảng trắng đầu cuối, để trống, số rất dài, số có số 0 ở đầu (007), dán chuỗi từ clipboard.\n\nNên hỏi lại yêu cầu cho những chỗ chưa rõ: ô có bắt buộc không, có cho dấu cộng hay dấu trừ không, kiểm tra ở frontend hay cả backend (phải test cả API vì có thể bỏ qua giao diện).",
+      "en": "Equivalence partitioning: split inputs into groups the system treats the same way and test one representative per group. Fewer test cases while still covering every kind of input.\n\nBoundary value analysis: defects cluster at boundaries (a developer writes < instead of <=), so test exactly at and just around each boundary. The two are used together: partitioning finds the groups, boundary analysis picks values at the edges of each group.\n\nFor a whole-number field from 0 to 100:\n- Valid partition: 0 to 100, e.g. 50.\n- Invalid partitions: below 0 (e.g. -5), above 100 (e.g. 150).\n- Boundaries: -1, 0, 1 and 99, 100, 101. Expected: 0, 1, 99 and 100 accepted; -1 and 101 rejected with a clear message.\n- Not whole numbers: decimals (10.5), letters (abc), special characters, leading or trailing spaces, empty, very long numbers, leading zeros (007), pasted text.\n\nClarify open points: is the field required, are plus or minus signs allowed, is validation only in the frontend or also in the backend (test the API too, since the UI can be bypassed)."
+    },
+    "example": {
+      "vi": "App giao hàng cho chọn số lượng món từ 1 đến 20. Test biên tìm ra lỗi: nhập 20 bị từ chối vì dev viết điều kiện < 20 thay vì <= 20, đúng chỗ mà thử một giá trị ở giữa như 10 sẽ không bao giờ phát hiện.",
+      "en": "A delivery app allows 1 to 20 portions. Boundary testing found the bug: 20 was rejected because the developer wrote < 20 instead of <= 20, exactly what testing a middle value like 10 would never reveal."
+    },
+    "tip": {
+      "vi": "Liệt kê theo nhóm (hợp lệ, không hợp lệ, biên, sai kiểu dữ liệu) và kết thúc bằng câu hỏi làm rõ yêu cầu sẽ cho thấy tư duy có hệ thống.",
+      "en": "Listing by group (valid, invalid, boundary, wrong type) and ending with clarifying questions shows systematic thinking."
+    },
+    "followUps": [
+      {
+        "vi": "Ô ngày tháng cho chọn từ hôm nay tới 30 ngày sau thì giá trị biên là gì?",
+        "en": "A date field allows today up to 30 days ahead: what are the boundaries?"
+      },
+      {
+        "vi": "Ưu và nhược điểm của hai kỹ thuật này là gì?",
+        "en": "What are the pros and cons of these two techniques?"
+      }
+    ]
+  },
+  {
+    "id": "qa-good-test-case",
+    "level": "intern",
+    "topic": "Test Design",
+    "q": {
+      "vi": "Một test case gồm những thành phần gì? Thế nào là một test case tốt?",
+      "en": "What are the parts of a test case? What makes a good test case?"
+    },
+    "a": {
+      "vi": "Thành phần thường có:\n- ID và tiêu đề ngắn nói rõ đang kiểm tra gì.\n- Chức năng hoặc yêu cầu liên quan (để truy ngược).\n- Điều kiện tiên quyết: đã đăng nhập, có sẵn đơn hàng ở trạng thái X…\n- Dữ liệu test cụ thể.\n- Các bước thực hiện.\n- Kết quả mong đợi, cụ thể và kiểm chứng được.\n- Mức ưu tiên, loại test (positive, negative), người viết.\n- Khi chạy thì có thêm: kết quả thực tế, trạng thái (pass, fail, blocked), link bug.\n\nTest case tốt:\n- Mỗi case kiểm tra một ý, tiêu đề đọc là hiểu.\n- Người khác chưa biết hệ thống vẫn làm theo được và ra cùng kết quả.\n- Kết quả mong đợi đo được: \"hiển thị thông báo 'Mật khẩu tối thiểu 8 ký tự' dưới ô mật khẩu\" thay vì \"hệ thống báo lỗi\".\n- Độc lập, không phụ thuộc thứ tự chạy, dữ liệu dễ chuẩn bị lại.\n- Truy ngược được về yêu cầu, có cả case lỗi và case biên chứ không chỉ luồng đúng.\n- Không thừa: không có nhiều case cùng kiểm tra một điều.\n- Dễ bảo trì khi yêu cầu đổi.",
+      "en": "Common parts:\n- An ID and a short title stating what is checked.\n- The related feature or requirement (for traceability).\n- Preconditions: logged in, an order exists in state X…\n- Concrete test data.\n- Steps.\n- Expected result, specific and verifiable.\n- Priority, type (positive, negative), author.\n- At execution time: actual result, status (pass, fail, blocked), bug link.\n\nA good test case:\n- Checks one thing, with a self-explanatory title.\n- Someone unfamiliar with the system can follow it and get the same result.\n- Has a measurable expected result: \"shows 'Password must be at least 8 characters' under the password field\" rather than \"the system shows an error\".\n- Is independent of execution order, with data that is easy to recreate.\n- Traces back to a requirement and includes error and boundary cases, not only the happy path.\n- Has no redundancy: several cases do not check the same thing.\n- Is easy to maintain when requirements change."
+    },
+    "example": {
+      "vi": "Case kém: \"Kiểm tra đăng nhập — Kết quả: đăng nhập được\". Case tốt: \"TC-LOGIN-05: Đăng nhập thất bại khi sai mật khẩu. Tiền điều kiện: tài khoản a@shop.vn đang hoạt động. Bước: nhập a@shop.vn, mật khẩu Sai12345, bấm Đăng nhập. Mong đợi: ở lại trang đăng nhập, hiện 'Email hoặc mật khẩu không đúng', không tiết lộ email có tồn tại hay không.\"",
+      "en": "A weak case: \"Check login — Result: can log in\". A good one: \"TC-LOGIN-05: Login fails with a wrong password. Precondition: account a@shop.vn is active. Steps: enter a@shop.vn, password Wrong12345, click Log in. Expected: stays on the login page, shows 'Incorrect email or password', and does not reveal whether the email exists.\""
+    },
+    "tip": {
+      "vi": "Đưa ra một ví dụ kết quả mong đợi viết mơ hồ rồi sửa lại cho cụ thể là cách thuyết phục nhất.",
+      "en": "Showing a vague expected result and rewriting it precisely is the most convincing move."
+    },
+    "followUps": [
+      {
+        "vi": "Test case và test scenario khác nhau thế nào?",
+        "en": "How does a test case differ from a test scenario?"
+      },
+      {
+        "vi": "Bạn review test case của đồng nghiệp dựa trên tiêu chí gì?",
+        "en": "What criteria do you use to review a colleague's test cases?"
+      }
+    ]
+  },
+  {
+    "id": "qa-decision-table-state-transition",
+    "level": "junior",
+    "topic": "Test Design",
+    "q": {
+      "vi": "Ngoài phân vùng tương đương và giá trị biên, bạn còn dùng kỹ thuật thiết kế test nào? Bảng quyết định và chuyển trạng thái dùng khi nào?",
+      "en": "Besides equivalence partitioning and boundary values, which test design techniques do you use? When do decision tables and state transitions apply?"
+    },
+    "a": {
+      "vi": "Bảng quyết định (decision table): dùng khi kết quả phụ thuộc vào tổ hợp nhiều điều kiện. Liệt kê các điều kiện, mỗi cột là một tổ hợp đúng sai, kèm hành động mong đợi. Với n điều kiện có tối đa 2^n tổ hợp; gộp những cột cho cùng kết quả để giảm bớt. Ưu điểm lớn: phát hiện tổ hợp mà tài liệu quên mô tả.\n\nChuyển trạng thái (state transition): dùng khi đối tượng có các trạng thái và sự kiện làm nó chuyển trạng thái: đơn hàng, tài khoản bị khoá sau nhiều lần sai mật khẩu, vé, hợp đồng. Vẽ sơ đồ trạng thái, rồi test:\n- Mọi chuyển trạng thái hợp lệ.\n- Các chuyển không hợp lệ: huỷ đơn đã giao, thanh toán lại đơn đã thanh toán.\n- Chuỗi sự kiện dài, ví dụ sai mật khẩu đủ 5 lần thì khoá.\n\nCác kỹ thuật khác:\n- Use case hoặc kịch bản người dùng: test theo luồng nghiệp vụ đầu cuối.\n- Pairwise testing: khi có nhiều tham số cấu hình (trình duyệt, hệ điều hành, ngôn ngữ), chọn tập nhỏ phủ mọi cặp giá trị thay vì thử mọi tổ hợp.\n- Error guessing và exploratory testing dựa trên kinh nghiệm.",
+      "en": "Decision tables: use when the outcome depends on combinations of conditions. List the conditions, make each column one true/false combination with the expected action. With n conditions there are up to 2^n combinations; merge columns with the same outcome. The big win: they expose combinations the spec forgot.\n\nState transition: use when an object has states and events move it between them: orders, accounts locked after failed logins, tickets, contracts. Draw the state diagram, then test:\n- Every valid transition.\n- Invalid transitions: cancelling a delivered order, paying an already paid order.\n- Long event sequences, e.g. locking after exactly 5 wrong passwords.\n\nOther techniques:\n- Use cases or user scenarios: end-to-end business flows.\n- Pairwise testing: with many configuration parameters (browser, OS, language), pick a small set covering every pair of values instead of all combinations.\n- Error guessing and exploratory testing based on experience."
+    },
+    "example": {
+      "vi": "Phí ship của một sàn: miễn phí khi đơn từ 300 nghìn VÀ khách có thẻ thành viên, HOẶC khi có mã freeship. Ba điều kiện cho 8 tổ hợp; lập bảng quyết định thì thấy tài liệu không nói gì về trường hợp vừa có mã freeship vừa đủ điều kiện thành viên thì có được dùng mã cho đơn sau không. Hỏi lại BA trước khi test.",
+      "en": "A marketplace's shipping fee: free when the order is 300k or more AND the customer is a member, OR with a free-shipping code. Three conditions give 8 combinations; the decision table shows the spec says nothing about whether the code is consumed when membership already qualifies. Ask the BA before testing."
+    },
+    "code": "Bảng quyết định: miễn phí ship?\nĐiều kiện            | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8\nĐơn >= 300.000       | Đ | Đ | Đ | Đ | S | S | S | S\nCó thẻ thành viên    | Đ | Đ | S | S | Đ | Đ | S | S\nCó mã freeship       | Đ | S | Đ | S | Đ | S | Đ | S\n---------------------+---+---+---+---+---+---+---+---\nMiễn phí ship        | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ | ✓ | ✗\nTrừ lượt mã?         | ? | - | ✓ | - | ✓ | - | ✓ | -   <- cột 1 tài liệu chưa nói",
+    "tip": {
+      "vi": "Cho một ví dụ có tổ hợp mà tài liệu bỏ sót là cách chứng minh giá trị của bảng quyết định rõ nhất.",
+      "en": "An example with a combination the spec missed is the clearest proof of a decision table's value."
+    },
+    "followUps": [
+      {
+        "vi": "Vẽ sơ đồ trạng thái cho một đơn hàng thương mại điện tử.",
+        "en": "Draw a state diagram for an e-commerce order."
+      },
+      {
+        "vi": "Pairwise testing giảm số tổ hợp như thế nào?",
+        "en": "How does pairwise testing reduce the number of combinations?"
+      }
+    ]
+  },
+  {
+    "id": "qa-login-test-cases",
+    "level": "junior",
+    "topic": "Test Design",
+    "q": {
+      "vi": "Bài tập: viết test case cho màn hình đăng nhập (email, mật khẩu, nút Đăng nhập, link Quên mật khẩu, ô Ghi nhớ đăng nhập).",
+      "en": "Exercise: write test cases for a login screen (email, password, Log in button, Forgot password link, Remember me checkbox)."
+    },
+    "a": {
+      "vi": "Chia test case thành 5 nhóm: giao diện, luồng đúng, luồng lỗi, bảo mật và các trường hợp khác (mạng, bấm nhiều lần); ưu tiên các case khoá tài khoản, thông báo lỗi không lộ email có tồn tại, và chống SQL injection. Bắt đầu bằng vài câu hỏi làm rõ yêu cầu.\n\nTrước khi viết, nên hỏi: định dạng email và độ dài mật khẩu, sai mấy lần thì khoá, có đăng nhập bằng Google không, \"ghi nhớ\" giữ bao lâu, có giới hạn thiết bị không. Rồi chia nhóm:\n\nGiao diện:\n- Đủ thành phần, nhãn đúng, placeholder, mật khẩu hiển thị dạng ẩn và có nút hiện/ẩn, thứ tự Tab hợp lý, Enter để gửi, hiển thị đúng trên mobile.\n\nChức năng, luồng đúng:\n- Email và mật khẩu đúng thì vào trang chủ.\n- Email viết hoa hoặc có khoảng trắng đầu cuối vẫn đăng nhập được (nếu yêu cầu cho phép).\n- Có tick Ghi nhớ: đóng trình duyệt mở lại vẫn đăng nhập; không tick thì phải đăng nhập lại.\n\nChức năng, luồng lỗi:\n- Bỏ trống một hoặc cả hai ô.\n- Email sai định dạng; email chưa đăng ký; mật khẩu sai; mật khẩu đúng nhưng khác hoa thường.\n- Thông báo lỗi không tiết lộ email có tồn tại hay không.\n- Tài khoản bị khoá hoặc chưa kích hoạt.\n- Sai liên tiếp N lần thì khoá hoặc hiện captcha.\n\nBảo mật:\n- Mật khẩu không xuất hiện trong URL, log, response; trang dùng HTTPS.\n- Thử SQL injection (' OR 1=1 --) và XSS trong ô email.\n- Sau khi đăng xuất bấm Back không vào lại được; phiên hết hạn đúng thời gian.\n\nKhác:\n- Bấm nút nhiều lần liên tiếp không tạo nhiều request; mạng chậm hoặc mất mạng có thông báo.\n- Link Quên mật khẩu mở đúng trang.\n- Đăng nhập trên hai thiết bị cùng lúc theo đúng quy định.",
+      "en": "Group the cases into UI, happy path, error paths, security and other (network, repeated clicks); prioritise lockout, error messages that do not reveal whether the email exists, and SQL injection. Start with a few clarifying questions.\n\nBefore writing, ask: email format and password length, how many failures before lockout, is Google sign-in supported, how long \"remember me\" lasts, any device limits. Then group the cases:\n\nUI:\n- All elements present, correct labels and placeholders, password masked with a show/hide toggle, sensible Tab order, Enter submits, correct layout on mobile.\n\nFunctional, happy path:\n- Correct email and password lead to the home page.\n- Uppercase email or leading/trailing spaces still work (if the requirement allows).\n- With Remember me: closing and reopening the browser keeps you logged in; without it you must log in again.\n\nFunctional, error paths:\n- One or both fields empty.\n- Invalid email format; unregistered email; wrong password; correct password with wrong case.\n- Error messages do not reveal whether the email exists.\n- Locked or unactivated account.\n- N consecutive failures trigger lockout or a captcha.\n\nSecurity:\n- The password never appears in URLs, logs or responses; the page uses HTTPS.\n- Try SQL injection (' OR 1=1 --) and XSS in the email field.\n- After logout, Back does not get you in again; the session expires on time.\n\nOther:\n- Rapid repeated clicks do not send multiple requests; slow or lost network shows a message.\n- Forgot password opens the right page.\n- Simultaneous logins on two devices follow the defined rule."
+    },
+    "example": {
+      "vi": "Ở bài test tại chỗ 20 phút, ứng viên A viết 40 case giao diện lặt vặt; ứng viên B viết 25 case chia nhóm rõ ràng, có câu hỏi làm rõ yêu cầu, có cả case khoá tài khoản và thông báo lỗi không lộ email. Người chấm thường chọn B, vì cách nghĩ quan trọng hơn số lượng case.",
+      "en": "In a 20-minute on-site exercise, candidate A writes 40 scattered UI cases; candidate B writes 25 well-grouped cases with clarifying questions, including lockout and an error message that does not leak whether the email exists. Graders usually pick B, because the thinking matters more than the count."
+    },
+    "tip": {
+      "vi": "Bắt đầu bằng các câu hỏi làm rõ yêu cầu và chia nhóm trước khi liệt kê case; nhớ thêm vài case bảo mật.",
+      "en": "Start with clarifying questions and group the cases before listing them; remember a few security cases."
+    },
+    "followUps": [
+      {
+        "vi": "Trong các case trên, bạn sẽ tự động hoá những case nào trước?",
+        "en": "Which of these cases would you automate first?"
+      },
+      {
+        "vi": "Có đăng nhập bằng Google thì bạn test thêm gì?",
+        "en": "If Google sign-in exists, what else do you test?"
+      }
+    ]
+  },
+  {
+    "id": "qa-date-range-search",
+    "level": "junior",
+    "topic": "Test Design",
+    "q": {
+      "vi": "Bài tập: form tìm kiếm có hai ô From date và To date (lọc đơn hàng theo ngày tạo). Bạn viết test case thế nào, và kiểm tra kết quả tìm kiếm đúng hay sai bằng cách nào?",
+      "en": "Exercise: a search form with From date and To date (filtering orders by creation date). How do you write test cases, and how do you verify the results are correct?"
+    },
+    "a": {
+      "vi": "Test từng ô, quan hệ giữa hai ô (From sau To, From bằng To, khoảng tối đa) và nhất là biên thời gian: đơn lúc 00:00:00 ngày From và 23:59:59 ngày To phải có trong kết quả. Kiểm tra kết quả bằng dữ liệu biết trước hoặc query database cùng điều kiện rồi so với màn hình.\n\nLàm rõ trước: hai ô có bắt buộc không, có được bỏ trống một ô không, ngày có tính cả giờ không (To date là hết ngày 23:59:59 hay 00:00), khoảng tìm tối đa bao nhiêu ngày, có cho chọn ngày tương lai không, múi giờ nào, định dạng ngày hiển thị.\n\nKiểm tra từng ô:\n- Nhập tay và chọn bằng lịch; định dạng sai (31/02, 2025-13-01, chữ); năm nhuận 29/02; để trống.\n\nKiểm tra quan hệ giữa hai ô (giá trị biên):\n- From = To (một ngày); From sau To phải báo lỗi; khoảng đúng bằng mức tối đa và vượt mức tối đa một ngày.\n- Chỉ nhập From, chỉ nhập To.\n\nKiểm tra kết quả:\n- Đơn tạo đúng lúc 00:00:00 của From và 23:59:59 của To phải có trong kết quả. Đây là lỗi biên hay gặp nhất.\n- Đơn tạo ngay ngoài khoảng (23:59:59 của ngày trước From) không được có.\n- Không có kết quả thì hiện thông báo; nhiều kết quả thì phân trang và sắp xếp đúng.\n- Kết hợp với các bộ lọc khác, xoá bộ lọc, giữ bộ lọc khi quay lại trang.\n\nKiểm tra kết quả đúng hay sai: chuẩn bị sẵn dữ liệu biết trước (vài đơn ở đúng biên và ngay ngoài biên), hoặc query thẳng database với cùng điều kiện rồi so số lượng và danh sách mã đơn với màn hình. Nếu dev bảo kết quả đúng mà bạn thấy sai, đưa câu query, dữ liệu và yêu cầu ra để đối chiếu thay vì tranh luận cảm tính.",
+      "en": "Test each field, the relationship between them (From after To, From equal to To, maximum range) and above all the time boundaries: orders at 00:00:00 on From and 23:59:59 on To must appear. Verify results with known data or a database query using the same condition, compared with the screen.\n\nClarify first: are both fields required, can one be empty, do dates include time (is To date the end of day 23:59:59 or 00:00), maximum range, are future dates allowed, which time zone, display format.\n\nEach field:\n- Typing and picking from the calendar; invalid formats (31/02, 2025-13-01, letters); leap day 29/02; empty.\n\nThe relationship between fields (boundaries):\n- From = To (one day); From after To must show an error; a range exactly at the maximum and one day over.\n- Only From, only To.\n\nResults:\n- Orders created at exactly 00:00:00 on From and 23:59:59 on To must appear. This is the most common boundary bug.\n- An order just outside (23:59:59 the day before From) must not appear.\n- No results show a message; many results paginate and sort correctly.\n- Combined with other filters, clearing filters, keeping filters when returning to the page.\n\nVerifying results: prepare known data (a few orders exactly at and just outside the boundaries), or query the database with the same condition and compare the count and order IDs with the screen. If a developer insists the results are right and you disagree, bring the query, the data and the requirement rather than arguing from impressions."
+    },
+    "example": {
+      "vi": "Báo cáo doanh thu lọc từ 01/10 đến 31/10 thiếu toàn bộ đơn ngày 31/10, vì backend so sánh created_at <= '2026-10-31', tức 00:00 ngày 31. Tester tìm ra nhờ cố ý tạo một đơn lúc 31/10 20:15 và một đơn lúc 30/09 23:59 làm dữ liệu biên.",
+      "en": "A revenue report filtered 01/10 to 31/10 missed every order on 31/10, because the backend compared created_at <= '2026-10-31', i.e. midnight at the start of the 31st. The tester caught it by deliberately creating one order at 20:15 on 31/10 and one at 23:59 on 30/09 as boundary data."
+    },
+    "code": "-- Đối chiếu với màn hình: đơn tạo trong tháng 10 (bao trọn ngày 31)\nSELECT count(*), min(created_at), max(created_at)\nFROM orders\nWHERE created_at >= '2026-10-01'\n  AND created_at <  '2026-11-01';   -- \"< ngày hôm sau\" thay vì \"<= 31/10\"",
+    "tip": {
+      "vi": "Chỉ ra lỗi biên 23:59:59 của To date và cách đối chiếu bằng SQL là hai điểm người phỏng vấn mong chờ ở bài này.",
+      "en": "Pointing out the 23:59:59 To-date boundary bug and verifying with SQL are the two things interviewers hope for here."
+    },
+    "followUps": [
+      {
+        "vi": "Người dùng ở múi giờ khác thì kết quả có thay đổi không? Test thế nào?",
+        "en": "Do results change for users in another time zone? How do you test it?"
+      },
+      {
+        "vi": "Ô ngày có cả dropdown và cho nhập tay thì bạn viết thêm case gì?",
+        "en": "If the date field offers both a dropdown and typing, what extra cases do you add?"
+      }
+    ]
+  },
+  {
+    "id": "qa-error-guessing-exploratory",
+    "level": "mid",
+    "topic": "Test Design",
+    "q": {
+      "vi": "Error guessing và exploratory testing là gì? Khi nào nên dùng thay cho test theo kịch bản có sẵn?",
+      "en": "What are error guessing and exploratory testing? When should they replace scripted testing?"
+    },
+    "a": {
+      "vi": "Error guessing: dựa trên kinh nghiệm để đoán chỗ hay có lỗi rồi thử thẳng vào đó. Danh sách quen thuộc: để trống, khoảng trắng, ký tự đặc biệt và emoji, chuỗi rất dài, số âm, số 0, ngày 29/02, đổi múi giờ, bấm nút hai lần, bấm Back giữa luồng, mất mạng giữa chừng, mở hai tab cùng sửa một bản ghi, dữ liệu tiếng Việt có dấu, file upload rỗng hoặc sai định dạng.\n\nExploratory testing: vừa học về sản phẩm, vừa thiết kế và chạy test cùng lúc, mỗi bước tiếp theo dựa trên điều vừa thấy. Không phải bấm lung tung: làm có cấu trúc theo phiên (session-based), mỗi phiên khoảng 60–90 phút với một charter, ví dụ \"khám phá luồng huỷ đơn với khuyến mãi để tìm lỗi tính tiền hoàn\", ghi chép lại điều đã thử, bug, câu hỏi và ý tưởng cho lần sau.\n\nNên dùng khi:\n- Yêu cầu sơ sài hoặc thay đổi liên tục, thời gian ít.\n- Tính năng mới, cần hiểu nhanh rủi ro trước khi viết test case chi tiết.\n- Bổ sung sau khi bộ test case đã pass, để tìm lỗi mà kịch bản không nghĩ tới.\n- Kiểm tra nhanh sau khi sửa bug lớn.\n\nKhông thay thế hoàn toàn test theo kịch bản: phần cần lặp lại, cần bằng chứng (nghiệm thu, quy định ngân hàng) hoặc sẽ tự động hoá vẫn nên có test case viết sẵn. Kết hợp cả hai là cách hiệu quả nhất.",
+      "en": "Error guessing: use experience to guess where defects usually live and aim straight at them. The usual list: empty values, whitespace, special characters and emoji, very long strings, negative numbers, zero, 29 February, time zone changes, double clicks, Back in the middle of a flow, losing network midway, two tabs editing the same record, Vietnamese diacritics, empty or wrong-format uploads.\n\nExploratory testing: learning the product while designing and running tests at the same time, each next step guided by what you just saw. It is not random clicking: work in sessions (session-based testing) of about 60–90 minutes, each with a charter such as \"explore order cancellation with promotions to find refund calculation errors\", and note what you tried, bugs, questions and ideas for next time.\n\nUse it when:\n- Requirements are thin or changing and time is short.\n- A feature is new and you need to understand risks before writing detailed test cases.\n- After the scripted suite passes, to find what the scripts never imagined.\n- For a quick check after a big fix.\n\nIt does not fully replace scripted testing: work that must be repeated, needs evidence (sign-off, banking regulation) or will be automated should still have written test cases. Combining both is most effective."
+    },
+    "example": {
+      "vi": "Bộ test case đặt phòng khách sạn pass hết. Một phiên exploratory 60 phút với charter \"đổi ngày nhận phòng sau khi đã áp mã giảm giá\" tìm ra lỗi: đổi sang ngày không áp dụng khuyến mãi mà giá vẫn giữ mức giảm. Không có test case nào trong bộ kịch bản đi theo thứ tự thao tác đó.",
+      "en": "The hotel booking test suite fully passed. A 60-minute exploratory session chartered \"change check-in date after applying a discount code\" found that switching to a date outside the promotion kept the discounted price. No scripted case followed that order of actions."
+    },
+    "tip": {
+      "vi": "Nói rõ exploratory có charter, giới hạn thời gian và ghi chép để người phỏng vấn không nghĩ đó là bấm lung tung.",
+      "en": "Make clear that exploratory testing has charters, time boxes and notes so the interviewer does not mistake it for random clicking."
+    },
+    "followUps": [
+      {
+        "vi": "Bạn báo cáo kết quả một phiên exploratory cho leader thế nào?",
+        "en": "How do you report an exploratory session's results to your lead?"
+      },
+      {
+        "vi": "Monkey testing khác exploratory testing ở điểm nào?",
+        "en": "How does monkey testing differ from exploratory testing?"
+      }
+    ]
+  },
+  {
+    "id": "qa-no-requirements-expected-result",
+    "level": "mid",
+    "topic": "Test Design",
+    "q": {
+      "vi": "Tính năng không có tài liệu yêu cầu (hoặc tài liệu rất sơ sài) thì bạn test thế nào? Dựa vào đâu để xác định kết quả mong đợi?",
+      "en": "How do you test a feature with no requirements document (or a very thin one)? What do you base expected results on?"
+    },
+    "a": {
+      "vi": "Kết quả mong đợi phải có căn cứ (gọi là test oracle), không dựa vào cảm giác của riêng mình. Khi không có tài liệu, lấy căn cứ từ:\n- Hỏi trực tiếp: PO, BA, khách hàng, developer. Ghi lại câu trả lời ở nơi cả team thấy (ticket, Confluence, chat của dự án) để làm tài liệu.\n- Phiên bản cũ của sản phẩm, hoặc tính năng tương tự ở chỗ khác trong cùng sản phẩm: hành vi phải nhất quán.\n- Sản phẩm của đối thủ và thói quen chung của người dùng.\n- Tiêu chuẩn và quy định: pháp luật (hoá đơn, thuế, dữ liệu cá nhân), chuẩn của Apple/Google cho app, chuẩn accessibility.\n- Thiết kế (Figma), user story, tiêu chí chấp nhận trong ticket, code và API (Swagger) nếu có.\n- Dữ liệu thật: log, phản hồi của người dùng, ticket hỗ trợ.\n\nCách làm:\n1. Tự viết một danh sách giả định hoặc checklist các hành vi mình hiểu, gửi PO/BA xác nhận. Đây cũng là tài liệu cho lần sau.\n2. Chạy exploratory testing để hiểu tính năng và tìm câu hỏi.\n3. Ưu tiên luồng chính và rủi ro cao (tiền, dữ liệu, bảo mật).\n4. Chỗ nào chưa có câu trả lời thì ghi rõ là \"câu hỏi mở\" trong báo cáo thay vì tự quyết định là bug hay không.",
+      "en": "Expected results need a basis (a test oracle), not just your own feeling. Without documents, draw on:\n- Asking directly: PO, BA, client, developers. Record the answers where the team can see them (ticket, Confluence, project chat) so they become documentation.\n- The previous version of the product, or similar features elsewhere in the same product: behaviour should be consistent.\n- Competitor products and common user conventions.\n- Standards and regulations: law (invoices, tax, personal data), Apple/Google app guidelines, accessibility standards.\n- Designs (Figma), user stories, acceptance criteria in the ticket, code and API docs (Swagger) if available.\n- Real data: logs, user feedback, support tickets.\n\nApproach:\n1. Write your own list of assumptions or a checklist of expected behaviours and send it to the PO/BA to confirm. It doubles as documentation next time.\n2. Run exploratory testing to understand the feature and surface questions.\n3. Prioritise main flows and high risks (money, data, security).\n4. Where there is no answer yet, report it clearly as an \"open question\" rather than deciding on your own whether it is a bug."
+    },
+    "example": {
+      "vi": "Sprint có ticket \"Thêm xuất Excel danh sách khách hàng\", chỉ một dòng mô tả. Tester gửi PO 6 câu hỏi kèm giả định: xuất theo bộ lọc đang chọn hay toàn bộ, tối đa bao nhiêu dòng, có xuất số điện thoại đầy đủ không, tên file, định dạng ngày, ai được quyền xuất. PO sửa 2 giả định, trong đó có việc nhân viên thường không được xuất số điện thoại, một rủi ro dữ liệu cá nhân suýt bị bỏ qua.",
+      "en": "A sprint ticket says only \"Add Excel export of the customer list\". The tester sends the PO six questions with assumptions: export the current filter or everything, maximum rows, full phone numbers or not, file name, date format, who may export. The PO corrects two assumptions, including that regular staff must not export phone numbers, a personal-data risk that almost slipped through."
+    },
+    "tip": {
+      "vi": "Nhắc khái niệm test oracle và việc ghi lại câu trả lời thành tài liệu cho cả team sẽ rất được đánh giá ở cấp mid.",
+      "en": "Mentioning test oracles and turning answers into shared documentation is valued at mid level."
+    },
+    "followUps": [
+      {
+        "vi": "PO trả lời mâu thuẫn với developer thì bạn làm gì?",
+        "en": "What do you do when the PO's answer contradicts the developer's?"
+      },
+      {
+        "vi": "Bạn đề xuất đổi vị trí hai nút vì thấy dễ dùng hơn nhưng yêu cầu không nói gì: bạn log bug hay làm gì?",
+        "en": "You think swapping two buttons would be more usable but the spec is silent: do you log a bug or what?"
+      }
+    ]
+  },
+  {
+    "id": "qa-smoke-sanity-regression-uat",
+    "level": "intern",
+    "topic": "Test Types",
+    "q": {
+      "vi": "Smoke test, sanity test, regression test và UAT khác nhau thế nào?",
+      "en": "How do smoke, sanity, regression and UAT testing differ?"
+    },
+    "a": {
+      "vi": "- Smoke test: kiểm tra nhanh các chức năng sống còn ngay khi có bản build mới (mở được app, đăng nhập, luồng chính chạy). Mục đích là quyết định bản build có đủ ổn để test tiếp không. Rộng nhưng nông.\n- Sanity test: kiểm tra hẹp và nhanh quanh một chỗ vừa sửa hoặc vừa thay đổi, xem nó có hợp lý trước khi test kỹ. Hẹp nhưng sâu hơn smoke một chút.\n- Regression test: chạy lại các test đã pass trước đó để đảm bảo thay đổi mới (sửa bug, tính năng mới, nâng cấp thư viện) không làm hỏng chỗ cũ. Thường làm trước mỗi lần release, và là ứng viên số một để tự động hoá.\n- Retest (confirmation test): chạy lại đúng test case đã fail để xác nhận bug đã được sửa. Khác regression ở chỗ chỉ nhìn vào bug đó.\n- UAT (User Acceptance Testing): khách hàng hoặc người dùng thật kiểm tra trên môi trường gần như thật để xác nhận phần mềm đáp ứng nhu cầu nghiệp vụ trước khi nghiệm thu, đưa vào dùng.\n\nThứ tự hay gặp: build mới → smoke → test tính năng và retest → regression → UAT → release.",
+      "en": "- Smoke test: a quick check of critical functions as soon as a new build arrives (the app opens, login works, the main flow runs), to decide whether the build is stable enough to test further. Broad but shallow.\n- Sanity test: a narrow, quick check around something just fixed or changed, to see it is reasonable before deeper testing. Narrow, a bit deeper than smoke.\n- Regression test: rerunning previously passed tests to make sure new changes (bug fixes, features, library upgrades) did not break existing behaviour. Usually before every release, and the prime candidate for automation.\n- Retest (confirmation testing): rerunning the exact failed test case to confirm a bug is fixed. Unlike regression, it only looks at that bug.\n- UAT (User Acceptance Testing): the client or real users test in a near-production environment to confirm the software meets business needs before sign-off and go-live.\n\nA common order: new build → smoke → feature testing and retests → regression → UAT → release."
+    },
+    "example": {
+      "vi": "Bản build mới của app ngân hàng: smoke 15 phút thấy không đăng nhập được, trả build lại ngay thay vì cả team test cả ngày trên bản hỏng. Sau khi dev sửa lỗi tính phí chuyển khoản, tester retest đúng case đó, rồi chạy regression cả luồng chuyển tiền vì phần tính phí dùng chung với thanh toán hoá đơn.",
+      "en": "A new banking-app build: a 15-minute smoke test shows login is broken, so the build goes straight back instead of the team testing a broken build all day. After the transfer-fee bug is fixed, the tester retests that case, then runs regression on the whole transfer flow because the fee logic is shared with bill payment."
+    },
+    "tip": {
+      "vi": "Thêm retest vào để phân biệt với regression là điểm nhiều ứng viên quên.",
+      "en": "Adding retest and distinguishing it from regression is something many candidates forget."
+    },
+    "followUps": [
+      {
+        "vi": "Bộ regression quá lớn, không đủ thời gian chạy hết trước release thì bạn chọn case nào?",
+        "en": "The regression suite is too big to finish before release: which cases do you pick?"
+      },
+      {
+        "vi": "Ai nên viết kịch bản UAT?",
+        "en": "Who should write UAT scenarios?"
+      }
+    ]
+  },
+  {
+    "id": "qa-when-to-stop-testing",
+    "level": "junior",
+    "topic": "Test Types",
+    "q": {
+      "vi": "Khi nào thì dừng test? Dựa vào đâu để biết bộ test case đã đầy đủ?",
+      "en": "When do you stop testing? How do you know the test cases are complete enough?"
+    },
+    "a": {
+      "vi": "Không bao giờ test được hết mọi thứ, nên dừng test là quyết định dựa trên rủi ro và tiêu chí đã thống nhất từ đầu (exit criteria) trong test plan, ví dụ:\n- Mọi test case ưu tiên cao đã chạy, tỉ lệ pass đạt mức thống nhất.\n- Không còn bug critical hoặc high đang mở; bug còn lại đã được PO chấp nhận và có kế hoạch.\n- Độ phủ yêu cầu đạt 100% cho phạm vi release.\n- Số bug mới tìm được giảm rõ qua các vòng test.\n- Hết thời gian hoặc ngân sách: khi đó báo rõ phần chưa test và rủi ro để người có quyền quyết định.\n\nĐánh giá độ đầy đủ của test case:\n- Ma trận truy vết (traceability matrix): mỗi yêu cầu nối với các test case của nó; yêu cầu nào chưa có case là lỗ hổng.\n- Đã áp dụng các kỹ thuật thiết kế (phân vùng, biên, bảng quyết định, chuyển trạng thái) cho các ô và quy tắc quan trọng.\n- Có cả case âm, case biên, non-functional, không chỉ luồng đúng.\n- Được người khác review (dev, BA, tester khác).\n- Đối chiếu với bug lọt ra production trước đây: đã có case để bắt chưa.\n\nDừng bất thường cũng có: bản build hỏng nặng chặn hết test (blocker), môi trường sập, yêu cầu thay đổi lớn. Khi đó dừng, báo ngay và ghi nhận lý do.",
+      "en": "You can never test everything, so stopping is a risk-based decision against criteria agreed up front (exit criteria) in the test plan, e.g.:\n- All high-priority test cases executed with the agreed pass rate.\n- No open critical or high bugs; remaining bugs accepted by the PO with a plan.\n- 100% requirement coverage for the release scope.\n- The rate of new bugs found has clearly dropped across cycles.\n- Time or budget runs out: then state clearly what was not tested and the risk, so someone with authority decides.\n\nJudging test case completeness:\n- A traceability matrix: each requirement linked to its test cases; a requirement with none is a gap.\n- Design techniques (partitioning, boundaries, decision tables, state transitions) applied to important fields and rules.\n- Negative, boundary and non-functional cases, not just happy paths.\n- Reviewed by someone else (developer, BA, another tester).\n- Checked against bugs that escaped to production before: is there now a case that would catch them?\n\nThere are abnormal stops too: a badly broken build blocks everything, the environment goes down, requirements change heavily. Then stop, report immediately and record why."
+    },
+    "example": {
+      "vi": "Ngày trước release còn 40 case ưu tiên thấp chưa chạy và một bug medium về căn lề trên iPad. Tester không tự quyết \"cho qua\" mà gửi PO danh sách phần chưa test cùng đánh giá rủi ro; PO chấp nhận release, bug căn lề vào sprint sau. Quyết định có ghi lại nên không ai bị bất ngờ.",
+      "en": "The day before release, 40 low-priority cases are unrun and a medium iPad alignment bug is open. The tester does not decide \"ship it\" alone but sends the PO what is untested with a risk assessment; the PO approves the release and schedules the bug for next sprint. The decision is recorded, so nobody is surprised."
+    },
+    "tip": {
+      "vi": "Nhấn mạnh tester cung cấp thông tin rủi ro, còn quyết định release là của người có thẩm quyền.",
+      "en": "Stress that testers provide risk information while the release decision belongs to someone with authority."
+    },
+    "followUps": [
+      {
+        "vi": "Traceability matrix lập và cập nhật thế nào khi yêu cầu thay đổi?",
+        "en": "How do you build and update a traceability matrix when requirements change?"
+      },
+      {
+        "vi": "Nếu leader muốn release dù còn bug critical, bạn làm gì?",
+        "en": "If your lead wants to release with a critical bug open, what do you do?"
+      }
+    ]
+  },
+  {
+    "id": "qa-mobile-vs-web-testing",
+    "level": "junior",
+    "topic": "Test Types",
+    "q": {
+      "vi": "Test ứng dụng mobile khác test web ở những điểm nào?",
+      "en": "How does testing a mobile app differ from testing a web app?"
+    },
+    "a": {
+      "vi": "Những điểm riêng của mobile:\n- Thiết bị phân mảnh: nhiều hãng, kích thước màn hình, phiên bản Android và iOS, máy cấu hình yếu. Chọn danh sách thiết bị theo thị phần người dùng thật, kết hợp máy thật với emulator và device farm.\n- Mạng thay đổi: 4G, wifi yếu, mất mạng, chuyển mạng giữa chừng, chế độ máy bay. App phải xử lý lưu tạm, thử lại, báo lỗi rõ ràng.\n- Bị gián đoạn: cuộc gọi đến, thông báo, chuyển app khác rồi quay lại, khoá màn hình, xoay màn hình, hệ điều hành giết app khi thiếu bộ nhớ.\n- Quyền truy cập: camera, vị trí, thông báo, danh bạ; người dùng từ chối hoặc thu hồi quyền.\n- Tài nguyên: pin, bộ nhớ, dung lượng app, nóng máy.\n- Cử chỉ và phần cứng: vuốt, giữ, bàn phím ảo che ô nhập, nút Back của Android, tai thỏ.\n- Cài đặt và cập nhật: cài mới, nâng cấp từ bản cũ còn giữ dữ liệu, gỡ cài; push notification; deep link.\n- Phát hành qua store: duyệt của Apple, Google; người dùng có thể không cập nhật, nên nhiều phiên bản cùng tồn tại, cần kiểm tra cơ chế bắt buộc cập nhật.\n\nWeb thì tập trung vào trình duyệt (Chrome, Safari, Firefox, Edge), độ phân giải và responsive, cookie và phiên đăng nhập, nút Back và refresh, nhiều tab, SEO; bản mới có hiệu lực ngay khi deploy.\n\nCông cụ thường dùng cho mobile: Android Studio, Xcode, adb, Charles hoặc Proxyman để xem request, Firebase Crashlytics, Appium cho tự động hoá.",
+      "en": "What is specific to mobile:\n- Device fragmentation: many brands, screen sizes, Android and iOS versions, low-end devices. Pick devices by your real users' market share, mixing real devices with emulators and device farms.\n- Changing networks: 4G, weak wifi, offline, switching networks mid-action, airplane mode. The app must cache, retry and show clear errors.\n- Interruptions: incoming calls, notifications, switching apps and back, screen lock, rotation, the OS killing the app under memory pressure.\n- Permissions: camera, location, notifications, contacts; users denying or revoking them.\n- Resources: battery, memory, app size, overheating.\n- Gestures and hardware: swipes, long press, the keyboard covering inputs, Android's Back button, notches.\n- Install and update: fresh install, upgrading from an old version with existing data, uninstall; push notifications; deep links.\n- Store releases: Apple and Google review; users may not update, so several versions coexist and forced-update logic needs testing.\n\nWeb focuses on browsers (Chrome, Safari, Firefox, Edge), resolutions and responsiveness, cookies and sessions, Back and refresh, multiple tabs, SEO; a new version takes effect as soon as it is deployed.\n\nCommon mobile tools: Android Studio, Xcode, adb, Charles or Proxyman to inspect requests, Firebase Crashlytics, Appium for automation."
+    },
+    "example": {
+      "vi": "App đặt đồ ăn chạy tốt trên máy test, nhưng người dùng phản ánh mất giỏ hàng. Nguyên nhân: đang chọn món thì chuyển sang Zalo trả lời tin nhắn, máy Android RAM thấp giết app ở nền, quay lại thì giỏ hàng trống. Bug chỉ tái hiện khi bật tuỳ chọn \"Don't keep activities\" trong Developer options.",
+      "en": "A food ordering app worked on test devices, yet users reported losing their cart. Cause: while choosing dishes they switched to a messaging app, a low-RAM Android phone killed the app in the background, and the cart was empty on return. The bug only reproduced with \"Don't keep activities\" enabled in Developer options."
+    },
+    "tip": {
+      "vi": "Kể được một bug kiểu bị gián đoạn hoặc mất mạng sẽ thuyết phục hơn liệt kê danh sách khác biệt.",
+      "en": "Telling one interruption or network bug story is more convincing than listing differences."
+    },
+    "followUps": [
+      {
+        "vi": "Không đủ máy thật thì bạn chọn thiết bị test thế nào?",
+        "en": "Without enough real devices, how do you choose test devices?"
+      },
+      {
+        "vi": "Test bản nâng cấp từ phiên bản cũ thì cần chú ý gì?",
+        "en": "What do you watch for when testing an upgrade from an old version?"
+      }
+    ]
+  },
+  {
+    "id": "qa-bug-life-cycle",
+    "level": "intern",
+    "topic": "Bug Management",
+    "q": {
+      "vi": "Mô tả vòng đời của một bug.",
+      "en": "Describe the life cycle of a bug."
+    },
+    "a": {
+      "vi": "Bug đi từ New, qua triage, Assigned, In Progress, Fixed, rồi tester retest để Closed hoặc Reopened; ngoài ra có các nhánh Rejected, Duplicate, Deferred, Cannot reproduce.\n\nTên trạng thái khác nhau tuỳ công cụ (Jira, Redmine, Azure DevOps) và quy trình từng team, nhưng thường gồm:\n\n1. New: tester tìm thấy và log bug.\n2. Triage: lead, PO hoặc dev xem xét, đánh giá severity và priority, quyết định có sửa không.\n3. Assigned/Open: giao cho một developer.\n4. In Progress: dev đang sửa.\n5. Fixed/Resolved: dev đã sửa, đưa vào bản build hoặc môi trường test.\n6. Retest/Ready for test: tester kiểm tra lại.\n7. Closed/Verified: sửa đúng, đóng bug.\n8. Reopened: kiểm tra lại vẫn lỗi, mở lại cho dev.\n\nCác nhánh khác:\n- Rejected/Not a bug: hoạt động đúng theo yêu cầu, hoặc tester hiểu sai.\n- Duplicate: đã có bug khác mô tả cùng lỗi.\n- Deferred/Postponed: lỗi thật nhưng để bản sau vì ưu tiên thấp.\n- Cannot reproduce: dev không tái hiện được, cần thêm thông tin.\n- Won't fix: chấp nhận lỗi, không sửa.\n\nVai trò của tester: log bug rõ ràng, retest đúng môi trường và bản build có chứa bản sửa, chạy regression quanh chỗ sửa, và không tự đóng bug của người khác mà chưa kiểm tra.",
+      "en": "A bug goes from New through triage, Assigned, In Progress and Fixed, then the tester retests to Closed or Reopened; side branches include Rejected, Duplicate, Deferred and Cannot reproduce.\n\nStatus names vary by tool (Jira, Redmine, Azure DevOps) and team process, but typically:\n\n1. New: the tester finds and logs the bug.\n2. Triage: the lead, PO or developers review it, set severity and priority, decide whether to fix.\n3. Assigned/Open: given to a developer.\n4. In Progress: being fixed.\n5. Fixed/Resolved: fixed and deployed to a build or test environment.\n6. Retest/Ready for test: the tester checks again.\n7. Closed/Verified: fixed correctly, closed.\n8. Reopened: still failing, sent back to the developer.\n\nOther branches:\n- Rejected/Not a bug: works as specified, or the tester misunderstood.\n- Duplicate: another bug already describes it.\n- Deferred/Postponed: real but moved to a later release due to low priority.\n- Cannot reproduce: the developer cannot reproduce it and needs more information.\n- Won't fix: accepted, will not be fixed.\n\nThe tester's role: log clearly, retest on the right environment and a build that contains the fix, run regression around the change, and never close someone else's bug without checking."
+    },
+    "example": {
+      "vi": "Bug \"không áp được mã giảm giá cho đơn trên 1 triệu\" được đánh dấu Fixed. Tester retest trên staging thấy vẫn lỗi, kiểm tra thì bản sửa mới chỉ có trên nhánh dev chứa chưa deploy lên staging. Bug không bị Reopened oan nhờ tester ghi rõ số build trong bình luận khi retest.",
+      "en": "The bug \"discount code fails for orders over 1 million\" is marked Fixed. Retesting on staging still fails; it turns out the fix is only on the dev branch and not yet deployed to staging. The bug avoids a pointless reopen because the tester notes the build number when retesting."
+    },
+    "tip": {
+      "vi": "Kể thêm các nhánh Duplicate, Deferred, Cannot reproduce và nhắc retest đúng bản build sẽ cho thấy bạn đã làm thật.",
+      "en": "Covering the Duplicate, Deferred and Cannot-reproduce branches and retesting on the right build shows real experience."
+    },
+    "followUps": [
+      {
+        "vi": "Bug bị Reopened nhiều lần thì bạn làm gì?",
+        "en": "What do you do when a bug keeps getting reopened?"
+      },
+      {
+        "vi": "Ai được quyền chuyển bug sang Won't fix?",
+        "en": "Who may move a bug to Won't fix?"
+      }
+    ]
+  },
+  {
+    "id": "qa-severity-priority",
+    "level": "intern",
+    "topic": "Bug Management",
+    "q": {
+      "vi": "Severity và priority khác nhau thế nào? Cho ví dụ bug nghiêm trọng nhưng độ ưu tiên thấp, và bug nhẹ nhưng ưu tiên cao.",
+      "en": "How do severity and priority differ? Give an example of a severe bug with low priority, and a minor bug with high priority."
+    },
+    "a": {
+      "vi": "- Severity (mức độ nghiêm trọng): bug ảnh hưởng tới hệ thống nặng tới đâu về mặt kỹ thuật. Thường do tester đánh giá. Các mức: Critical/Blocker (sập, mất dữ liệu, chặn luồng chính, lỗi bảo mật), Major/High (chức năng chính sai, có cách né), Minor/Medium, Trivial/Low (giao diện, chính tả).\n- Priority (độ ưu tiên): cần sửa sớm tới đâu, dựa trên ảnh hưởng kinh doanh, số người gặp, lịch release. Thường do PO hoặc lead quyết định. Các mức: P1 sửa ngay, P2 trong release này, P3 khi có thời gian.\n\nHai thứ thường đi cùng chiều nhưng không phải lúc nào cũng vậy:\n- Nghiêm trọng nhưng ưu tiên thấp: app sập khi in báo cáo năm 2015 trên một trình duyệt cũ mà gần như không ai dùng; hoặc lỗi nặng ở tính năng sắp bị gỡ bỏ.\n- Nhẹ nhưng ưu tiên cao: logo hoặc tên công ty viết sai trên trang chủ ngay trước buổi ra mắt; giá khuyến mãi hiển thị sai chữ trên banner chiến dịch đang chạy; sai chính tả trong email gửi tới toàn bộ khách hàng.\n- Nghiêm trọng và ưu tiên cao: không thanh toán được.\n- Nhẹ và ưu tiên thấp: lệch lề vài pixel ở trang ít người vào.\n\nTester nên đánh giá severity khách quan và có thể đề xuất priority kèm lý do, nhưng không tự hạ hay nâng priority khi chưa trao đổi.",
+      "en": "- Severity: how badly the bug affects the system technically. Usually set by the tester. Levels: Critical/Blocker (crash, data loss, main flow blocked, security hole), Major/High (main feature wrong, workaround exists), Minor/Medium, Trivial/Low (cosmetic, typos).\n- Priority: how soon it should be fixed, based on business impact, how many users hit it and the release schedule. Usually decided by the PO or lead. Levels: P1 fix now, P2 this release, P3 when time allows.\n\nThey usually move together, but not always:\n- Severe but low priority: the app crashes when printing a 2015 report in an old browser almost nobody uses; or a serious defect in a feature about to be removed.\n- Minor but high priority: the company name or logo misspelled on the home page right before launch; the wrong promotional price text on a live campaign banner; a typo in an email going to every customer.\n- Severe and high priority: payments fail.\n- Minor and low priority: a few pixels of misalignment on a rarely visited page.\n\nTesters should rate severity objectively and may suggest a priority with reasons, but not raise or lower priority without discussing it."
+    },
+    "example": {
+      "vi": "Một ví điện tử chuẩn bị chiến dịch 11/11: nút \"Nhận ưu đãi\" trên banner ghi nhầm \"Giảm 50%\" thay vì \"Giảm 5%\". Về kỹ thuật chỉ là sai chữ (severity thấp), nhưng nếu lên sóng thì công ty phải chịu khiếu nại và có thể vi phạm quy định quảng cáo, nên priority cao nhất.",
+      "en": "An e-wallet prepares an 11/11 campaign: the banner button says \"50% off\" instead of \"5% off\". Technically just a text error (low severity), but if it goes live the company faces complaints and possible advertising violations, so it gets top priority."
+    },
+    "tip": {
+      "vi": "Chuẩn bị sẵn hai ví dụ chéo (nặng mà ưu tiên thấp, nhẹ mà ưu tiên cao) vì đây gần như chắc chắn là câu hỏi tiếp theo.",
+      "en": "Prepare the two cross examples (severe but low priority, minor but high priority) in advance; they are almost certainly the follow-up."
+    },
+    "followUps": [
+      {
+        "vi": "Dev và bạn không thống nhất severity của một bug thì xử lý thế nào?",
+        "en": "You and a developer disagree on a bug's severity. How do you resolve it?"
+      },
+      {
+        "vi": "Có nên để tester quyết định priority không?",
+        "en": "Should testers decide priority?"
+      }
+    ]
+  },
+  {
+    "id": "qa-bug-report",
+    "level": "intern",
+    "topic": "Bug Management",
+    "q": {
+      "vi": "Khi nào thì log bug? Một bug report tốt cần những thông tin gì?",
+      "en": "When do you log a bug? What does a good bug report contain?"
+    },
+    "a": {
+      "vi": "Log bug khi kết quả thực tế khác kết quả mong đợi có căn cứ (yêu cầu, thiết kế, tiêu chuẩn, hành vi nhất quán của sản phẩm). Trước khi log: thử tái hiện lại, kiểm tra có bị trùng bug cũ không, xác định đúng môi trường. Chỗ chưa chắc là bug hay không thì hỏi trước hoặc log dạng câu hỏi, không im lặng bỏ qua.\n\nBug report tốt gồm:\n- Tiêu đề ngắn, cụ thể: chỗ nào, làm gì, sai gì. Ví dụ \"Giỏ hàng: tổng tiền không cập nhật khi xoá sản phẩm có mã giảm giá\".\n- Môi trường: staging hay production, phiên bản app hoặc build, trình duyệt, thiết bị, hệ điều hành, tài khoản test.\n- Điều kiện tiên quyết và dữ liệu test.\n- Các bước tái hiện đánh số, ngắn gọn, ai làm theo cũng ra lỗi.\n- Kết quả thực tế và kết quả mong đợi, kèm căn cứ (link yêu cầu).\n- Bằng chứng: ảnh chụp có khoanh vùng, video, log, request và response từ DevTools hoặc Charles, mã lỗi.\n- Tần suất: luôn luôn hay thỉnh thoảng (ví dụ 3/10 lần).\n- Severity, priority đề xuất, thành phần hoặc module liên quan.\n\nMột bug một report. Viết khách quan, không đổ lỗi. Bug thỉnh thoảng mới xảy ra vẫn log, ghi rõ tần suất và mọi điều kiện đã thử.",
+      "en": "Log a bug when the actual result differs from an expected result that has a basis (requirement, design, standard, consistent product behaviour). Before logging: reproduce it again, check for duplicates, identify the exact environment. If you are unsure whether it is a bug, ask first or log it as a question rather than silently ignoring it.\n\nA good bug report has:\n- A short, specific title: where, what action, what is wrong. E.g. \"Cart: total does not update when removing an item with a discount code\".\n- Environment: staging or production, app version or build, browser, device, OS, test account.\n- Preconditions and test data.\n- Numbered, concise steps that reproduce it for anyone.\n- Actual and expected results, with the basis (link to the requirement).\n- Evidence: annotated screenshots, video, logs, request and response from DevTools or Charles, error codes.\n- Frequency: always or intermittent (e.g. 3 out of 10).\n- Suggested severity and priority, affected component or module.\n\nOne bug per report. Write objectively without blame. Intermittent bugs still get logged, with frequency and every condition tried."
+    },
+    "example": {
+      "vi": "Report kém: \"Thanh toán bị lỗi, sửa gấp\". Report tốt: \"[Staging, Android 14, app 3.8.1] Thanh toán MoMo: màn hình xoay mãi khi huỷ ở trang MoMo rồi quay lại app. Bước: 1) thêm 1 sản phẩm, 2) chọn MoMo, 3) bấm Huỷ trên trang MoMo. Thực tế: loading không dừng, đơn vẫn ở 'Chờ thanh toán'. Mong đợi: về giỏ hàng, báo 'Đã huỷ thanh toán'. Tần suất 10/10. Kèm video và response của API /payments/callback.\"",
+      "en": "A weak report: \"Payment broken, fix ASAP\". A good one: \"[Staging, Android 14, app 3.8.1] MoMo payment: spinner never stops after cancelling on the MoMo page and returning. Steps: 1) add 1 item, 2) choose MoMo, 3) tap Cancel on the MoMo page. Actual: endless loading, order stays 'Awaiting payment'. Expected: back to cart with 'Payment cancelled'. Frequency 10/10. Video and /payments/callback response attached.\""
+    },
+    "tip": {
+      "vi": "Nhắc việc đính kèm request và response từ DevTools là điểm cộng lớn: dev biết ngay lỗi ở frontend hay backend.",
+      "en": "Attaching the request and response from DevTools is a big plus: the developer instantly knows whether it is a frontend or backend issue."
+    },
+    "followUps": [
+      {
+        "vi": "Bạn dùng công cụ gì để log bug và quản lý test case?",
+        "en": "Which tools do you use for bugs and test cases?"
+      },
+      {
+        "vi": "Bug chỉ xảy ra một lần rồi không tái hiện được nữa thì bạn có log không?",
+        "en": "A bug happened once and never again: do you still log it?"
+      }
+    ]
+  },
+  {
+    "id": "qa-dev-rejects-bug",
+    "level": "junior",
+    "topic": "Bug Management",
+    "q": {
+      "vi": "Developer nói \"không phải bug\" hoặc không tái hiện được lỗi trên máy mình. Bạn xử lý thế nào?",
+      "en": "A developer says \"not a bug\" or cannot reproduce it on their machine. How do you handle it?"
+    },
+    "a": {
+      "vi": "Khi dev nói \"không phải bug\":\n1. Bình tĩnh đọc lại yêu cầu, thiết kế và bug report của chính mình: có thể mình hiểu sai, hoặc bước tái hiện viết chưa rõ.\n2. Nếu có căn cứ (yêu cầu, thiết kế, hành vi nhất quán ở chỗ khác), trao đổi trực tiếp, đưa căn cứ ra thay vì tranh luận cảm tính. Ngồi cạnh nhau tái hiện thường giải quyết trong 5 phút.\n3. Nếu yêu cầu không rõ hoặc hai bên hiểu khác nhau, hỏi người quyết định (PO, BA, khách hàng) và ghi lại kết luận vào ticket. Khi đó vấn đề không còn là \"tester hay dev đúng\" mà là \"sản phẩm cần hành vi nào\".\n4. Chấp nhận kết luận dù khác ý mình; nếu thấy ảnh hưởng người dùng thì đề xuất cải tiến (improvement) thay vì giữ là bug.\n\nKhi dev không tái hiện được:\n- Ghi thêm chi tiết: môi trường, số build, tài khoản và dữ liệu cụ thể, trình duyệt hoặc thiết bị, thời điểm chính xác để tìm log.\n- Đính kèm video, request và response, log của server hoặc app.\n- Tìm điều kiện làm bug xảy ra: dữ liệu đặc biệt, quyền tài khoản, cache cũ, mạng chậm, múi giờ, thao tác nhanh.\n- Thử tái hiện trên môi trường của dev hoặc ngồi cùng dev.\n- Nếu vẫn không tái hiện, ghi lại tần suất, để trạng thái phù hợp (Cannot reproduce) và tiếp tục theo dõi chứ không xoá.",
+      "en": "When a developer says \"not a bug\":\n1. Calmly reread the requirement, design and your own report: you may have misunderstood, or the steps may be unclear.\n2. If you have a basis (requirement, design, consistent behaviour elsewhere), talk directly and show it rather than arguing from opinion. Reproducing it side by side often settles it in five minutes.\n3. If the requirement is unclear or interpreted differently, ask the decision maker (PO, BA, client) and record the conclusion in the ticket. The question stops being \"who is right\" and becomes \"what behaviour does the product need\".\n4. Accept the conclusion even if you disagree; if users are affected, propose it as an improvement rather than insisting it is a bug.\n\nWhen the developer cannot reproduce it:\n- Add detail: environment, build number, specific account and data, browser or device, exact time to find logs.\n- Attach video, requests and responses, server or app logs.\n- Hunt for the trigger: special data, account permissions, stale cache, slow network, time zone, fast actions.\n- Try to reproduce on the developer's environment or together.\n- If it still does not reproduce, record the frequency, use the right status (Cannot reproduce) and keep watching rather than deleting it."
+    },
+    "example": {
+      "vi": "Dev đóng bug \"không gửi được OTP\" vì máy dev nhận OTP bình thường. Tester để ý chỉ tài khoản có số điện thoại bắt đầu bằng +84 mới lỗi, còn số dạng 09... thì không; tài khoản của dev là dạng 09... Thêm dữ liệu đó vào bug, dev tái hiện được ngay và tìm ra lỗi chuẩn hoá số điện thoại.",
+      "en": "A developer closed \"OTP not sent\" because their account received OTPs fine. The tester noticed only accounts whose phone number starts with +84 failed, not those written as 09...; the developer's account used 09... Adding that data to the bug let the developer reproduce it instantly and find a phone normalisation bug."
+    },
+    "tip": {
+      "vi": "Chuyển câu chuyện từ \"ai đúng\" sang \"sản phẩm cần hành vi nào\" và nhờ PO/BA quyết định là thái độ người phỏng vấn muốn thấy.",
+      "en": "Shifting from \"who is right\" to \"what behaviour the product needs\" and letting the PO/BA decide is the attitude interviewers want."
+    },
+    "followUps": [
+      {
+        "vi": "Dev vẫn không đồng ý dù đã có căn cứ trong tài liệu thì sao?",
+        "en": "What if the developer still disagrees despite the document?"
+      },
+      {
+        "vi": "Bạn có từng log nhầm bug không? Bạn rút ra gì?",
+        "en": "Have you ever logged a bug by mistake? What did you learn?"
+      }
+    ]
+  },
+  {
+    "id": "qa-bug-leakage-missed-bug",
+    "level": "mid",
+    "topic": "Bug Management",
+    "q": {
+      "vi": "Bug leakage là gì? Kể một lần bạn để lọt bug ra production và bạn đã làm gì sau đó.",
+      "en": "What is bug leakage? Tell me about a time a bug you missed reached production and what you did afterwards."
+    },
+    "a": {
+      "vi": "Bug leakage là bug lọt qua một giai đoạn kiểm thử mà lẽ ra phải bị bắt ở đó, thường nói về bug người dùng tìm ra trên production dù đã qua test. Tỉ lệ leakage (bug tìm ở production chia tổng bug) là một chỉ số chất lượng của quá trình test. Khác với bug release: bug đã biết nhưng được chấp nhận phát hành kèm, có ghi trong release note.\n\nKhi kể chuyện bỏ sót bug, theo cấu trúc STAR và trung thực:\n- Bối cảnh và lỗi: bug gì, ảnh hưởng ra sao.\n- Phản ứng ngay: báo team, giúp tái hiện, đánh giá phạm vi ảnh hưởng, kiểm tra bản sửa nhanh, theo dõi sau hotfix.\n- Phân tích nguyên nhân gốc (root cause), không đổ lỗi: thiếu case, dữ liệu test không giống thật, môi trường khác production, yêu cầu thay đổi mà không cập nhật case, bị cắt thời gian test.\n- Hành động phòng ngừa: thêm test case hoặc test tự động cho đúng lỗi đó, bổ sung checklist, cải thiện dữ liệu test, đề xuất thay đổi quy trình.\n- Kết quả: lỗi tương tự không lặp lại, chỉ số cải thiện.\n\nNgười phỏng vấn không chờ một tester chưa từng bỏ sót bug; họ muốn thấy bạn nhận trách nhiệm, phản ứng nhanh và sửa được quy trình.",
+      "en": "Bug leakage is a bug that slipped through a testing stage where it should have been caught, usually meaning one users found in production despite testing. The leakage rate (production bugs divided by total bugs) is a quality metric for the test process. It differs from a bug release: a known bug deliberately shipped and documented in the release notes.\n\nWhen telling the story of a missed bug, use STAR and be honest:\n- Context and defect: what it was and its impact.\n- Immediate response: alert the team, help reproduce, assess impact, verify the quick fix, monitor after the hotfix.\n- Root cause analysis without blame: a missing case, unrealistic test data, an environment unlike production, changed requirements not reflected in cases, cut testing time.\n- Prevention: add a manual or automated test for exactly that defect, extend checklists, improve test data, propose process changes.\n- Result: similar defects did not recur, metrics improved.\n\nInterviewers do not expect a tester who never missed a bug; they want to see ownership, a fast response and a fixed process."
+    },
+    "example": {
+      "vi": "Câu trả lời mẫu: \"Tháng 3, khách dùng mã giảm giá trên app thì bị trừ 2 lần phần giảm khi đổi địa chỉ giao hàng sau khi áp mã. Tôi đã test áp mã và đổi địa chỉ riêng lẻ nhưng không test thứ tự 'áp mã rồi đổi địa chỉ'. Tôi báo ngay khi đội CSKH chuyển phản ánh, cùng dev tái hiện trong 30 phút, kiểm tra hotfix và rà các đơn bị ảnh hưởng. Sau đó tôi thêm nhóm case 'thay đổi sau khi áp khuyến mãi' vào checklist và viết 6 test tự động cho luồng giỏ hàng. Ba tháng sau đó không có lỗi khuyến mãi nào lọt ra production.\"",
+      "en": "Sample answer: \"In March, customers using a discount code got the discount applied twice when they changed the delivery address after applying the code. I had tested applying codes and changing addresses separately but not the order 'apply then change address'. I responded as soon as support escalated it, reproduced it with the developer within 30 minutes, verified the hotfix and reviewed affected orders. I then added a 'changes after applying promotions' group to our checklist and wrote 6 automated cart tests. No promotion bug reached production in the following three months.\""
+    },
+    "tip": {
+      "vi": "Chọn một lỗi thật, nói rõ phần lỗi của mình, và dành nhiều thời gian nhất cho hành động phòng ngừa.",
+      "en": "Pick a real defect, own your part, and spend most of the time on the prevention you put in place."
+    },
+    "followUps": [
+      {
+        "vi": "Nếu bug lọt là do bị cắt thời gian test thì bạn nói thế nào cho khéo?",
+        "en": "If the bug slipped because testing time was cut, how do you say so tactfully?"
+      },
+      {
+        "vi": "Tỉ lệ bug leakage bao nhiêu là chấp nhận được?",
+        "en": "What bug leakage rate is acceptable?"
+      }
+    ]
+  },
+  {
+    "id": "qa-test-plan-strategy",
+    "level": "junior",
+    "topic": "Test Planning & Agile",
+    "q": {
+      "vi": "Test plan gồm những nội dung gì? Test plan khác test strategy và test case thế nào?",
+      "en": "What goes into a test plan? How does it differ from a test strategy and test cases?"
+    },
+    "a": {
+      "vi": "- Test strategy: định hướng chung cho cả tổ chức hoặc sản phẩm, ít thay đổi: cách tiếp cận test, các cấp độ và loại test, tỉ lệ manual và tự động, công cụ, tiêu chuẩn chất lượng.\n- Test plan: kế hoạch cụ thể cho một dự án, một release hoặc một sprint: test gì, ai test, khi nào, bằng gì.\n- Test case: từng bước kiểm tra cụ thể, nằm ở mức chi tiết nhất.\n\nNội dung thường có trong test plan:\n- Mục tiêu và phạm vi: tính năng trong phạm vi, và quan trọng không kém là phần ngoài phạm vi.\n- Cách tiếp cận: loại test sẽ làm (functional, regression, performance, bảo mật), phần nào tự động.\n- Môi trường, thiết bị, trình duyệt, dữ liệu test, công cụ.\n- Nhân sự, vai trò và trách nhiệm.\n- Lịch trình, mốc quan trọng.\n- Tiêu chí bắt đầu và kết thúc (entry/exit), tiêu chí tạm dừng và tiếp tục.\n- Rủi ro và phương án giảm thiểu, các giả định và phụ thuộc.\n- Sản phẩm bàn giao: test case, báo cáo bug, báo cáo tổng kết.\n\nTrong team Agile, test plan thường gọn hơn: một trang cho release, còn mỗi sprint thì đưa vào định nghĩa Done và tiêu chí chấp nhận của từng user story.",
+      "en": "- Test strategy: the general direction for an organisation or product, rarely changing: testing approach, levels and types, manual-to-automation balance, tools, quality standards.\n- Test plan: the concrete plan for one project, release or sprint: what to test, who, when and with what.\n- Test case: the individual concrete checks, at the most detailed level.\n\nA test plan typically includes:\n- Objectives and scope: features in scope and, just as important, what is out of scope.\n- Approach: test types to perform (functional, regression, performance, security), what is automated.\n- Environments, devices, browsers, test data, tools.\n- People, roles and responsibilities.\n- Schedule and milestones.\n- Entry and exit criteria, suspension and resumption criteria.\n- Risks and mitigations, assumptions and dependencies.\n- Deliverables: test cases, bug reports, a summary report.\n\nIn Agile teams the plan is often lighter: one page per release, with each sprint relying on the Definition of Done and each story's acceptance criteria."
+    },
+    "example": {
+      "vi": "Test plan cho bản cập nhật \"thanh toán trả góp\" ghi rõ ngoài phạm vi là phần đối soát với ngân hàng (đội khác phụ trách), rủi ro là môi trường sandbox của đối tác hay sập, nên có phương án dùng mock và lịch test lại khi sandbox ổn. Nhờ ghi trước, khi sandbox sập 2 ngày team không bị động.",
+      "en": "The test plan for an \"instalment payments\" release states that bank reconciliation is out of scope (another team owns it) and flags the partner sandbox as unreliable, with a mock fallback and a retest slot when it recovers. Because it was written down, a two-day sandbox outage caught nobody off guard."
+    },
+    "tip": {
+      "vi": "Nhắc phần \"ngoài phạm vi\" và \"rủi ro kèm phương án\" là hai mục nhiều người quên nhưng người phỏng vấn đánh giá cao.",
+      "en": "\"Out of scope\" and \"risks with mitigations\" are two sections many forget and interviewers value."
+    },
+    "followUps": [
+      {
+        "vi": "Ai viết và ai duyệt test plan trong dự án của bạn?",
+        "en": "Who writes and approves the test plan in your projects?"
+      },
+      {
+        "vi": "Có những loại báo cáo test nào, mỗi loại dùng cho ai?",
+        "en": "What kinds of test reports exist and who is each for?"
+      }
+    ]
+  },
+  {
+    "id": "qa-test-estimation",
+    "level": "junior",
+    "topic": "Test Planning & Agile",
+    "q": {
+      "vi": "Bạn estimate thời gian test cho một màn hình (ví dụ màn hình đăng ký) như thế nào?",
+      "en": "How do you estimate testing time for a screen (e.g. a registration screen)?"
+    },
+    "a": {
+      "vi": "Chia nhỏ công việc rồi ước lượng từng phần, thay vì đoán một con số cho cả màn hình:\n1. Phân tích yêu cầu và đặt câu hỏi.\n2. Viết test case: đếm số ô nhập, quy tắc kiểm tra, luồng và trạng thái để ước lượng số case. Ví dụ màn đăng ký có 6 ô, mỗi ô khoảng 5–8 case (bắt buộc, định dạng, biên, trùng, ký tự đặc biệt), cộng luồng chính, email xác thực, giao diện và bảo mật, ra khoảng 50–60 case.\n3. Chuẩn bị dữ liệu và môi trường.\n4. Thực thi: thời gian trung bình mỗi case nhân số case, cộng số thiết bị hoặc trình duyệt cần chạy.\n5. Log bug, retest và regression: thường cộng thêm 30–50% thời gian thực thi vì gần như luôn có bug và vòng test lại.\n6. Báo cáo.\n\nYếu tố làm tăng hoặc giảm: độ phức tạp nghiệp vụ, tích hợp bên thứ ba (gửi email, OTP), độ ổn định của bản build và môi trường, kinh nghiệm với hệ thống, số nền tảng.\n\nThực hành tốt:\n- Dựa trên số liệu thật của các tính năng tương tự trước đây.\n- Đưa ra khoảng (2–3 ngày) kèm giả định thay vì một con số chắc chắn.\n- Cộng thêm phần dự phòng cho rủi ro đã biết.\n- Khi bị ép thời gian, nói rõ sẽ bỏ bớt phần nào và rủi ro đi kèm, không âm thầm test ẩu cho kịp.",
+      "en": "Break the work down and estimate each part instead of guessing one number for the screen:\n1. Analyse requirements and ask questions.\n2. Write test cases: count inputs, validation rules, flows and states to estimate the number of cases. E.g. a registration screen with 6 fields at about 5–8 cases each (required, format, boundaries, duplicates, special characters), plus the main flow, email verification, UI and security, gives about 50–60 cases.\n3. Prepare data and environments.\n4. Execute: average time per case times the number of cases, times the devices or browsers to cover.\n5. Bug logging, retests and regression: typically add 30–50% of execution time, since there are nearly always bugs and retest rounds.\n6. Reporting.\n\nFactors that change it: business complexity, third-party integrations (email, OTP), build and environment stability, familiarity with the system, number of platforms.\n\nGood practice:\n- Base it on real data from similar past features.\n- Give a range (2–3 days) with assumptions rather than one firm number.\n- Add a buffer for known risks.\n- Under time pressure, say clearly what you would drop and the risk, instead of quietly testing carelessly to fit."
+    },
+    "example": {
+      "vi": "Leader hỏi test màn đăng ký trong một ngày được không. Tester trả lời: viết khoảng 55 case mất nửa ngày, chạy trên web và hai app mất 1,5 ngày, cộng retest là khoảng 2,5 ngày; nếu chỉ có một ngày thì đề xuất chạy đủ trên web, còn app chỉ chạy luồng chính và các case ưu tiên cao, phần còn lại test ở sprint sau. Leader chọn phương án đó với rủi ro đã rõ.",
+      "en": "The lead asks whether the registration screen can be tested in one day. The tester answers: about 55 cases take half a day to write, running on web and two apps takes 1.5 days, plus retests, about 2.5 days in total; with only one day, they propose full coverage on web and only the main flow and high-priority cases on the apps, with the rest next sprint. The lead picks that option with the risk understood."
+    },
+    "tip": {
+      "vi": "Cho thấy cách chia nhỏ và luôn đưa ra phương án khi bị ép thời gian, thay vì chỉ nói một con số.",
+      "en": "Show the breakdown and always offer options under time pressure, rather than just stating a number."
+    },
+    "followUps": [
+      {
+        "vi": "500 test case thì bạn cần bao lâu để chạy hết? Bạn tính thế nào?",
+        "en": "How long would 500 test cases take to run? How do you work it out?"
+      },
+      {
+        "vi": "Estimate sai nhiều so với thực tế thì bạn làm gì?",
+        "en": "What do you do when your estimate turns out badly wrong?"
+      }
+    ]
+  },
+  {
+    "id": "qa-tester-in-scrum",
+    "level": "junior",
+    "topic": "Test Planning & Agile",
+    "q": {
+      "vi": "Tester làm gì trong một team Agile Scrum? Definition of Done thường gồm những gì?",
+      "en": "What does a tester do in an Agile Scrum team? What does a Definition of Done usually include?"
+    },
+    "a": {
+      "vi": "Trong Scrum không có giai đoạn test riêng ở cuối; test diễn ra liên tục trong sprint và tester là thành viên của team phát triển:\n- Sprint planning và refinement: đọc user story, hỏi làm rõ, giúp viết tiêu chí chấp nhận (acceptance criteria) kiểm chứng được, ước lượng cả phần test vào story point.\n- Trong sprint: viết test case song song khi dev đang code, test ngay khi từng phần xong thay vì đợi cuối sprint, trao đổi trực tiếp với dev thay vì chỉ qua ticket, viết và bảo trì test tự động.\n- Daily: báo tiến độ test, bug chặn, rủi ro.\n- Sprint review: có thể demo tính năng, cung cấp thông tin chất lượng.\n- Retrospective: đề xuất cải tiến quy trình chất lượng.\n\nDefinition of Done (DoD) là danh sách điều kiện chung mà mọi story phải đạt mới được coi là xong, cả team thống nhất, ví dụ:\n- Code đã review và merge, build trên CI pass.\n- Unit test viết và pass, đạt độ phủ thống nhất.\n- Tiêu chí chấp nhận đã được kiểm tra và pass.\n- Không còn bug critical hoặc high mở liên quan tới story.\n- Regression liên quan pass, test tự động đã cập nhật.\n- Đã deploy lên môi trường test hoặc staging.\n- Tài liệu cần thiết đã cập nhật.\n\nKhác với acceptance criteria: acceptance criteria riêng cho từng story, còn DoD áp dụng cho mọi story.",
+      "en": "Scrum has no separate testing phase at the end; testing runs continuously within the sprint and the tester is a member of the development team:\n- Sprint planning and refinement: read user stories, ask clarifying questions, help write verifiable acceptance criteria, include testing effort in story points.\n- During the sprint: write test cases while developers code, test each piece as soon as it is ready rather than at sprint end, talk directly with developers instead of only through tickets, write and maintain automated tests.\n- Daily stand-up: report testing progress, blocking bugs, risks.\n- Sprint review: may demo features and provide quality information.\n- Retrospective: propose quality process improvements.\n\nThe Definition of Done (DoD) is the team-wide list of conditions every story must meet to count as done, e.g.:\n- Code reviewed and merged, CI build passing.\n- Unit tests written and passing at the agreed coverage.\n- Acceptance criteria verified and passing.\n- No open critical or high bugs for the story.\n- Relevant regression passing, automated tests updated.\n- Deployed to the test or staging environment.\n- Necessary documentation updated.\n\nUnlike acceptance criteria, which are specific to each story, the DoD applies to every story."
+    },
+    "example": {
+      "vi": "Một team thường dồn hết story cho tester vào hai ngày cuối sprint, lần nào cũng trễ. Tester đề xuất trong retrospective: chia story nhỏ hơn, dev bàn giao từng phần để test sớm, và thêm \"đã qua test\" vào DoD. Hai sprint sau, số story phải dời sang sprint tiếp giảm hẳn.",
+      "en": "A team kept handing every story to the tester in the last two days of the sprint and always overran. In a retrospective the tester proposed smaller stories, handing over pieces for early testing, and adding \"tested\" to the DoD. Two sprints later far fewer stories spilled over."
+    },
+    "tip": {
+      "vi": "Phân biệt được Definition of Done với acceptance criteria và kể một cải tiến bạn từng đề xuất trong retrospective.",
+      "en": "Distinguish the Definition of Done from acceptance criteria and mention an improvement you proposed in a retrospective."
+    },
+    "followUps": [
+      {
+        "vi": "Cuối sprint story chưa test xong thì xử lý thế nào?",
+        "en": "What happens when a story is not fully tested by sprint end?"
+      },
+      {
+        "vi": "Viết acceptance criteria theo dạng Given/When/Then cho một story đăng nhập.",
+        "en": "Write Given/When/Then acceptance criteria for a login story."
+      }
+    ]
+  },
+  {
+    "id": "qa-test-metrics-reporting",
+    "level": "mid",
+    "topic": "Test Planning & Agile",
+    "q": {
+      "vi": "Bạn báo cáo kết quả test thế nào? Những chỉ số chất lượng nào nên theo dõi?",
+      "en": "How do you report test results? Which quality metrics are worth tracking?"
+    },
+    "a": {
+      "vi": "Các loại báo cáo:\n- Báo cáo tiến độ hằng ngày hoặc theo sprint: đã chạy bao nhiêu case, pass, fail, blocked, bug mới, bug chặn, rủi ro.\n- Báo cáo trước release: phạm vi đã test, phần chưa test và lý do, bug còn mở kèm mức độ, đánh giá rủi ro và đề xuất có nên release không.\n- Báo cáo tổng kết sau dự án hoặc release: chỉ số, bài học, đề xuất cải tiến.\n\nChỉ số hay dùng:\n- Tiến độ thực thi và tỉ lệ pass theo mức ưu tiên.\n- Độ phủ yêu cầu (bao nhiêu yêu cầu có test case và đã chạy).\n- Số bug theo severity, theo module; xu hướng bug mới và bug được đóng theo thời gian.\n- Bug leakage: tỉ lệ bug tìm ở production so với tổng.\n- Tỉ lệ bug bị reject hoặc reopen (phản ánh chất lượng report và bản sửa).\n- Thời gian sửa bug trung bình theo mức độ.\n- Với tự động hoá: số test, thời gian chạy, tỉ lệ flaky.\n\nLưu ý:\n- Báo cáo cho người đọc: quản lý cần kết luận và rủi ro ở dòng đầu, dev cần chi tiết bug.\n- Chỉ số là để ra quyết định, không để chấm điểm cá nhân: đếm số bug mỗi tester tìm được sẽ khiến mọi người log bug vụn để lấy số.\n- Một con số không có xu hướng hay bối cảnh thì ít ý nghĩa.",
+      "en": "Report types:\n- Daily or sprint progress: cases run, passed, failed, blocked, new bugs, blockers, risks.\n- Pre-release report: scope tested, what was not tested and why, open bugs by severity, risk assessment and a go/no-go recommendation.\n- Post-release or project summary: metrics, lessons learned, improvements.\n\nCommon metrics:\n- Execution progress and pass rate by priority.\n- Requirement coverage (how many requirements have test cases that were run).\n- Bugs by severity and module; trends of new versus closed bugs over time.\n- Bug leakage: share of bugs found in production.\n- Rejected and reopened bug rates (reflecting report and fix quality).\n- Mean time to fix by severity.\n- For automation: number of tests, run time, flaky rate.\n\nNotes:\n- Write for the reader: managers need the conclusion and risks in the first line, developers need bug details.\n- Metrics support decisions, not individual scoring: counting bugs per tester makes people log trivial bugs to boost numbers.\n- A number without trend or context means little."
+    },
+    "example": {
+      "vi": "Báo cáo trước release mở đầu bằng một câu: \"Đề xuất release, rủi ro thấp: 96% case ưu tiên cao pass, còn 2 bug medium ở trang lịch sử giao dịch đã có cách né; chưa test trên iOS 16 vì thiếu máy.\" Giám đốc sản phẩm đọc 10 giây là quyết định được, phần chi tiết để ở bên dưới cho ai cần.",
+      "en": "A pre-release report opens with one sentence: \"Recommend release, low risk: 96% of high-priority cases pass, 2 medium bugs remain on the transaction history page with workarounds; iOS 16 untested for lack of devices.\" The product director decides in ten seconds, with details below for those who need them."
+    },
+    "tip": {
+      "vi": "Nhắc chuyện không dùng số bug để chấm điểm tester cho thấy bạn hiểu chỉ số có thể phản tác dụng.",
+      "en": "Saying bug counts should not be used to score testers shows you understand how metrics can backfire."
+    },
+    "followUps": [
+      {
+        "vi": "Biểu đồ bug mới so với bug đóng theo thời gian cho bạn biết điều gì?",
+        "en": "What does a chart of new versus closed bugs over time tell you?"
+      },
+      {
+        "vi": "Quản lý muốn đo hiệu suất tester bằng số bug tìm được, bạn phản hồi thế nào?",
+        "en": "A manager wants to measure testers by bugs found. How do you respond?"
+      }
+    ]
+  },
+  {
+    "id": "qa-shift-left",
+    "level": "mid",
+    "topic": "Test Planning & Agile",
+    "q": {
+      "vi": "Shift-left testing là gì? Bạn đã áp dụng nó như thế nào?",
+      "en": "What is shift-left testing and how have you applied it?"
+    },
+    "a": {
+      "vi": "Shift-left là đưa hoạt động chất lượng về sớm hơn trong vòng đời phát triển (sang bên trái của dòng thời gian), thay vì dồn hết vào giai đoạn test cuối. Lý do: lỗi phát hiện càng muộn thì sửa càng tốn kém, vì phải sửa code, test lại, deploy lại, có khi ảnh hưởng người dùng.\n\nCách áp dụng cụ thể:\n- Tester tham gia từ lúc refinement: review user story, hỏi các trường hợp lỗi, viết tiêu chí chấp nhận kiểm chứng được (có thể theo dạng Given/When/Then).\n- Thống nhất ví dụ cụ thể trước khi code (cách làm \"Three Amigos\": BA/PO, dev và tester cùng ngồi).\n- Review thiết kế và hợp đồng API sớm; viết test trước hoặc song song khi dev code.\n- Dev viết unit test và integration test; tester giúp nghĩ case biên.\n- Đưa kiểm tra tự động vào pipeline CI: lint, unit test, test API, quét bảo mật chạy cho mọi pull request.\n- Môi trường test tạm cho từng nhánh để test trước khi merge.\n\nĐi kèm là shift-right: tiếp tục đảm bảo chất lượng sau khi release bằng giám sát, feature flag, canary, theo dõi lỗi và phản hồi người dùng. Hai hướng bổ sung cho nhau.",
+      "en": "Shift-left means moving quality activities earlier in the development life cycle (to the left on the timeline) instead of concentrating them in a final testing phase. The reason: the later a defect is found, the costlier the fix, since it means changing code, retesting, redeploying and sometimes affecting users.\n\nConcrete practices:\n- Testers join refinement: review user stories, ask about error cases, write verifiable acceptance criteria (possibly Given/When/Then).\n- Agree on concrete examples before coding (\"Three Amigos\": BA/PO, developer and tester together).\n- Review designs and API contracts early; write tests before or alongside development.\n- Developers write unit and integration tests; testers help think of boundary cases.\n- Automated checks in CI: lint, unit tests, API tests and security scans for every pull request.\n- Temporary per-branch environments to test before merging.\n\nIts companion is shift-right: continuing quality work after release through monitoring, feature flags, canaries, error tracking and user feedback. The two complement each other."
+    },
+    "example": {
+      "vi": "Trước đây team tìm phần lớn bug ở giai đoạn test cuối sprint. Sau khi thêm buổi Three Amigos 30 phút cho mỗi story lớn và chạy test API tự động trên mọi pull request, nhiều lỗi hiểu sai yêu cầu được bắt ngay trên giấy, và số bug tester tìm được ở cuối sprint giảm rõ, sprint ít bị trễ hơn.",
+      "en": "The team used to find most bugs in end-of-sprint testing. After adding a 30-minute Three Amigos session per large story and running automated API tests on every pull request, many misunderstood requirements were caught on paper, end-of-sprint bugs dropped noticeably, and sprints slipped less often."
+    },
+    "tip": {
+      "vi": "Đưa ra một việc cụ thể bạn đã làm (tham gia refinement, test API trên pull request) thay vì chỉ định nghĩa.",
+      "en": "Name one concrete thing you did (joining refinement, API tests on pull requests) rather than just defining the term."
+    },
+    "followUps": [
+      {
+        "vi": "Shift-right testing gồm những hoạt động gì?",
+        "en": "What does shift-right testing involve?"
+      },
+      {
+        "vi": "Dev không muốn tester tham gia sớm vì \"tốn thời gian họp\", bạn thuyết phục thế nào?",
+        "en": "Developers resist testers joining early because of \"extra meetings\". How do you persuade them?"
+      }
+    ]
+  },
+  {
+    "id": "qa-sql-for-testers",
+    "level": "junior",
+    "topic": "SQL & API",
+    "q": {
+      "vi": "Tester dùng SQL vào việc gì? Viết truy vấn lấy các đơn hàng của một khách, phân biệt LEFT JOIN với INNER JOIN, và dùng GROUP BY, HAVING.",
+      "en": "What do testers use SQL for? Write a query for one customer's orders, explain LEFT JOIN versus INNER JOIN, and use GROUP BY and HAVING."
+    },
+    "a": {
+      "vi": "Tester dùng SQL để:\n- Kiểm tra dữ liệu thao tác trên giao diện đã lưu đúng vào database chưa (đúng giá trị, đúng trạng thái, có bản ghi lịch sử).\n- Đối chiếu kết quả tìm kiếm, báo cáo, số liệu trên dashboard với dữ liệu gốc.\n- Tìm hoặc tạo dữ liệu test: tài khoản ở trạng thái đặc biệt, đơn hàng đúng biên ngày.\n- Tìm nguyên nhân bug: dữ liệu bị trùng, NULL, sai liên kết.\n\nCác lệnh cần nắm: SELECT với WHERE, ORDER BY, LIMIT; JOIN; GROUP BY với COUNT, SUM, AVG và HAVING; INSERT, UPDATE, DELETE (chỉ dùng trên môi trường test, cẩn thận điều kiện WHERE).\n\nINNER JOIN chỉ giữ dòng khớp ở cả hai bảng; LEFT JOIN giữ mọi dòng bảng bên trái, dòng không khớp thì cột bảng phải là NULL. Muốn tìm \"khách chưa có đơn nào\" thì dùng LEFT JOIN rồi lọc phía phải IS NULL. RIGHT JOIN là ngược lại của LEFT JOIN, ít dùng vì đổi thứ tự bảng là được.\n\nWHERE lọc từng dòng trước khi nhóm; HAVING lọc nhóm sau khi GROUP BY, nên điều kiện trên COUNT hay SUM phải đặt trong HAVING.\n\nLưu ý khi làm thật: chỉ có quyền đọc trên production, không chạy UPDATE hay DELETE khi chưa chạy SELECT cùng điều kiện để xem trước số dòng bị ảnh hưởng.",
+      "en": "Testers use SQL to:\n- Check that actions in the UI were stored correctly (right values, right status, history records present).\n- Reconcile search results, reports and dashboard numbers with the source data.\n- Find or create test data: accounts in special states, orders exactly on date boundaries.\n- Investigate bugs: duplicates, NULLs, broken references.\n\nCommands to know: SELECT with WHERE, ORDER BY, LIMIT; JOINs; GROUP BY with COUNT, SUM, AVG and HAVING; INSERT, UPDATE, DELETE (only on test environments, with careful WHERE clauses).\n\nINNER JOIN keeps only rows matching in both tables; LEFT JOIN keeps every row of the left table, with NULLs in the right table's columns when there is no match. To find \"customers with no orders\", LEFT JOIN and filter the right side IS NULL. RIGHT JOIN mirrors LEFT JOIN and is rarely used, since swapping the tables does the same.\n\nWHERE filters rows before grouping; HAVING filters groups after GROUP BY, so conditions on COUNT or SUM belong in HAVING.\n\nIn practice: have read-only access to production, and never run UPDATE or DELETE without first running a SELECT with the same condition to preview the affected rows."
+    },
+    "example": {
+      "vi": "Màn hình \"Khách hàng thân thiết\" hiện 120 người, yêu cầu là khách có từ 5 đơn đã giao trở lên. Tester viết query GROUP BY customer_id HAVING count(*) >= 5 trên đơn có status = 'delivered' thì ra 112. Hoá ra màn hình đếm cả đơn đã huỷ; bug được log kèm câu query để dev đối chiếu.",
+      "en": "The \"Loyal customers\" screen shows 120 people, defined as customers with at least 5 delivered orders. The tester's GROUP BY customer_id HAVING count(*) >= 5 over orders with status = 'delivered' returns 112. The screen was counting cancelled orders too; the bug was logged with the query attached for the developer."
+    },
+    "code": "-- Đơn của một khách, mới nhất trước\nSELECT o.id, o.created_at, o.status, o.total\nFROM orders o\nJOIN customers c ON c.id = o.customer_id\nWHERE c.email = 'lan@example.com'\nORDER BY o.created_at DESC;\n\n-- Khách chưa có đơn nào: LEFT JOIN + IS NULL\nSELECT c.id, c.email\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nWHERE o.id IS NULL;\n\n-- Khách có từ 5 đơn đã giao: WHERE lọc dòng, HAVING lọc nhóm\nSELECT customer_id, count(*) AS delivered, sum(total) AS revenue\nFROM orders\nWHERE status = 'delivered'\nGROUP BY customer_id\nHAVING count(*) >= 5;",
+    "tip": {
+      "vi": "Kể một bug bạn tìm ra nhờ đối chiếu bằng SQL sẽ có sức nặng hơn việc chỉ viết đúng câu lệnh.",
+      "en": "Describing a bug you found by reconciling with SQL carries more weight than just writing correct queries."
+    },
+    "followUps": [
+      {
+        "vi": "Tìm các email bị trùng trong bảng customers bằng SQL thế nào?",
+        "en": "How do you find duplicate emails in the customers table with SQL?"
+      },
+      {
+        "vi": "Vì sao không nên chạy UPDATE trực tiếp trên production để tạo dữ liệu test?",
+        "en": "Why should you never run UPDATE directly on production to create test data?"
+      }
+    ]
+  },
+  {
+    "id": "qa-api-testing-postman",
+    "level": "junior",
+    "topic": "SQL & API",
+    "q": {
+      "vi": "Test API bằng Postman thì bạn kiểm tra những gì? Viết test script cơ bản thế nào?",
+      "en": "When testing APIs with Postman, what do you check? How do you write basic test scripts?"
+    },
+    "a": {
+      "vi": "Test API giúp kiểm tra logic nghiệp vụ trực tiếp, sớm hơn và nhanh hơn qua giao diện, và bắt được lỗi mà giao diện che đi (frontend chặn dữ liệu sai nhưng backend thì không).\n\nNhững thứ cần kiểm tra:\n- Status code đúng: 200, 201 cho thành công; 400 cho dữ liệu sai; 401 chưa đăng nhập; 403 không có quyền; 404 không tồn tại; 409 xung đột; không trả 500 cho lỗi do người dùng.\n- Response body: đúng cấu trúc (schema), đúng kiểu dữ liệu, đúng giá trị, không thừa thông tin nhạy cảm (mật khẩu, token người khác, stack trace).\n- Header: Content-Type, cache, CORS nếu cần.\n- Case âm: thiếu field bắt buộc, sai kiểu, chuỗi quá dài, số âm, giá trị biên, JSON hỏng.\n- Xác thực và phân quyền: không có token, token hết hạn, token của người dùng khác (user A xem được đơn của user B là lỗi bảo mật nghiêm trọng, gọi là IDOR).\n- Tác động phụ: tạo xong thì GET lại thấy đúng, kiểm tra database; gọi lại cùng request (idempotency) có tạo bản trùng không.\n- Thời gian phản hồi ở mức chấp nhận được.\n\nDùng Postman hiệu quả:\n- Environment và biến ({{baseUrl}}, {{token}}) để chạy cùng bộ test trên dev, staging.\n- Script trước request (pre-request) để tạo dữ liệu, script sau để kiểm tra và lưu giá trị cho request sau (ví dụ lưu token sau khi đăng nhập).\n- Collection Runner hoặc Newman để chạy cả bộ, đưa vào CI.",
+      "en": "API testing checks business logic directly, earlier and faster than through the UI, and catches what the UI hides (the frontend blocks bad input but the backend does not).\n\nWhat to check:\n- Correct status codes: 200, 201 on success; 400 for invalid data; 401 unauthenticated; 403 forbidden; 404 not found; 409 conflict; never 500 for user errors.\n- Response body: correct structure (schema), types and values, no leaked sensitive data (passwords, other users' tokens, stack traces).\n- Headers: Content-Type, caching, CORS where relevant.\n- Negative cases: missing required fields, wrong types, overlong strings, negative numbers, boundaries, malformed JSON.\n- Authentication and authorisation: no token, expired token, another user's token (user A reading user B's order is a serious security bug called IDOR).\n- Side effects: after creating, GET shows it correctly and the database matches; repeating the same request (idempotency) does not create duplicates.\n- Acceptable response times.\n\nUsing Postman well:\n- Environments and variables ({{baseUrl}}, {{token}}) to run the same suite on dev and staging.\n- Pre-request scripts to set up data and test scripts to assert and save values for later requests (e.g. storing the token after login).\n- Collection Runner or Newman to run whole suites, including in CI."
+    },
+    "example": {
+      "vi": "Giao diện app không cho đặt số lượng âm, nên test qua giao diện không thấy lỗi gì. Gọi thẳng API POST /cart/items với quantity = -3 thì backend chấp nhận và tổng tiền giỏ hàng bị trừ đi, tức có thể dùng để giảm giá đơn hàng. Bug chỉ tìm được nhờ test API.",
+      "en": "The app's UI does not allow negative quantities, so UI testing found nothing. Calling POST /cart/items directly with quantity = -3 was accepted by the backend and reduced the cart total, effectively a way to discount orders. Only API testing found it."
+    },
+    "code": "// Tab \"Scripts > Post-response\" của request GET {{baseUrl}}/orders/{{orderId}}\npm.test(\"Status 200\", () => pm.response.to.have.status(200));\n\npm.test(\"Đúng cấu trúc và dữ liệu\", () => {\n  const body = pm.response.json();\n  pm.expect(body.id).to.eql(Number(pm.environment.get(\"orderId\")));\n  pm.expect(body.status).to.be.oneOf([\"pending\", \"paid\", \"shipped\"]);\n  pm.expect(body.total).to.be.a(\"number\").and.to.be.at.least(0);\n  pm.expect(body).to.not.have.property(\"passwordHash\");\n});\n\npm.test(\"Phản hồi dưới 800 ms\", () => pm.expect(pm.response.responseTime).to.be.below(800));\n\n// Request đăng nhập: lưu token cho các request sau\n// pm.environment.set(\"token\", pm.response.json().accessToken);",
+    "tip": {
+      "vi": "Nhắc case token của người dùng khác (IDOR) và case \"giao diện chặn nhưng API không chặn\" là hai điểm rất ăn điểm.",
+      "en": "Mentioning another user's token (IDOR) and \"the UI blocks it but the API does not\" are two strong points."
+    },
+    "followUps": [
+      {
+        "vi": "Khác nhau giữa 401 và 403 là gì? Cho ví dụ.",
+        "en": "What is the difference between 401 and 403? Give an example."
+      },
+      {
+        "vi": "Chạy bộ test Postman trong CI thế nào?",
+        "en": "How do you run a Postman suite in CI?"
+      }
+    ]
+  },
+  {
+    "id": "qa-devtools-debugging",
+    "level": "junior",
+    "topic": "SQL & API",
+    "q": {
+      "vi": "Bạn dùng DevTools của trình duyệt thế nào khi test và điều tra bug?",
+      "en": "How do you use browser DevTools when testing and investigating bugs?"
+    },
+    "a": {
+      "vi": "DevTools (F12) giúp tester biết lỗi nằm ở frontend hay backend và viết bug report có bằng chứng:\n\n- Network: xem từng request (URL, method, status, header, body gửi đi và response trả về, thời gian). Thao tác không có tác dụng thì xem request có được gửi không, có trả 4xx, 5xx không. Response đúng mà màn hình hiện sai thì lỗi ở frontend; response sai thì lỗi ở backend. Có thể bật Disable cache, giả lập mạng chậm (Slow 4G) hoặc offline, và chuột phải \"Copy as cURL\" để gửi cho dev.\n- Console: lỗi JavaScript (dòng đỏ) thường giải thích vì sao nút không phản hồi hay trang trắng; chụp kèm vào bug.\n- Elements: xem HTML và CSS thực tế, kiểm tra phần tử bị ẩn, sửa thử nội dung để test chuỗi dài, kiểm tra thuộc tính accessibility.\n- Application: xem và xoá cookie, localStorage, sessionStorage để test đăng xuất, hết phiên, trạng thái lần đầu vào trang.\n- Device toolbar: giả lập kích thước điện thoại, máy tính bảng để test responsive (vẫn nên kiểm tra lại trên máy thật).\n- Lighthouse và Performance: đo tốc độ tải, Core Web Vitals, gợi ý accessibility.\n\nBug report kèm request, response, lỗi console và số build giúp dev sửa nhanh hơn nhiều.",
+      "en": "DevTools (F12) tells a tester whether a bug is in the frontend or backend and provides evidence for reports:\n\n- Network: every request (URL, method, status, headers, request body and response, timing). If an action does nothing, check whether a request was sent and whether it returned 4xx or 5xx. A correct response with a wrong screen means a frontend bug; a wrong response means a backend bug. You can disable cache, throttle to Slow 4G or go offline, and right-click \"Copy as cURL\" to share with developers.\n- Console: JavaScript errors (red lines) often explain an unresponsive button or a blank page; include them in the bug.\n- Elements: the actual HTML and CSS, hidden elements, editing text to try long strings, checking accessibility attributes.\n- Application: view and clear cookies, localStorage and sessionStorage to test logout, session expiry and first-visit states.\n- Device toolbar: emulate phone and tablet sizes for responsive testing (still confirm on real devices).\n- Lighthouse and Performance: load speed, Core Web Vitals, accessibility hints.\n\nA bug report with the request, response, console error and build number gets fixed much faster."
+    },
+    "example": {
+      "vi": "Bấm \"Lưu hồ sơ\" thì không có gì xảy ra. Tab Network cho thấy API trả 200 với dữ liệu đã cập nhật, còn Console báo lỗi \"Cannot read properties of undefined (reading 'avatarUrl')\": người dùng chưa có ảnh đại diện làm frontend lỗi khi hiển thị lại. Bug được gán thẳng cho dev frontend thay vì đẩy qua lại giữa hai đội.",
+      "en": "Clicking \"Save profile\" does nothing. Network shows the API returned 200 with the updated data, while Console reports \"Cannot read properties of undefined (reading 'avatarUrl')\": users without an avatar crash the frontend on re-render. The bug went straight to a frontend developer instead of bouncing between teams."
+    },
+    "tip": {
+      "vi": "Câu \"response đúng mà màn hình sai là lỗi frontend, response sai là lỗi backend\" cho thấy ngay bạn biết khoanh vùng lỗi.",
+      "en": "\"Correct response but wrong screen means frontend, wrong response means backend\" immediately shows you can isolate defects."
+    },
+    "followUps": [
+      {
+        "vi": "Test ứng dụng khi mạng chậm bằng DevTools thế nào?",
+        "en": "How do you test a web app on a slow network with DevTools?"
+      },
+      {
+        "vi": "Trên app mobile thì bạn xem request bằng công cụ gì?",
+        "en": "Which tool do you use to inspect requests from a mobile app?"
+      }
+    ]
+  },
+  {
+    "id": "qa-when-to-automate",
+    "level": "junior",
+    "topic": "Automation",
+    "q": {
+      "vi": "Khi nào nên tự động hoá test, khi nào nên giữ test thủ công?",
+      "en": "When should you automate a test, and when should you keep it manual?"
+    },
+    "a": {
+      "vi": "Nên tự động hoá:\n- Regression chạy lặp lại mỗi release hoặc mỗi pull request.\n- Luồng quan trọng, ổn định: đăng nhập, thanh toán, đặt hàng (smoke test tự động).\n- Kiểm tra cần nhiều bộ dữ liệu (data-driven): cùng form với hàng trăm tổ hợp đầu vào.\n- Test API, test hiệu năng, kiểm tra trên nhiều trình duyệt hay thiết bị.\n- Việc dễ sai khi làm tay: so sánh số liệu lớn, chuẩn bị dữ liệu test.\n\nNên giữ thủ công:\n- Exploratory testing, đánh giá trải nghiệm, cảm nhận giao diện, accessibility thực tế.\n- Tính năng mới hoặc giao diện còn thay đổi liên tục: viết script lúc này sẽ phải sửa mãi.\n- Test chỉ chạy một vài lần, hoặc chi phí viết và bảo trì lớn hơn lợi ích.\n- Thứ khó tự động: captcha, OTP thật qua SMS, thao tác phần cứng (có thể giả lập bằng môi trường test riêng).\n\nCách quyết định: so sánh chi phí viết và bảo trì với thời gian tiết kiệm qua nhiều lần chạy và rủi ro nếu bỏ sót. Theo mô hình test pyramid, phần lớn kiểm tra tự động nên ở unit và API vì nhanh và ổn định; test giao diện đầu cuối chỉ cho vài luồng quan trọng nhất vì chậm và dễ flaky. Tự động hoá không thay thế tester; nó giải phóng thời gian để tester làm phần cần tư duy.",
+      "en": "Automate:\n- Regression that repeats every release or pull request.\n- Critical, stable flows: login, checkout, ordering (an automated smoke suite).\n- Checks with many data sets (data-driven): one form with hundreds of input combinations.\n- API tests, performance tests, checks across many browsers or devices.\n- Error-prone manual work: comparing large data sets, preparing test data.\n\nKeep manual:\n- Exploratory testing, user experience, visual feel, real-world accessibility.\n- New features or UIs still changing constantly: scripts written now would need endless fixes.\n- Tests run only a few times, or where writing and maintenance cost more than they save.\n- Hard-to-automate things: captchas, real SMS OTPs, hardware interactions (often simulated in a dedicated test setup).\n\nHow to decide: compare the cost of writing and maintaining against the time saved over many runs and the risk of missing defects. Following the test pyramid, most automated checks belong at unit and API level because they are fast and stable; end-to-end UI tests only for the few most critical flows because they are slow and flaky. Automation does not replace testers; it frees their time for work that needs thinking."
+    },
+    "example": {
+      "vi": "Team test tay 300 case regression mất 3 ngày mỗi release hai tuần. Tự động hoá 60 case API và 15 luồng giao diện quan trọng nhất trong hai sprint: regression còn chạy khoảng 25 phút trên CI, tester dùng 3 ngày đó để test sâu tính năng mới và exploratory.",
+      "en": "A team spent 3 days running 300 manual regression cases every two-week release. Automating 60 API cases and the 15 most important UI flows over two sprints cut regression to about 25 minutes in CI, and testers spent those 3 days on deep testing of new features and exploration."
+    },
+    "tip": {
+      "vi": "Nhắc test pyramid và việc ưu tiên tự động hoá ở tầng API thay vì giao diện cho thấy bạn hiểu chi phí bảo trì.",
+      "en": "Mentioning the test pyramid and favouring API-level automation over UI shows you understand maintenance cost."
+    },
+    "followUps": [
+      {
+        "vi": "Bạn chọn 10 case đầu tiên để tự động hoá cho một app thương mại điện tử thế nào?",
+        "en": "How would you pick the first 10 cases to automate for an e-commerce app?"
+      },
+      {
+        "vi": "Đo lợi ích của tự động hoá bằng gì?",
+        "en": "How do you measure the benefit of automation?"
+      }
+    ]
+  },
+  {
+    "id": "qa-selenium-vs-playwright-locators",
+    "level": "junior",
+    "topic": "Automation",
+    "q": {
+      "vi": "Selenium và Playwright khác nhau thế nào? Bạn chọn locator (CSS, XPath, theo role) ra sao để test không dễ vỡ?",
+      "en": "How do Selenium and Playwright differ? How do you choose locators (CSS, XPath, by role) so tests are not brittle?"
+    },
+    "a": {
+      "vi": "Selenium WebDriver: lâu đời, hỗ trợ nhiều ngôn ngữ (Java, Python, C#, JavaScript…) và trình duyệt qua giao thức WebDriver, cộng đồng lớn, dùng kèm framework như TestNG, JUnit, pytest. Thường phải tự viết cơ chế chờ (explicit wait), tự dựng báo cáo, chạy song song qua Selenium Grid.\n\nPlaywright (Microsoft): mới hơn, hỗ trợ TypeScript/JavaScript, Python, Java, .NET; chạy Chromium, Firefox, WebKit. Có sẵn tự động chờ phần tử sẵn sàng (auto-wait), test runner, chạy song song, chụp ảnh, quay video, trace viewer để xem lại từng bước khi test lỗi, giả lập mạng và thiết bị, chặn và giả lập request. Viết nhanh và ít flaky hơn. Nhiều tin tuyển dụng QA ở Việt Nam hiện yêu cầu Playwright hoặc Selenium.\n\nChọn: dự án cũ đã có bộ Selenium lớn hoặc team quen Java thì giữ Selenium; dự án web mới thường chọn Playwright. Cypress là lựa chọn khác cho web với JavaScript.\n\nChọn locator, ưu tiên theo thứ tự:\n1. Theo vai trò và tên mà người dùng thấy: getByRole('button', { name: 'Đăng nhập' }), getByLabel('Email'). Gần với cách người dùng nhìn, cũng kiểm tra luôn accessibility.\n2. Thuộc tính dành riêng cho test: data-testid, thống nhất với dev từ đầu.\n3. CSS selector ngắn, ổn định (id, name).\n4. XPath chỉ khi thật cần (ví dụ tìm theo quan hệ với phần tử khác), tránh XPath tuyệt đối kiểu /html/body/div[3]/div[2]/button vì chỉ cần đổi bố cục là vỡ.\nTránh dựa vào class CSS sinh tự động, thứ tự phần tử, hay chuỗi văn bản hay đổi.",
+      "en": "Selenium WebDriver: mature, supports many languages (Java, Python, C#, JavaScript…) and browsers via the WebDriver protocol, a large community, used with frameworks such as TestNG, JUnit, pytest. You usually write your own explicit waits, build reports, and parallelise through Selenium Grid.\n\nPlaywright (Microsoft): newer, supports TypeScript/JavaScript, Python, Java, .NET; runs Chromium, Firefox and WebKit. Built in: auto-waiting for elements to be ready, a test runner, parallel runs, screenshots, video, a trace viewer to replay each step of a failed test, network and device emulation, request interception and mocking. Faster to write and less flaky. Many QA job posts in Vietnam now ask for Playwright or Selenium.\n\nChoosing: an existing large Selenium suite or a Java-oriented team stays with Selenium; new web projects often choose Playwright. Cypress is another option for JavaScript web apps.\n\nLocator priority:\n1. Role and accessible name as users see them: getByRole('button', { name: 'Log in' }), getByLabel('Email'). Close to how users perceive the page, and it checks accessibility too.\n2. Dedicated test attributes: data-testid, agreed with developers early.\n3. Short, stable CSS selectors (id, name).\n4. XPath only when really needed (e.g. locating relative to another element); avoid absolute XPath like /html/body/div[3]/div[2]/button, which breaks on any layout change.\nAvoid generated CSS classes, element order, or frequently changing text."
+    },
+    "example": {
+      "vi": "Bộ test cũ dùng XPath tuyệt đối, lần nào frontend thêm một banner khuyến mãi là 40 test đỏ dù tính năng vẫn chạy đúng. Chuyển sang getByRole và data-testid thống nhất với dev, đợt đổi giao diện tiếp theo chỉ 2 test phải sửa.",
+      "en": "An old suite used absolute XPath, and every time the frontend added a promotional banner 40 tests went red while the features still worked. After switching to getByRole and data-testid agreed with developers, the next redesign broke only 2 tests."
+    },
+    "code": "// Playwright: ưu tiên locator theo vai trò, nhãn và data-testid\nawait page.getByLabel(\"Email\").fill(\"lan@example.com\");\nawait page.getByRole(\"button\", { name: \"Đăng nhập\" }).click();\nawait page.getByTestId(\"cart-count\").click();\n\n// Dễ vỡ: phụ thuộc bố cục và class sinh tự động\n// await page.locator(\"xpath=/html/body/div[3]/div[2]/form/button\").click();\n// await page.locator(\".btn-x7f3a\").click();",
+    "tip": {
+      "vi": "Nói được thứ tự ưu tiên locator và lý do tránh XPath tuyệt đối quan trọng hơn việc thuộc cú pháp.",
+      "en": "Knowing the locator priority and why to avoid absolute XPath matters more than memorising syntax."
+    },
+    "followUps": [
+      {
+        "vi": "Explicit wait, implicit wait và auto-wait khác nhau thế nào?",
+        "en": "How do explicit waits, implicit waits and auto-waiting differ?"
+      },
+      {
+        "vi": "Phần tử nằm trong iframe hoặc shadow DOM thì bạn xử lý thế nào?",
+        "en": "How do you handle elements inside an iframe or shadow DOM?"
+      }
+    ]
+  },
+  {
+    "id": "qa-page-object-model",
+    "level": "mid",
+    "topic": "Automation",
+    "q": {
+      "vi": "Page Object Model là gì? Viết test Playwright cho màn hình đăng nhập theo mô hình này.",
+      "en": "What is the Page Object Model? Write a Playwright test for a login screen using it."
+    },
+    "a": {
+      "vi": "Page Object Model (POM) là cách tổ chức code test: mỗi trang hoặc thành phần giao diện là một class chứa locator và các hành động của trang đó (đăng nhập, thêm vào giỏ). Test chỉ gọi các hành động này và kiểm tra kết quả, không trực tiếp chứa selector.\n\nLợi ích:\n- Giao diện đổi thì chỉ sửa ở một chỗ (class của trang) thay vì hàng chục test.\n- Test đọc như kịch bản nghiệp vụ, dễ review.\n- Tái sử dụng hành động giữa nhiều test.\n\nNguyên tắc:\n- Page object chỉ mô tả trang và hành động, phần kiểm tra (assert) nên để trong test, trừ vài kiểm tra trạng thái trang.\n- Không để page object quá to: chia theo thành phần (header, giỏ hàng) nếu cần.\n- Dữ liệu test để riêng (file, fixture), không viết cứng trong page object.\n- Kết hợp fixture của Playwright để tạo sẵn page object cho mỗi test, và lưu trạng thái đăng nhập (storageState) để các test khác khỏi đăng nhập lại qua giao diện.\n\nMột khung automation hoàn chỉnh thường gồm: page objects, fixture, dữ liệu test, cấu hình môi trường, báo cáo, chạy trên CI.",
+      "en": "The Page Object Model (POM) organises test code so each page or UI component is a class holding its locators and actions (log in, add to cart). Tests call these actions and assert results, without containing selectors directly.\n\nBenefits:\n- A UI change is fixed in one place (the page class) instead of dozens of tests.\n- Tests read like business scenarios and are easy to review.\n- Actions are reused across tests.\n\nPrinciples:\n- Page objects describe pages and actions; assertions belong in tests, apart from a few page-state checks.\n- Keep page objects small: split by component (header, cart) if needed.\n- Keep test data separate (files, fixtures), not hard-coded in page objects.\n- Use Playwright fixtures to provide page objects per test, and save the logged-in state (storageState) so other tests skip logging in through the UI.\n\nA complete automation framework typically has: page objects, fixtures, test data, environment config, reporting, and CI runs."
+    },
+    "example": {
+      "vi": "Nút đăng nhập đổi chữ từ \"Đăng nhập\" thành \"Tiếp tục\" trong đợt làm lại giao diện. Với POM, chỉ sửa một dòng trong LoginPage và cả 35 test có bước đăng nhập lại xanh. Bộ test cũ không dùng POM phải tìm và sửa từng file.",
+      "en": "The login button text changed from \"Log in\" to \"Continue\" in a redesign. With POM, one line in LoginPage was fixed and all 35 tests that log in went green again. The old non-POM suite needed every file hunted down and edited."
+    },
+    "code": "// pages/login-page.ts\nimport { expect, type Page } from \"@playwright/test\";\n\nexport class LoginPage {\n  constructor(private readonly page: Page) {}\n\n  async goto() {\n    await this.page.goto(\"/login\");\n  }\n\n  async login(email: string, password: string) {\n    await this.page.getByLabel(\"Email\").fill(email);\n    await this.page.getByLabel(\"Mật khẩu\").fill(password);\n    await this.page.getByRole(\"button\", { name: \"Đăng nhập\" }).click();\n  }\n\n  error() {\n    return this.page.getByRole(\"alert\");\n  }\n}\n\n// tests/login.spec.ts\nimport { test, expect } from \"@playwright/test\";\nimport { LoginPage } from \"../pages/login-page\";\n\ntest(\"đăng nhập thành công vào trang chủ\", async ({ page }) => {\n  const login = new LoginPage(page);\n  await login.goto();\n  await login.login(\"lan@example.com\", \"Dung12345\");\n  await expect(page).toHaveURL(/\\/home/);\n});\n\ntest(\"sai mật khẩu hiện thông báo lỗi\", async ({ page }) => {\n  const login = new LoginPage(page);\n  await login.goto();\n  await login.login(\"lan@example.com\", \"Sai12345\");\n  await expect(login.error()).toHaveText(\"Email hoặc mật khẩu không đúng\");\n});",
+    "tip": {
+      "vi": "Nhắc storageState để không phải đăng nhập qua giao diện ở mọi test sẽ cho thấy bạn đã làm bộ test lớn thật.",
+      "en": "Mentioning storageState to avoid UI login in every test shows you have run a real, large suite."
+    },
+    "followUps": [
+      {
+        "vi": "Page object nên chứa assert không? Vì sao?",
+        "en": "Should page objects contain assertions? Why?"
+      },
+      {
+        "vi": "Tạo dữ liệu test cho automation bằng giao diện hay bằng API thì tốt hơn?",
+        "en": "Is it better to create automation test data through the UI or the API?"
+      }
+    ]
+  },
+  {
+    "id": "qa-flaky-tests",
+    "level": "mid",
+    "topic": "Automation",
+    "q": {
+      "vi": "Flaky test (lúc pass lúc fail) do đâu và bạn xử lý thế nào?",
+      "en": "What causes flaky tests (passing and failing at random) and how do you deal with them?"
+    },
+    "a": {
+      "vi": "Flaky test thường do chờ sai thời điểm, dùng chung dữ liệu, phụ thuộc thứ tự chạy hoặc môi trường không ổn định. Cách xử lý: điều tra nguyên nhân gốc qua trace và log, thay sleep bằng chờ theo điều kiện, cho mỗi test dữ liệu riêng, mock dịch vụ ngoài, cách ly test flaky kèm ticket sửa; retry chỉ là tạm thời.\n\nFlaky test làm mất niềm tin vào bộ test: khi đỏ thường xuyên, mọi người bắt đầu bấm chạy lại hoặc bỏ qua, và bug thật lọt qua.\n\nNguyên nhân hay gặp:\n- Chờ sai: dùng sleep cố định, hoặc thao tác khi phần tử chưa sẵn sàng, dữ liệu chưa tải xong, animation chưa kết thúc.\n- Phụ thuộc dữ liệu chung: nhiều test dùng chung một tài khoản hay một sản phẩm, chạy song song thì giẫm lên nhau; dữ liệu còn sót từ lần chạy trước.\n- Phụ thuộc thứ tự: test B chỉ pass khi test A chạy trước.\n- Môi trường không ổn định: staging chậm, dịch vụ bên thứ ba (thanh toán, SMS) chập chờn.\n- Thời gian và ngẫu nhiên: ngày giờ hiện tại, múi giờ, dữ liệu sinh ngẫu nhiên bị trùng.\n- Locator dễ vỡ, hoặc bug thật chỉ xảy ra khi có race condition trong sản phẩm.\n\nCách xử lý:\n- Điều tra ngay, không chỉ thêm retry: xem trace, video, ảnh chụp và log của lần fail.\n- Thay sleep bằng chờ theo điều kiện (auto-wait, chờ response cụ thể, assertion có tự thử lại).\n- Mỗi test tự tạo dữ liệu riêng (qua API) và dọn sau khi chạy; không phụ thuộc thứ tự.\n- Giả lập dịch vụ bên ngoài (mock) cho test giao diện; test tích hợp thật để riêng.\n- Cố định thời gian và dữ liệu ngẫu nhiên khi cần.\n- Đánh dấu và cách ly test flaky (quarantine) kèm ticket sửa có hạn, theo dõi tỉ lệ flaky theo thời gian.\n- Retry tự động chỉ là biện pháp tạm, và vẫn phải báo test nào cần retry mới pass.",
+      "en": "Flaky tests usually come from bad waits, shared data, order dependence or unstable environments. Fix them by finding the root cause through traces and logs, replacing sleeps with condition-based waits, giving each test its own data, mocking external services, and quarantining flaky tests with a fix ticket; retries are only a stopgap.\n\nFlaky tests destroy trust in the suite: when it is red often, people start rerunning or ignoring failures, and real bugs slip through.\n\nCommon causes:\n- Wrong waiting: fixed sleeps, or acting before an element is ready, data has loaded or an animation has finished.\n- Shared data: several tests using one account or product collide when run in parallel; leftovers from previous runs.\n- Order dependence: test B passes only if test A ran first.\n- Unstable environments: slow staging, flaky third parties (payments, SMS).\n- Time and randomness: the current date, time zones, random data colliding.\n- Brittle locators, or a real race condition in the product.\n\nHow to handle them:\n- Investigate immediately rather than just adding retries: look at the trace, video, screenshots and logs of the failing run.\n- Replace sleeps with condition-based waits (auto-wait, waiting for a specific response, retrying assertions).\n- Each test creates its own data (via API) and cleans up; no order dependence.\n- Mock external services in UI tests; keep real integration tests separate.\n- Freeze time and seed randomness when needed.\n- Mark and quarantine flaky tests with a time-boxed fix ticket, and track the flaky rate over time.\n- Automatic retries are only a stopgap, and must still report which tests needed a retry to pass."
+    },
+    "example": {
+      "vi": "Test \"thêm vào giỏ hàng\" fail khoảng 1 trong 8 lần chạy trên CI. Trace cho thấy test bấm Thanh toán khi API cập nhật giỏ hàng chưa trả về. Thay waitForTimeout(2000) bằng chờ response của /cart và assertion số lượng hiển thị, test ổn định qua hơn 200 lần chạy liên tiếp.",
+      "en": "An \"add to cart\" test failed about 1 run in 8 on CI. The trace showed it clicked Checkout before the cart update API responded. Replacing waitForTimeout(2000) with waiting for the /cart response and an assertion on the displayed quantity made it stable over 200+ consecutive runs."
+    },
+    "code": "// Dễ flaky: chờ cố định, có hôm 2 giây chưa đủ\nawait page.getByRole(\"button\", { name: \"Thêm vào giỏ\" }).click();\nawait page.waitForTimeout(2000);\nawait page.getByRole(\"button\", { name: \"Thanh toán\" }).click();\n\n// Ổn định: chờ đúng điều kiện\nconst cartUpdated = page.waitForResponse((r) => r.url().includes(\"/api/cart\") && r.ok());\nawait page.getByRole(\"button\", { name: \"Thêm vào giỏ\" }).click();\nawait cartUpdated;\nawait expect(page.getByTestId(\"cart-count\")).toHaveText(\"1\"); // tự thử lại tới khi đúng hoặc hết timeout\nawait page.getByRole(\"button\", { name: \"Thanh toán\" }).click();",
+    "tip": {
+      "vi": "Nói rõ retry chỉ là tạm thời và bạn luôn tìm nguyên nhân gốc, người phỏng vấn sẽ đánh giá bạn trưởng thành về automation.",
+      "en": "Making clear that retries are temporary and you always find the root cause marks you as mature in automation."
+    },
+    "followUps": [
+      {
+        "vi": "Test flaky hoá ra do bug race condition thật của sản phẩm thì bạn xử lý thế nào?",
+        "en": "What if a flaky test turns out to expose a real race condition in the product?"
+      },
+      {
+        "vi": "Theo dõi tỉ lệ flaky của cả bộ test bằng cách nào?",
+        "en": "How do you track the flaky rate of the whole suite?"
+      }
+    ]
+  },
+  {
+    "id": "qa-assertions-data-driven",
+    "level": "mid",
+    "topic": "Automation",
+    "q": {
+      "vi": "Hard assert và soft assert khác nhau thế nào? Data-driven testing là gì và cài đặt ra sao?",
+      "en": "How do hard and soft assertions differ? What is data-driven testing and how do you implement it?"
+    },
+    "a": {
+      "vi": "Hard assert: kiểm tra thất bại thì test dừng ngay ở dòng đó. Dùng cho điều kiện tiên quyết: không đăng nhập được thì kiểm tra tiếp vô nghĩa.\n\nSoft assert (trong một số framework gọi là verify): ghi nhận thất bại nhưng chạy tiếp, cuối test báo tất cả các chỗ sai. Hợp khi kiểm tra nhiều thông tin độc lập trên cùng một màn hình (tên, giá, tồn kho, ảnh của sản phẩm) để một lần chạy thấy hết lỗi. Playwright có expect.soft, TestNG có SoftAssert. Không nên dùng soft assert cho bước mà các bước sau phụ thuộc vào.\n\nData-driven testing: tách dữ liệu test khỏi logic test, cùng một kịch bản chạy với nhiều bộ dữ liệu đầu vào và kết quả mong đợi. Dữ liệu để trong mảng, file JSON, CSV hoặc Excel. Lợi ích: thêm case chỉ cần thêm một dòng dữ liệu, phủ được nhiều phân vùng và giá trị biên, người không viết code (BA, tester manual) cũng đóng góp case được.\n\nCài đặt: lặp qua bộ dữ liệu để sinh test (Playwright, Jest), @DataProvider (TestNG), @pytest.mark.parametrize (pytest). Mỗi bộ dữ liệu nên có tên riêng để khi fail biết ngay case nào. Đây cũng là cách tự nhiên để biến bảng phân vùng tương đương và giá trị biên thành test tự động.",
+      "en": "Hard assertion: a failure stops the test on that line. Use it for preconditions: if login fails, checking further is pointless.\n\nSoft assertion (called verify in some frameworks): records the failure and continues, reporting every mismatch at the end. Good for several independent checks on one screen (a product's name, price, stock and image) so one run shows all errors. Playwright has expect.soft, TestNG has SoftAssert. Do not use soft assertions for steps that later steps depend on.\n\nData-driven testing: separating test data from test logic so one scenario runs with many sets of inputs and expected results. Data lives in arrays, JSON, CSV or Excel. Benefits: adding a case means adding a data row, partitions and boundaries are easy to cover, and non-coders (BAs, manual testers) can contribute cases.\n\nImplementation: loop over the data to generate tests (Playwright, Jest), @DataProvider (TestNG), @pytest.mark.parametrize (pytest). Give each data set a name so a failure tells you which case. It is also the natural way to turn an equivalence-partition and boundary table into automated tests."
+    },
+    "example": {
+      "vi": "Form đăng ký có 12 quy tắc kiểm tra mật khẩu và email. Thay vì 12 test gần như giống hệt nhau, một test data-driven đọc bảng 12 dòng gồm đầu vào và thông báo lỗi mong đợi. Khi BA thêm quy tắc \"mật khẩu không được chứa email\", tester manual chỉ cần thêm một dòng vào file dữ liệu.",
+      "en": "A registration form has 12 password and email validation rules. Instead of 12 near-identical tests, one data-driven test reads a 12-row table of inputs and expected error messages. When the BA added \"password must not contain the email\", a manual tester just added one data row."
+    },
+    "code": "import { test, expect } from \"@playwright/test\";\n\n// Data-driven: bảng phân vùng và giá trị biên cho ô mật khẩu\nconst cases = [\n  { name: \"7 ký tự (dưới biên)\", password: \"Abc1234\", error: \"Mật khẩu tối thiểu 8 ký tự\" },\n  { name: \"8 ký tự (đúng biên)\", password: \"Abc12345\", error: null },\n  { name: \"không có chữ số\", password: \"Abcdefgh\", error: \"Mật khẩu cần ít nhất 1 chữ số\" },\n];\n\nfor (const c of cases) {\n  test(`mật khẩu: ${c.name}`, async ({ page }) => {\n    await page.goto(\"/register\");\n    await page.getByLabel(\"Mật khẩu\").fill(c.password);\n    await page.getByLabel(\"Mật khẩu\").blur();\n    const error = page.getByTestId(\"password-error\");\n    if (c.error) await expect(error).toHaveText(c.error);\n    else await expect(error).toBeHidden();\n  });\n}\n\n// Soft assert: kiểm tra nhiều thông tin độc lập, báo hết lỗi một lần\ntest(\"trang chi tiết sản phẩm\", async ({ page }) => {\n  await page.goto(\"/products/42\");\n  await expect.soft(page.getByTestId(\"name\")).toHaveText(\"Tai nghe X1\");\n  await expect.soft(page.getByTestId(\"price\")).toHaveText(\"1.290.000 ₫\");\n  await expect.soft(page.getByTestId(\"stock\")).toContainText(\"Còn hàng\");\n});",
+    "tip": {
+      "vi": "Nối data-driven với kỹ thuật phân vùng và giá trị biên cho thấy bạn hiểu automation là công cụ, còn thiết kế test vẫn là cốt lõi.",
+      "en": "Linking data-driven testing to partitions and boundaries shows automation is a tool while test design remains the core."
+    },
+    "followUps": [
+      {
+        "vi": "Dữ liệu test nên để trong code hay file ngoài? Vì sao?",
+        "en": "Should test data live in code or in external files? Why?"
+      },
+      {
+        "vi": "Khi nào soft assert gây hại?",
+        "en": "When do soft assertions do harm?"
+      }
+    ]
+  },
+  {
+    "id": "qa-automation-in-ci",
+    "level": "mid",
+    "topic": "Automation",
+    "q": {
+      "vi": "Đưa test tự động vào pipeline CI/CD thế nào? Chạy test nào ở bước nào?",
+      "en": "How do you put automated tests into a CI/CD pipeline? Which tests run at which stage?"
+    },
+    "a": {
+      "vi": "Mục tiêu: mọi thay đổi đều được kiểm tra tự động trước khi tới người dùng, và kết quả về nhanh để dev sửa ngay khi còn nhớ code.\n\nChia tầng theo tốc độ và độ tin cậy:\n- Mỗi pull request: lint, unit test, test API chính, một bộ smoke giao diện ngắn (vài phút). Fail thì không cho merge.\n- Sau khi merge và deploy lên staging: regression đầy đủ hơn (API và các luồng giao diện quan trọng), có thể song song nhiều máy để giữ dưới khoảng 15–20 phút.\n- Định kỳ (hằng đêm): bộ chạy lâu, nhiều trình duyệt hoặc thiết bị, test hiệu năng, quét bảo mật.\n- Sau khi deploy production: smoke test nhanh trên production với tài khoản test, kèm giám sát.\n\nThực hành tốt:\n- Chạy song song và chia nhỏ (sharding) để pipeline nhanh.\n- Lưu báo cáo, ảnh chụp, video, trace của test fail làm artifact để xem lại mà không cần chạy lại trên máy mình.\n- Môi trường và dữ liệu test được dựng tự động, không phụ thuộc thao tác tay.\n- Secret (mật khẩu tài khoản test, API key) để trong secret của CI, không đưa vào repo.\n- Báo kết quả về nơi team hay xem (pull request, Slack, Teams).\n- Theo dõi thời gian chạy và tỉ lệ flaky; test flaky phải được xử lý, nếu không mọi người sẽ bỏ qua pipeline đỏ.",
+      "en": "The goal: every change is checked automatically before reaching users, with fast feedback so developers fix issues while the code is fresh.\n\nLayer by speed and reliability:\n- Every pull request: lint, unit tests, key API tests, a short UI smoke suite (a few minutes). Failures block the merge.\n- After merge and deploy to staging: broader regression (API and critical UI flows), parallelised across machines to stay under about 15–20 minutes.\n- Scheduled (nightly): long suites, many browsers or devices, performance tests, security scans.\n- After production deploys: a quick smoke test on production with test accounts, plus monitoring.\n\nGood practice:\n- Run in parallel and shard to keep pipelines fast.\n- Keep reports, screenshots, videos and traces of failures as artifacts so you can inspect them without rerunning locally.\n- Provision environments and test data automatically, not by hand.\n- Keep secrets (test account passwords, API keys) in CI secrets, never in the repo.\n- Post results where the team looks (pull requests, Slack, Teams).\n- Track run time and flaky rate; flaky tests must be dealt with, or people will start ignoring red pipelines."
+    },
+    "example": {
+      "vi": "Trước đây bộ test giao diện chỉ chạy tay trên máy một tester mỗi tối thứ Năm, bug phát hiện muộn cả tuần. Đưa vào GitHub Actions chạy trên mỗi pull request, chia 4 máy song song: 12 phút có kết quả, dev thấy test đỏ ngay trong pull request của mình và sửa trước khi merge.",
+      "en": "The UI suite used to run by hand on one tester's laptop every Thursday evening, so bugs surfaced a week late. Moving it to GitHub Actions on every pull request with 4 parallel shards gave results in 12 minutes, and developers saw red tests in their own pull request and fixed them before merging."
+    },
+    "code": "# .github/workflows/e2e.yml\nname: e2e\non: [pull_request]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    strategy:\n      matrix: { shard: [1, 2, 3, 4] }          # chia 4 máy song song\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with: { node-version: 22 }\n      - run: npm ci\n      - run: npx playwright install --with-deps\n      - run: npx playwright test --shard=${{ matrix.shard }}/4\n        env:\n          BASE_URL: ${{ vars.STAGING_URL }}\n          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}   # không để mật khẩu trong repo\n      - uses: actions/upload-artifact@v4\n        if: failure()\n        with:\n          name: report-${{ matrix.shard }}\n          path: playwright-report/",
+    "tip": {
+      "vi": "Trình bày theo tầng (pull request, staging, hằng đêm, production) kèm thời gian mục tiêu cho thấy bạn nghĩ cả về tốc độ phản hồi.",
+      "en": "Presenting it in layers (pull request, staging, nightly, production) with target durations shows you think about feedback speed."
+    },
+    "followUps": [
+      {
+        "vi": "Pipeline chạy quá lâu, bạn rút ngắn thế nào?",
+        "en": "The pipeline takes too long. How do you shorten it?"
+      },
+      {
+        "vi": "Chạy test tự động trên production có rủi ro gì?",
+        "en": "What are the risks of running automated tests on production?"
+      }
+    ]
+  },
+  {
+    "id": "qa-performance-testing",
+    "level": "mid",
+    "topic": "Performance & Strategy",
+    "q": {
+      "vi": "Performance testing là gì? Load, stress và spike test khác nhau thế nào? Bạn dùng công cụ gì (JMeter, k6) và đọc kết quả ra sao?",
+      "en": "What is performance testing? How do load, stress and spike tests differ? Which tools do you use (JMeter, k6) and how do you read results?"
+    },
+    "a": {
+      "vi": "Performance testing đo hệ thống phản hồi nhanh tới đâu và chịu được bao nhiêu tải.\n\nCác loại chính:\n- Load test: tải ở mức dự kiến (ví dụ giờ cao điểm), xem có đạt mục tiêu thời gian phản hồi không.\n- Stress test: tăng tải vượt mức dự kiến tới khi hệ thống hỏng, để biết giới hạn và cách nó hỏng (chậm dần hay sập hẳn, có tự phục hồi không).\n- Spike test: tải tăng vọt đột ngột rồi giảm, như lúc mở bán flash sale hay gửi thông báo đẩy tới mọi người dùng.\n- Soak (endurance) test: tải vừa phải trong nhiều giờ để tìm rò rỉ bộ nhớ, cạn connection.\n\nQuy trình:\n1. Thống nhất mục tiêu đo được: ví dụ 500 người dùng đồng thời, p95 dưới 500 ms, tỉ lệ lỗi dưới 1%.\n2. Viết kịch bản theo hành vi thật (xem sản phẩm, thêm giỏ, thanh toán) với dữ liệu đa dạng và thời gian nghỉ giữa các bước.\n3. Chạy trên môi trường giống production về cấu hình; không bắn tải lên production hay dịch vụ bên thứ ba khi chưa được phép.\n4. Theo dõi cả hai phía: số liệu từ công cụ (thời gian phản hồi, throughput, lỗi) và tài nguyên server (CPU, RAM, database, connection pool).\n5. Tìm điểm nghẽn, báo cáo, chạy lại sau khi tối ưu để so sánh.\n\nĐọc kết quả: nhìn percentile (p95, p99) thay vì trung bình; xem điểm tải mà thời gian phản hồi bắt đầu tăng vọt hay lỗi xuất hiện; throughput ngừng tăng dù thêm người dùng là dấu hiệu nghẽn.\n\nCông cụ: JMeter (giao diện, phổ biến, nhiều plugin), k6 (viết bằng JavaScript, nhẹ, dễ đưa vào CI), Gatling, Locust (Python).",
+      "en": "Performance testing measures how fast a system responds and how much load it can handle.\n\nMain types:\n- Load test: expected load (e.g. peak hour), checking response-time targets are met.\n- Stress test: load beyond expectations until the system breaks, to learn its limits and failure mode (gradual slowdown or collapse, does it recover).\n- Spike test: a sudden surge then drop, like a flash sale opening or a push notification to every user.\n- Soak (endurance) test: moderate load for hours to find memory leaks and connection exhaustion.\n\nProcess:\n1. Agree on measurable goals: e.g. 500 concurrent users, p95 under 500 ms, error rate under 1%.\n2. Script realistic behaviour (browse, add to cart, check out) with varied data and think time between steps.\n3. Run on an environment configured like production; never load-test production or third parties without permission.\n4. Watch both sides: tool metrics (response time, throughput, errors) and server resources (CPU, RAM, database, connection pool).\n5. Find bottlenecks, report, and rerun after optimisation to compare.\n\nReading results: look at percentiles (p95, p99) rather than averages; find the load at which response time shoots up or errors appear; throughput that stops rising as users are added signals a bottleneck.\n\nTools: JMeter (GUI, widespread, many plugins), k6 (JavaScript scripts, lightweight, CI-friendly), Gatling, Locust (Python)."
+    },
+    "example": {
+      "vi": "Trước đợt sale 12/12, load test với 2.000 người dùng ảo cho thấy p95 trang thanh toán tăng từ 400 ms lên 6 giây khi vượt khoảng 1.200 người, trong khi CPU server vẫn thấp. Nguyên nhân là connection pool của database chỉ có 20 kết nối. Tăng pool và thêm cache cho trang sản phẩm, chạy lại thì p95 giữ dưới 600 ms ở 2.000 người.",
+      "en": "Before a 12/12 sale, a load test with 2,000 virtual users showed checkout p95 jumping from 400 ms to 6 seconds past about 1,200 users while server CPU stayed low. The cause was a database connection pool of only 20. After enlarging the pool and caching product pages, the rerun kept p95 under 600 ms at 2,000 users."
+    },
+    "code": "// k6: tăng dần tới 200 người dùng, giữ 5 phút; fail nếu p95 >= 500 ms hoặc lỗi >= 1%\nimport http from \"k6/http\";\nimport { check, sleep } from \"k6\";\n\nexport const options = {\n  stages: [\n    { duration: \"2m\", target: 200 },\n    { duration: \"5m\", target: 200 },\n    { duration: \"1m\", target: 0 },\n  ],\n  thresholds: {\n    http_req_duration: [\"p(95)<500\"],\n    http_req_failed: [\"rate<0.01\"],\n  },\n};\n\nexport default function () {\n  const res = http.get(\"https://staging.shop.vn/api/products?page=1\");\n  check(res, { \"status 200\": (r) => r.status === 200 });\n  sleep(1); // thời gian người dùng đọc trang\n}",
+    "tip": {
+      "vi": "Nhắc việc theo dõi tài nguyên server song song và đọc p95 thay vì trung bình sẽ khác biệt với người chỉ biết bấm chạy JMeter.",
+      "en": "Watching server resources alongside and reading p95 instead of averages sets you apart from someone who only presses Run in JMeter."
+    },
+    "followUps": [
+      {
+        "vi": "Load test cho kết quả tốt nhưng production vẫn chậm, nguyên nhân có thể là gì?",
+        "en": "The load test looked fine but production is still slow. What could explain it?"
+      },
+      {
+        "vi": "Ước lượng số người dùng đồng thời cho bài test từ số liệu truy cập thế nào?",
+        "en": "How do you estimate concurrent users for a test from traffic data?"
+      }
+    ]
+  },
+  {
+    "id": "qa-test-strategy-pyramid",
+    "level": "senior",
+    "topic": "Performance & Strategy",
+    "q": {
+      "vi": "Bạn được giao xây dựng chiến lược kiểm thử cho một sản phẩm mới và đảm bảo chất lượng cho cả team QA. Bạn làm thế nào? Test pyramid đóng vai trò gì?",
+      "en": "You are asked to build the test strategy for a new product and ensure quality across the QA team. How do you approach it? What role does the test pyramid play?"
+    },
+    "a": {
+      "vi": "Bắt đầu từ rủi ro nghiệp vụ, định nghĩa chất lượng đo được, phân bổ test theo test pyramid (nhiều unit, phần lớn logic ở test API, ít test giao diện), đưa chất lượng vào quy trình (shift-left, Definition of Done, CI, giám sát sau release), và nâng chất lượng cả team bằng chuẩn chung, review chéo, chia sẻ kiến thức.\n\n1. Hiểu sản phẩm và rủi ro: người dùng là ai, luồng nào mang lại tiền hoặc nếu hỏng thì thiệt hại lớn nhất (thanh toán, dữ liệu cá nhân, quy định pháp luật), nền tảng nào (web, iOS, Android), tần suất release. Lập danh sách rủi ro và ưu tiên test theo rủi ro (risk-based testing).\n\n2. Định nghĩa chất lượng đo được: mục tiêu về bug lọt production, thời gian phản hồi, độ ổn định (crash-free), accessibility; tiêu chí release.\n\n3. Phân bổ theo test pyramid:\n- Đáy rộng: unit test do dev viết, nhanh và rẻ.\n- Giữa: test API và integration, nơi kiểm phần lớn logic nghiệp vụ một cách ổn định.\n- Đỉnh hẹp: vài test giao diện đầu cuối cho các luồng quan trọng nhất.\n- Bên cạnh là exploratory testing và test thủ công cho trải nghiệm, cùng test phi chức năng (hiệu năng, bảo mật, tương thích).\nTránh hình \"cây kem\" ngược: rất nhiều test giao diện chậm và flaky, ít unit test.\n\n4. Quy trình và công cụ: tester tham gia từ refinement (shift-left), Definition of Done có phần chất lượng, pipeline CI theo tầng, môi trường và dữ liệu test tự động, công cụ quản lý test case và bug thống nhất, giám sát sau release (shift-right).\n\n5. Chất lượng của cả team, không chỉ phần của mình:\n- Chuẩn chung: mẫu test case và bug report, checklist, quy ước automation, code review cho code test.\n- Review chéo test case, ghép cặp tester với nhau hoặc với dev.\n- Đào tạo và chia sẻ kiến thức nghiệp vụ, kỹ thuật; tài liệu hoá.\n- Chỉ số dùng để cải tiến quy trình (bug leakage, flaky rate, thời gian phản hồi của pipeline), không để chấm điểm cá nhân.\n- Retrospective sau mỗi sự cố production để sửa quy trình.\n\n6. Xem lại chiến lược định kỳ khi sản phẩm và rủi ro thay đổi.",
+      "en": "Start from business risk, define measurable quality, distribute tests along the test pyramid (many unit tests, most logic in API tests, few UI tests), build quality into the process (shift-left, Definition of Done, CI, post-release monitoring), and raise team-wide quality through shared standards, cross-reviews and knowledge sharing.\n\n1. Understand the product and risks: who the users are, which flows earn money or cause the most damage if broken (payments, personal data, regulation), which platforms (web, iOS, Android), how often you release. List risks and test by risk priority (risk-based testing).\n\n2. Define measurable quality: targets for escaped bugs, response times, stability (crash-free), accessibility; release criteria.\n\n3. Allocate effort with the test pyramid:\n- A wide base: developer-written unit tests, fast and cheap.\n- The middle: API and integration tests, where most business logic is checked reliably.\n- A narrow top: a few end-to-end UI tests for the most critical flows.\n- Alongside: exploratory and manual testing for experience, plus non-functional testing (performance, security, compatibility).\nAvoid the inverted \"ice cream cone\": many slow, flaky UI tests and few unit tests.\n\n4. Process and tooling: testers join refinement (shift-left), a Definition of Done with quality items, a layered CI pipeline, automated environments and test data, one shared tool for test cases and bugs, post-release monitoring (shift-right).\n\n5. Quality across the team, not just your own work:\n- Shared standards: test case and bug report templates, checklists, automation conventions, code review for test code.\n- Cross-review of test cases, pairing testers with each other or with developers.\n- Training and sharing domain and technical knowledge; documentation.\n- Metrics used to improve the process (bug leakage, flaky rate, pipeline feedback time), not to score individuals.\n- Retrospectives after every production incident to fix the process.\n\n6. Revisit the strategy regularly as the product and its risks change."
+    },
+    "example": {
+      "vi": "Một startup ví điện tử có 3 tester, test tay toàn bộ trước mỗi release hai tuần, vẫn liên tục lọt lỗi tính phí. Chiến lược mới: xếp hạng rủi ro, ưu tiên tiền và đăng nhập; dev viết unit test cho phần tính phí; tester viết 120 test API cho luồng chuyển tiền chạy trên mọi pull request; chỉ 12 test giao diện cho luồng chính; mỗi sự cố production có buổi rút kinh nghiệm. Sau 2 quý, lỗi về tiền lọt ra production giảm rõ và thời gian regression từ 3 ngày còn nửa ngày.",
+      "en": "An e-wallet startup with 3 testers tested everything by hand before each two-week release and still kept leaking fee bugs. The new strategy: rank risks with money and login first; developers unit-test fee logic; testers write 120 API tests for transfers on every pull request; only 12 UI tests for main flows; a retrospective after every production incident. After two quarters money-related escapes dropped noticeably and regression went from 3 days to half a day."
+    },
+    "tip": {
+      "vi": "Bắt đầu từ rủi ro nghiệp vụ, không phải từ công cụ; và nói rõ chỉ số dùng để cải tiến quy trình chứ không chấm điểm người.",
+      "en": "Start from business risk, not tools; and state that metrics improve the process rather than score people."
+    },
+    "followUps": [
+      {
+        "vi": "Team chỉ có 1 tester cho 6 dev thì chiến lược của bạn thay đổi thế nào?",
+        "en": "With 1 tester for 6 developers, how does your strategy change?"
+      },
+      {
+        "vi": "Bạn thuyết phục dev viết unit test và coi chất lượng là việc chung thế nào?",
+        "en": "How do you persuade developers to write unit tests and treat quality as shared work?"
+      }
+    ]
+  }
+]

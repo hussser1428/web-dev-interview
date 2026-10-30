@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 
 // Danh sách mảng & level. Tên hiển thị nằm trong dictionaries/*.json (tracks.*, levels.*).
-export const tracks = ["frontend", "backend", "ai", "devops", "mobile", "data", "cs", "dsa", "system-design", "behavioral"] as const;
+export const tracks = ["frontend", "backend", "java", "ai", "devops", "mobile", "data", "qa", "cs", "dsa", "system-design", "behavioral"] as const;
 export const levels = ["intern", "junior", "mid", "senior"] as const;
 // Phong cách phỏng vấn theo loại công ty. Tên hiển thị: interview.styles.* trong dictionaries.
 export const styles = ["outsource", "product", "bigtech"] as const;
@@ -21,10 +21,12 @@ export type QuestionItem = { id: string; track: Track; level: Level; topic: stri
 export const trackColor: Record<Track, [string, string]> = {
   frontend: ["#0e7490", "#3b82f6"],
   backend: ["#6d28d9", "#c026d3"],
+  java: ["#7c2d12", "#ea580c"],
   ai: ["#b45309", "#f97316"],
   devops: ["#047857", "#0891b2"],
   mobile: ["#be185d", "#9333ea"],
   data: ["#1d4ed8", "#6366f1"],
+  qa: ["#4d7c0f", "#84cc16"],
   cs: ["#0f766e", "#14b8a6"],
   dsa: ["#c2410c", "#e11d48"],
   "system-design": ["#b91c1c", "#db2777"],

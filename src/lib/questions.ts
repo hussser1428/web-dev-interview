@@ -8,6 +8,8 @@ import devops from "@/data/questions/devops.json";
 import dsa from "@/data/questions/dsa.json";
 import frontend from "@/data/questions/frontend.json";
 import mobile from "@/data/questions/mobile.json";
+import java from "@/data/questions/java.json";
+import qa from "@/data/questions/qa.json";
 import systemDesign from "@/data/questions/system-design.json";
 import { pick } from "@/locales";
 import { tracks, type Level, type QuestionItem, type Track } from "./catalog";
@@ -31,7 +33,7 @@ export type Question = {
 };
 
 const files: Record<Track, unknown> = {
-  frontend, backend, ai, devops, mobile, data, cs, dsa, "system-design": systemDesign, behavioral,
+  frontend, backend, java, ai, devops, mobile, data, qa, cs, dsa, "system-design": systemDesign, behavioral,
 };
 
 /** Thứ tự trong file = thứ tự học (lộ trình). */

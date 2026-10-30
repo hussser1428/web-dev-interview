@@ -724,7 +724,8 @@
       "backend",
       "system-design",
       "data",
-      "ai"
+      "ai",
+      "java"
     ]
   },
   {
@@ -738,7 +739,8 @@
     "tracks": [
       "devops",
       "system-design",
-      "backend"
+      "backend",
+      "java"
     ],
     "def": {
       "vi": "Đơn vị nhỏ nhất Kubernetes chạy: một hoặc vài container dùng chung mạng và ổ đĩa, được tạo/xoá/thay thế tự động.",
@@ -1839,7 +1841,8 @@
     "tracks": [
       "backend",
       "data",
-      "system-design"
+      "system-design",
+      "java"
     ]
   },
   {
@@ -1866,7 +1869,8 @@
     "tracks": [
       "backend",
       "data",
-      "system-design"
+      "system-design",
+      "java"
     ]
   },
   {
@@ -1941,7 +1945,8 @@
     "tracks": [
       "backend",
       "data",
-      "system-design"
+      "system-design",
+      "java"
     ]
   },
   {
@@ -2147,7 +2152,8 @@
     "tracks": [
       "backend",
       "devops",
-      "system-design"
+      "system-design",
+      "java"
     ]
   },
   {
@@ -2179,7 +2185,8 @@
       "backend",
       "frontend",
       "cs",
-      "system-design"
+      "system-design",
+      "java"
     ]
   },
   {
@@ -2253,7 +2260,8 @@
       "devops",
       "system-design",
       "frontend",
-      "mobile"
+      "mobile",
+      "java"
     ]
   },
   {
@@ -3225,7 +3233,8 @@
       "devops",
       "frontend",
       "mobile",
-      "system-design"
+      "system-design",
+      "java"
     ]
   },
   {
@@ -3254,7 +3263,8 @@
       "backend",
       "cs",
       "devops",
-      "system-design"
+      "system-design",
+      "java"
     ]
   },
   {
@@ -3419,7 +3429,8 @@
     ],
     "tracks": [
       "backend",
-      "system-design"
+      "system-design",
+      "java"
     ]
   },
   {
@@ -3810,7 +3821,8 @@
       "frontend",
       "mobile",
       "cs",
-      "backend"
+      "backend",
+      "java"
     ]
   },
   {
@@ -3836,7 +3848,8 @@
       "devops",
       "backend",
       "mobile",
-      "system-design"
+      "system-design",
+      "java"
     ]
   },
   {
@@ -3863,7 +3876,8 @@
       "devops",
       "backend",
       "system-design",
-      "data"
+      "data",
+      "java"
     ]
   },
   {
@@ -4104,6 +4118,1492 @@
     "tracks": [
       "ai",
       "data"
+    ]
+  },
+  {
+    "id": "stlc",
+    "term": "STLC / SDLC",
+    "full": {
+      "vi": "Software Testing / Development Life Cycle",
+      "en": "Software Testing / Development Life Cycle"
+    },
+    "match": [
+      "STLC",
+      "SDLC"
+    ],
+    "see": "qa-stlc",
+    "def": {
+      "vi": "SDLC là vòng đời phát triển phần mềm (yêu cầu, thiết kế, code, test, triển khai, bảo trì). STLC là vòng đời của riêng hoạt động kiểm thử bên trong đó: phân tích yêu cầu, lập kế hoạch, thiết kế test case, chuẩn bị môi trường, thực thi, kết thúc.",
+      "en": "SDLC is the software development life cycle (requirements, design, code, test, deploy, maintain). STLC is the life cycle of testing within it: requirement analysis, planning, test design, environment setup, execution, closure."
+    }
+  },
+  {
+    "id": "verification-validation",
+    "term": "Verification / validation",
+    "match": [
+      "verification",
+      "validation"
+    ],
+    "see": "qa-verification-validation",
+    "def": {
+      "vi": "Verification: làm sản phẩm đúng cách chưa, đúng đặc tả chưa (thường là review, không chạy phần mềm). Validation: làm đúng sản phẩm người dùng cần chưa (chạy phần mềm thật, UAT).",
+      "en": "Verification: are we building the product right, does it match the spec (often reviews, without running the software). Validation: are we building the right product users need (running the real software, UAT)."
+    },
+    "tracks": [
+      "qa"
+    ]
+  },
+  {
+    "id": "box-testing",
+    "term": "Black-box / white-box",
+    "match": [
+      "black-box",
+      "white-box",
+      "grey-box",
+      "gray-box",
+      "black box",
+      "white box"
+    ],
+    "see": "qa-black-white-grey-box",
+    "def": {
+      "vi": "Black-box: test theo yêu cầu và hành vi bên ngoài, không nhìn code. White-box: test dựa trên cấu trúc code (nhánh, vòng lặp). Grey-box: biết một phần bên trong như database, API, log nhưng vẫn test từ bên ngoài.",
+      "en": "Black-box: testing from requirements and external behaviour without looking at code. White-box: testing based on code structure (branches, loops). Grey-box: partial knowledge of internals such as the database, APIs or logs while still testing from outside."
+    },
+    "example": {
+      "vi": "Black-box như kiểm tra xe bằng cách lái thử; white-box như mở nắp capo kiểm từng bộ phận; grey-box là vừa lái thử vừa nhìn đồng hồ báo lỗi trên táp-lô.",
+      "en": "Black-box is test-driving the car; white-box is opening the bonnet to check each part; grey-box is test-driving while watching the warning lights."
+    }
+  },
+  {
+    "id": "test-case",
+    "term": "Test case / test scenario",
+    "match": [
+      "test case",
+      "test cases",
+      "test scenario",
+      "test scenarios"
+    ],
+    "see": "qa-good-test-case",
+    "def": {
+      "vi": "Test case là một kiểm tra cụ thể: điều kiện tiên quyết, dữ liệu, các bước, kết quả mong đợi. Test scenario là tình huống cần kiểm ở mức cao hơn (\"thanh toán bằng ví\"), thường gồm nhiều test case.",
+      "en": "A test case is one concrete check: preconditions, data, steps, expected result. A test scenario is a higher-level situation to verify (\"pay with a wallet\"), usually covering several test cases."
+    },
+    "related": [
+      "test-plan"
+    ]
+  },
+  {
+    "id": "test-plan",
+    "term": "Test plan / test strategy",
+    "match": [
+      "test plan",
+      "test plans",
+      "test strategy"
+    ],
+    "see": "qa-test-plan-strategy",
+    "def": {
+      "vi": "Test strategy là định hướng kiểm thử chung, ít thay đổi. Test plan là kế hoạch cụ thể cho một dự án hay release: phạm vi, cách tiếp cận, nguồn lực, lịch, rủi ro, tiêu chí bắt đầu và kết thúc.",
+      "en": "A test strategy is the general, stable testing direction. A test plan is the concrete plan for one project or release: scope, approach, resources, schedule, risks, entry and exit criteria."
+    },
+    "related": [
+      "test-case"
+    ]
+  },
+  {
+    "id": "boundary-equivalence",
+    "term": "Phân vùng tương đương / giá trị biên",
+    "match": [
+      "phân vùng tương đương",
+      "giá trị biên",
+      "equivalence partitioning",
+      "boundary value analysis",
+      "boundary value",
+      "boundary values"
+    ],
+    "see": "qa-equivalence-boundary",
+    "def": {
+      "vi": "Phân vùng tương đương chia đầu vào thành nhóm được xử lý giống nhau, mỗi nhóm thử một giá trị. Phân tích giá trị biên thử ngay tại và sát hai bên ranh giới của mỗi nhóm, nơi lỗi hay xảy ra.",
+      "en": "Equivalence partitioning groups inputs that are handled the same and tests one value per group. Boundary value analysis tests exactly at and around each group's edges, where defects cluster."
+    },
+    "example": {
+      "vi": "Ô tuổi cho 18–60: thử 30 cho nhóm hợp lệ, 10 và 70 cho nhóm không hợp lệ, rồi 17, 18, 60, 61 ở biên.",
+      "en": "An age field allowing 18–60: try 30 for the valid group, 10 and 70 for invalid groups, then 17, 18, 60 and 61 at the edges."
+    },
+    "related": [
+      "edge-case"
+    ]
+  },
+  {
+    "id": "decision-table",
+    "term": "Bảng quyết định / chuyển trạng thái",
+    "match": [
+      "bảng quyết định",
+      "decision table",
+      "decision tables",
+      "state transition",
+      "chuyển trạng thái"
+    ],
+    "see": "qa-decision-table-state-transition",
+    "def": {
+      "vi": "Bảng quyết định liệt kê mọi tổ hợp điều kiện cùng kết quả mong đợi, dùng khi nghiệp vụ có nhiều điều kiện kết hợp. Chuyển trạng thái test các trạng thái của đối tượng (đơn hàng, tài khoản) và sự kiện làm nó chuyển, kể cả chuyển không hợp lệ.",
+      "en": "A decision table lists every combination of conditions with the expected outcome, for rules combining several conditions. State transition testing covers an object's states (order, account) and the events that move it, including invalid transitions."
+    },
+    "tracks": [
+      "qa"
+    ]
+  },
+  {
+    "id": "pairwise",
+    "term": "Pairwise testing",
+    "match": [
+      "pairwise testing",
+      "pairwise"
+    ],
+    "see": "qa-decision-table-state-transition",
+    "def": {
+      "vi": "Chọn một tập nhỏ tổ hợp sao cho mọi cặp giá trị của các tham số đều xuất hiện ít nhất một lần, thay vì thử mọi tổ hợp. Phần lớn lỗi do tương tác của hai tham số gây ra, nên cách này hiệu quả với chi phí thấp.",
+      "en": "Choosing a small set of combinations so every pair of parameter values appears at least once, instead of testing every combination. Most defects come from two parameters interacting, so it is effective and cheap."
+    },
+    "example": {
+      "vi": "3 trình duyệt × 3 hệ điều hành × 2 ngôn ngữ là 18 tổ hợp; pairwise chỉ cần khoảng 9 tổ hợp mà vẫn phủ mọi cặp.",
+      "en": "3 browsers × 3 operating systems × 2 languages is 18 combinations; pairwise needs about 9 while still covering every pair."
+    }
+  },
+  {
+    "id": "exploratory-testing",
+    "term": "Exploratory testing",
+    "match": [
+      "exploratory testing",
+      "exploratory",
+      "error guessing",
+      "đoán lỗi"
+    ],
+    "see": "qa-error-guessing-exploratory",
+    "def": {
+      "vi": "Vừa tìm hiểu sản phẩm vừa thiết kế và chạy test, bước sau dựa trên điều vừa thấy, thường theo phiên có charter và giới hạn thời gian. Error guessing là dựa vào kinh nghiệm để thử thẳng vào chỗ hay có lỗi.",
+      "en": "Learning the product while designing and running tests, each step guided by what you just saw, usually in time-boxed sessions with a charter. Error guessing uses experience to aim straight at likely defects."
+    },
+    "example": {
+      "vi": "Như thám tử đi hiện trường: có mục tiêu rõ, ghi chép mọi thứ, nhưng đường đi do manh mối dẫn dắt chứ không theo kịch bản viết sẵn.",
+      "en": "Like a detective at a scene: a clear goal and careful notes, but the path follows the clues rather than a script."
+    }
+  },
+  {
+    "id": "test-oracle",
+    "term": "Test oracle",
+    "match": [
+      "test oracle",
+      "test oracles"
+    ],
+    "see": "qa-no-requirements-expected-result",
+    "def": {
+      "vi": "Căn cứ để xác định kết quả mong đợi của một test: tài liệu yêu cầu, thiết kế, phiên bản cũ, sản phẩm tương tự, quy định pháp luật, hoặc câu trả lời của người có thẩm quyền.",
+      "en": "The source used to decide a test's expected result: requirements, designs, a previous version, similar products, regulations, or an answer from someone with authority."
+    }
+  },
+  {
+    "id": "smoke-test",
+    "term": "Smoke / sanity test",
+    "match": [
+      "smoke test",
+      "smoke tests",
+      "smoke testing",
+      "sanity test",
+      "sanity testing"
+    ],
+    "see": "qa-smoke-sanity-regression-uat",
+    "def": {
+      "vi": "Smoke test kiểm tra nhanh các chức năng sống còn của bản build mới để quyết định có test tiếp không. Sanity test kiểm tra hẹp quanh chỗ vừa sửa hay vừa thay đổi.",
+      "en": "A smoke test quickly checks a new build's critical functions to decide whether testing can continue. A sanity test is a narrow check around something just fixed or changed."
+    },
+    "example": {
+      "vi": "Nhận xe từ tiệm sửa: nổ máy, bật đèn, đạp phanh thử vài giây (smoke) trước khi lái đi xa.",
+      "en": "Collecting a car from the garage: start it, try the lights and brakes for a few seconds (smoke) before driving far."
+    },
+    "related": [
+      "regression-test"
+    ]
+  },
+  {
+    "id": "regression-test",
+    "term": "Regression test / retest",
+    "match": [
+      "regression test",
+      "regression tests",
+      "regression testing",
+      "regression",
+      "test hồi quy",
+      "retest",
+      "retesting"
+    ],
+    "see": "qa-smoke-sanity-regression-uat",
+    "def": {
+      "vi": "Regression test chạy lại các test đã pass để chắc thay đổi mới không làm hỏng chỗ cũ. Retest chạy lại đúng case đã fail để xác nhận bug đã được sửa.",
+      "en": "Regression testing reruns previously passing tests to make sure new changes did not break existing behaviour. Retesting reruns the exact failed case to confirm a fix."
+    },
+    "example": {
+      "vi": "Thợ sửa vòi nước bếp xong, bạn mở thử vòi bếp (retest) và kiểm luôn vòi nhà tắm vì dùng chung đường ống (regression).",
+      "en": "After the plumber fixes the kitchen tap, you try that tap (retest) and also check the bathroom tap on the same pipe (regression)."
+    },
+    "related": [
+      "smoke-test"
+    ],
+    "tracks": [
+      "qa",
+      "frontend",
+      "backend",
+      "mobile",
+      "devops",
+      "cs",
+      "system-design",
+      "java"
+    ]
+  },
+  {
+    "id": "uat",
+    "term": "UAT",
+    "full": {
+      "vi": "User Acceptance Testing",
+      "en": "User Acceptance Testing"
+    },
+    "match": [
+      "UAT",
+      "acceptance testing",
+      "acceptance test",
+      "acceptance tests"
+    ],
+    "see": "qa-smoke-sanity-regression-uat",
+    "def": {
+      "vi": "Khách hàng hoặc người dùng thật kiểm tra phần mềm trên môi trường gần như thật để xác nhận nó đáp ứng nhu cầu nghiệp vụ trước khi nghiệm thu và đưa vào dùng.",
+      "en": "The client or real users test the software in a near-production environment to confirm it meets business needs before sign-off and go-live."
+    },
+    "example": {
+      "vi": "Như chủ nhà đi kiểm tra căn hộ trước khi ký biên bản bàn giao.",
+      "en": "Like a buyer inspecting a flat before signing the handover."
+    }
+  },
+  {
+    "id": "traceability-matrix",
+    "term": "Traceability matrix",
+    "match": [
+      "traceability matrix",
+      "ma trận truy vết"
+    ],
+    "see": "qa-when-to-stop-testing",
+    "def": {
+      "vi": "Bảng nối mỗi yêu cầu với các test case kiểm tra nó (và kết quả, bug liên quan). Yêu cầu nào chưa có test case là lỗ hổng độ phủ; khi yêu cầu đổi thì biết ngay case nào cần sửa.",
+      "en": "A table linking each requirement to the test cases that cover it (with results and related bugs). A requirement without test cases is a coverage gap; when a requirement changes you see which cases to update."
+    },
+    "related": [
+      "test-case"
+    ]
+  },
+  {
+    "id": "code-coverage",
+    "term": "Code coverage",
+    "match": [
+      "code coverage",
+      "test coverage",
+      "statement coverage",
+      "branch coverage"
+    ],
+    "def": {
+      "vi": "Tỉ lệ code được chạy qua khi chạy test: statement coverage đếm dòng lệnh, branch coverage đếm nhánh if/else. Độ phủ cao chưa chắc test tốt, nhưng độ phủ thấp chắc chắn có phần chưa được kiểm.",
+      "en": "The share of code executed by tests: statement coverage counts statements, branch coverage counts if/else branches. High coverage does not guarantee good tests, but low coverage guarantees untested code."
+    }
+  },
+  {
+    "id": "bug-life-cycle",
+    "term": "Bug life cycle",
+    "match": [
+      "bug life cycle",
+      "vòng đời bug",
+      "vòng đời của bug",
+      "defect life cycle"
+    ],
+    "see": "qa-bug-life-cycle",
+    "def": {
+      "vi": "Các trạng thái một bug đi qua: New, triage, Assigned, In Progress, Fixed, Retest, Closed hoặc Reopened, cùng các nhánh Rejected, Duplicate, Deferred, Cannot reproduce.",
+      "en": "The states a bug moves through: New, triage, Assigned, In Progress, Fixed, Retest, Closed or Reopened, plus branches such as Rejected, Duplicate, Deferred and Cannot reproduce."
+    },
+    "related": [
+      "bug-report",
+      "severity-priority"
+    ]
+  },
+  {
+    "id": "severity-priority",
+    "term": "Severity / priority",
+    "match": [
+      "severity",
+      "priority"
+    ],
+    "see": "qa-severity-priority",
+    "def": {
+      "vi": "Severity là bug nghiêm trọng tới đâu về kỹ thuật, thường do tester đánh giá. Priority là cần sửa sớm tới đâu dựa trên ảnh hưởng kinh doanh, thường do PO quyết định. Hai thứ có thể ngược nhau.",
+      "en": "Severity is how serious a bug is technically, usually rated by testers. Priority is how soon it must be fixed based on business impact, usually decided by the PO. The two can disagree."
+    },
+    "example": {
+      "vi": "Sai chính tả tên công ty trên trang chủ ngay trước buổi ra mắt: severity thấp nhưng priority cao nhất.",
+      "en": "The company name misspelled on the home page right before launch: low severity but top priority."
+    },
+    "related": [
+      "bug-life-cycle"
+    ],
+    "tracks": [
+      "qa"
+    ]
+  },
+  {
+    "id": "bug-report",
+    "term": "Bug report",
+    "match": [
+      "bug report",
+      "bug reports"
+    ],
+    "see": "qa-bug-report",
+    "def": {
+      "vi": "Bản mô tả một lỗi để dev tái hiện và sửa: tiêu đề cụ thể, môi trường và phiên bản, dữ liệu, các bước tái hiện, kết quả thực tế và mong đợi, bằng chứng (ảnh, video, log, request), tần suất, severity.",
+      "en": "A description of a defect that lets developers reproduce and fix it: a specific title, environment and version, data, steps to reproduce, actual and expected results, evidence (screenshots, video, logs, requests), frequency, severity."
+    },
+    "related": [
+      "bug-life-cycle"
+    ]
+  },
+  {
+    "id": "bug-leakage",
+    "term": "Bug leakage",
+    "match": [
+      "bug leakage",
+      "bug leak"
+    ],
+    "see": "qa-bug-leakage-missed-bug",
+    "def": {
+      "vi": "Bug lọt qua giai đoạn kiểm thử lẽ ra phải bắt được nó, thường là bug người dùng tìm ra trên production. Tỉ lệ bug tìm ở production so với tổng số bug là một chỉ số chất lượng của quá trình test.",
+      "en": "A bug that slipped past the testing stage that should have caught it, usually one users found in production. The share of bugs found in production is a quality metric for the test process."
+    }
+  },
+  {
+    "id": "definition-of-done",
+    "term": "Definition of Done / acceptance criteria",
+    "match": [
+      "Definition of Done",
+      "DoD",
+      "acceptance criteria",
+      "tiêu chí chấp nhận"
+    ],
+    "see": "qa-tester-in-scrum",
+    "def": {
+      "vi": "Definition of Done là danh sách điều kiện chung mà mọi story phải đạt mới coi là xong (code review, test pass, không còn bug nặng, đã deploy lên staging). Acceptance criteria là điều kiện riêng của từng story.",
+      "en": "The Definition of Done is the team-wide checklist every story must meet to count as done (code review, passing tests, no serious bugs, deployed to staging). Acceptance criteria are the conditions specific to one story."
+    },
+    "related": [
+      "scrum"
+    ]
+  },
+  {
+    "id": "scrum",
+    "term": "Agile / Scrum / sprint",
+    "match": [
+      "Scrum",
+      "sprint",
+      "sprints",
+      "Agile"
+    ],
+    "def": {
+      "vi": "Agile là cách làm phần mềm theo vòng lặp ngắn, giao từng phần và điều chỉnh theo phản hồi. Scrum là một khung Agile phổ biến: làm theo sprint 1–4 tuần, có planning, daily, review, retrospective và các vai trò PO, Scrum Master, team phát triển.",
+      "en": "Agile builds software in short iterations, delivering in increments and adjusting to feedback. Scrum is a popular Agile framework: work in 1–4 week sprints with planning, daily stand-ups, reviews and retrospectives, and the roles of PO, Scrum Master and development team."
+    },
+    "related": [
+      "definition-of-done"
+    ]
+  },
+  {
+    "id": "shift-left",
+    "term": "Shift-left / shift-right",
+    "match": [
+      "shift-left",
+      "shift left",
+      "shift-right",
+      "shift right"
+    ],
+    "see": "qa-shift-left",
+    "def": {
+      "vi": "Shift-left là đưa hoạt động chất lượng về sớm hơn (review yêu cầu, test API trên mọi pull request) vì lỗi càng phát hiện muộn càng tốn kém. Shift-right là tiếp tục đảm bảo chất lượng sau release bằng giám sát, canary, feature flag.",
+      "en": "Shift-left moves quality work earlier (requirement reviews, API tests on every pull request) because later defects cost more. Shift-right continues quality work after release with monitoring, canaries and feature flags."
+    },
+    "related": [
+      "ci-cd",
+      "canary"
+    ]
+  },
+  {
+    "id": "test-pyramid",
+    "term": "Test pyramid",
+    "match": [
+      "test pyramid",
+      "testing pyramid",
+      "kim tự tháp kiểm thử"
+    ],
+    "see": "qa-test-strategy-pyramid",
+    "def": {
+      "vi": "Mô hình phân bổ test tự động: đáy rộng là unit test nhanh và rẻ, giữa là test API và integration, đỉnh hẹp là vài test giao diện đầu cuối cho luồng quan trọng nhất. Ngược lại (rất nhiều test giao diện) thì chậm và dễ flaky.",
+      "en": "A model for distributing automated tests: a wide base of fast, cheap unit tests, API and integration tests in the middle, and a narrow top of a few end-to-end UI tests for the most critical flows. The inverse (mostly UI tests) is slow and flaky."
+    },
+    "related": [
+      "test-levels",
+      "flaky-test"
+    ]
+  },
+  {
+    "id": "selenium-playwright",
+    "term": "Selenium / Playwright",
+    "match": [
+      "Selenium",
+      "Playwright",
+      "Cypress",
+      "Appium"
+    ],
+    "see": "qa-selenium-vs-playwright-locators",
+    "def": {
+      "vi": "Công cụ tự động hoá thao tác trên trình duyệt để test giao diện. Selenium lâu đời, nhiều ngôn ngữ; Playwright mới hơn, có sẵn tự chờ, chạy song song, trace; Cypress cho web viết bằng JavaScript; Appium cho app mobile.",
+      "en": "Tools that automate browser actions for UI testing. Selenium is mature and multi-language; Playwright is newer with built-in auto-waiting, parallelism and traces; Cypress targets JavaScript web apps; Appium handles mobile apps."
+    },
+    "related": [
+      "locator",
+      "page-object-model"
+    ]
+  },
+  {
+    "id": "locator",
+    "term": "Locator / XPath",
+    "match": [
+      "locator",
+      "locators",
+      "XPath",
+      "CSS selector",
+      "CSS selectors"
+    ],
+    "see": "qa-selenium-vs-playwright-locators",
+    "def": {
+      "vi": "Cách test tự động tìm một phần tử trên trang: theo vai trò và nhãn, data-testid, CSS selector hoặc XPath. Locator ổn định là locator không vỡ khi bố cục hay class CSS thay đổi.",
+      "en": "How an automated test finds an element on the page: by role and label, data-testid, a CSS selector or XPath. A stable locator does not break when layout or CSS classes change."
+    },
+    "related": [
+      "selenium-playwright"
+    ],
+    "tracks": [
+      "qa",
+      "frontend"
+    ]
+  },
+  {
+    "id": "page-object-model",
+    "term": "Page Object Model",
+    "match": [
+      "Page Object Model",
+      "page object",
+      "page objects",
+      "POM"
+    ],
+    "see": "qa-page-object-model",
+    "def": {
+      "vi": "Cách tổ chức code test: mỗi trang là một class chứa locator và hành động của trang đó, test chỉ gọi hành động và kiểm tra kết quả. Giao diện đổi thì chỉ sửa một chỗ.",
+      "en": "A way to organise test code: each page is a class holding its locators and actions, and tests only call actions and assert results. A UI change is fixed in one place."
+    },
+    "related": [
+      "locator"
+    ]
+  },
+  {
+    "id": "flaky-test",
+    "term": "Flaky test",
+    "match": [
+      "flaky test",
+      "flaky tests",
+      "flaky"
+    ],
+    "see": "qa-flaky-tests",
+    "def": {
+      "vi": "Test lúc pass lúc fail dù code không đổi, thường do chờ sai thời điểm, dùng chung dữ liệu, phụ thuộc thứ tự chạy hoặc môi trường không ổn định. Làm mất niềm tin vào cả bộ test.",
+      "en": "A test that passes and fails without code changes, usually due to bad waits, shared data, order dependence or unstable environments. It erodes trust in the whole suite."
+    },
+    "example": {
+      "vi": "Chuông báo cháy thỉnh thoảng tự kêu: vài lần như vậy là cả toà nhà bắt đầu phớt lờ, kể cả khi có cháy thật.",
+      "en": "A fire alarm that goes off randomly: after a few times the whole building ignores it, even during a real fire."
+    }
+  },
+  {
+    "id": "data-driven-testing",
+    "term": "Data-driven testing",
+    "match": [
+      "data-driven testing",
+      "data-driven"
+    ],
+    "see": "qa-assertions-data-driven",
+    "def": {
+      "vi": "Tách dữ liệu test khỏi logic: một kịch bản chạy với nhiều bộ đầu vào và kết quả mong đợi để trong bảng hoặc file. Thêm case chỉ cần thêm một dòng dữ liệu.",
+      "en": "Separating test data from logic: one scenario runs with many input and expected-result sets kept in a table or file. Adding a case means adding a data row."
+    }
+  },
+  {
+    "id": "soft-assert",
+    "term": "Hard / soft assert",
+    "match": [
+      "soft assert",
+      "hard assert",
+      "soft assertion",
+      "soft assertions",
+      "hard assertion"
+    ],
+    "see": "qa-assertions-data-driven",
+    "def": {
+      "vi": "Hard assert sai là dừng test ngay; soft assert ghi nhận lỗi rồi chạy tiếp, cuối test báo tất cả chỗ sai. Soft assert hợp khi kiểm nhiều thông tin độc lập trên một màn hình.",
+      "en": "A failing hard assertion stops the test immediately; a soft assertion records the failure and continues, reporting all mismatches at the end. Soft assertions suit many independent checks on one screen."
+    }
+  },
+  {
+    "id": "load-test",
+    "term": "Load / stress / spike test",
+    "match": [
+      "load test",
+      "load tests",
+      "load testing",
+      "stress test",
+      "stress testing",
+      "spike test",
+      "soak test",
+      "performance testing"
+    ],
+    "see": "qa-performance-testing",
+    "def": {
+      "vi": "Load test: tải ở mức dự kiến. Stress test: tăng tải tới khi hệ thống hỏng để biết giới hạn. Spike test: tải tăng vọt đột ngột. Soak test: tải vừa trong nhiều giờ để tìm rò rỉ tài nguyên.",
+      "en": "Load test: expected load. Stress test: increasing load until failure to find limits. Spike test: a sudden surge. Soak test: moderate load for hours to find resource leaks."
+    },
+    "example": {
+      "vi": "Thử cầu: cho xe chạy bình thường (load), chất tải tới khi cầu võng (stress), cả đoàn xe lên cùng lúc (spike), để xe chạy liên tục cả tuần (soak).",
+      "en": "Testing a bridge: normal traffic (load), loading until it bends (stress), a whole convoy at once (spike), constant traffic for a week (soak)."
+    },
+    "related": [
+      "percentile",
+      "throughput"
+    ]
+  },
+  {
+    "id": "idor",
+    "term": "IDOR",
+    "full": {
+      "vi": "Insecure Direct Object Reference",
+      "en": "Insecure Direct Object Reference"
+    },
+    "match": [
+      "IDOR"
+    ],
+    "see": "qa-api-testing-postman",
+    "def": {
+      "vi": "Lỗi phân quyền khi chỉ cần đổi id trong URL hay request là xem hoặc sửa được dữ liệu của người khác, vì server không kiểm tra người gọi có quyền với đối tượng đó không.",
+      "en": "An authorisation flaw where changing an id in a URL or request lets you view or modify someone else's data, because the server never checks the caller owns that object."
+    },
+    "example": {
+      "vi": "Đổi /orders/1001 thành /orders/1002 trên thanh địa chỉ là thấy đơn hàng của người khác.",
+      "en": "Changing /orders/1001 to /orders/1002 in the address bar shows another customer's order."
+    },
+    "related": [
+      "owasp"
+    ]
+  },
+  {
+    "id": "devtools",
+    "term": "DevTools",
+    "match": [
+      "DevTools",
+      "Chrome DevTools"
+    ],
+    "see": "qa-devtools-debugging",
+    "def": {
+      "vi": "Bộ công cụ cho nhà phát triển có sẵn trong trình duyệt (F12): Network xem request và response, Console xem lỗi JavaScript, Elements xem HTML, CSS, Application xem cookie và storage, giả lập thiết bị và mạng chậm.",
+      "en": "The browser's built-in developer tools (F12): Network for requests and responses, Console for JavaScript errors, Elements for HTML and CSS, Application for cookies and storage, plus device and slow-network emulation."
+    }
+  },
+  {
+    "id": "postman",
+    "term": "Postman / Newman",
+    "match": [
+      "Postman",
+      "Newman"
+    ],
+    "see": "qa-api-testing-postman",
+    "def": {
+      "vi": "Postman là công cụ gửi request và viết test cho API (kiểm status, body, thời gian), quản lý theo collection và environment. Newman chạy collection Postman từ dòng lệnh, dùng để đưa vào CI.",
+      "en": "Postman sends requests and runs API tests (status, body, timing), organised in collections and environments. Newman runs Postman collections from the command line, for CI."
+    },
+    "related": [
+      "api"
+    ]
+  },
+  {
+    "id": "jvm",
+    "term": "JVM / JRE / JDK",
+    "full": {
+      "vi": "Java Virtual Machine / Java Runtime Environment / Java Development Kit",
+      "en": "Java Virtual Machine / Java Runtime Environment / Java Development Kit"
+    },
+    "match": [
+      "JVM",
+      "JRE",
+      "JDK"
+    ],
+    "see": "java-jdk-jre-jvm",
+    "def": {
+      "vi": "JVM là máy ảo chạy bytecode Java (cả Kotlin, Scala), quản lý bộ nhớ và GC. JRE là JVM cộng thư viện chuẩn để chạy chương trình. JDK là JRE cộng công cụ phát triển như javac, jar, jcmd.",
+      "en": "The JVM is the virtual machine that runs Java bytecode (also Kotlin, Scala) and manages memory and GC. The JRE is the JVM plus the standard library needed to run programs. The JDK is the JRE plus development tools such as javac, jar and jcmd."
+    },
+    "example": {
+      "vi": "Giống trình đọc PDF: cùng một file PDF (bytecode) mở được trên Windows, Mac hay điện thoại, miễn là máy có trình đọc (JVM).",
+      "en": "Like a PDF reader: the same PDF (bytecode) opens on Windows, Mac or a phone as long as the device has a reader (a JVM)."
+    },
+    "related": [
+      "bytecode",
+      "jit",
+      "gc"
+    ]
+  },
+  {
+    "id": "jit",
+    "term": "JIT compiler",
+    "full": {
+      "vi": "Just-In-Time compiler",
+      "en": "Just-In-Time compiler"
+    },
+    "match": [
+      "JIT",
+      "JIT compiler"
+    ],
+    "see": "java-jdk-jre-jvm",
+    "def": {
+      "vi": "Bộ biên dịch trong lúc chạy: JVM (hay V8 của JavaScript) theo dõi đoạn code chạy nhiều rồi biên dịch nó thành mã máy để chạy nhanh hơn. Vì vậy ứng dụng thường chậm lúc mới khởi động rồi nhanh dần (warm-up).",
+      "en": "A compiler that works at runtime: the JVM (or JavaScript's V8) watches which code runs often and compiles it into machine code to run faster. That is why apps are often slow right after startup and speed up (warm-up)."
+    },
+    "related": [
+      "jvm",
+      "bytecode"
+    ]
+  },
+  {
+    "id": "bytecode",
+    "term": "Bytecode",
+    "match": [
+      "bytecode"
+    ],
+    "see": "cs-lang-compiled-vs-interpreted",
+    "def": {
+      "vi": "Mã trung gian do compiler sinh ra (file .class của Java, .pyc của Python), không phải mã máy của CPU cụ thể nào. Một máy ảo như JVM đọc và chạy nó, nên cùng bytecode chạy được trên nhiều hệ điều hành.",
+      "en": "Intermediate code produced by a compiler (Java .class files, Python .pyc), not machine code for any specific CPU. A virtual machine such as the JVM reads and runs it, so the same bytecode runs on many operating systems."
+    },
+    "related": [
+      "jvm",
+      "jit"
+    ]
+  },
+  {
+    "id": "equals-hashcode",
+    "term": "equals() / hashCode()",
+    "match": [
+      "equals()",
+      "hashCode()",
+      "hashCode"
+    ],
+    "see": "java-equals-hashcode",
+    "def": {
+      "vi": "Hai method của mọi object Java: equals so sánh nội dung, hashCode trả về một số dùng để chọn bucket trong HashMap, HashSet. Hai object equals nhau thì bắt buộc cùng hashCode, nếu không HashMap sẽ tìm sai.",
+      "en": "Two methods every Java object has: equals compares content, hashCode returns a number used to pick a bucket in HashMap and HashSet. Equal objects must share a hashCode, otherwise HashMap looks in the wrong place."
+    },
+    "related": [
+      "hash-map"
+    ],
+    "tracks": [
+      "java"
+    ]
+  },
+  {
+    "id": "string-pool",
+    "term": "String pool",
+    "match": [
+      "string pool"
+    ],
+    "see": "java-string-immutable",
+    "def": {
+      "vi": "Vùng nhớ JVM dùng để chứa một bản duy nhất cho mỗi chuỗi literal giống nhau, các biến cùng trỏ vào đó để tiết kiệm bộ nhớ. Chỉ an toàn vì String là immutable.",
+      "en": "A JVM area that keeps a single copy of each identical string literal, with variables pointing to it to save memory. It is only safe because String is immutable."
+    },
+    "related": [
+      "immutability"
+    ],
+    "tracks": [
+      "java"
+    ]
+  },
+  {
+    "id": "checked-exception",
+    "term": "Checked / unchecked exception",
+    "match": [
+      "checked exception",
+      "checked exceptions",
+      "unchecked exception",
+      "unchecked exceptions"
+    ],
+    "see": "java-exceptions-checked-unchecked",
+    "def": {
+      "vi": "Trong Java, checked exception (IOException, SQLException) bắt buộc phải catch hoặc khai báo throws; unchecked exception (RuntimeException như NullPointerException) thì không. Spring mặc định chỉ rollback transaction với unchecked.",
+      "en": "In Java, checked exceptions (IOException, SQLException) must be caught or declared with throws; unchecked ones (RuntimeExceptions such as NullPointerException) need not be. Spring rolls back transactions only on unchecked ones by default."
+    },
+    "related": [
+      "transaction",
+      "rollback"
+    ],
+    "tracks": [
+      "java",
+      "cs"
+    ]
+  },
+  {
+    "id": "generics",
+    "term": "Generics / type erasure",
+    "match": [
+      "generics",
+      "type erasure",
+      "wildcard",
+      "wildcards"
+    ],
+    "see": "java-generics-erasure-pecs",
+    "def": {
+      "vi": "Generics cho phép viết class, method dùng chung cho nhiều kiểu (List<String>, Map<K, V>) mà vẫn được compiler kiểm tra kiểu. Trong Java, thông tin kiểu bị xoá khi chạy (type erasure), nên List<String> và List<Integer> lúc chạy là cùng một class. Wildcard ? extends, ? super dùng để nới lỏng kiểu tham số.",
+      "en": "Generics let you write classes and methods that work with many types (List<String>, Map<K, V>) while the compiler still checks types. In Java the type information is erased at runtime (type erasure), so List<String> and List<Integer> are the same class at runtime. The wildcards ? extends and ? super loosen parameter types."
+    },
+    "tracks": [
+      "java"
+    ]
+  },
+  {
+    "id": "java-record",
+    "term": "Record (Java)",
+    "match": [
+      "record",
+      "records"
+    ],
+    "see": "java-modern-features",
+    "def": {
+      "vi": "Kiểu class chỉ chứa dữ liệu bất biến (Java 16): khai báo một dòng record Money(long amount, String currency) là có sẵn constructor, getter, equals, hashCode, toString. Hợp cho DTO, không hợp cho entity JPA.",
+      "en": "A class that only holds immutable data (Java 16): one line, record Money(long amount, String currency), gives you the constructor, accessors, equals, hashCode and toString. Great for DTOs, not for JPA entities."
+    },
+    "related": [
+      "dto",
+      "immutability"
+    ],
+    "tracks": [
+      "java"
+    ]
+  },
+  {
+    "id": "sealed",
+    "term": "Sealed class",
+    "match": [
+      "sealed class",
+      "sealed classes",
+      "sealed interface",
+      "sealed"
+    ],
+    "see": "java-modern-features",
+    "def": {
+      "vi": "Class hoặc interface chỉ cho phép một danh sách cố định class con (permits). Compiler biết hết các trường hợp, nên switch không cần default và báo lỗi khi bạn quên xử lý một loại mới.",
+      "en": "A class or interface that only allows a fixed list of subclasses (permits). The compiler knows every case, so a switch needs no default and flags it when you forget a new type."
+    },
+    "tracks": [
+      "java"
+    ]
+  },
+  {
+    "id": "lambda",
+    "term": "Lambda",
+    "match": [
+      "lambda",
+      "lambdas",
+      "lambda expression",
+      "lambda expressions"
+    ],
+    "see": "java-stream-api-optional",
+    "def": {
+      "vi": "Hàm viết gọn không cần tên, truyền đi như một giá trị: x -> x * 2 trong Java, (x) => x * 2 trong JavaScript. Hay dùng làm tham số cho Stream, callback, sự kiện.",
+      "en": "A short nameless function passed around as a value: x -> x * 2 in Java, (x) => x * 2 in JavaScript. Commonly used as arguments to streams, callbacks and event handlers."
+    },
+    "related": [
+      "callback"
+    ],
+    "tracks": [
+      "java",
+      "mobile",
+      "cs",
+      "frontend",
+      "backend"
+    ]
+  },
+  {
+    "id": "stream-api",
+    "term": "Stream API",
+    "match": [
+      "Stream API",
+      "stream pipeline"
+    ],
+    "see": "java-stream-api-optional",
+    "def": {
+      "vi": "API của Java 8 để xử lý tập dữ liệu theo dạng chuỗi thao tác: nguồn → filter, map, sorted (trung gian, chạy lười) → collect, count (kết thúc). Mỗi stream chỉ dùng được một lần.",
+      "en": "Java 8's API for processing collections as a chain of operations: a source → filter, map, sorted (intermediate, lazy) → collect, count (terminal). Each stream can only be consumed once."
+    },
+    "related": [
+      "lambda"
+    ],
+    "tracks": [
+      "java"
+    ]
+  },
+  {
+    "id": "thread-pool",
+    "term": "Thread pool",
+    "match": [
+      "thread pool",
+      "thread pools",
+      "ExecutorService"
+    ],
+    "see": "java-thread-executor",
+    "def": {
+      "vi": "Một nhóm thread tạo sẵn và dùng lại để chạy nhiều tác vụ, thay vì tạo thread mới cho mỗi việc. Giới hạn số thread chạy cùng lúc; tác vụ dư phải xếp hàng chờ.",
+      "en": "A set of pre-created threads reused to run many tasks instead of creating a new thread per job. It caps how many run at once; extra tasks wait in a queue."
+    },
+    "example": {
+      "vi": "Đội shipper cố định của cửa hàng: đơn tới thì xếp hàng, ai rảnh nhận đơn tiếp, không thuê người mới cho mỗi đơn.",
+      "en": "A shop's fixed team of couriers: orders queue up and whoever is free takes the next one, instead of hiring someone new per order."
+    },
+    "related": [
+      "thread",
+      "virtual-thread"
+    ]
+  },
+  {
+    "id": "volatile-jmm",
+    "term": "volatile / happens-before",
+    "match": [
+      "volatile",
+      "happens-before",
+      "Java Memory Model"
+    ],
+    "see": "java-synchronized-volatile-jmm",
+    "def": {
+      "vi": "Java Memory Model quy định khi nào thao tác ghi của thread này chắc chắn được thread khác nhìn thấy, qua quan hệ happens-before (mở khoá trước khoá lại, ghi volatile trước đọc volatile…). volatile đảm bảo nhìn thấy giá trị mới ngay, nhưng không làm count++ thành nguyên tử.",
+      "en": "The Java Memory Model defines when one thread's write is guaranteed visible to another, through happens-before relations (an unlock before the next lock, a volatile write before a volatile read…). volatile guarantees visibility of the latest value but does not make count++ atomic."
+    },
+    "related": [
+      "thread",
+      "race-condition",
+      "cas"
+    ],
+    "tracks": [
+      "java",
+      "cs"
+    ]
+  },
+  {
+    "id": "cas",
+    "term": "CAS (compare-and-swap)",
+    "match": [
+      "CAS",
+      "compare-and-swap"
+    ],
+    "see": "java-synchronized-volatile-jmm",
+    "def": {
+      "vi": "Lệnh nguyên tử của CPU: \"nếu giá trị hiện tại vẫn là A thì đổi thành B\", thất bại thì thử lại. Là nền tảng của AtomicInteger, ConcurrentHashMap và các cấu trúc không cần khoá.",
+      "en": "An atomic CPU instruction: \"if the value is still A, change it to B\", retrying on failure. It underpins AtomicInteger, ConcurrentHashMap and other lock-free structures."
+    },
+    "related": [
+      "race-condition",
+      "optimistic-locking"
+    ],
+    "tracks": [
+      "java",
+      "cs",
+      "backend"
+    ]
+  },
+  {
+    "id": "virtual-thread",
+    "term": "Virtual thread",
+    "match": [
+      "virtual thread",
+      "virtual threads"
+    ],
+    "see": "java-virtual-threads",
+    "def": {
+      "vi": "Thread nhẹ do JVM quản lý (Java 21), không gắn cố định với một thread hệ điều hành. Khi chờ I/O, nó nhả thread thật cho việc khác, nên tạo được hàng triệu thread và vẫn viết code chặn tuần tự.",
+      "en": "A lightweight thread managed by the JVM (Java 21), not permanently tied to an OS thread. While waiting on I/O it frees the real thread for other work, so you can create millions and still write sequential blocking code."
+    },
+    "related": [
+      "thread",
+      "thread-pool",
+      "io"
+    ]
+  },
+  {
+    "id": "thread-dump",
+    "term": "Thread dump / heap dump",
+    "match": [
+      "thread dump",
+      "thread dumps",
+      "heap dump",
+      "heap dumps"
+    ],
+    "see": "java-production-incident",
+    "def": {
+      "vi": "Thread dump là ảnh chụp mọi thread của tiến trình đang làm gì, đang chờ khoá nào (jcmd Thread.print, jstack), dùng để tìm deadlock hay chỗ treo. Heap dump là ảnh chụp toàn bộ object trong bộ nhớ (jcmd GC.heap_dump), mở bằng Eclipse MAT để tìm rò rỉ bộ nhớ.",
+      "en": "A thread dump is a snapshot of what every thread in a process is doing and which locks it waits for (jcmd Thread.print, jstack), used to find deadlocks or hangs. A heap dump is a snapshot of every object in memory (jcmd GC.heap_dump), opened in Eclipse MAT to find memory leaks."
+    },
+    "related": [
+      "deadlock",
+      "memory-leak"
+    ]
+  },
+  {
+    "id": "oom",
+    "term": "OOM (Out Of Memory)",
+    "match": [
+      "OOM",
+      "OutOfMemoryError",
+      "OOMKilled"
+    ],
+    "see": "java-jvm-memory-oom",
+    "def": {
+      "vi": "Lỗi hết bộ nhớ. Trong Java là OutOfMemoryError (hết heap, metaspace…). Trong Kubernetes, container vượt giới hạn RAM bị hệ điều hành kill với trạng thái OOMKilled, kể cả khi heap Java chưa đầy.",
+      "en": "Running out of memory. In Java it is OutOfMemoryError (heap, metaspace…). In Kubernetes, a container exceeding its memory limit is killed by the OS with status OOMKilled, even if the Java heap is not full."
+    },
+    "related": [
+      "memory-leak",
+      "gc"
+    ]
+  },
+  {
+    "id": "ioc",
+    "term": "IoC (Inversion of Control)",
+    "full": {
+      "vi": "Inversion of Control",
+      "en": "Inversion of Control"
+    },
+    "match": [
+      "IoC",
+      "inversion of control",
+      "IoC container",
+      "ApplicationContext",
+      "Spring container"
+    ],
+    "see": "java-spring-ioc-di",
+    "def": {
+      "vi": "Đảo ngược điều khiển: object không tự tạo các phụ thuộc của nó mà để framework (IoC container, ở Spring là ApplicationContext) tạo và lắp ráp. Dependency injection là cách thực hiện phổ biến nhất.",
+      "en": "Inversion of Control: an object does not create its own dependencies; the framework (the IoC container, ApplicationContext in Spring) creates and wires them. Dependency injection is the most common way to do it."
+    },
+    "related": [
+      "dependency-injection",
+      "spring-bean"
+    ],
+    "tracks": [
+      "java",
+      "cs",
+      "backend"
+    ]
+  },
+  {
+    "id": "spring-bean",
+    "term": "Bean (Spring)",
+    "match": [
+      "bean",
+      "beans"
+    ],
+    "see": "java-spring-bean-scope-lifecycle",
+    "def": {
+      "vi": "Object do Spring container tạo và quản lý vòng đời (khởi tạo, inject phụ thuộc, huỷ). Khai báo bằng @Component, @Service… hoặc method @Bean. Mặc định là singleton, dùng chung cho cả ứng dụng.",
+      "en": "An object whose lifecycle (creation, dependency injection, destruction) is managed by the Spring container. Declared with @Component, @Service… or a @Bean method. Singleton by default, shared across the application."
+    },
+    "related": [
+      "ioc",
+      "singleton"
+    ],
+    "tracks": [
+      "java"
+    ]
+  },
+  {
+    "id": "annotation",
+    "term": "Annotation",
+    "match": [
+      "annotation",
+      "annotations"
+    ],
+    "def": {
+      "vi": "Nhãn gắn lên class, method, field bằng dấu @ (@Service, @Transactional, @NotBlank) để framework đọc và xử lý thêm, ví dụ tạo bean, mở transaction, kiểm tra dữ liệu.",
+      "en": "A label attached to a class, method or field with @ (@Service, @Transactional, @NotBlank) that frameworks read to add behaviour, e.g. creating beans, opening transactions, validating data."
+    },
+    "tracks": [
+      "java"
+    ]
+  },
+  {
+    "id": "aop",
+    "term": "AOP",
+    "full": {
+      "vi": "Aspect-Oriented Programming",
+      "en": "Aspect-Oriented Programming"
+    },
+    "match": [
+      "AOP",
+      "aspect-oriented programming"
+    ],
+    "see": "java-spring-aop-proxy",
+    "def": {
+      "vi": "Lập trình hướng khía cạnh: tách các việc cắt ngang nhiều nơi (transaction, log, bảo mật, cache) khỏi code nghiệp vụ và gắn chúng vào bằng cấu hình. Spring làm việc này qua proxy.",
+      "en": "Aspect-Oriented Programming: separating concerns that cut across many places (transactions, logging, security, caching) from business code and attaching them declaratively. Spring does it with proxies."
+    },
+    "related": [
+      "proxy"
+    ],
+    "tracks": [
+      "java"
+    ]
+  },
+  {
+    "id": "proxy",
+    "term": "Proxy (Spring)",
+    "match": [
+      "proxy",
+      "proxies"
+    ],
+    "see": "java-spring-aop-proxy",
+    "def": {
+      "vi": "Object bọc ngoài bean thật, chạy thêm logic (mở transaction, kiểm tra quyền, đọc cache) rồi mới gọi method thật. Gọi method trong cùng class không đi qua proxy nên @Transactional, @Cacheable không có tác dụng.",
+      "en": "A wrapper around the real bean that runs extra logic (opening a transaction, checking permissions, reading a cache) before calling the real method. Calls within the same class bypass the proxy, so @Transactional and @Cacheable have no effect."
+    },
+    "example": {
+      "vi": "Thư ký trước cửa phòng giám đốc: mọi cuộc gọi từ ngoài đều qua thư ký, nhưng giám đốc tự nói chuyện trong phòng thì thư ký không biết.",
+      "en": "A secretary outside the director's office: every outside call goes through the secretary, but when the director talks to themself inside, the secretary never knows."
+    },
+    "related": [
+      "aop",
+      "transaction"
+    ],
+    "tracks": [
+      "java"
+    ]
+  },
+  {
+    "id": "auto-configuration",
+    "term": "Starter / auto-configuration",
+    "match": [
+      "auto-configuration",
+      "auto-configurations",
+      "auto-config",
+      "auto-configs",
+      "starter",
+      "starters"
+    ],
+    "see": "java-spring-auto-configuration",
+    "def": {
+      "vi": "Starter là dependency gom sẵn các thư viện tương thích (spring-boot-starter-web). Auto-configuration là các class cấu hình có điều kiện của Spring Boot: thấy thư viện trong classpath và bạn chưa tự khai báo bean thì tự tạo bean mặc định.",
+      "en": "A starter is a dependency bundling compatible libraries (spring-boot-starter-web). Auto-configuration is Spring Boot's conditional configuration: when a library is on the classpath and you have not declared the bean yourself, it creates a default one."
+    },
+    "related": [
+      "spring-bean",
+      "classpath"
+    ],
+    "tracks": [
+      "java"
+    ]
+  },
+  {
+    "id": "jpa-hibernate",
+    "term": "JPA / Hibernate",
+    "full": {
+      "vi": "Jakarta Persistence API",
+      "en": "Jakarta Persistence API"
+    },
+    "match": [
+      "JPA",
+      "Hibernate",
+      "Spring Data JPA"
+    ],
+    "see": "java-jpa-hibernate-spring-data",
+    "def": {
+      "vi": "JPA là chuẩn ORM của Java (@Entity, EntityManager, JPQL). Hibernate là thư viện cài đặt chuẩn đó và thực sự sinh SQL. Spring Data JPA nằm trên cùng, chỉ cần khai báo interface repository là có CRUD.",
+      "en": "JPA is Java's ORM standard (@Entity, EntityManager, JPQL). Hibernate is the library implementing it and actually generating SQL. Spring Data JPA sits on top: declare a repository interface and you get CRUD."
+    },
+    "related": [
+      "orm",
+      "persistence-context",
+      "n-plus-one"
+    ]
+  },
+  {
+    "id": "persistence-context",
+    "term": "Persistence context / dirty checking",
+    "match": [
+      "persistence context",
+      "dirty checking"
+    ],
+    "see": "java-jpa-hibernate-spring-data",
+    "def": {
+      "vi": "Persistence context là nơi Hibernate theo dõi các entity đã nạp trong một transaction (cache cấp 1). Dirty checking: khi flush, Hibernate so entity với bản lúc nạp và tự sinh UPDATE cho những field đã đổi, không cần gọi save.",
+      "en": "The persistence context is where Hibernate tracks entities loaded within a transaction (the first-level cache). Dirty checking: at flush time Hibernate compares entities with their loaded state and issues UPDATEs for changed fields, without any save call."
+    },
+    "related": [
+      "jpa-hibernate",
+      "transaction"
+    ],
+    "tracks": [
+      "java"
+    ]
+  },
+  {
+    "id": "jpa-entity",
+    "term": "Entity (JPA)",
+    "match": [
+      "entity",
+      "entities"
+    ],
+    "see": "java-jpa-hibernate-spring-data",
+    "def": {
+      "vi": "Class Java được ánh xạ sang một bảng database bằng @Entity; mỗi object ứng với một dòng. Nên tách khỏi DTO trả ra API để không lộ field nhạy cảm và không vướng lazy loading.",
+      "en": "A Java class mapped to a database table with @Entity; each object is one row. Keep it separate from the DTOs returned by APIs so sensitive fields do not leak and lazy loading does not get in the way."
+    },
+    "related": [
+      "jpa-hibernate",
+      "dto"
+    ],
+    "tracks": [
+      "java"
+    ]
+  },
+  {
+    "id": "dto",
+    "term": "DTO",
+    "full": {
+      "vi": "Data Transfer Object",
+      "en": "Data Transfer Object"
+    },
+    "match": [
+      "DTO",
+      "DTOs"
+    ],
+    "def": {
+      "vi": "Object chỉ chứa dữ liệu để truyền giữa các tầng hoặc qua API (request, response), không chứa logic. Tách DTO khỏi entity database giúp API không lộ field nhạy cảm và đổi DB không làm vỡ API.",
+      "en": "An object that only carries data between layers or over an API (requests, responses), with no logic. Keeping DTOs separate from database entities stops sensitive fields leaking and lets the DB change without breaking the API."
+    },
+    "related": [
+      "api"
+    ]
+  },
+  {
+    "id": "propagation",
+    "term": "Transaction propagation",
+    "match": [
+      "propagation"
+    ],
+    "see": "java-spring-transactional",
+    "def": {
+      "vi": "Quy tắc của @Transactional khi một method có transaction gọi method có transaction khác: REQUIRED (mặc định, dùng chung transaction đang có), REQUIRES_NEW (mở transaction riêng, commit hay rollback độc lập), NESTED (savepoint)…",
+      "en": "@Transactional's rule for when one transactional method calls another: REQUIRED (default, join the existing transaction), REQUIRES_NEW (start a separate one that commits or rolls back independently), NESTED (a savepoint)…"
+    },
+    "related": [
+      "transaction",
+      "rollback"
+    ],
+    "tracks": [
+      "java"
+    ]
+  },
+  {
+    "id": "fetch-type",
+    "term": "LAZY / EAGER fetch",
+    "match": [
+      "LAZY",
+      "EAGER",
+      "FetchType"
+    ],
+    "see": "java-jpa-lazy-eager",
+    "def": {
+      "vi": "Cách JPA nạp quan hệ: EAGER nạp ngay cùng entity, LAZY chỉ nạp khi truy cập lần đầu. Mặc định @ManyToOne là EAGER; nên đặt tất cả là LAZY và nạp theo nhu cầu bằng JOIN FETCH hoặc @EntityGraph.",
+      "en": "How JPA loads associations: EAGER loads them with the entity, LAZY only on first access. @ManyToOne defaults to EAGER; set everything to LAZY and fetch as needed with JOIN FETCH or @EntityGraph."
+    },
+    "related": [
+      "lazy-loading",
+      "n-plus-one"
+    ],
+    "tracks": [
+      "java"
+    ]
+  },
+  {
+    "id": "jdbc",
+    "term": "JDBC",
+    "full": {
+      "vi": "Java Database Connectivity",
+      "en": "Java Database Connectivity"
+    },
+    "match": [
+      "JDBC",
+      "JdbcTemplate",
+      "JdbcClient"
+    ],
+    "see": "java-jpa-locking",
+    "def": {
+      "vi": "API chuẩn của Java để kết nối database và chạy SQL. JPA, Hibernate đều chạy trên JDBC. Spring có JdbcTemplate và JdbcClient giúp viết SQL tay gọn hơn, hợp cho báo cáo và ghi hàng loạt.",
+      "en": "Java's standard API for connecting to databases and running SQL. JPA and Hibernate run on top of it. Spring's JdbcTemplate and JdbcClient make hand-written SQL concise, handy for reports and bulk writes."
+    },
+    "related": [
+      "jpa-hibernate",
+      "connection-pool"
+    ]
+  },
+  {
+    "id": "servlet",
+    "term": "Servlet / DispatcherServlet",
+    "match": [
+      "servlet",
+      "servlets",
+      "servlet container",
+      "DispatcherServlet"
+    ],
+    "see": "java-spring-mvc-dispatcher",
+    "def": {
+      "vi": "Servlet là chuẩn Java để xử lý HTTP request; servlet container (Tomcat, Jetty) chạy chúng. Spring MVC có một servlet duy nhất là DispatcherServlet, nhận mọi request rồi chuyển tới đúng method controller.",
+      "en": "A servlet is Java's standard for handling HTTP requests; a servlet container (Tomcat, Jetty) runs them. Spring MVC has a single servlet, the DispatcherServlet, which receives every request and routes it to the right controller method."
+    },
+    "related": [
+      "http"
+    ],
+    "tracks": [
+      "java"
+    ]
+  },
+  {
+    "id": "filter-chain",
+    "term": "Filter chain (Spring Security)",
+    "match": [
+      "filter chain",
+      "SecurityFilterChain"
+    ],
+    "see": "java-spring-security-jwt",
+    "def": {
+      "vi": "Chuỗi filter mà mọi request đi qua trước khi tới controller. Spring Security là một filter chain: đọc thông tin đăng nhập, xác thực, kiểm tra CSRF, CORS, phân quyền, rồi mới cho request đi tiếp.",
+      "en": "The chain of filters every request passes through before reaching a controller. Spring Security is a filter chain: it reads credentials, authenticates, checks CSRF, CORS and authorization before letting the request through."
+    },
+    "related": [
+      "jwt",
+      "csrf",
+      "cors"
+    ],
+    "tracks": [
+      "java"
+    ]
+  },
+  {
+    "id": "actuator",
+    "term": "Spring Boot Actuator",
+    "match": [
+      "Actuator"
+    ],
+    "see": "java-spring-actuator-deploy",
+    "def": {
+      "vi": "Module của Spring Boot cung cấp sẵn các endpoint vận hành: /actuator/health (liveness, readiness), metrics cho Prometheus, loggers, threaddump. Chỉ nên mở health và metrics; các endpoint khác lộ thông tin nhạy cảm.",
+      "en": "A Spring Boot module with ready-made operational endpoints: /actuator/health (liveness, readiness), Prometheus metrics, loggers, threaddump. Expose only health and metrics; the others leak sensitive information."
+    },
+    "related": [
+      "health-check",
+      "metric"
+    ],
+    "tracks": [
+      "java"
+    ]
+  },
+  {
+    "id": "circuit-breaker",
+    "term": "Circuit breaker",
+    "match": [
+      "circuit breaker",
+      "circuit breakers",
+      "Resilience4j"
+    ],
+    "see": "java-spring-http-client-resilience",
+    "def": {
+      "vi": "Cơ chế bảo vệ khi gọi service khác: tỉ lệ lỗi vượt ngưỡng thì \"ngắt mạch\" (OPEN), từ chối ngay các lời gọi tiếp theo và trả giá trị dự phòng, sau một lúc cho vài lời gọi thử (HALF_OPEN), ổn thì đóng lại (CLOSED). Tránh một service hỏng kéo sập cả hệ thống.",
+      "en": "A safeguard for calling other services: when the failure rate passes a threshold it \"trips\" (OPEN), rejects further calls immediately and returns a fallback, after a while lets a few trial calls through (HALF_OPEN), and closes again (CLOSED) if they succeed. It stops one failing service from taking down the whole system."
+    },
+    "example": {
+      "vi": "Cầu dao điện trong nhà: chập điện thì cầu dao ngắt ngay để không cháy cả nhà, lát sau thử đóng lại xem đã ổn chưa.",
+      "en": "The breaker in a home's fuse box: on a short circuit it trips at once so the house does not burn, then you try switching it back on later."
+    },
+    "related": [
+      "timeout",
+      "retry-backoff"
+    ]
+  },
+  {
+    "id": "reactive",
+    "term": "Reactive / WebFlux",
+    "match": [
+      "reactive",
+      "WebFlux",
+      "Project Reactor"
+    ],
+    "see": "java-webflux-vs-virtual-threads",
+    "def": {
+      "vi": "Mô hình lập trình không chặn: dữ liệu là luồng sự kiện bất đồng bộ (Mono cho 0 hoặc 1 phần tử, Flux cho nhiều phần tử), vài thread event loop phục vụ rất nhiều kết nối. Spring WebFlux dựa trên mô hình này; mọi thư viện trong chuỗi cũng phải không chặn.",
+      "en": "A non-blocking programming model: data is an asynchronous stream of events (Mono for 0 or 1 element, Flux for many), and a few event-loop threads serve very many connections. Spring WebFlux is built on it; every library in the chain must be non-blocking too."
+    },
+    "related": [
+      "event-loop",
+      "backpressure"
+    ],
+    "tracks": [
+      "java",
+      "backend"
+    ]
+  },
+  {
+    "id": "backpressure",
+    "term": "Backpressure",
+    "match": [
+      "backpressure",
+      "back-pressure"
+    ],
+    "see": "java-webflux-vs-virtual-threads",
+    "def": {
+      "vi": "Cơ chế để bên nhận báo cho bên gửi biết mình xử lý được bao nhiêu, để bên gửi chậm lại thay vì dồn dữ liệu tới mức tràn bộ nhớ.",
+      "en": "A way for a consumer to tell a producer how much it can handle, so the producer slows down instead of piling up data until memory overflows."
+    },
+    "example": {
+      "vi": "Băng chuyền sushi: bếp thấy khách ăn chậm thì thả đĩa chậm lại, thay vì xếp chồng đĩa tràn ra ngoài.",
+      "en": "A sushi conveyor: when diners eat slowly the kitchen sends plates out more slowly instead of stacking them until they spill."
+    },
+    "related": [
+      "message-queue",
+      "reactive"
+    ]
+  },
+  {
+    "id": "maven-gradle",
+    "term": "Maven / Gradle",
+    "match": [
+      "Maven",
+      "Gradle",
+      "mvnw"
+    ],
+    "def": {
+      "vi": "Công cụ build và quản lý thư viện cho dự án Java, Kotlin: khai báo dependency trong pom.xml (Maven) hoặc build.gradle (Gradle), tự tải thư viện, biên dịch, chạy test, đóng gói jar. mvnw là script giúp mọi máy dùng cùng một phiên bản Maven.",
+      "en": "Build and dependency tools for Java and Kotlin projects: declare dependencies in pom.xml (Maven) or build.gradle (Gradle), and they download libraries, compile, run tests and package jars. mvnw is a wrapper script so every machine uses the same Maven version."
+    }
+  },
+  {
+    "id": "jar-war",
+    "term": "JAR / WAR",
+    "match": [
+      "jar",
+      "fat jar",
+      "WAR"
+    ],
+    "def": {
+      "vi": "File đóng gói ứng dụng Java. Spring Boot đóng thành một fat jar chứa cả thư viện và server nhúng, chạy bằng java -jar. WAR là kiểu cũ, phải deploy vào một Tomcat có sẵn.",
+      "en": "Packaged Java application files. Spring Boot builds a fat jar containing every library and the embedded server, run with java -jar. A WAR is the older format, deployed into an existing Tomcat."
+    },
+    "related": [
+      "maven-gradle"
+    ],
+    "tracks": [
+      "java"
+    ]
+  },
+  {
+    "id": "classpath",
+    "term": "Classpath",
+    "match": [
+      "classpath"
+    ],
+    "def": {
+      "vi": "Danh sách thư mục và file jar mà JVM tìm class trong đó. Spring Boot dựa vào việc có thư viện nào trong classpath để quyết định tự cấu hình gì.",
+      "en": "The list of directories and jar files where the JVM looks for classes. Spring Boot decides what to auto-configure based on which libraries are on the classpath."
+    },
+    "related": [
+      "auto-configuration"
+    ],
+    "tracks": [
+      "java"
+    ]
+  },
+  {
+    "id": "bcrypt",
+    "term": "bcrypt",
+    "match": [
+      "bcrypt"
+    ],
+    "see": "cs-sec-hash-encrypt-encode",
+    "def": {
+      "vi": "Thuật toán băm mật khẩu cố ý chạy chậm (có tham số độ khó) và tự thêm salt, nên kẻ tấn công lấy được database cũng rất khó dò ngược mật khẩu. Không dùng MD5 hay SHA-256 trần cho mật khẩu.",
+      "en": "A password hashing algorithm that is deliberately slow (with a cost factor) and salts automatically, so attackers who steal the database struggle to recover passwords. Never use plain MD5 or SHA-256 for passwords."
+    },
+    "related": [
+      "salt"
+    ]
+  },
+  {
+    "id": "pagination",
+    "term": "Pagination",
+    "match": [
+      "pagination",
+      "offset pagination",
+      "keyset pagination",
+      "cursor pagination"
+    ],
+    "see": "backend-api-pagination",
+    "def": {
+      "vi": "Chia danh sách lớn thành từng trang. Offset (page, size) đơn giản nhưng chậm khi trang sâu và dễ trùng hoặc sót khi dữ liệu thay đổi; keyset hay cursor (lấy tiếp sau id cuối) nhanh và ổn định, hợp cuộn vô hạn.",
+      "en": "Splitting a large list into pages. Offset (page, size) is simple but slow for deep pages and can skip or repeat items as data changes; keyset or cursor (continue after the last id) is fast and stable, ideal for infinite scroll."
+    }
+  },
+  {
+    "id": "feature-flag",
+    "term": "Feature flag",
+    "match": [
+      "feature flag",
+      "feature flags",
+      "feature toggle",
+      "feature toggles"
+    ],
+    "def": {
+      "vi": "Công tắc bật tắt tính năng lúc chạy mà không cần deploy lại: phát hành dần cho một phần người dùng, tắt nhanh khi có sự cố, hoặc chuyển sang phương án dự phòng.",
+      "en": "A switch that turns a feature on or off at runtime without redeploying: roll out gradually to some users, kill it quickly during an incident, or switch to a fallback."
+    },
+    "related": [
+      "canary",
+      "rollback"
+    ]
+  },
+  {
+    "id": "testcontainers",
+    "term": "Testcontainers",
+    "match": [
+      "Testcontainers"
+    ],
+    "see": "java-spring-testing",
+    "def": {
+      "vi": "Thư viện khởi động database, Kafka, Redis thật trong Docker ngay khi chạy test rồi tự dọn, để integration test chạy trên đúng loại hệ thống như production thay vì DB nhúng giả lập.",
+      "en": "A library that starts real databases, Kafka or Redis in Docker while tests run and cleans up afterwards, so integration tests run against the same kind of system as production instead of an embedded stand-in."
+    },
+    "related": [
+      "test-levels",
+      "container"
     ]
   }
 ]
