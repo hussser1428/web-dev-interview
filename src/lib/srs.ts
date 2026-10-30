@@ -1,6 +1,8 @@
 // Logic ôn tập thuần (không phụ thuộc React/trình duyệt) — test ở scripts/test-srs.ts.
 // Ngày luôn ở dạng "YYYY-MM-DD" theo giờ địa phương.
 
+import type { Level, Style, Track } from "./catalog";
+
 export type Rating = 1 | 2 | 3; // 1 = khó, 2 = vừa, 3 = dễ
 export const ratingKey = { 1: "hard", 2: "medium", 3: "easy" } as const;
 
@@ -10,7 +12,22 @@ export type Progress = {
   days: Record<string, number>; // số lần luyện theo ngày
   last?: string; // id câu luyện gần nhất
   interviewDate?: string;
+  interviews?: InterviewLog[]; // các buổi phỏng vấn AI, cũ -> mới
+  weak?: WeakItem[]; // câu phỏng vấn AI bị chấm yếu, cũ -> mới
 };
+export type InterviewLog = { date: string; track: Track; level: Level; style: Style; overall: number };
+/**
+ * Câu phỏng vấn AI bị chấm yếu. answer: câu trả lời của ứng viên; related: id câu cùng ý trong ngân hàng;
+ * project: tên project nếu là buổi Deep-dive; done: đã đánh dấu "Đã nắm".
+ */
+export type WeakItem = {
+  id: string; date: string; track: Track; level: Level; style: Style;
+  question: string; score: number; answer?: string; feedback: string; betterAnswer: string; nextTime?: string;
+  related?: string; project?: string; done?: boolean;
+};
+const MAX_LOGS = 30;
+// ponytail: giữ 100 câu yếu gần nhất (kể cả câu đã nắm) trong localStorage; muốn giữ hết thì cần database.
+const MAX_WEAK = 100;
 export const emptyProgress: Progress = { q: {}, days: {} };
 
 export function today(d = new Date()): string {
@@ -82,3 +99,30 @@ export function buildQueue(ids: string[], p: Progress, max: number, now = today(
   const fresh = ids.filter((id) => !isDone(p.q[id]));
   return [...due, ...fresh].slice(0, max);
 }
+
+/**
+ * Ghi 1 buổi phỏng vấn AI. Mọi câu yếu vào danh sách câu yếu;
+ * câu nào khớp ngân hàng thì câu đó vào ôn ngay hôm đó (như tự chấm "Khó").
+ */
+export function logInterview(p: Progress, log: InterviewLog, weak: WeakItem[]): Progress {
+  const q = { ...p.q };
+  for (const w of weak) if (w.related) q[w.related] = { ...q[w.related], rating: 1, interval: 1, due: log.date };
+  return {
+    ...p,
+    q,
+    interviews: [...(p.interviews ?? []), log].slice(-MAX_LOGS),
+    weak: [...(p.weak ?? []), ...weak].slice(-MAX_WEAK),
+  };
+}
+
+/** Sửa dữ liệu cũ khi đọc: câu yếu lưu trước khi có id thì gán id cố định theo vị trí. */
+export function migrate(p: Progress): Progress {
+  if (!p.weak?.some((w) => !w.id)) return p;
+  return { ...p, weak: p.weak.map((w, i) => (w.id ? w : { ...w, id: `old-${i}` })) };
+}
+
+/** Bật/tắt "Đã nắm" cho một câu yếu. */
+export const toggleWeak = (p: Progress, id: string): Progress => ({
+  ...p,
+  weak: p.weak?.map((w) => (w.id === id ? { ...w, done: !w.done } : w)),
+});

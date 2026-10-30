@@ -1,11 +1,15 @@
 // Cấu trúc báo cáo chấm điểm: schema gửi cho AI + type dùng ở giao diện.
+
+/** Điểm dưới mức này là câu yếu -> đưa vào lịch ôn. */
+export const WEAK = 5;
 export type Report = {
   overall: number;
   summary: string;
   criteria: { knowledge: number; problemSolving: number; communication: number };
   strengths: string[];
   improvements: string[];
-  questions: { question: string; score: number; feedback: string; betterAnswer: string }[];
+  /** related: id câu cùng ý trong ngân hàng (server đã kiểm tra), không có thì bỏ trống. */
+  questions: { question: string; score: number; answer: string; feedback: string; betterAnswer: string; nextTime: string; related?: string }[];
 };
 
 const score = { type: "number", minimum: 0, maximum: 10 };
@@ -30,10 +34,13 @@ export const reportSchema = {
         properties: {
           question: { type: "string" },
           score,
+          answer: { type: "string" },
           feedback: { type: "string" },
           betterAnswer: { type: "string" },
+          nextTime: { type: "string" },
+          related: { type: "string" },
         },
-        required: ["question", "score", "feedback", "betterAnswer"],
+        required: ["question", "score", "answer", "feedback", "betterAnswer", "nextTime", "related"],
       },
     },
   },

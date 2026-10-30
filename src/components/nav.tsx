@@ -7,7 +7,7 @@ import { addDays, isDue, streak, today } from "@/lib/srs";
 import { fmt } from "@/locales";
 import Icon, { type IconName } from "./icon";
 
-export type NavItem = { href: string; label: string; icon: IconName; exact?: boolean; count?: number; due?: boolean };
+export type NavItem = { href: string; label: string; icon: IconName; exact?: boolean; count?: number; badge?: "due" | "weak" };
 type Props = {
   groups: { label: string; items: NavItem[] }[];
   t: { streak: string; keepStreak: string; streakDone: string };
@@ -17,7 +17,10 @@ export default function Nav({ groups, t }: Props) {
   const path = usePathname();
   const p = useProgress();
   const now = p ? today() : "";
-  const due = p ? Object.values(p.q).filter((s) => isDue(s, now)).length : 0;
+  const badges = {
+    due: p ? Object.values(p.q).filter((s) => isDue(s, now)).length : 0,
+    weak: p?.weak?.filter((w) => !w.done).length ?? 0,
+  };
   const days = p ? streak(p.days, now) : 0;
 
   return (
@@ -43,9 +46,9 @@ export default function Nav({ groups, t }: Props) {
                   {it.count !== undefined && (
                     <span className="ml-auto text-[11px] text-subtle">{it.count}</span>
                   )}
-                  {it.due && due > 0 && (
+                  {it.badge && badges[it.badge] > 0 && (
                     <span className="ml-auto rounded-full bg-[#fff1e6] px-[7px] text-[10px] font-bold text-[#c2410c]">
-                      {due}
+                      {badges[it.badge]}
                     </span>
                   )}
                 </Link>

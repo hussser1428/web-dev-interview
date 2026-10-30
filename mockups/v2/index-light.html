@@ -5,7 +5,7 @@
 <title>DevInterview – UI v2</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* Mockup v2 – mở bằng index.html?s=dashboard|bank|setup|room|report
+/* Mockup v2 – mở bằng index.html?s=dashboard|bank|setup|room|report|weak
    Hệ màu nền sáng:
    - 1 màu thương hiệu (tím → chàm) cho hành động chính, mục đang chọn, điểm nhấn.
    - Màu trạng thái chỉ để báo nghĩa: xanh = tốt/xong, cam = cần ôn, đỏ = yếu.
@@ -296,6 +296,12 @@ h2{font-size:15px;font-weight:600}
 .better h4{color:#047857}
 .cta{display:flex;align-items:center;gap:14px;padding:16px 20px;border-radius:14px;background:var(--brand-soft);border:1px solid var(--brand-line)}
 .cta .chipi{background:var(--grad);color:#fff}
+/* Câu yếu */
+.item .score{flex:none;margin-top:1px;width:40px;height:26px;font-size:12px}
+.mine{border-radius:12px;padding:12px 14px;background:var(--panel2,#f8fafc);border:1px solid var(--line)}
+.mine h4,.wk-cols h4{font-size:12px;font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.mine p,.wk-cols p{color:#334155;font-size:13.5px;line-height:1.7}
+.wk-cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .new{font-size:10px;font-weight:800;padding:1px 6px;border-radius:4px;background:#f97316;color:#fff;letter-spacing:.04em}
 </style>
 </head>
@@ -356,6 +362,7 @@ h2{font-size:15px;font-weight:600}
     <div class="group">Luyện với AI</div>
     <a class="nav" data-k="setup"><span class="chipi"><svg class="i"><use href="#chat"/></svg></span>Phỏng vấn thử</a>
     <a class="nav" data-k="project"><span class="chipi"><svg class="i"><use href="#git"/></svg></span>Hỏi về project</a>
+    <a class="nav" data-k="weak"><span class="chipi"><svg class="i"><use href="#alert"/></svg></span>Câu yếu<span class="pill">12</span></a>
     <div class="side-foot">
       <div class="streak-card">
         <div class="row"><svg class="i"><use href="#flame"/></svg>7 ngày liên tiếp</div>
@@ -639,6 +646,62 @@ Idempotency-Key: <span class="s">"a1b2-c3d4"</span>   <span class="c"># server b
         </div>
         <div class="qa"><div class="qa-h"><span class="score s-a">6.5</span><div class="grow" style="font-weight:500">Transaction isolation level — dirty read, phantom read là gì?</div><svg class="i" style="color:var(--subtle)"><use href="#chev"/></svg></div></div>
         <div class="qa"><div class="qa-h"><span class="score s-g">8.5</span><div class="grow" style="font-weight:500">Thiết kế API phân trang cho danh sách đơn hàng</div><svg class="i" style="color:var(--subtle)"><use href="#chev"/></svg></div></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ CÂU YẾU ============ -->
+<div class="screen app" id="weak">
+  <slot data-side="weak"></slot>
+  <main class="main">
+    <div class="top"><div class="crumb"><b>Câu yếu</b></div><slot data-search></slot></div>
+    <div class="split">
+      <div class="list">
+        <div class="list-h">
+          <div class="row"><h2 style="font-size:17px">Câu trả lời yếu</h2><span class="sub small">12 câu dưới 5 điểm</span></div>
+          <div class="filters">
+            <span class="chip">Mảng: Tất cả<svg class="i" style="width:12px"><use href="#down"/></svg></span>
+            <span class="chip">Mới nhất<svg class="i" style="width:12px"><use href="#down"/></svg></span>
+          </div>
+        </div>
+        <div class="tabs-s"><span class="on">Cần ôn<em class="am">12</em></span><span>Phỏng vấn<em>7</em></span><span>Project<em class="vi">5</em></span><span>Đã nắm<em>9</em></span></div>
+        <div style="overflow:hidden">
+          <div class="item on"><span class="score s-r">3.5</span><div class="grow"><div class="t">Vì sao shop-api lưu giỏ hàng trong Redis mà không dùng PostgreSQL? Redis restart thì sao?</div><div class="meta"><svg class="i" style="width:12px"><use href="#git"/></svg>Project shop-api<i>·</i>30/10</div></div></div>
+          <div class="item"><span class="score s-r">4.0</span><div class="grow"><div class="t">Index trong database hoạt động thế nào? Khi nào index làm chậm hệ thống?</div><div class="meta"><svg class="i" style="width:12px"><use href="#t-be"/></svg>Backend<i>·</i>30/10<i>·</i><span style="color:#b45309;font-weight:600">Trong flashcards</span></div></div></div>
+          <div class="item"><span class="score s-r">2.5</span><div class="grow"><div class="t">Hai người cùng đặt món hàng cuối cùng trong kho — shop-api xử lý thế nào?</div><div class="meta"><svg class="i" style="width:12px"><use href="#git"/></svg>Project shop-api<i>·</i>30/10</div></div></div>
+          <div class="item"><span class="score s-a">4.5</span><div class="grow"><div class="t">Transaction isolation level — dirty read, phantom read là gì?</div><div class="meta"><svg class="i" style="width:12px"><use href="#t-be"/></svg>Backend<i>·</i>28/10<i>·</i><span style="color:#b45309;font-weight:600">Trong flashcards</span></div></div></div>
+          <div class="item"><span class="score s-r">3.0</span><div class="grow"><div class="t">Giới thiệu bản thân và một project bạn tự hào</div><div class="meta"><svg class="i" style="width:12px"><use href="#t-bh"/></svg>Behavioral<i>·</i>28/10<i>·</i><span style="color:#b45309;font-weight:600">Trong flashcards</span></div></div></div>
+          <div class="item"><span class="score s-r">4.0</span><div class="grow"><div class="t">Vì sao portfolio-next dùng SSR cho trang sản phẩm thay vì SSG?</div><div class="meta"><svg class="i" style="width:12px"><use href="#git"/></svg>Project portfolio-next<i>·</i>25/10</div></div></div>
+          <div class="item"><span class="score s-r">1.5</span><div class="grow"><div class="t">Độ phức tạp thời gian của đoạn code bạn vừa viết là bao nhiêu?</div><div class="meta"><svg class="i" style="width:12px"><use href="#t-ds"/></svg>Thuật toán (DSA)<i>·</i>25/10</div></div></div>
+          <div class="item"><span class="score s-a">4.5</span><div class="grow"><div class="t">Node.js xử lý nhiều request đồng thời thế nào khi chỉ có một thread?</div><div class="meta"><svg class="i" style="width:12px"><use href="#t-be"/></svg>Backend<i>·</i>22/10<i>·</i><span style="color:#b45309;font-weight:600">Trong flashcards</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="detail">
+        <div class="detail-body">
+          <div class="row" style="gap:8px">
+            <span class="tagc" style="--c:#0f766e"><svg class="i" style="width:13px"><use href="#git"/></svg>Project shop-api</span>
+            <span class="tagc k-be"><svg class="i" style="width:13px"><use href="#t-be"/></svg>Backend</span>
+            <span class="badge">Phỏng vấn 30/10 · Product · Junior</span>
+            <div class="grow"></div>
+            <span class="score s-r" style="width:auto;padding:0 12px">3.5 / 10</span>
+          </div>
+          <h1>Vì sao shop-api lưu giỏ hàng trong Redis mà không dùng PostgreSQL? Redis restart thì sao?</h1>
+          <div class="mine"><h4>Bạn đã trả lời</h4><p>Vì Redis nhanh hơn, giỏ hàng đọc nhiều. Nếu Redis restart thì… chắc người dùng phải thêm lại giỏ hàng ạ.</p></div>
+          <div class="wk-cols">
+            <div class="fb"><h4 style="color:#b91c1c">Nhận xét</h4><p>Đúng ý "đọc nhiều, cần nhanh" nhưng dừng ở đó. Chưa nói Redis có persistence (RDB/AOF), chưa cân nhắc giỏ hàng là dữ liệu người dùng quan tâm, và chấp nhận mất dữ liệu mà không đưa ra phương án.</p></div>
+            <div class="better"><h4 style="color:#047857">Câu trả lời tốt nên có</h4><p>Giỏ hàng thay đổi liên tục và cần đọc nhanh nên để ở Redis (hash theo user, TTL 30 ngày). Bật AOF <span class="mono" style="font-size:12px">everysec</span> để restart chỉ mất tối đa ~1 giây. Khi checkout thì ghi đơn vào PostgreSQL trong transaction — dữ liệu quan trọng luôn nằm ở DB, Redis chỉ là trạng thái tạm.</p></div>
+          </div>
+          <div class="tip"><span class="chipi"><svg class="i"><use href="#bulb"/></svg></span><div><b>Lần sau nên</b><br>Trả lời theo khung: lý do chọn → rủi ro → cách giảm rủi ro. Người phỏng vấn product hỏi "restart thì sao" là đang chờ bạn nói về đánh đổi.</div></div>
+        </div>
+        <div class="rate">
+          <span class="sub small">Thêm vào danh sách 30/10 · chưa luyện lại</span>
+          <div class="grow"></div>
+          <button class="btn ghost"><svg class="i" style="width:14px"><use href="#git"/></svg>Mở project</button>
+          <button class="btn ghost"><svg class="i" style="width:14px"><use href="#play"/></svg>Luyện lại với AI</button>
+          <button class="btn primary"><svg class="i" style="width:14px"><use href="#check"/></svg>Đã nắm</button>
+        </div>
       </div>
     </div>
   </main>

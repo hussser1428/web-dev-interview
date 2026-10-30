@@ -2,6 +2,7 @@ import "server-only";
 import ai from "@/data/questions/ai.json";
 import backend from "@/data/questions/backend.json";
 import behavioral from "@/data/questions/behavioral.json";
+import cs from "@/data/questions/cs.json";
 import data from "@/data/questions/data.json";
 import devops from "@/data/questions/devops.json";
 import dsa from "@/data/questions/dsa.json";
@@ -28,7 +29,7 @@ export type Question = {
 };
 
 const files: Record<Track, unknown> = {
-  frontend, backend, ai, devops, mobile, data, dsa, "system-design": systemDesign, behavioral,
+  frontend, backend, ai, devops, mobile, data, cs, dsa, "system-design": systemDesign, behavioral,
 };
 
 /** Thứ tự trong file = thứ tự học (lộ trình). */

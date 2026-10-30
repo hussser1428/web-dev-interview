@@ -17,7 +17,8 @@
     "ai": "Practice with AI",
     "streak": "{n}-day streak",
     "keepStreak": "Practice 1 more to keep it!",
-    "streakDone": "Done for today — keep it up!"
+    "streakDone": "Done for today — keep it up!",
+    "weak": "Weak answers"
   },
   "header": {
     "search": "Search questions, topics…"
@@ -29,6 +30,7 @@
     "devops": "DevOps / Cloud",
     "mobile": "Mobile",
     "data": "Data",
+    "cs": "CS Fundamentals",
     "dsa": "Algorithms (DSA)",
     "system-design": "System Design",
     "behavioral": "Behavioral"
@@ -99,7 +101,14 @@
     "noDateTitle": "No interview date yet",
     "noDateHint": "Set a date to see how long you have and how much to practice daily.",
     "setDate": "Set date",
-    "activeDays": "{n} days · 6 months"
+    "activeDays": "{n} days · 6 months",
+    "aiTitle": "AI interviews",
+    "aiLast": "Last session",
+    "aiSessions": "{n} sessions",
+    "aiEmpty": "No sessions yet — do a mock interview to track your score over time.",
+    "weakTitle": "Weak answers from AI interviews",
+    "weakCount": "{n} questions",
+    "weakProject": "Project"
   },
   "questions": {
     "allTracks": "All fields",
@@ -222,7 +231,11 @@
     "attachCode": "Attach code",
     "codeSent": "Sent with your answer",
     "tabIndent": "Tab to indent",
-    "codeLines": "{n} lines"
+    "codeLines": "{n} lines",
+    "weakAdded": "{n} weak answers saved — see Weak answers",
+    "inReview": "Added to review",
+    "inBank": "View in bank",
+    "savedWeak": "Saved as weak"
   },
   "project": {
     "title": "Project Deep-dive",
@@ -267,5 +280,38 @@
       "github_rate_limit": "GitHub rate limit reached, try again in a few minutes (or add GITHUB_TOKEN to .env.local).",
       "invalid_request": "Invalid request."
     }
+  },
+  "weak": {
+    "title": "Weak answers",
+    "count": "{n} to review",
+    "tabs": {
+      "todo": "To review",
+      "interview": "Interview",
+      "project": "Project",
+      "done": "Got it"
+    },
+    "allTracks": "Track: All",
+    "sortNew": "Newest",
+    "sortLow": "Lowest score",
+    "inFlash": "In flashcards",
+    "project": "Project {name}",
+    "from": "Interview {date}",
+    "yourAnswer": "Your answer",
+    "noAnswer": "(No answer)",
+    "feedback": "Feedback",
+    "better": "What a strong answer includes",
+    "nextTime": "Next time",
+    "added": "Added {date}",
+    "openProject": "Open project",
+    "openBank": "View in question bank",
+    "retry": "Retry with AI",
+    "done": "Got it",
+    "undo": "Review again",
+    "empty": "No weak answers yet. Answers scored below 5 in AI interviews are saved here.",
+    "emptyTab": "Nothing in this tab.",
+    "startInterview": "Mock interview",
+    "back": "← Weak answers",
+    "retryTitle": "Retry weak answers",
+    "retrySubtitle": "The AI asks the question again and digs into what you missed."
   }
 }

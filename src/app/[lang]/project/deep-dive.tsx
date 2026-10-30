@@ -117,6 +117,7 @@ export default function DeepDive({ lang, t, ratings, room }: Props) {
           initialTrack={project.track}
           initialLevel="junior"
           context={context(project, practice === "all" ? undefined : practice)}
+          project={project.name}
         />
       </>
     );
@@ -158,7 +159,7 @@ export default function DeepDive({ lang, t, ratings, room }: Props) {
       {!project ? (
         !busy && <div className="card text-muted">{t.empty}</div>
       ) : (
-        <div className="grid items-start gap-5 md:grid-cols-[340px_1fr]">
+        <div className="grid items-start gap-5 md:grid-cols-[340px_minmax(0,1fr)]">
           <div className="flex flex-col gap-5">
             <div className="card">
               <div className="flex items-center gap-2">

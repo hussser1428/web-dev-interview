@@ -17,7 +17,7 @@ Mockup: [mockups/](mockups/) (mở `mockups/index.html?s=dashboard|bank|intervie
 Điểm khác biệt so với LeetCode / InterviewBit / các repo GitHub:
 1. **Hỏi về chính project của bạn** (đọc repo GitHub / CV) – thứ nhà tuyển dụng VN hỏi nhiều nhất nhưng không chỗ nào luyện được.
 2. **AI interviewer nói tiếng Việt**, biết hỏi follow-up như người thật.
-3. Gắn câu hỏi với **công ty & level thực tế** (Shopee, FPT, VNG, Grab…).
+3. Hỏi theo **level & loại công ty** (outsource / product / big tech). Gắn câu với tên công ty cụ thể (Shopee, FPT…) để sau: chỉ làm khi có nguồn kiểm chứng được, qua đóng góp của cộng đồng có kiểm duyệt — không tự gắn bằng phỏng đoán.
 
 ---
 
@@ -26,14 +26,14 @@ Mockup: [mockups/](mockups/) (mở `mockups/index.html?s=dashboard|bank|intervie
 Frontend · Backend · Fullstack · Mobile (iOS/Android/Flutter/RN) · AI/ML/LLM · Data Engineer/Analyst · DevOps/Cloud/SRE · Security · Tester/QA · Embedded · Game dev
 Cộng các phần chung: **DSA, System Design, OS, Network, Database, OOP/Design Pattern, Behavioral (STAR)**.
 
-Mỗi câu hỏi có: mảng, chủ đề, level (Intern → Senior), công ty từng hỏi, nguồn, đáp án gợi ý (bản 30 giây + bản chi tiết), code mẫu, câu follow-up, lỗi hay gặp.
+Mỗi câu hỏi có: mảng, chủ đề, level (Intern → Senior), nguồn, đáp án gợi ý (bản 30 giây + bản chi tiết), code mẫu, câu follow-up, lỗi hay gặp.
 
 ---
 
 ## 3. Tính năng chính
 
 ### MVP (làm trước)
-1. **Ngân hàng câu hỏi** – lọc theo mảng / level / công ty / chủ đề; chế độ "tự trả lời trước rồi mới xem đáp án".
+1. **Ngân hàng câu hỏi** – lọc theo mảng / level / chủ đề; chế độ "tự trả lời trước rồi mới xem đáp án".
 2. **Phỏng vấn thử với AI** – chọn vị trí + level + phong cách (outsource / product / big tech); trả lời bằng **gõ hoặc giọng nói**; có code editor; AI hỏi follow-up dựa trên câu trả lời.
 3. **Báo cáo sau buổi phỏng vấn** – điểm theo tiêu chí (kiến thức, giải quyết vấn đề, code, giao tiếp), so sánh câu trả lời của bạn với câu trả lời mẫu, câu yếu tự đưa vào danh sách ôn.
 4. **Project Deep-dive** – dán link GitHub hoặc tải CV → AI phân tích tech stack, điểm mạnh/rủi ro → sinh câu hỏi gắn với file/dòng code cụ thể.
@@ -43,7 +43,7 @@ Mỗi câu hỏi có: mảng, chủ đề, level (Intern → Senior), công ty t
 - Flashcards ôn lặp lại ngắt quãng (spaced repetition).
 - Live coding có chạy test (sandbox).
 - Phân tích giọng nói: tốc độ, từ đệm, khoảng im lặng.
-- Cộng đồng: chia sẻ kinh nghiệm phỏng vấn theo công ty (kiểu Glassdoor), bình chọn đáp án.
+- Cộng đồng: chia sẻ kinh nghiệm phỏng vấn theo công ty (kiểu Glassdoor), bình chọn đáp án; từ đây mới gắn câu hỏi với công ty (cần đăng nhập + database + kiểm duyệt).
 - Phỏng vấn tiếng Anh, chế độ phỏng vấn nhóm/HR.
 
 ---
@@ -54,7 +54,7 @@ Mỗi câu hỏi có: mảng, chủ đề, level (Intern → Senior), công ty t
 |---|---|
 | GitHub: `kamranahmedse/developer-roadmap`, `yangshun/tech-interview-handbook`, `donnemartin/system-design-primer`, `sudheerj/javascript-interview-questions`, `sudheerj/reactjs-interview-questions`, `DopplerHQ/awesome-interview-questions`, `alirezadir/Machine-Learning-Interviews`, `chiphuyen/ml-interviews-book`, `Devinterview-io/*` | Lấy danh sách chủ đề & câu hỏi, **kiểm tra license** (MIT/CC thì dùng được, ghi nguồn) |
 | Viblo, TopDev, ITviec blog, Dev.to, roadmap.sh | Câu hỏi thực tế ở VN, bài giải thích tiếng Việt |
-| Review phỏng vấn trên Glassdoor, nhóm Facebook, Reddit (r/cscareerquestions) | Gắn câu hỏi với công ty/level – **chỉ tóm tắt, không copy nguyên văn** |
+| Review phỏng vấn trên Glassdoor, nhóm Facebook, Reddit (r/cscareerquestions) | Tham khảo xu hướng câu hay hỏi theo level/loại công ty – **chỉ tóm tắt, không copy nguyên văn**, không ghi tên công ty khi chưa kiểm chứng |
 | Người dùng đóng góp | Kinh nghiệm phỏng vấn, có kiểm duyệt |
 | AI sinh thêm | Đáp án gợi ý, follow-up, câu hỏi theo project – **có người duyệt** trước khi vào ngân hàng chung |
 

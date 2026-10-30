@@ -1,0 +1,844 @@
+[
+  {
+    "id": "cs-oop-four-pillars",
+    "level": "intern",
+    "topic": "OOP",
+    "q": {
+      "vi": "Bốn tính chất của lập trình hướng đối tượng là gì? Cho ví dụ từng tính chất.",
+      "en": "What are the four pillars of object-oriented programming? Give an example of each."
+    },
+    "a": {
+      "vi": "OOP tổ chức chương trình thành các đối tượng gồm dữ liệu (thuộc tính) và hành vi (phương thức). Bốn tính chất:\n\n- Đóng gói (encapsulation): giấu trạng thái bên trong, chỉ cho thay đổi qua phương thức có kiểm soát. Ví dụ BankAccount để balance là private, chỉ đổi qua deposit()/withdraw() có kiểm tra số dư.\n- Trừu tượng (abstraction): chỉ lộ ra \"làm được gì\", giấu \"làm thế nào\". Ví dụ interface PaymentGateway có pay(amount); nơi gọi không cần biết bên dưới là VNPay hay Stripe.\n- Kế thừa (inheritance): lớp con dùng lại và mở rộng lớp cha. Ví dụ AdminUser kế thừa User và thêm quyền quản trị.\n- Đa hình (polymorphism): cùng một lời gọi, mỗi đối tượng xử lý theo cách riêng. Ví dụ shape.area() cho Circle và Rectangle tính khác nhau; nơi gọi chỉ cần biết kiểu Shape.\n\nÝ chính: đóng gói và trừu tượng giúp thay đổi bên trong mà không ảnh hưởng nơi dùng; đa hình giúp thêm loại mới mà không sửa code cũ. Kế thừa hữu ích nhưng dễ bị lạm dụng, nhiều trường hợp nên dùng composition.",
+      "en": "OOP organizes a program into objects that combine data (fields) and behaviour (methods). The four pillars:\n\n- Encapsulation: hide internal state and only allow changes through controlled methods. E.g. BankAccount keeps balance private and changes it only via deposit()/withdraw(), which check the balance.\n- Abstraction: expose \"what it does\", hide \"how it does it\". E.g. a PaymentGateway interface with pay(amount); the caller does not care whether VNPay or Stripe is underneath.\n- Inheritance: a subclass reuses and extends a parent class. E.g. AdminUser extends User and adds admin permissions.\n- Polymorphism: the same call, handled differently by each object. E.g. shape.area() is computed differently for Circle and Rectangle; the caller only knows the Shape type.\n\nThe point: encapsulation and abstraction let you change internals without breaking callers; polymorphism lets you add new types without editing existing code. Inheritance is useful but easily overused; composition is often the better choice."
+    },
+    "code": "abstract class Shape {\n  abstract area(): number;\n}\nclass Circle extends Shape {\n  constructor(private r: number) { super(); }\n  area() { return Math.PI * this.r ** 2; }\n}\nclass Rect extends Shape {\n  constructor(private w: number, private h: number) { super(); }\n  area() { return this.w * this.h; }\n}\n\n// đa hình: không cần biết từng loại cụ thể\nconst total = [new Circle(1), new Rect(2, 3)].reduce((s, x) => s + x.area(), 0);",
+    "tip": {
+      "vi": "Đừng chỉ đọc định nghĩa: mỗi tính chất nêu một ví dụ từ project của bạn, và nói thêm vì sao nó giúp code dễ sửa hơn.",
+      "en": "Do not just recite definitions: give one example of each from your own project and say why it makes the code easier to change."
+    },
+    "followUps": [
+      {
+        "vi": "Đóng gói và trừu tượng khác nhau thế nào?",
+        "en": "How do encapsulation and abstraction differ?"
+      },
+      {
+        "vi": "Đa hình lúc biên dịch và lúc chạy khác nhau ra sao?",
+        "en": "What is the difference between compile-time and runtime polymorphism?"
+      }
+    ]
+  },
+  {
+    "id": "cs-oop-overloading-vs-overriding",
+    "level": "intern",
+    "topic": "OOP",
+    "q": {
+      "vi": "Overloading và overriding khác nhau thế nào?",
+      "en": "What is the difference between overloading and overriding?"
+    },
+    "a": {
+      "vi": "- Overloading (nạp chồng): nhiều phương thức cùng tên trong cùng một lớp nhưng khác danh sách tham số (số lượng hoặc kiểu). Trình biên dịch chọn bản phù hợp dựa trên tham số lúc gọi, nên còn gọi là đa hình lúc biên dịch. Ví dụ print(int), print(String). Chỉ khác kiểu trả về thì không được tính là overload.\n- Overriding (ghi đè): lớp con định nghĩa lại phương thức đã có ở lớp cha với cùng chữ ký. Bản nào chạy được quyết định lúc chạy theo kiểu thật của đối tượng (dynamic dispatch), nên gọi là đa hình lúc chạy. Ví dụ Animal a = new Dog(); a.speak() gọi Dog.speak().\n\nLưu ý khi override: không được thu hẹp quyền truy cập (public ở cha thì con không thể private), phương thức static/final (Java) hoặc không virtual (C#) thì không override được. Nên dùng @Override (Java) / override (C#, TypeScript) để trình biên dịch báo lỗi khi gõ sai chữ ký.\n\nNgôn ngữ động như JavaScript hay Python không có overloading theo kiểu tham số; thường thay bằng tham số tuỳ chọn hoặc kiểm tra kiểu bên trong hàm.",
+      "en": "- Overloading: several methods with the same name in one class but different parameter lists (count or types). The compiler picks the right one from the arguments at the call site, so it is called compile-time polymorphism. E.g. print(int), print(String). Differing only in return type does not count as an overload.\n- Overriding: a subclass redefines a method already declared in its parent, with the same signature. Which version runs is decided at runtime from the object's actual type (dynamic dispatch), so it is runtime polymorphism. E.g. Animal a = new Dog(); a.speak() calls Dog.speak().\n\nWhen overriding: you cannot narrow visibility (public in the parent cannot become private), and static/final methods (Java) or non-virtual methods (C#) cannot be overridden. Use @Override (Java) / override (C#, TypeScript) so the compiler catches a mistyped signature.\n\nDynamic languages such as JavaScript or Python have no overloading by parameter type; optional parameters or type checks inside the function are used instead."
+    },
+    "code": "class Printer {\n  void print(int x)    { System.out.println(\"int \" + x); }  // overload\n  void print(String s) { System.out.println(\"str \" + s); }  // overload\n}\n\nclass Animal { String speak() { return \"...\"; } }\nclass Dog extends Animal {\n  @Override String speak() { return \"Woof\"; }            // override\n}\n\nAnimal a = new Dog();\na.speak(); // \"Woof\" — chọn lúc chạy theo kiểu thật",
+    "tip": {
+      "vi": "Gắn ngay hai cụm \"compile-time\" và \"runtime polymorphism\" vào câu trả lời, người phỏng vấn outsource rất hay chờ đúng hai từ này.",
+      "en": "Tie the answer to \"compile-time\" vs \"runtime polymorphism\"; outsourcing interviewers often wait for exactly those terms."
+    },
+    "followUps": [
+      {
+        "vi": "Có overload được chỉ bằng cách đổi kiểu trả về không? Vì sao?",
+        "en": "Can you overload by changing only the return type? Why?"
+      },
+      {
+        "vi": "Phương thức static có override được không?",
+        "en": "Can a static method be overridden?"
+      }
+    ]
+  },
+  {
+    "id": "cs-oop-static-members",
+    "level": "intern",
+    "topic": "OOP",
+    "q": {
+      "vi": "Thành phần static (biến, phương thức) khác thành phần instance thế nào? Khi nào nên dùng static?",
+      "en": "How do static members (fields, methods) differ from instance members? When should you use static?"
+    },
+    "a": {
+      "vi": "- Thành phần instance thuộc về từng đối tượng: mỗi đối tượng có bản sao riêng của biến instance, phương thức instance dùng được this.\n- Thành phần static thuộc về lớp: chỉ có một bản dùng chung cho mọi đối tượng, gọi qua tên lớp (Math.max), không có this nên không truy cập được biến instance.\n\nNên dùng static cho:\n- Hàm tiện ích thuần không phụ thuộc trạng thái: Math.abs, parseDate.\n- Hằng số dùng chung: MAX_RETRY.\n- Factory method: User.fromJson(json).\n\nCẩn thận với:\n- Biến static có thể thay đổi là trạng thái toàn cục: khó test (test này ảnh hưởng test khác), dễ race condition khi nhiều thread cùng ghi.\n- Phương thức static khó mock và khó thay thế bằng implementation khác, nên logic nghiệp vụ có phụ thuộc (DB, API) thường để ở object được inject thay vì static.",
+      "en": "- Instance members belong to each object: every object has its own copy of instance fields, and instance methods can use this.\n- Static members belong to the class: one shared copy for all objects, accessed through the class name (Math.max), with no this, so they cannot touch instance fields.\n\nGood uses of static:\n- Pure utility functions that do not depend on state: Math.abs, parseDate.\n- Shared constants: MAX_RETRY.\n- Factory methods: User.fromJson(json).\n\nBe careful with:\n- Mutable static fields are global state: hard to test (one test affects another) and prone to race conditions when several threads write.\n- Static methods are hard to mock or swap for another implementation, so business logic with dependencies (DB, APIs) usually lives in injected objects rather than static methods."
+    },
+    "code": "class Counter {\n  static total = 0;   // dùng chung cho mọi đối tượng\n  count = 0;          // riêng từng đối tượng\n  inc() { this.count++; Counter.total++; }\n}\n\nconst a = new Counter(), b = new Counter();\na.inc(); b.inc(); b.inc();\n// a.count = 1, b.count = 2, Counter.total = 3",
+    "tip": {
+      "vi": "Nói thêm \"biến static có thể đổi giá trị là global state, khó test và không an toàn đa luồng\" để cho thấy bạn biết mặt trái.",
+      "en": "Add that mutable static fields are global state, hard to test and not thread-safe, to show you know the downside."
+    },
+    "followUps": [
+      {
+        "vi": "Trong phương thức static có gọi được phương thức instance không?",
+        "en": "Can a static method call an instance method?"
+      },
+      {
+        "vi": "Static class / static constructor trong C# dùng khi nào?",
+        "en": "When do you use a static class or static constructor in C#?"
+      }
+    ]
+  },
+  {
+    "id": "cs-oop-abstract-class-vs-interface",
+    "level": "junior",
+    "topic": "OOP",
+    "q": {
+      "vi": "Abstract class và interface khác nhau thế nào? Khi nào dùng cái nào?",
+      "en": "How do abstract classes and interfaces differ? When do you use each?"
+    },
+    "a": {
+      "vi": "Cả hai đều dùng để định nghĩa hợp đồng mà lớp cụ thể phải tuân theo và không tạo đối tượng trực tiếp được. Khác biệt chính (theo Java/C#):\n\n- Kế thừa: một lớp chỉ extends được một abstract class nhưng implements được nhiều interface.\n- Trạng thái: abstract class có thể có field, constructor và code dùng chung; interface không có field instance (chỉ có hằng), từ Java 8 / C# 8 có thêm default method nhưng vẫn không giữ trạng thái.\n- Ý nghĩa: abstract class diễn tả quan hệ \"là một\" (is-a) với phần code chung; interface diễn tả \"làm được gì\" (can-do), ví dụ Comparable, Serializable.\n\nKhi nào dùng:\n- Interface: khi chỉ cần hợp đồng, muốn nhiều lớp không liên quan cùng có một khả năng, hoặc để inject/mock (UserRepository với bản DB thật và bản in-memory cho test). Đây là lựa chọn mặc định.\n- Abstract class: khi các lớp con thật sự cùng họ và chia sẻ nhiều code/trạng thái, ví dụ template method: BaseReportExporter làm sẵn các bước chung, lớp con chỉ viết phần định dạng.\n\nTrong TypeScript, interface chỉ tồn tại lúc biên dịch (bị xoá khi chạy), còn abstract class sinh ra code JavaScript thật.",
+      "en": "Both define a contract that concrete classes must follow, and neither can be instantiated directly. Key differences (Java/C#):\n\n- Inheritance: a class can extend only one abstract class but implement many interfaces.\n- State: an abstract class can have fields, constructors and shared code; an interface has no instance fields (only constants). Since Java 8 / C# 8 interfaces may have default methods, but they still hold no state.\n- Meaning: an abstract class expresses an \"is-a\" relationship with shared code; an interface expresses a capability (\"can-do\"), e.g. Comparable, Serializable.\n\nWhen to use:\n- Interface: when you only need a contract, want unrelated classes to share a capability, or need to inject/mock (a UserRepository with a real DB version and an in-memory one for tests). This is the default choice.\n- Abstract class: when subclasses really are one family and share a lot of code/state, e.g. the template method pattern: BaseReportExporter implements the common steps and subclasses only write the formatting part.\n\nIn TypeScript, interfaces exist only at compile time (erased at runtime), while abstract classes produce real JavaScript."
+    },
+    "code": "interface Notifier { send(to: string, msg: string): Promise<void>; }\n\nabstract class BaseExporter {\n  export(rows: object[]) {            // code dùng chung (template method)\n    const data = rows.filter(Boolean);\n    return this.format(data);\n  }\n  protected abstract format(rows: object[]): string;\n}\n\nclass CsvExporter extends BaseExporter {\n  protected format(rows: object[]) { return rows.map((r) => Object.values(r).join(\",\")).join(\"\\n\"); }\n}",
+    "tip": {
+      "vi": "Kết bằng một quy tắc rõ ràng: \"mặc định dùng interface, chỉ dùng abstract class khi thật sự có code chung\" — nghe chắc chắn hơn liệt kê khác biệt.",
+      "en": "Finish with a clear rule: \"interface by default, abstract class only when there is real shared code\" — it sounds more confident than listing differences."
+    },
+    "followUps": [
+      {
+        "vi": "Default method trong interface giải quyết vấn đề gì? Có gây xung đột khi implement hai interface không?",
+        "en": "What problem do default interface methods solve? Can they conflict when implementing two interfaces?"
+      },
+      {
+        "vi": "Abstract class có constructor không? Để làm gì?",
+        "en": "Can an abstract class have a constructor? What for?"
+      }
+    ]
+  },
+  {
+    "id": "cs-oop-composition-over-inheritance",
+    "level": "junior",
+    "topic": "OOP",
+    "q": {
+      "vi": "\"Composition over inheritance\" nghĩa là gì? Kế thừa có những vấn đề gì?",
+      "en": "What does \"composition over inheritance\" mean? What problems does inheritance have?"
+    },
+    "a": {
+      "vi": "Composition là xây dựng đối tượng bằng cách chứa các đối tượng khác (quan hệ \"có một\" — has-a) và giao việc cho chúng, thay vì kế thừa (\"là một\" — is-a).\n\nVấn đề của kế thừa:\n- Gắn chặt: lớp con phụ thuộc chi tiết lớp cha; sửa lớp cha có thể làm hỏng lớp con (fragile base class).\n- Cây kế thừa phình to khi tổ hợp tính năng: Bird, FlyingBird, SwimmingBird, FlyingSwimmingBird…\n- Lớp con nhận cả những thứ không cần, dễ vi phạm Liskov (Penguin kế thừa Bird nhưng không bay được).\n- Chỉ quyết định được lúc viết code, không đổi được lúc chạy.\n\nComposition giải quyết bằng cách tách hành vi thành các thành phần nhỏ (FlyBehavior, SwimBehavior) rồi ghép lại; muốn đổi hành vi chỉ cần thay thành phần, kể cả lúc chạy, và mỗi phần test riêng được.\n\nKhông có nghĩa là cấm kế thừa: kế thừa vẫn hợp khi quan hệ \"là một\" thật sự đúng và ổn định (ví dụ các loại Exception, lớp con của framework như Activity). Câu hỏi nên tự đặt: lớp con có thay thế được lớp cha ở mọi nơi không?",
+      "en": "Composition means building an object by holding other objects (a \"has-a\" relationship) and delegating to them, instead of inheriting (\"is-a\").\n\nProblems with inheritance:\n- Tight coupling: the subclass depends on the parent's details; changing the parent can break subclasses (fragile base class).\n- The hierarchy explodes when combining features: Bird, FlyingBird, SwimmingBird, FlyingSwimmingBird…\n- Subclasses inherit things they do not need, easily violating Liskov (Penguin extends Bird but cannot fly).\n- It is fixed when you write the code and cannot change at runtime.\n\nComposition splits behaviour into small parts (FlyBehavior, SwimBehavior) and combines them; to change behaviour you swap a part, even at runtime, and each part can be tested on its own.\n\nIt does not mean inheritance is banned: it still fits when the \"is-a\" relationship is genuinely true and stable (e.g. exception types, framework subclasses such as Activity). The question to ask: can the subclass replace the parent everywhere?"
+    },
+    "code": "// Kế thừa: muốn ghi log + retry thì phải tạo thêm lớp con mới cho từng tổ hợp\n// Composition: ghép các phần nhỏ\nclass HttpClient {\n  constructor(private send: (url: string) => Promise<Response>) {}\n  get(url: string) { return this.send(url); }\n}\nconst withLog = (f: typeof fetch) => (url: string) => { console.log(url); return f(url); };\nconst withRetry = (f: (u: string) => Promise<Response>) => async (url: string) => {\n  try { return await f(url); } catch { return f(url); }\n};\nconst client = new HttpClient(withRetry(withLog(fetch)));",
+    "tip": {
+      "vi": "Ví dụ Penguin–Bird kết nối luôn sang nguyên lý Liskov trong SOLID, cho thấy bạn hiểu các khái niệm liên quan nhau.",
+      "en": "The Penguin–Bird example links straight to the Liskov principle in SOLID, showing you see how the ideas connect."
+    },
+    "followUps": [
+      {
+        "vi": "Strategy pattern liên quan gì tới composition?",
+        "en": "How does the Strategy pattern relate to composition?"
+      },
+      {
+        "vi": "Khi nào kế thừa vẫn là lựa chọn đúng?",
+        "en": "When is inheritance still the right choice?"
+      }
+    ]
+  },
+  {
+    "id": "cs-oop-value-vs-reference",
+    "level": "junior",
+    "topic": "OOP",
+    "q": {
+      "vi": "Kiểu tham trị và kiểu tham chiếu khác nhau thế nào? Shallow copy và deep copy là gì?",
+      "en": "How do value types and reference types differ? What are shallow and deep copies?"
+    },
+    "a": {
+      "vi": "- Kiểu tham trị (value type): biến chứa trực tiếp giá trị; gán hay truyền vào hàm là sao chép giá trị. Ví dụ số, boolean; struct trong C#, Go.\n- Kiểu tham chiếu (reference type): biến chứa địa chỉ tới đối tượng; gán là sao chép địa chỉ, hai biến cùng trỏ một đối tượng nên sửa qua biến này thì biến kia thấy. Ví dụ object, array trong Java/JavaScript, class trong C#.\n\nLưu ý: Java và JavaScript đều truyền tham số theo giá trị — với object thì giá trị được sao chép là tham chiếu. Vì vậy trong hàm sửa thuộc tính obj.x thì bên ngoài thấy, nhưng gán obj = {} mới thì bên ngoài không đổi.\n\nSao chép object:\n- Shallow copy: tạo object mới nhưng chỉ chép tầng đầu; thuộc tính là object con vẫn dùng chung. Ví dụ {...obj}, Object.assign, Array.slice.\n- Deep copy: chép đệ quy mọi tầng, hai bản độc lập hoàn toàn. Ví dụ structuredClone(obj) trong JavaScript; JSON.parse(JSON.stringify(obj)) cũng được nhưng làm mất Date, Map, undefined, hàm.\n\nLỗi hay gặp: sửa mảng/object trong state React hoặc trong hàm tiện ích làm thay đổi dữ liệu gốc ngoài ý muốn.",
+      "en": "- Value types: the variable holds the value itself; assigning or passing to a function copies the value. E.g. numbers, booleans; structs in C# and Go.\n- Reference types: the variable holds an address of an object; assigning copies the address, so both variables point to the same object and a change through one is visible through the other. E.g. objects and arrays in Java/JavaScript, classes in C#.\n\nNote: Java and JavaScript both pass arguments by value — for objects, the value being copied is the reference. So setting obj.x inside a function is visible outside, but reassigning obj = {} is not.\n\nCopying objects:\n- Shallow copy: a new object, but only the top level is copied; nested objects are still shared. E.g. {...obj}, Object.assign, Array.slice.\n- Deep copy: copies every level recursively, so the two are fully independent. E.g. structuredClone(obj) in JavaScript; JSON.parse(JSON.stringify(obj)) also works but loses Date, Map, undefined and functions.\n\nCommon bug: mutating an array/object in React state or inside a utility function changes the original data unexpectedly."
+    },
+    "code": "const user = { name: \"An\", address: { city: \"HN\" } };\n\nconst shallow = { ...user };\nshallow.address.city = \"HCM\";\nconsole.log(user.address.city); // \"HCM\" — object con dùng chung!\n\nconst deep = structuredClone(user);\ndeep.address.city = \"DN\";\nconsole.log(user.address.city); // vẫn \"HCM\"",
+    "tip": {
+      "vi": "Câu \"Java luôn pass-by-value, với object thì giá trị là tham chiếu\" là bẫy kinh điển — nói đúng câu này sẽ được đánh giá cao.",
+      "en": "\"Java is always pass-by-value; for objects the value is the reference\" is a classic trap — stating it precisely earns points."
+    },
+    "followUps": [
+      {
+        "vi": "String trong Java/C# là kiểu tham chiếu nhưng vì sao hành xử giống tham trị?",
+        "en": "String is a reference type in Java/C#, so why does it behave like a value?"
+      },
+      {
+        "vi": "Immutable object giúp tránh lỗi này thế nào?",
+        "en": "How do immutable objects help avoid this bug?"
+      }
+    ]
+  },
+  {
+    "id": "cs-clean-code-dry-kiss-yagni",
+    "level": "intern",
+    "topic": "Clean Code",
+    "q": {
+      "vi": "DRY, KISS và YAGNI là gì? Có khi nào áp dụng máy móc lại gây hại không?",
+      "en": "What are DRY, KISS and YAGNI? Can applying them blindly cause harm?"
+    },
+    "a": {
+      "vi": "- DRY (Don't Repeat Yourself): mỗi kiến thức/quy tắc nghiệp vụ chỉ nên nằm ở một chỗ. Ví dụ công thức tính phí ship viết một hàm dùng chung thay vì copy vào 5 controller; đổi quy tắc chỉ sửa một nơi.\n- KISS (Keep It Simple, Stupid): chọn cách đơn giản nhất giải quyết được vấn đề; code dễ đọc quan trọng hơn code \"thông minh\".\n- YAGNI (You Aren't Gonna Need It): không viết trước tính năng, lớp trừu tượng hay cấu hình \"phòng khi sau này cần\". Khi nào cần thật thì thêm, lúc đó bạn cũng hiểu yêu cầu rõ hơn.\n\nÁp dụng máy móc có hại:\n- DRY quá đà: gộp hai đoạn code chỉ giống nhau bề ngoài nhưng thay đổi vì lý do khác nhau, rồi phải thêm cờ if/else cho từng nơi gọi — tệ hơn lặp lại. Lặp lại hai lần chưa phải vấn đề; quy tắc phổ biến là đợi tới lần thứ ba (rule of three).\n- KISS không có nghĩa bỏ qua xử lý lỗi, validate hay bảo mật.\n- YAGNI không áp dụng cho những thứ đắt khi sửa về sau như thiết kế schema dữ liệu hay API public.",
+      "en": "- DRY (Don't Repeat Yourself): each piece of knowledge or business rule should live in one place. E.g. the shipping-fee formula is one shared function instead of being copied into five controllers; changing the rule touches one place.\n- KISS (Keep It Simple, Stupid): pick the simplest solution that solves the problem; readable code beats clever code.\n- YAGNI (You Aren't Gonna Need It): do not build features, abstractions or configuration \"in case we need it later\". Add them when the need is real, when you also understand the requirement better.\n\nBlind application can hurt:\n- Over-DRY: merging two pieces of code that only look alike but change for different reasons, then adding if/else flags for each caller — worse than the duplication. Repeating twice is fine; a common rule is to wait for the third time (rule of three).\n- KISS does not mean skipping error handling, validation or security.\n- YAGNI does not apply to things that are expensive to change later, such as data schemas or public APIs."
+    },
+    "tip": {
+      "vi": "Kể một lần bạn gộp code \"cho DRY\" rồi phải tách ra lại — người phỏng vấn đánh giá cao kinh nghiệm thực tế hơn định nghĩa.",
+      "en": "Describe a time you merged code \"for DRY\" and had to split it again — interviewers value real experience over definitions."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao phân biệt code lặp \"thật\" với code chỉ giống nhau ngẫu nhiên?",
+        "en": "How do you tell real duplication from code that only looks alike by accident?"
+      },
+      {
+        "vi": "Code review của bạn thường bắt những lỗi clean code nào?",
+        "en": "Which clean-code issues do you usually catch in code review?"
+      }
+    ]
+  },
+  {
+    "id": "cs-pattern-singleton",
+    "level": "junior",
+    "topic": "Design Patterns",
+    "q": {
+      "vi": "Singleton pattern là gì? Khi nào dùng và vì sao nhiều người coi nó là anti-pattern?",
+      "en": "What is the Singleton pattern? When is it used, and why do many consider it an anti-pattern?"
+    },
+    "a": {
+      "vi": "Singleton đảm bảo một lớp chỉ có đúng một instance trong chương trình và cung cấp một điểm truy cập toàn cục tới nó. Cách làm thường gặp: constructor private, một biến static giữ instance, phương thức getInstance() tạo lần đầu rồi trả lại.\n\nDùng khi thật sự chỉ nên có một: connection pool, cấu hình đọc một lần, logger, cache trong bộ nhớ.\n\nVấn đề:\n- Là trạng thái toàn cục trá hình: mọi nơi gọi getInstance() đều phụ thuộc ngầm vào nó, khó nhìn ra phụ thuộc.\n- Khó test: không thay bằng bản giả được, trạng thái rò rỉ giữa các test.\n- Đa luồng: khởi tạo lười (lazy) không đồng bộ có thể tạo ra hai instance; cần double-checked locking với volatile (Java), Lazy<T> (C#) hoặc khởi tạo sẵn.\n\nCách làm hiện đại: vẫn chỉ tạo một instance nhưng để DI container quản lý (Spring bean mặc định là singleton, AddSingleton trong .NET) và inject vào nơi cần. Như vậy giữ được \"một instance\" mà vẫn test được. Trong Node.js, module được cache nên export một object đã là singleton.",
+      "en": "Singleton ensures a class has exactly one instance in the program and provides a global access point to it. The usual implementation: a private constructor, a static field holding the instance, and a getInstance() method that creates it the first time and returns it afterwards.\n\nUse it when there really should be only one: a connection pool, configuration loaded once, a logger, an in-memory cache.\n\nProblems:\n- It is disguised global state: everything calling getInstance() depends on it implicitly, hiding dependencies.\n- Hard to test: you cannot substitute a fake, and state leaks between tests.\n- Threads: unsynchronised lazy initialisation can create two instances; you need double-checked locking with volatile (Java), Lazy<T> (C#) or eager initialisation.\n\nThe modern approach: still create one instance, but let a DI container manage it (Spring beans are singletons by default, AddSingleton in .NET) and inject it where needed. You keep \"one instance\" and stay testable. In Node.js modules are cached, so exporting an object is already a singleton."
+    },
+    "code": "public final class Config {\n  private static volatile Config instance;\n  private Config() { /* đọc file cấu hình */ }\n\n  public static Config getInstance() {\n    if (instance == null) {                 // kiểm tra lần 1, không khoá\n      synchronized (Config.class) {\n        if (instance == null) instance = new Config(); // kiểm tra lần 2\n      }\n    }\n    return instance;\n  }\n}",
+    "tip": {
+      "vi": "Trả lời đủ ba ý: cách cài, vấn đề đa luồng, và \"thực tế mình để DI container quản lý singleton\" — ý cuối cho thấy bạn đã làm dự án thật.",
+      "en": "Cover three points: implementation, the threading issue, and \"in practice I let the DI container manage singletons\" — the last shows real project experience."
+    },
+    "followUps": [
+      {
+        "vi": "Vì sao cần từ khoá volatile trong double-checked locking?",
+        "en": "Why is volatile needed in double-checked locking?"
+      },
+      {
+        "vi": "Singleton scope trong Spring khác Singleton pattern cổ điển thế nào?",
+        "en": "How does Spring's singleton scope differ from the classic Singleton pattern?"
+      }
+    ],
+    "source": "https://refactoring.guru/design-patterns/singleton"
+  },
+  {
+    "id": "cs-pattern-factory-builder",
+    "level": "junior",
+    "topic": "Design Patterns",
+    "q": {
+      "vi": "Factory và Builder pattern khác nhau thế nào? Cho ví dụ khi nào dùng mỗi loại.",
+      "en": "How do the Factory and Builder patterns differ? Give an example of when to use each."
+    },
+    "a": {
+      "vi": "Cả hai đều là creational pattern — tách việc tạo đối tượng ra khỏi nơi dùng — nhưng giải quyết vấn đề khác nhau.\n\n- Factory (Factory Method / Simple Factory): quyết định tạo loại đối tượng nào. Nơi gọi chỉ nói \"cần một PaymentGateway cho 'momo'\", factory trả về MomoGateway hay VnpayGateway. Lợi ích: thêm loại mới chỉ sửa factory, nơi gọi không cần biết các lớp cụ thể.\n- Builder: xây dựng một đối tượng phức tạp từng bước. Dùng khi đối tượng có nhiều tham số, nhiều tham số tuỳ chọn, hoặc cần kiểm tra hợp lệ trước khi tạo. Tránh constructor dài 8 tham số dễ truyền nhầm thứ tự (telescoping constructor). Ví dụ HttpRequest.builder().url(…).header(…).timeout(…).build(), hay StringBuilder, các query builder như Knex.\n\nTóm lại: Factory trả lời \"tạo cái gì\", Builder trả lời \"tạo nó như thế nào\". Trong JavaScript/TypeScript, builder thường được thay bằng object tham số có tên ({ url, timeout }) vì ngôn ngữ đã có sẵn tham số đặt tên qua object.",
+      "en": "Both are creational patterns — they separate creating objects from using them — but solve different problems.\n\n- Factory (Factory Method / Simple Factory): decides which type of object to create. The caller just says \"I need a PaymentGateway for 'momo'\" and the factory returns MomoGateway or VnpayGateway. Benefit: adding a new type only changes the factory; callers do not know the concrete classes.\n- Builder: constructs one complex object step by step. Use it when the object has many parameters, many optional ones, or needs validation before creation. It avoids an 8-argument constructor where arguments are easily swapped (telescoping constructor). E.g. HttpRequest.builder().url(…).header(…).timeout(…).build(), StringBuilder, or query builders such as Knex.\n\nIn short: Factory answers \"what to create\", Builder answers \"how to put it together\". In JavaScript/TypeScript a builder is often replaced by a named options object ({ url, timeout }), since the language already offers named parameters that way."
+    },
+    "code": "// Factory: chọn loại\nfunction createGateway(kind: \"momo\" | \"vnpay\"): PaymentGateway {\n  switch (kind) {\n    case \"momo\": return new MomoGateway(process.env.MOMO_KEY!);\n    case \"vnpay\": return new VnpayGateway(process.env.VNPAY_KEY!);\n  }\n}\n\n// Builder: lắp từng bước rồi kiểm tra\nconst req = new RequestBuilder()\n  .url(\"https://api.example.com/orders\")\n  .header(\"Authorization\", `Bearer ${token}`)\n  .timeout(5000)\n  .build(); // build() báo lỗi nếu thiếu url",
+    "tip": {
+      "vi": "Câu tóm \"Factory: tạo cái gì — Builder: tạo thế nào\" ngắn gọn và dễ nhớ, nói ngay đầu câu trả lời.",
+      "en": "Open with the summary \"Factory: what to create — Builder: how to assemble it\"; it is short and memorable."
+    },
+    "followUps": [
+      {
+        "vi": "Abstract Factory khác Factory Method thế nào?",
+        "en": "How does Abstract Factory differ from Factory Method?"
+      },
+      {
+        "vi": "Lombok @Builder trong Java sinh ra những gì?",
+        "en": "What does Lombok's @Builder generate in Java?"
+      }
+    ],
+    "source": "https://refactoring.guru/design-patterns/creational-patterns"
+  },
+  {
+    "id": "cs-pattern-dependency-injection",
+    "level": "junior",
+    "topic": "Design Patterns",
+    "q": {
+      "vi": "Dependency Injection (DI) và Inversion of Control (IoC) là gì? DI mang lại lợi ích gì?",
+      "en": "What are Dependency Injection (DI) and Inversion of Control (IoC)? What does DI give you?"
+    },
+    "a": {
+      "vi": "- Inversion of Control: thay vì code của bạn tự điều khiển việc tạo và gọi các thành phần, quyền điều khiển được đảo cho framework/container. Ví dụ framework gọi controller của bạn khi có request, chứ bạn không tự viết vòng lặp nhận request.\n- Dependency Injection là một cách hiện thực IoC: một lớp không tự new các phụ thuộc của nó mà nhận chúng từ bên ngoài, thường qua constructor. OrderService nhận PaymentGateway và OrderRepository thay vì tự tạo new VnpayGateway().\n\nLợi ích:\n- Test dễ: truyền bản giả (mock, in-memory) vào thay cho DB hay API thật.\n- Giảm phụ thuộc: OrderService chỉ biết interface, đổi VNPay sang Momo không phải sửa nó (đúng nguyên lý Dependency Inversion trong SOLID).\n- Quản lý vòng đời tập trung: container quyết định tạo một instance dùng chung (singleton), mỗi request một instance (scoped) hay mỗi lần một instance (transient).\n\nCác kiểu inject: constructor (nên dùng — phụ thuộc rõ ràng, không thể quên), setter, field (@Autowired trên field — tiện nhưng khó test, nên tránh). Container phổ biến: Spring (Java), built-in DI của ASP.NET Core, NestJS, Angular.",
+      "en": "- Inversion of Control: instead of your code controlling how components are created and called, control is handed to a framework/container. E.g. the framework calls your controller when a request arrives; you do not write the request loop yourself.\n- Dependency Injection is one way to achieve IoC: a class does not new up its own dependencies but receives them from outside, usually through the constructor. OrderService takes a PaymentGateway and an OrderRepository instead of calling new VnpayGateway() itself.\n\nBenefits:\n- Easy testing: pass fakes (mocks, in-memory versions) instead of a real DB or API.\n- Looser coupling: OrderService only knows the interface, so switching from VNPay to Momo does not touch it (the Dependency Inversion principle in SOLID).\n- Centralised lifetimes: the container decides whether to share one instance (singleton), one per request (scoped) or a new one every time (transient).\n\nInjection styles: constructor (preferred — dependencies are explicit and cannot be forgotten), setter, and field (@Autowired on a field — convenient but harder to test, best avoided). Common containers: Spring (Java), ASP.NET Core's built-in DI, NestJS, Angular."
+    },
+    "code": "// Không DI: tự tạo phụ thuộc, không test được nếu không gọi VNPay thật\nclass OrderServiceBad {\n  private gateway = new VnpayGateway();\n}\n\n// DI qua constructor\nclass OrderService {\n  constructor(private gateway: PaymentGateway, private repo: OrderRepository) {}\n  async checkout(order: Order) {\n    await this.gateway.pay(order.total);\n    await this.repo.save(order);\n  }\n}\n\n// Trong test\nconst service = new OrderService(new FakeGateway(), new InMemoryOrderRepo());",
+    "tip": {
+      "vi": "Phân biệt rõ IoC là nguyên lý, DI là một cách làm; rồi nhắc ba vòng đời singleton / scoped / transient nếu bạn dùng .NET hoặc NestJS.",
+      "en": "Make clear IoC is the principle and DI is one technique; then mention the singleton / scoped / transient lifetimes if you use .NET or NestJS."
+    },
+    "followUps": [
+      {
+        "vi": "Vì sao nên dùng constructor injection thay vì field injection?",
+        "en": "Why prefer constructor injection over field injection?"
+      },
+      {
+        "vi": "Inject một service scoped vào một singleton thì có vấn đề gì?",
+        "en": "What goes wrong when you inject a scoped service into a singleton?"
+      }
+    ],
+    "source": "https://martinfowler.com/articles/injection.html"
+  },
+  {
+    "id": "cs-pattern-strategy-observer",
+    "level": "mid",
+    "topic": "Design Patterns",
+    "q": {
+      "vi": "Giải thích Strategy và Observer pattern. Bạn đã dùng chúng (hoặc thấy chúng trong framework) ở đâu?",
+      "en": "Explain the Strategy and Observer patterns. Where have you used them (or seen them in frameworks)?"
+    },
+    "a": {
+      "vi": "Strategy: đóng gói nhiều thuật toán thay thế được cho nhau sau cùng một interface, và chọn thuật toán lúc chạy. Thay vì một hàm với chuỗi if/else theo loại (if type === 'percent' … else if 'fixed' …), mỗi cách là một lớp/hàm riêng: PercentDiscount, FixedDiscount, BuyXGetY. Thêm loại khuyến mãi mới chỉ cần thêm một strategy, không sửa code cũ (Open/Closed). Ví dụ thực tế: Comparator truyền vào sort, các strategy xác thực trong Passport.js, chọn thuật toán tính phí ship theo đơn vị vận chuyển.\n\nObserver: một đối tượng (subject) giữ danh sách người theo dõi và báo cho tất cả khi trạng thái đổi, mà không cần biết họ là ai. Ví dụ OrderPlaced được phát ra, các listener gửi email, trừ kho, cộng điểm thưởng độc lập với nhau. Gặp trong: addEventListener của DOM, EventEmitter của Node.js, RxJS, Spring ApplicationEvent, signals/state store ở frontend.\n\nRủi ro của Observer: khó lần theo luồng chạy (ai đang nghe sự kiện này?), quên huỷ đăng ký gây memory leak, và listener lỗi có thể làm hỏng cả chuỗi nếu không bắt lỗi. Khi các listener ở service khác nhau, observer trong bộ nhớ được thay bằng message queue (Kafka, RabbitMQ) — cùng ý tưởng ở quy mô hệ thống.",
+      "en": "Strategy: wrap several interchangeable algorithms behind one interface and pick one at runtime. Instead of one function with an if/else chain by type (if type === 'percent' … else if 'fixed' …), each approach is its own class/function: PercentDiscount, FixedDiscount, BuyXGetY. A new promotion type is a new strategy with no change to existing code (Open/Closed). Real examples: a Comparator passed to sort, authentication strategies in Passport.js, choosing a shipping-fee algorithm per carrier.\n\nObserver: an object (the subject) keeps a list of observers and notifies them all when its state changes, without knowing who they are. E.g. OrderPlaced is emitted and listeners independently send an email, reserve stock and add reward points. Found in: DOM addEventListener, Node.js EventEmitter, RxJS, Spring ApplicationEvent, signals/state stores on the frontend.\n\nRisks of Observer: the flow is hard to trace (who listens to this event?), forgetting to unsubscribe leaks memory, and a failing listener can break the chain if errors are not caught. When listeners live in different services, the in-memory observer becomes a message queue (Kafka, RabbitMQ) — the same idea at system scale."
+    },
+    "code": "// Strategy\ntype Discount = (total: number) => number;\nconst strategies: Record<string, Discount> = {\n  percent10: (t) => t * 0.9,\n  minus50k: (t) => Math.max(0, t - 50_000),\n};\nconst pay = (total: number, code: string) => (strategies[code] ?? ((t) => t))(total);\n\n// Observer\nimport { EventEmitter } from \"node:events\";\nconst events = new EventEmitter();\nevents.on(\"order:placed\", (o) => sendEmail(o.userId));\nevents.on(\"order:placed\", (o) => reserveStock(o.items));\nevents.emit(\"order:placed\", order);",
+    "tip": {
+      "vi": "Mở đầu bằng vấn đề mà pattern giải quyết (chuỗi if/else theo loại, các module phải gọi trực tiếp lẫn nhau) rồi mới nói tên pattern — nghe như người đã dùng thật.",
+      "en": "Start with the problem each pattern solves (if/else chains by type, modules calling each other directly) before naming the pattern — it sounds like real experience."
+    },
+    "followUps": [
+      {
+        "vi": "Observer khác Pub/Sub thế nào?",
+        "en": "How does Observer differ from Pub/Sub?"
+      },
+      {
+        "vi": "Làm sao tránh memory leak khi dùng event listener trong React?",
+        "en": "How do you avoid memory leaks with event listeners in React?"
+      }
+    ],
+    "source": "https://refactoring.guru/design-patterns/behavioral-patterns"
+  },
+  {
+    "id": "cs-pattern-mvc-mvvm",
+    "level": "junior",
+    "topic": "Design Patterns",
+    "q": {
+      "vi": "MVC, MVP và MVVM khác nhau thế nào?",
+      "en": "How do MVC, MVP and MVVM differ?"
+    },
+    "a": {
+      "vi": "Cả ba đều tách giao diện khỏi dữ liệu và logic nghiệp vụ để dễ sửa và dễ test. Model là dữ liệu và quy tắc nghiệp vụ, View là phần hiển thị; khác nhau ở thành phần ở giữa.\n\n- MVC (Model–View–Controller): Controller nhận input (request, click), cập nhật Model và chọn View để trả về. Phổ biến ở web server-side: Spring MVC, ASP.NET MVC, Laravel, Rails — controller nhận HTTP request, gọi service, render template hoặc trả JSON.\n- MVP (Model–View–Presenter): View rất \"ngốc\", chỉ chuyển sự kiện cho Presenter; Presenter xử lý rồi gọi các hàm của View (qua interface) để cập nhật. Vì View là interface nên Presenter test được không cần UI thật. Từng phổ biến ở Android trước khi có Architecture Components, và WinForms.\n- MVVM (Model–View–ViewModel): ViewModel giữ trạng thái hiển thị và lệnh; View gắn (data binding) vào ViewModel và tự cập nhật khi trạng thái đổi. ViewModel không biết gì về View. Dùng trong WPF, Android ViewModel + LiveData/StateFlow, SwiftUI, Angular; ý tưởng tương tự ở Vue và React với state + render lại.\n\nĐiểm khác cốt lõi: hướng giao tiếp. MVC/MVP: thành phần giữa chủ động điều khiển View; MVVM: View tự quan sát trạng thái.",
+      "en": "All three separate the UI from data and business logic so each part is easier to change and test. The Model is the data and business rules, the View is the display; they differ in the piece in the middle.\n\n- MVC (Model–View–Controller): the Controller receives input (a request, a click), updates the Model and chooses the View to return. Common on server-side web: Spring MVC, ASP.NET MVC, Laravel, Rails — the controller takes the HTTP request, calls a service and renders a template or returns JSON.\n- MVP (Model–View–Presenter): the View is passive and just forwards events to the Presenter; the Presenter does the work and calls View methods (through an interface) to update it. Because the View is an interface, the Presenter is testable without a real UI. Popular on Android before Architecture Components, and in WinForms.\n- MVVM (Model–View–ViewModel): the ViewModel holds display state and commands; the View binds to the ViewModel and updates itself when state changes. The ViewModel knows nothing about the View. Used in WPF, Android ViewModel + LiveData/StateFlow, SwiftUI, Angular; Vue and React follow a similar idea with state plus re-rendering.\n\nThe core difference is the direction of communication: in MVC/MVP the middle piece drives the View; in MVVM the View observes state."
+    },
+    "tip": {
+      "vi": "Gắn mỗi mô hình với framework bạn đã dùng (Spring MVC, Android ViewModel, WPF…) — một câu \"ở project X mình dùng…\" giá trị hơn định nghĩa.",
+      "en": "Tie each pattern to a framework you have used (Spring MVC, Android ViewModel, WPF…) — one \"in project X I used…\" sentence beats a definition."
+    },
+    "followUps": [
+      {
+        "vi": "Trong MVC, logic nghiệp vụ nên nằm ở controller hay ở đâu?",
+        "en": "In MVC, should business logic live in the controller, or where?"
+      },
+      {
+        "vi": "Fat controller là gì và xử lý thế nào?",
+        "en": "What is a fat controller and how do you fix it?"
+      }
+    ]
+  },
+  {
+    "id": "cs-lang-compiled-vs-interpreted",
+    "level": "intern",
+    "topic": "Programming Languages",
+    "q": {
+      "vi": "Ngôn ngữ biên dịch và thông dịch khác nhau thế nào? JIT là gì? Java, Python, JavaScript thuộc loại nào?",
+      "en": "How do compiled and interpreted languages differ? What is JIT? Where do Java, Python and JavaScript fit?"
+    },
+    "a": {
+      "vi": "Thực ra \"biên dịch\" hay \"thông dịch\" là đặc điểm của cách cài đặt ngôn ngữ, không phải của bản thân ngôn ngữ, và phần lớn ngôn ngữ hiện đại kết hợp cả hai.\n\n- Biên dịch trước (ahead-of-time): toàn bộ mã nguồn được dịch thành mã máy trước khi chạy (C, C++, Go, Rust). Chạy nhanh, phát hiện nhiều lỗi lúc build, nhưng file chạy gắn với hệ điều hành/CPU và mỗi lần sửa phải build lại.\n- Thông dịch: chương trình thông dịch đọc và thực thi từng phần mã lúc chạy. Khởi động nhanh, dễ chạy thử, chạy được mọi nơi có trình thông dịch, nhưng chậm hơn.\n- JIT (just-in-time): trong lúc chạy, máy ảo theo dõi đoạn code nào chạy nhiều (hot) rồi biên dịch đoạn đó sang mã máy, có tối ưu dựa trên dữ liệu thật.\n\nCác ngôn ngữ hay gặp:\n- Java, C#: biên dịch sang bytecode (.class, IL) rồi JVM/CLR chạy bằng thông dịch + JIT. Vì vậy \"write once, run anywhere\".\n- JavaScript: engine như V8 phân tích mã nguồn, chạy bằng interpreter (Ignition) rồi JIT các hàm nóng (TurboFan).\n- Python (CPython): biên dịch sang bytecode (.pyc) rồi máy ảo thông dịch, mặc định không có JIT (PyPy thì có).",
+      "en": "\"Compiled\" or \"interpreted\" is really a property of a language implementation, not the language itself, and most modern languages mix both.\n\n- Ahead-of-time compilation: all source is translated to machine code before running (C, C++, Go, Rust). Fast execution and many errors caught at build time, but binaries are tied to an OS/CPU and every change needs a rebuild.\n- Interpretation: an interpreter reads and executes code at runtime. Quick start, easy to experiment, runs anywhere the interpreter exists, but slower.\n- JIT (just-in-time): while running, the VM watches which code runs often (hot) and compiles it to machine code, optimising with real runtime data.\n\nCommon languages:\n- Java, C#: compiled to bytecode (.class, IL), then the JVM/CLR runs it with an interpreter plus JIT. Hence \"write once, run anywhere\".\n- JavaScript: engines like V8 parse the source, run it in an interpreter (Ignition), then JIT-compile hot functions (TurboFan).\n- Python (CPython): compiled to bytecode (.pyc) that a VM interprets, with no JIT by default (PyPy has one)."
+    },
+    "tip": {
+      "vi": "Câu mở đầu \"đây là đặc điểm của cách cài đặt, không phải của ngôn ngữ\" cho thấy bạn hiểu sâu hơn mức học thuộc.",
+      "en": "Opening with \"it is a property of the implementation, not the language\" shows understanding beyond memorisation."
+    },
+    "followUps": [
+      {
+        "vi": "Vì sao ứng dụng Java thường chạy chậm lúc mới khởi động rồi nhanh dần (warm-up)?",
+        "en": "Why do Java applications often start slow and then speed up (warm-up)?"
+      },
+      {
+        "vi": "GraalVM native image / AOT giải quyết vấn đề gì?",
+        "en": "What problem do GraalVM native image / AOT solve?"
+      }
+    ]
+  },
+  {
+    "id": "cs-lang-static-vs-dynamic-typing",
+    "level": "intern",
+    "topic": "Programming Languages",
+    "q": {
+      "vi": "Kiểu tĩnh và kiểu động khác nhau thế nào? Kiểu mạnh và kiểu yếu là gì?",
+      "en": "How do static and dynamic typing differ? What are strong and weak typing?"
+    },
+    "a": {
+      "vi": "Hai trục khác nhau, hay bị nhầm với nhau.\n\nTĩnh và động — khi nào kiểm tra kiểu:\n- Kiểu tĩnh (Java, C#, Go, TypeScript): kiểu của biến được biết và kiểm tra lúc biên dịch. Lỗi như truyền chuỗi vào chỗ cần số bị phát hiện trước khi chạy; IDE gợi ý và refactor tốt hơn. Đổi lại phải khai báo nhiều hơn (dù type inference giảm bớt).\n- Kiểu động (Python, JavaScript, Ruby, PHP): kiểu gắn với giá trị, chỉ kiểm tra lúc chạy. Viết nhanh, linh hoạt, nhưng lỗi kiểu chỉ lộ ra khi chạy tới dòng đó — cần test nhiều hơn.\n\nMạnh và yếu — có tự ép kiểu ngầm không:\n- Kiểu mạnh (Python, Java): không tự chuyển kiểu bất ngờ; \"1\" + 1 trong Python báo lỗi.\n- Kiểu yếu (JavaScript, PHP): tự ép kiểu ngầm; \"1\" + 1 = \"11\", \"5\" * 2 = 10.\n\nNhư vậy Python là động + mạnh, JavaScript là động + yếu, C là tĩnh nhưng khá yếu (ép con trỏ thoải mái). Xu hướng hiện nay là thêm kiểu tĩnh tuỳ chọn cho ngôn ngữ động: TypeScript cho JavaScript, type hints + mypy cho Python, cho codebase lớn và team đông.",
+      "en": "Two different axes that are often confused.\n\nStatic vs dynamic — when types are checked:\n- Static typing (Java, C#, Go, TypeScript): variable types are known and checked at compile time. Errors such as passing a string where a number is expected are caught before running; IDEs autocomplete and refactor better. The cost is more declarations (type inference reduces it).\n- Dynamic typing (Python, JavaScript, Ruby, PHP): types belong to values and are checked at runtime. Quick and flexible to write, but type errors appear only when that line runs — you need more tests.\n\nStrong vs weak — whether implicit conversions happen:\n- Strong typing (Python, Java): no surprising implicit conversions; \"1\" + 1 raises an error in Python.\n- Weak typing (JavaScript, PHP): implicit coercion; \"1\" + 1 = \"11\", \"5\" * 2 = 10.\n\nSo Python is dynamic + strong, JavaScript is dynamic + weak, and C is static but fairly weak (pointer casts are easy). The current trend is optional static types for dynamic languages: TypeScript for JavaScript, type hints + mypy for Python, for large codebases and big teams."
+    },
+    "code": "// JavaScript: động + yếu\n\"1\" + 1;   // \"11\"\n\"5\" * 2;   // 10\n\n# Python: động + mạnh\n\"1\" + 1    # TypeError\n\n// TypeScript: tĩnh — lỗi ngay lúc biên dịch\nconst total: number = \"100\"; // Type 'string' is not assignable to type 'number'",
+    "tip": {
+      "vi": "Vẽ ra hai trục (tĩnh/động × mạnh/yếu) và xếp Python, JavaScript vào đúng ô — gọn và chứng tỏ bạn không nhầm hai khái niệm.",
+      "en": "Lay out the two axes (static/dynamic × strong/weak) and place Python and JavaScript correctly — concise, and proof you do not mix them up."
+    },
+    "followUps": [
+      {
+        "vi": "Type inference là gì? Nó có làm ngôn ngữ thành kiểu động không?",
+        "en": "What is type inference? Does it make a language dynamically typed?"
+      },
+      {
+        "vi": "TypeScript kiểm tra kiểu lúc chạy không? Vậy validate dữ liệu từ API bằng gì?",
+        "en": "Does TypeScript check types at runtime? Then how do you validate API data?"
+      }
+    ]
+  },
+  {
+    "id": "cs-lang-garbage-collection",
+    "level": "junior",
+    "topic": "Programming Languages",
+    "q": {
+      "vi": "Garbage collection hoạt động thế nào? Ngôn ngữ có GC thì còn bị memory leak không?",
+      "en": "How does garbage collection work? Can a garbage-collected language still leak memory?"
+    },
+    "a": {
+      "vi": "Garbage collector (GC) tự giải phóng bộ nhớ của những object không còn dùng tới, để lập trình viên không phải free thủ công như C.\n\nCác cách chính:\n- Reference counting: mỗi object đếm số tham chiếu tới nó, về 0 thì giải phóng ngay (CPython, Swift ARC). Đơn giản nhưng không tự xử lý được vòng tham chiếu (A trỏ B, B trỏ A).\n- Tracing (mark-and-sweep): định kỳ đi từ các gốc (biến trên stack, biến toàn cục) đánh dấu mọi object còn với tới được, phần còn lại là rác. Dùng trong JVM, .NET, V8. Xử lý được vòng tham chiếu.\n- Generational: phần lớn object chết trẻ, nên heap chia thế hệ trẻ/già; thế hệ trẻ được dọn thường xuyên và nhanh, object sống lâu được chuyển sang vùng già, ít dọn hơn.\n\nGC có chi phí: các lần tạm dừng (stop-the-world) làm tăng độ trễ, nên có các GC độ trễ thấp như G1, ZGC (Java).\n\nVẫn có memory leak — GC chỉ dọn object không còn ai tham chiếu, không dọn object bạn quên bỏ tham chiếu:\n- Cache hoặc Map toàn cục chỉ thêm không xoá.\n- Event listener, setInterval, subscription không huỷ.\n- Closure giữ tham chiếu tới object lớn.\n- Static collection trong Java.\nPhát hiện bằng heap snapshot (Chrome DevTools), heap dump + Eclipse MAT, hoặc theo dõi bộ nhớ tăng dần không giảm.",
+      "en": "A garbage collector (GC) automatically frees memory of objects that are no longer used, so programmers do not free it manually as in C.\n\nMain approaches:\n- Reference counting: each object counts references to it and is freed as soon as the count hits zero (CPython, Swift ARC). Simple, but cannot handle reference cycles on its own (A points to B, B points to A).\n- Tracing (mark-and-sweep): periodically start from roots (stack variables, globals), mark every reachable object, and treat the rest as garbage. Used by the JVM, .NET and V8. Handles cycles.\n- Generational: most objects die young, so the heap is split into young and old generations; the young one is collected often and quickly, and long-lived objects are promoted to the old one, collected less often.\n\nGC has a cost: stop-the-world pauses add latency, which is why low-latency collectors such as G1 and ZGC (Java) exist.\n\nLeaks still happen — the GC only frees objects nobody references, not objects you forgot to release:\n- Global caches or Maps that only grow.\n- Event listeners, setInterval timers and subscriptions never removed.\n- Closures holding references to large objects.\n- Static collections in Java.\nFind them with heap snapshots (Chrome DevTools), heap dumps + Eclipse MAT, or by watching memory grow and never drop."
+    },
+    "code": "// Leak: cache toàn cục chỉ thêm không xoá\nconst cache = new Map<string, Buffer>();\napp.get(\"/img/:id\", async (req, res) => {\n  if (!cache.has(req.params.id)) cache.set(req.params.id, await loadImage(req.params.id));\n  res.send(cache.get(req.params.id));\n});\n// Sửa: giới hạn kích thước (LRU) hoặc đặt TTL cho mỗi phần tử",
+    "tip": {
+      "vi": "Câu hỏi thật sự là vế thứ hai: nêu 2–3 nguồn leak cụ thể và cách bạn tìm ra chúng bằng công cụ nào.",
+      "en": "The real question is the second half: name 2–3 concrete leak sources and the tool you used to find them."
+    },
+    "followUps": [
+      {
+        "vi": "WeakMap / WeakReference dùng để làm gì?",
+        "en": "What are WeakMap / WeakReference for?"
+      },
+      {
+        "vi": "Service Java bị OutOfMemoryError trên production, bạn xử lý thế nào?",
+        "en": "A Java service hits OutOfMemoryError in production. What do you do?"
+      }
+    ]
+  },
+  {
+    "id": "cs-lang-exceptions",
+    "level": "junior",
+    "topic": "Programming Languages",
+    "q": {
+      "vi": "Bạn xử lý lỗi (exception) trong ứng dụng thế nào cho đúng? Checked và unchecked exception khác nhau ra sao?",
+      "en": "How do you handle errors (exceptions) properly in an application? How do checked and unchecked exceptions differ?"
+    },
+    "a": {
+      "vi": "Checked và unchecked (Java):\n- Checked exception (IOException, SQLException): trình biên dịch bắt buộc phải catch hoặc khai báo throws. Dùng cho lỗi dự đoán được mà nơi gọi có thể xử lý.\n- Unchecked (RuntimeException: NullPointerException, IllegalArgumentException): không bắt buộc. Thường là lỗi lập trình hoặc lỗi không thể phục hồi. Phần lớn ngôn ngữ khác (C#, Kotlin, JavaScript, Python) chỉ có loại này.\n\nNguyên tắc xử lý lỗi tốt:\n- Không nuốt lỗi: catch (e) {} rỗng làm lỗi biến mất, rất khó debug. Không xử lý được thì để lỗi đi lên.\n- Bắt ở đúng tầng: tầng thấp ném lỗi có ý nghĩa (OrderNotFoundError), một chỗ xử lý tập trung ở rìa ứng dụng (middleware Express, @ControllerAdvice Spring, exception filter) chuyển thành HTTP status và thông báo phù hợp.\n- Phân biệt lỗi nghiệp vụ dự đoán được (số dư không đủ → 400/422 kèm mã lỗi) với lỗi hệ thống (DB sập → 500, log đầy đủ, không lộ stack trace cho client).\n- Giữ nguyên nhân gốc khi bọc lỗi (new ServiceError(\"…\", { cause: e })).\n- Luôn giải phóng tài nguyên bằng finally / try-with-resources / using.\n- Với async: await trong try/catch, và đừng để promise bị từ chối mà không ai bắt (unhandled rejection).",
+      "en": "Checked vs unchecked (Java):\n- Checked exceptions (IOException, SQLException): the compiler forces you to catch them or declare throws. Meant for predictable failures the caller can handle.\n- Unchecked (RuntimeException: NullPointerException, IllegalArgumentException): not enforced. Usually programming bugs or unrecoverable errors. Most other languages (C#, Kotlin, JavaScript, Python) only have this kind.\n\nGood error-handling principles:\n- Do not swallow errors: an empty catch (e) {} makes failures vanish and is very hard to debug. If you cannot handle it, let it propagate.\n- Handle at the right layer: lower layers throw meaningful errors (OrderNotFoundError); one central handler at the application edge (Express middleware, Spring @ControllerAdvice, exception filters) maps them to HTTP statuses and messages.\n- Separate expected business errors (insufficient balance → 400/422 with an error code) from system failures (database down → 500, full logs, no stack trace leaked to the client).\n- Keep the root cause when wrapping (new ServiceError(\"…\", { cause: e })).\n- Always release resources with finally / try-with-resources / using.\n- For async code: await inside try/catch, and never leave a rejected promise unhandled."
+    },
+    "code": "class AppError extends Error {\n  constructor(public status: number, public code: string, message: string, opts?: { cause?: unknown }) {\n    super(message, opts);\n  }\n}\n\n// tầng service: ném lỗi có ý nghĩa\nif (!order) throw new AppError(404, \"ORDER_NOT_FOUND\", \"Order not found\");\n\n// một chỗ xử lý tập trung (Express)\napp.use((err, req, res, next) => {\n  if (err instanceof AppError) return res.status(err.status).json({ code: err.code, message: err.message });\n  logger.error(err);                       // lỗi hệ thống: log đủ\n  res.status(500).json({ code: \"INTERNAL\" }); // không lộ stack trace\n});",
+    "tip": {
+      "vi": "Nói \"một chỗ xử lý lỗi tập trung + phân biệt lỗi nghiệp vụ và lỗi hệ thống\" là đủ ăn điểm; thêm ví dụ global handler bạn đã viết.",
+      "en": "\"One central error handler + separate business errors from system errors\" earns the points; add an example of a global handler you wrote."
+    },
+    "followUps": [
+      {
+        "vi": "Có nên dùng exception để điều khiển luồng bình thường không? Vì sao?",
+        "en": "Should you use exceptions for normal control flow? Why?"
+      },
+      {
+        "vi": "Kiểu Result/Either (Rust, Go trả error) khác exception thế nào?",
+        "en": "How do Result/Either types (Rust, Go returning errors) compare to exceptions?"
+      }
+    ]
+  },
+  {
+    "id": "cs-os-concurrency-vs-parallelism",
+    "level": "intern",
+    "topic": "Operating Systems",
+    "q": {
+      "vi": "Concurrency (đồng thời) và parallelism (song song) khác nhau thế nào?",
+      "en": "What is the difference between concurrency and parallelism?"
+    },
+    "a": {
+      "vi": "- Concurrency: xử lý nhiều việc trong cùng một khoảng thời gian bằng cách xen kẽ chúng — việc này chờ thì làm việc khác. Không cần nhiều CPU: một CPU chuyển qua lại giữa các tác vụ cũng là concurrency. Đây là cách tổ chức chương trình.\n- Parallelism: nhiều việc thực sự chạy cùng một thời điểm trên nhiều lõi CPU hoặc nhiều máy. Đây là cách thực thi, cần phần cứng hỗ trợ.\n\nVí dụ đời thường: một người nấu ăn vừa luộc rau vừa thái thịt trong lúc chờ nước sôi là concurrency; hai người nấu hai món cùng lúc là parallelism.\n\nTrong lập trình:\n- Node.js: một thread chạy JavaScript nhưng xử lý hàng nghìn request đồng thời nhờ event loop và I/O bất đồng bộ — concurrency, không parallelism (trừ khi dùng worker threads/cluster).\n- Python có GIL: thread giúp cho việc chờ I/O (concurrency) nhưng không tăng tốc tính toán nặng; muốn parallelism dùng multiprocessing.\n- Java, Go, C#: thread / goroutine được lập lịch trên nhiều lõi nên có cả hai.\n\nChọn cách nào: việc chủ yếu chờ I/O (gọi API, DB) cần concurrency; việc tính toán nặng (xử lý ảnh, mã hoá video) cần parallelism.",
+      "en": "- Concurrency: dealing with many tasks over the same period by interleaving them — while one waits, work on another. It does not need multiple CPUs: one CPU switching between tasks is concurrent. It is a way of structuring a program.\n- Parallelism: several tasks literally running at the same instant on multiple CPU cores or machines. It is a way of executing, and needs hardware support.\n\nEveryday example: one cook chopping meat while waiting for water to boil is concurrency; two cooks making two dishes at once is parallelism.\n\nIn programming:\n- Node.js: one thread runs JavaScript but serves thousands of concurrent requests through the event loop and async I/O — concurrency without parallelism (unless you use worker threads/cluster).\n- Python has the GIL: threads help with waiting on I/O (concurrency) but do not speed up CPU-heavy work; use multiprocessing for parallelism.\n- Java, Go, C#: threads/goroutines are scheduled across cores, so you get both.\n\nWhich to choose: I/O-bound work (calling APIs, databases) needs concurrency; CPU-bound work (image processing, video encoding) needs parallelism."
+    },
+    "tip": {
+      "vi": "Câu của Rob Pike rất hợp để kết: \"Concurrency is about dealing with lots of things at once. Parallelism is about doing lots of things at once.\"",
+      "en": "Rob Pike's line makes a good close: \"Concurrency is about dealing with lots of things at once. Parallelism is about doing lots of things at once.\""
+    },
+    "followUps": [
+      {
+        "vi": "I/O-bound và CPU-bound khác nhau thế nào? Mỗi loại tối ưu ra sao?",
+        "en": "How do I/O-bound and CPU-bound work differ, and how do you optimise each?"
+      },
+      {
+        "vi": "Tăng số thread lên mãi có làm chương trình nhanh hơn không?",
+        "en": "Does adding more and more threads keep making a program faster?"
+      }
+    ],
+    "source": "https://go.dev/blog/waza-talk"
+  },
+  {
+    "id": "cs-os-stack-vs-heap",
+    "level": "junior",
+    "topic": "Operating Systems",
+    "q": {
+      "vi": "Bộ nhớ stack và heap khác nhau thế nào? Stack overflow xảy ra khi nào?",
+      "en": "How do stack and heap memory differ? When does a stack overflow happen?"
+    },
+    "a": {
+      "vi": "Stack:\n- Mỗi thread có một stack riêng. Mỗi lần gọi hàm, một stack frame được đẩy vào chứa tham số, biến cục bộ và địa chỉ trả về; hàm kết thúc thì frame bị gỡ ra.\n- Cấp phát/giải phóng cực nhanh (chỉ dịch con trỏ stack), tự động, theo thứ tự vào sau ra trước.\n- Kích thước nhỏ và cố định (thường vài trăm KB tới vài MB mỗi thread).\n\nHeap:\n- Vùng nhớ dùng chung cho cả tiến trình, chứa dữ liệu có kích thước động hoặc cần sống lâu hơn hàm tạo ra nó: object, mảng, chuỗi lớn.\n- Cấp phát chậm hơn, có thể bị phân mảnh; được giải phóng thủ công (C: malloc/free, C++: new/delete) hoặc bởi garbage collector.\n- Các thread dùng chung heap nên cần đồng bộ khi cùng ghi.\n\nTrong Java/C#: biến kiểu nguyên thủy cục bộ và tham chiếu nằm trên stack, còn object mà tham chiếu trỏ tới nằm trên heap.\n\nStack overflow: khi stack vượt giới hạn, thường do đệ quy quá sâu hoặc đệ quy không có điểm dừng, hoặc khai báo mảng cục bộ quá lớn. Cách xử lý: sửa điều kiện dừng, chuyển đệ quy thành vòng lặp với stack tự quản lý trên heap. Ngược lại, heap hết bộ nhớ gây OutOfMemoryError.",
+      "en": "Stack:\n- Each thread has its own stack. Every function call pushes a stack frame holding arguments, local variables and the return address; the frame is popped when the function returns.\n- Allocation and release are extremely fast (just moving the stack pointer), automatic and last-in first-out.\n- Small and fixed in size (usually a few hundred KB to a few MB per thread).\n\nHeap:\n- Memory shared by the whole process, for data of dynamic size or data that must outlive the function that created it: objects, arrays, large strings.\n- Slower allocation and possible fragmentation; freed manually (C: malloc/free, C++: new/delete) or by a garbage collector.\n- Threads share the heap, so concurrent writes need synchronisation.\n\nIn Java/C#: local primitives and references live on the stack, while the objects they point to live on the heap.\n\nStack overflow: the stack exceeds its limit, usually from recursion that is too deep or never stops, or from huge local arrays. Fixes: correct the base case, or turn recursion into a loop with an explicit stack kept on the heap. Running out of heap instead gives OutOfMemoryError."
+    },
+    "code": "function depth(n: number): number {\n  return depth(n + 1);   // thiếu điểm dừng\n}\ndepth(0); // RangeError: Maximum call stack size exceeded\n\n// Duyệt cây sâu: dùng stack tự quản lý thay vì đệ quy\nfunction visit(root: Node) {\n  const stack = [root];\n  while (stack.length) {\n    const n = stack.pop()!;\n    stack.push(...n.children);\n  }\n}",
+    "tip": {
+      "vi": "Nối sang thực tế: \"đệ quy duyệt cây/thư mục sâu trên production có thể tràn stack, nên mình chuyển sang vòng lặp\" — cho thấy bạn biết áp dụng.",
+      "en": "Link it to practice: \"deep recursive tree/directory traversal can overflow in production, so I switch to a loop\" — shows you can apply it."
+    },
+    "followUps": [
+      {
+        "vi": "Tail-call optimization là gì? JavaScript có hỗ trợ không?",
+        "en": "What is tail-call optimisation? Does JavaScript support it?"
+      },
+      {
+        "vi": "Vì sao biến cục bộ trên stack không cần khoá khi đa luồng?",
+        "en": "Why do local variables on the stack need no locking across threads?"
+      }
+    ]
+  },
+  {
+    "id": "cs-os-mutex-vs-semaphore",
+    "level": "junior",
+    "topic": "Operating Systems",
+    "q": {
+      "vi": "Mutex và semaphore khác nhau thế nào? Cho ví dụ dùng mỗi loại.",
+      "en": "What is the difference between a mutex and a semaphore? Give an example of each."
+    },
+    "a": {
+      "vi": "Cả hai đều là công cụ đồng bộ để kiểm soát việc nhiều thread truy cập tài nguyên dùng chung.\n\n- Mutex (mutual exclusion lock): chỉ cho đúng một thread vào vùng găng (critical section) tại một thời điểm. Có khái niệm \"chủ sở hữu\": thread nào lock thì chính thread đó phải unlock. Ví dụ bảo vệ việc cập nhật một biến đếm hay một Map dùng chung để tránh race condition.\n- Semaphore: một bộ đếm cho phép tối đa N thread cùng vào. acquire() giảm bộ đếm (bằng 0 thì chờ), release() tăng lên. Không có chủ sở hữu: thread này có thể release cho thread khác. Ví dụ giới hạn tối đa 10 kết nối đồng thời tới một API bên ngoài, hay connection pool 20 kết nối.\n- Binary semaphore (N = 1) trông giống mutex nhưng vẫn khác ở chỗ không có chủ sở hữu, nên hay dùng để báo hiệu giữa các thread (thread A xong việc thì release để thread B chạy tiếp).\n\nLưu ý: lock trong một tiến trình không bảo vệ được khi chạy nhiều instance service; khi đó cần lock phân tán (Redis, database row lock) hoặc thiết kế để không cần lock (idempotent, hàng đợi).",
+      "en": "Both are synchronisation tools that control how multiple threads access shared resources.\n\n- Mutex (mutual exclusion lock): lets exactly one thread into the critical section at a time. It has ownership: the thread that locks it must be the one to unlock it. E.g. protecting updates to a shared counter or Map to avoid a race condition.\n- Semaphore: a counter allowing up to N threads in at once. acquire() decrements (waiting at zero), release() increments. No ownership: one thread can release on behalf of another. E.g. limiting calls to an external API to 10 concurrent requests, or a connection pool of 20 connections.\n- A binary semaphore (N = 1) looks like a mutex but still has no owner, so it is often used for signalling between threads (thread A releases when done so thread B can continue).\n\nNote: an in-process lock does not help when several service instances run; then you need a distributed lock (Redis, a database row lock) or a design that avoids locking (idempotency, queues)."
+    },
+    "code": "import java.util.concurrent.Semaphore;\nimport java.util.concurrent.locks.ReentrantLock;\n\nReentrantLock lock = new ReentrantLock();\nvoid increment() {\n  lock.lock();\n  try { counter++; } finally { lock.unlock(); }   // chỉ 1 thread\n}\n\nSemaphore slots = new Semaphore(10);\nvoid callApi() throws InterruptedException {\n  slots.acquire();                                  // tối đa 10 thread\n  try { httpClient.send(request); } finally { slots.release(); }\n}",
+    "tip": {
+      "vi": "Ví dụ \"giới hạn 10 request đồng thời tới API bên thứ ba\" là ứng dụng semaphore thực tế, dễ hiểu hơn ví dụ sách giáo khoa.",
+      "en": "\"Limit concurrent calls to a third-party API to 10\" is a practical semaphore example, clearer than textbook ones."
+    },
+    "followUps": [
+      {
+        "vi": "Bốn điều kiện để xảy ra deadlock là gì?",
+        "en": "What are the four conditions for deadlock?"
+      },
+      {
+        "vi": "Spinlock là gì và khi nào dùng nó tốt hơn mutex?",
+        "en": "What is a spinlock and when is it better than a mutex?"
+      }
+    ]
+  },
+  {
+    "id": "cs-os-context-switch",
+    "level": "mid",
+    "topic": "Operating Systems",
+    "q": {
+      "vi": "Context switch là gì? Vì sao nó tốn kém và ảnh hưởng gì tới việc chọn số thread?",
+      "en": "What is a context switch? Why is it expensive, and how does it affect choosing a thread count?"
+    },
+    "a": {
+      "vi": "Context switch là khi hệ điều hành dừng thread/tiến trình đang chạy trên một lõi CPU để chạy cái khác. Nó phải lưu trạng thái của cái cũ (thanh ghi, con trỏ lệnh, con trỏ stack) và nạp trạng thái của cái mới. Xảy ra khi hết lượt thời gian (time slice), khi thread chờ I/O hoặc chờ lock, hoặc khi có ngắt.\n\nVì sao tốn kém:\n- Chi phí trực tiếp: chuyển vào kernel mode, lưu và nạp thanh ghi — vài micro giây.\n- Chi phí gián tiếp thường lớn hơn: cache CPU và TLB chứa dữ liệu của thread cũ, thread mới chạy sẽ bị cache miss một lúc. Chuyển giữa hai tiến trình khác nhau còn phải đổi không gian địa chỉ, đắt hơn chuyển giữa hai thread cùng tiến trình.\n\nẢnh hưởng tới số thread:\n- Việc nặng CPU: số thread ≈ số lõi; thêm nữa chỉ tăng context switch mà không nhanh hơn.\n- Việc chờ I/O: cần nhiều thread hơn số lõi vì phần lớn thời gian thread ngủ chờ; công thức ước lượng: số lõi × (1 + thời gian chờ / thời gian tính).\n- Hàng nghìn thread hệ điều hành cho hàng nghìn kết nối thì tốn bộ nhớ stack và context switch, nên các hệ thống hiện đại dùng event loop (Node.js, Nginx), goroutine (Go) hoặc virtual thread (Java 21) — nhiều tác vụ nhẹ chạy trên ít thread hệ điều hành.",
+      "en": "A context switch is when the OS stops the thread/process running on a CPU core to run another. It saves the old one's state (registers, instruction pointer, stack pointer) and loads the new one's. It happens when a time slice expires, when a thread blocks on I/O or a lock, or on an interrupt.\n\nWhy it is expensive:\n- Direct cost: entering kernel mode, saving and restoring registers — a few microseconds.\n- Indirect cost, often bigger: CPU caches and the TLB hold the old thread's data, so the new thread suffers cache misses for a while. Switching between processes also changes the address space, which costs more than switching threads within one process.\n\nImpact on thread count:\n- CPU-bound work: threads ≈ cores; more only adds context switches without speed.\n- I/O-bound work: more threads than cores, because threads mostly sleep while waiting; a rough formula is cores × (1 + wait time / compute time).\n- Thousands of OS threads for thousands of connections waste stack memory and context switches, so modern systems use event loops (Node.js, Nginx), goroutines (Go) or virtual threads (Java 21) — many lightweight tasks on a few OS threads."
+    },
+    "tip": {
+      "vi": "Nhắc chi phí gián tiếp (cache miss) và công thức chọn số thread cho việc I/O — đây là phần phân biệt mid với junior.",
+      "en": "Mention the indirect cost (cache misses) and the thread-count formula for I/O work — that is what separates mid from junior."
+    },
+    "followUps": [
+      {
+        "vi": "Virtual thread trong Java 21 khác platform thread thế nào?",
+        "en": "How do Java 21 virtual threads differ from platform threads?"
+      },
+      {
+        "vi": "Bạn đo context switch trên Linux bằng công cụ nào?",
+        "en": "Which tools do you use to measure context switches on Linux?"
+      }
+    ],
+    "source": "https://pages.cs.wisc.edu/~remzi/OSTEP/"
+  },
+  {
+    "id": "cs-os-virtual-memory",
+    "level": "mid",
+    "topic": "Operating Systems",
+    "q": {
+      "vi": "Virtual memory là gì? Paging, page fault và swap hoạt động thế nào?",
+      "en": "What is virtual memory? How do paging, page faults and swap work?"
+    },
+    "a": {
+      "vi": "Virtual memory cho mỗi tiến trình một không gian địa chỉ riêng, liên tục, như thể nó có cả bộ nhớ cho mình. Hệ điều hành và phần cứng (MMU) dịch địa chỉ ảo sang địa chỉ vật lý.\n\nLợi ích:\n- Cách ly: tiến trình này không đọc/ghi được bộ nhớ của tiến trình khác, lỗi một chương trình không làm hỏng chương trình khác.\n- Dùng được nhiều hơn RAM thật: phần ít dùng có thể nằm trên đĩa.\n- Chia sẻ hiệu quả: thư viện dùng chung chỉ nạp một lần vào RAM; fork() dùng copy-on-write.\n\nCách hoạt động:\n- Paging: bộ nhớ chia thành các trang cố định (thường 4 KB). Bảng trang (page table) ánh xạ trang ảo → khung vật lý; TLB là cache của bảng trang để dịch nhanh.\n- Page fault: truy cập trang chưa có trong RAM thì CPU báo lỗi, hệ điều hành nạp trang đó (từ file hoặc vùng swap) rồi cho chạy tiếp. Truy cập địa chỉ không hợp lệ thì thành segmentation fault.\n- Swap: khi RAM đầy, hệ điều hành đẩy các trang ít dùng ra đĩa. Đĩa chậm hơn RAM hàng nghìn lần, nên swap nhiều (thrashing) làm máy chậm hẳn.\n\nÝ nghĩa thực tế: trên server thường hạn chế swap; khi container vượt giới hạn bộ nhớ, Linux OOM killer sẽ giết tiến trình — đó là lý do pod Kubernetes bị OOMKilled.",
+      "en": "Virtual memory gives each process its own contiguous address space, as if it had all the memory to itself. The OS and hardware (the MMU) translate virtual addresses into physical ones.\n\nBenefits:\n- Isolation: a process cannot read or write another process's memory, so one buggy program cannot corrupt another.\n- Using more than physical RAM: rarely used parts can live on disk.\n- Efficient sharing: shared libraries are loaded into RAM once; fork() uses copy-on-write.\n\nHow it works:\n- Paging: memory is split into fixed pages (usually 4 KB). The page table maps virtual pages to physical frames; the TLB caches the page table for fast translation.\n- Page fault: touching a page not in RAM traps to the OS, which loads it (from a file or swap) and resumes. Touching an invalid address becomes a segmentation fault.\n- Swap: when RAM is full, the OS pushes rarely used pages to disk. Disk is thousands of times slower than RAM, so heavy swapping (thrashing) slows the machine dramatically.\n\nIn practice: servers usually limit swap; when a container exceeds its memory limit the Linux OOM killer terminates the process — which is why a Kubernetes pod gets OOMKilled."
+    },
+    "tip": {
+      "vi": "Kết bằng ví dụ OOMKilled trong Kubernetes hoặc lỗi segmentation fault — nối lý thuyết hệ điều hành với sự cố bạn có thể đã gặp.",
+      "en": "Finish with Kubernetes OOMKilled or a segmentation fault — linking OS theory to incidents you may have seen."
+    },
+    "followUps": [
+      {
+        "vi": "TLB miss là gì và vì sao huge page giúp ích?",
+        "en": "What is a TLB miss and why do huge pages help?"
+      },
+      {
+        "vi": "Copy-on-write trong fork() hoạt động thế nào?",
+        "en": "How does copy-on-write work with fork()?"
+      }
+    ],
+    "source": "https://pages.cs.wisc.edu/~remzi/OSTEP/"
+  },
+  {
+    "id": "cs-os-user-kernel-mode",
+    "level": "mid",
+    "topic": "Operating Systems",
+    "q": {
+      "vi": "User mode và kernel mode là gì? System call hoạt động thế nào?",
+      "en": "What are user mode and kernel mode? How does a system call work?"
+    },
+    "a": {
+      "vi": "CPU có các mức đặc quyền:\n- Kernel mode: mã của hệ điều hành chạy với toàn quyền — truy cập phần cứng, mọi vùng nhớ, lập lịch tiến trình.\n- User mode: ứng dụng chạy với quyền hạn chế, không được trực tiếp đụng tới đĩa, card mạng hay bộ nhớ của tiến trình khác. Nhờ vậy một ứng dụng lỗi không làm sập cả máy.\n\nSystem call là cách ứng dụng nhờ kernel làm việc cần đặc quyền: đọc/ghi file (read, write), mở kết nối mạng (socket), tạo tiến trình (fork, exec), cấp phát bộ nhớ (mmap). Quá trình:\n1. Ứng dụng (thường qua thư viện như libc, hoặc runtime của Node/Java) đặt số hiệu syscall và tham số vào thanh ghi rồi thực hiện lệnh đặc biệt (syscall trên x86-64).\n2. CPU chuyển sang kernel mode, nhảy vào hàm xử lý của kernel.\n3. Kernel kiểm tra quyền và tham số, làm việc, rồi trả kết quả và chuyển về user mode.\n\nChi phí: mỗi lần chuyển mode tốn hơn lời gọi hàm thường nhiều, nên đọc file từng byte rất chậm — dùng buffer (BufferedReader, stream) để gộp nhiều lần đọc thành ít syscall. Công cụ strace (Linux) cho xem một chương trình đang gọi những syscall nào, rất hữu ích khi debug \"chương trình treo không rõ lý do\".",
+      "en": "CPUs have privilege levels:\n- Kernel mode: operating-system code runs with full privileges — hardware access, all memory, process scheduling.\n- User mode: applications run with restricted rights and cannot touch the disk, network card or other processes' memory directly. So one buggy application cannot bring down the machine.\n\nA system call is how an application asks the kernel to do privileged work: reading/writing files (read, write), opening network connections (socket), creating processes (fork, exec), allocating memory (mmap). The flow:\n1. The application (usually through a library such as libc, or the Node/Java runtime) puts the syscall number and arguments into registers and executes a special instruction (syscall on x86-64).\n2. The CPU switches to kernel mode and jumps to the kernel's handler.\n3. The kernel checks permissions and arguments, does the work, returns the result and switches back to user mode.\n\nCost: each mode switch is far more expensive than a normal function call, so reading a file byte by byte is slow — use buffering (BufferedReader, streams) to turn many reads into few syscalls. strace (Linux) shows which syscalls a program makes, very handy for debugging \"the program hangs for no reason\"."
+    },
+    "code": "# Xem các syscall mà một lệnh gọi\nstrace -c ls /tmp        # thống kê số lần gọi từng syscall\nstrace -p 1234 -e trace=network   # theo dõi syscall mạng của tiến trình đang chạy",
+    "tip": {
+      "vi": "Nhắc strace và ví dụ \"đọc file không buffer rất chậm vì mỗi lần đọc là một syscall\" để biến câu lý thuyết thành kinh nghiệm thực tế.",
+      "en": "Mention strace and the \"unbuffered file reads are slow because each read is a syscall\" example to turn theory into practice."
+    },
+    "followUps": [
+      {
+        "vi": "Vì sao container dùng chung kernel với máy host? Điều đó ảnh hưởng gì tới bảo mật?",
+        "en": "Why do containers share the host kernel? What does that mean for security?"
+      },
+      {
+        "vi": "epoll giúp server xử lý nhiều kết nối mà ít syscall thế nào?",
+        "en": "How does epoll let a server handle many connections with few syscalls?"
+      }
+    ]
+  },
+  {
+    "id": "cs-net-osi-tcp-ip",
+    "level": "intern",
+    "topic": "Networking",
+    "q": {
+      "vi": "Mô hình OSI 7 tầng và mô hình TCP/IP là gì? Các giao thức quen thuộc nằm ở tầng nào?",
+      "en": "What are the 7-layer OSI model and the TCP/IP model? Which layers do familiar protocols belong to?"
+    },
+    "a": {
+      "vi": "Mô hình phân tầng chia việc truyền dữ liệu thành các tầng, mỗi tầng chỉ lo một việc và phục vụ tầng trên nó. Nhờ vậy có thể thay Wi-Fi bằng cáp quang mà HTTP không cần biết.\n\nOSI (7 tầng, từ dưới lên):\n1. Physical: tín hiệu điện, sóng, cáp.\n2. Data Link: truyền giữa hai thiết bị cạnh nhau trong mạng cục bộ — Ethernet, Wi-Fi, địa chỉ MAC, switch.\n3. Network: định tuyến giữa các mạng — IP, router.\n4. Transport: truyền giữa hai tiến trình, qua port — TCP, UDP.\n5. Session, 6. Presentation, 7. Application: phiên làm việc, mã hoá/định dạng dữ liệu, giao thức ứng dụng — HTTP, DNS, SMTP.\n\nTCP/IP (4 tầng, mô hình thực tế mà Internet dùng): Link (≈ OSI 1–2), Internet (≈ 3, IP), Transport (≈ 4, TCP/UDP), Application (≈ 5–7, HTTP, DNS, TLS…).\n\nÝ nghĩa khi làm việc:\n- Load balancer L4 làm việc với IP + port, L7 hiểu được HTTP (đọc URL, header, cookie).\n- Debug theo tầng: không ping được (tầng 3) thì chưa cần xem lỗi HTTP; ping được nhưng không telnet được port (tầng 4) thì xem firewall/service; kết nối được mà lỗi 500 thì là tầng ứng dụng.",
+      "en": "Layered models split data transmission into layers, each doing one job and serving the layer above. That is why you can swap Wi-Fi for fibre without HTTP noticing.\n\nOSI (7 layers, bottom up):\n1. Physical: electrical signals, radio, cables.\n2. Data Link: transfer between neighbouring devices on a local network — Ethernet, Wi-Fi, MAC addresses, switches.\n3. Network: routing between networks — IP, routers.\n4. Transport: transfer between two processes via ports — TCP, UDP.\n5. Session, 6. Presentation, 7. Application: sessions, encoding/encryption of data, application protocols — HTTP, DNS, SMTP.\n\nTCP/IP (4 layers, the practical model the Internet uses): Link (≈ OSI 1–2), Internet (≈ 3, IP), Transport (≈ 4, TCP/UDP), Application (≈ 5–7, HTTP, DNS, TLS…).\n\nWhy it matters at work:\n- An L4 load balancer works with IP + port; an L7 one understands HTTP (URL, headers, cookies).\n- Debug layer by layer: if ping fails (layer 3) there is no point looking at HTTP errors; if ping works but you cannot connect to the port (layer 4), check firewalls/the service; if you connect and get a 500, it is the application layer."
+    },
+    "tip": {
+      "vi": "Đừng chỉ đọc tên 7 tầng: phần \"debug theo từng tầng\" mới là thứ cho thấy bạn dùng được kiến thức này.",
+      "en": "Do not just list the seven names: the \"debug layer by layer\" part is what shows you can use this knowledge."
+    },
+    "followUps": [
+      {
+        "vi": "TLS nằm ở tầng nào? Vì sao khó xếp nó vào đúng một tầng?",
+        "en": "Which layer does TLS belong to? Why is it hard to place in one layer?"
+      },
+      {
+        "vi": "Switch và router khác nhau thế nào?",
+        "en": "How do a switch and a router differ?"
+      }
+    ]
+  },
+  {
+    "id": "cs-net-what-happens-url",
+    "level": "intern",
+    "topic": "Networking",
+    "q": {
+      "vi": "Điều gì xảy ra từ lúc gõ một URL vào trình duyệt tới khi trang hiện ra?",
+      "en": "What happens from typing a URL into the browser until the page appears?"
+    },
+    "a": {
+      "vi": "Ví dụ gõ https://shop.vn/products:\n\n1. Phân tích URL: giao thức https, tên miền shop.vn, đường dẫn /products. Trình duyệt kiểm tra HSTS để biết có bắt buộc HTTPS không.\n2. DNS: tìm địa chỉ IP của shop.vn — lần lượt qua cache trình duyệt, cache hệ điều hành (và file hosts), DNS resolver của nhà mạng/8.8.8.8; resolver hỏi root → .vn → name server của shop.vn nếu chưa có trong cache.\n3. Kết nối TCP: bắt tay ba bước (SYN, SYN-ACK, ACK) tới IP đó, port 443. (HTTP/3 dùng QUIC trên UDP thay cho TCP.)\n4. TLS handshake: thống nhất thuật toán mã hoá, server gửi chứng chỉ, trình duyệt kiểm tra chứng chỉ hợp lệ và đúng tên miền, hai bên tạo khoá phiên.\n5. Gửi HTTP request: GET /products, kèm header Host, cookie, Accept…\n6. Phía server: thường qua CDN/load balancer, tới web server, ứng dụng xử lý (đọc DB, cache) rồi trả response: status 200, header, HTML.\n7. Trình duyệt render: phân tích HTML thành DOM, tải CSS (CSSOM), JavaScript, ảnh — mỗi tài nguyên lại là request (tái sử dụng kết nối); dựng render tree → layout → paint → hiện ra màn hình. JavaScript có thể gọi thêm API và cập nhật trang.\n\nCâu này không có đáp án duy nhất — người phỏng vấn thường cho bạn chọn đào sâu một bước (DNS, TLS hay rendering) tuỳ vị trí.",
+      "en": "Say you type https://shop.vn/products:\n\n1. Parse the URL: scheme https, host shop.vn, path /products. The browser checks HSTS to see whether HTTPS is mandatory.\n2. DNS: find the IP of shop.vn — browser cache, OS cache (and hosts file), then the ISP's resolver or 8.8.8.8; on a cache miss the resolver asks the root → .vn → shop.vn's name servers.\n3. TCP connection: the three-way handshake (SYN, SYN-ACK, ACK) to that IP on port 443. (HTTP/3 uses QUIC over UDP instead of TCP.)\n4. TLS handshake: agree on ciphers, the server sends its certificate, the browser checks it is valid and matches the domain, and both sides derive session keys.\n5. Send the HTTP request: GET /products with Host, cookies, Accept and other headers.\n6. Server side: usually through a CDN/load balancer to a web server, where the application does its work (database, cache) and returns a response: status 200, headers, HTML.\n7. Browser rendering: parse HTML into the DOM, load CSS (CSSOM), JavaScript and images — each is another request (reusing connections); build the render tree → layout → paint → pixels on screen. JavaScript may call more APIs and update the page.\n\nThere is no single right answer — interviewers usually let you go deep on one step (DNS, TLS or rendering) depending on the role."
+    },
+    "tip": {
+      "vi": "Trình bày khung 7 bước trước trong 1 phút, rồi chủ động hỏi \"anh/chị muốn em đi sâu phần nào?\" — tránh sa vào một bước quá lâu.",
+      "en": "Give the 7-step outline in one minute first, then ask \"which part would you like me to go deeper on?\" — avoid getting stuck on one step."
+    },
+    "followUps": [
+      {
+        "vi": "Trình duyệt làm gì để trang hiện ra nhanh hơn ở lần truy cập thứ hai?",
+        "en": "What does the browser do to make the second visit faster?"
+      },
+      {
+        "vi": "Nếu trang trắng không hiện gì, bạn kiểm tra những bước nào?",
+        "en": "If the page stays blank, which steps do you check?"
+      }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Web/Performance/How_browsers_work"
+  },
+  {
+    "id": "cs-net-tcp-handshake",
+    "level": "junior",
+    "topic": "Networking",
+    "q": {
+      "vi": "Bắt tay ba bước của TCP diễn ra thế nào? Vì sao đóng kết nối cần bốn bước và TIME_WAIT là gì?",
+      "en": "How does TCP's three-way handshake work? Why does closing take four steps, and what is TIME_WAIT?"
+    },
+    "a": {
+      "vi": "Mở kết nối (three-way handshake):\n1. Client gửi SYN kèm số thứ tự ban đầu x.\n2. Server trả SYN-ACK: đồng ý, gửi số thứ tự của nó y và xác nhận x+1.\n3. Client gửi ACK xác nhận y+1. Kết nối sẵn sàng.\nCần ba bước để cả hai phía đều biết bên kia nhận được và thống nhất số thứ tự ban đầu của nhau — dùng để sắp xếp gói tin và phát hiện gói mất.\n\nĐóng kết nối (bốn bước): TCP là song công, mỗi chiều đóng riêng. Bên A gửi FIN (\"tôi hết dữ liệu để gửi\"), B trả ACK; B có thể vẫn đang gửi nốt dữ liệu, xong mới gửi FIN của mình, A trả ACK. ACK và FIN của B thường không gộp được vì B chưa chắc đã gửi xong.\n\nTIME_WAIT: bên chủ động đóng giữ trạng thái này khoảng 2 × MSL (thường 30 giây tới 2 phút) để (1) gửi lại ACK cuối nếu nó bị mất, và (2) gói tin cũ còn lạc trên mạng không bị nhầm vào kết nối mới cùng địa chỉ và port.\n\nThực tế: server hoặc client mở/đóng rất nhiều kết nối ngắn sẽ tích tụ hàng nghìn socket TIME_WAIT, có thể hết port tạm. Cách xử lý: dùng keep-alive và connection pool để tái sử dụng kết nối thay vì mở mới cho mỗi request.",
+      "en": "Opening (three-way handshake):\n1. The client sends SYN with its initial sequence number x.\n2. The server replies SYN-ACK: it agrees, sends its own sequence number y and acknowledges x+1.\n3. The client sends ACK for y+1. The connection is ready.\nThree steps let both sides know the other is receiving and agree on each other's initial sequence numbers — used to order packets and detect loss.\n\nClosing (four steps): TCP is full duplex and each direction closes separately. A sends FIN (\"I have nothing more to send\"), B replies ACK; B may still be sending remaining data, and only then sends its own FIN, which A acknowledges. B's ACK and FIN usually cannot be combined because B may not be finished.\n\nTIME_WAIT: the side that closes first stays in this state for about 2 × MSL (typically 30 seconds to 2 minutes) to (1) resend the final ACK if it was lost and (2) make sure stray old packets are not mistaken for a new connection with the same address and port.\n\nIn practice: a server or client opening and closing many short connections piles up thousands of TIME_WAIT sockets and can run out of ephemeral ports. The fix is keep-alive and connection pooling to reuse connections instead of opening one per request."
+    },
+    "tip": {
+      "vi": "Phần TIME_WAIT + connection pool là thứ biến câu hỏi lý thuyết thành câu chuyện vận hành — nên nhắc nếu bạn làm backend.",
+      "en": "The TIME_WAIT + connection pool part turns a theory question into an operations story — mention it if you do backend work."
+    },
+    "followUps": [
+      {
+        "vi": "SYN flood là gì và SYN cookies chống nó thế nào?",
+        "en": "What is a SYN flood and how do SYN cookies defend against it?"
+      },
+      {
+        "vi": "TCP đảm bảo thứ tự và không mất gói bằng cách nào?",
+        "en": "How does TCP guarantee ordering and no packet loss?"
+      }
+    ],
+    "source": "https://www.rfc-editor.org/rfc/rfc9293"
+  },
+  {
+    "id": "cs-net-ip-subnet-nat",
+    "level": "junior",
+    "topic": "Networking",
+    "q": {
+      "vi": "Địa chỉ IP, subnet mask / CIDR và NAT là gì? IP public và private khác nhau thế nào?",
+      "en": "What are IP addresses, subnet masks / CIDR and NAT? How do public and private IPs differ?"
+    },
+    "a": {
+      "vi": "- Địa chỉ IPv4: 32 bit, viết thành 4 số 0–255 (192.168.1.10). Gồm phần mạng (network) và phần máy (host). IPv6 dài 128 bit, ra đời vì IPv4 chỉ có khoảng 4,3 tỉ địa chỉ.\n- Subnet mask / CIDR: cho biết bao nhiêu bit đầu là phần mạng. 192.168.1.0/24 nghĩa là 24 bit mạng, 8 bit máy → 256 địa chỉ (254 dùng được cho máy, trừ địa chỉ mạng và broadcast). /16 có 65.536 địa chỉ. Hai máy cùng subnet nói chuyện trực tiếp; khác subnet phải qua router (default gateway).\n- IP private: các dải dành cho mạng nội bộ, không định tuyến trên Internet: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16. Nhiều mạng khác nhau dùng trùng được.\n- IP public: duy nhất trên toàn Internet, do nhà mạng/cloud cấp.\n- NAT: router đổi địa chỉ private của các máy trong mạng thành một IP public khi ra Internet, và ghi nhớ ánh xạ (qua port) để chuyển phản hồi về đúng máy. Nhờ vậy cả công ty dùng chung một IP public; máy bên ngoài không tự kết nối vào máy bên trong được nếu không mở port forwarding.\n\nỨng dụng: thiết kế VPC trên AWS/GCP — chia subnet public (có Internet gateway, đặt load balancer) và subnet private (đặt app, database; ra Internet qua NAT gateway). Chọn dải CIDR không trùng nhau nếu sau này cần nối các VPC hay nối với mạng văn phòng.",
+      "en": "- IPv4 address: 32 bits written as four numbers 0–255 (192.168.1.10). It has a network part and a host part. IPv6 is 128 bits long, created because IPv4 offers only about 4.3 billion addresses.\n- Subnet mask / CIDR: how many leading bits are the network part. 192.168.1.0/24 means 24 network bits and 8 host bits → 256 addresses (254 usable for hosts, minus the network and broadcast addresses). A /16 has 65,536 addresses. Machines in the same subnet talk directly; different subnets go through a router (default gateway).\n- Private IPs: ranges reserved for internal networks, not routed on the Internet: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16. Many separate networks can reuse them.\n- Public IPs: unique across the Internet, assigned by ISPs/cloud providers.\n- NAT: the router rewrites internal private addresses to one public IP on the way out and remembers the mapping (by port) to route replies back to the right machine. A whole office can share one public IP; outside machines cannot connect in unless a port is forwarded.\n\nApplied: designing a VPC on AWS/GCP — public subnets (with an Internet gateway, for load balancers) and private subnets (apps, databases; outbound via a NAT gateway). Pick non-overlapping CIDR ranges if VPCs or the office network will ever need to be connected."
+    },
+    "code": "10.0.0.0/16      VPC (65.536 địa chỉ)\n├─ 10.0.1.0/24   public subnet  → load balancer, có Internet gateway\n├─ 10.0.2.0/24   private subnet → app server, ra Internet qua NAT gateway\n└─ 10.0.3.0/24   private subnet → database, không ra Internet",
+    "tip": {
+      "vi": "Tính nhanh được số địa chỉ của /24, /16 và giải thích một VPC public/private subnet là đủ cho hầu hết vòng phỏng vấn backend/DevOps.",
+      "en": "Quickly computing the size of a /24 and /16 and explaining a public/private-subnet VPC is enough for most backend/DevOps rounds."
+    },
+    "followUps": [
+      {
+        "vi": "Hai VPC có dải CIDR trùng nhau thì vì sao không peering được?",
+        "en": "Why can two VPCs with overlapping CIDR ranges not be peered?"
+      },
+      {
+        "vi": "localhost / 127.0.0.1 và 0.0.0.0 khác nhau thế nào khi chạy server?",
+        "en": "How do localhost / 127.0.0.1 and 0.0.0.0 differ when binding a server?"
+      }
+    ]
+  },
+  {
+    "id": "cs-net-polling-websocket",
+    "level": "junior",
+    "topic": "Networking",
+    "q": {
+      "vi": "So sánh polling, long polling, Server-Sent Events và WebSocket. Khi nào dùng cái nào?",
+      "en": "Compare polling, long polling, Server-Sent Events and WebSocket. When do you use each?"
+    },
+    "a": {
+      "vi": "Bài toán: server có dữ liệu mới (tin nhắn, trạng thái đơn hàng) và cần báo cho client.\n\n- Polling: client hỏi định kỳ (mỗi 5 giây gọi GET /status). Đơn giản nhất, chạy mọi nơi, nhưng trễ tới một chu kỳ và tốn request vô ích khi không có gì mới.\n- Long polling: client gửi request, server giữ request đó tới khi có dữ liệu mới (hoặc hết thời gian chờ) rồi mới trả; client nhận xong gửi request tiếp. Gần real-time, vẫn là HTTP thường, nhưng mỗi tin là một vòng request và server phải giữ nhiều kết nối treo.\n- Server-Sent Events (SSE): một kết nối HTTP mở lâu, server đẩy sự kiện một chiều xuống client (EventSource trong trình duyệt, tự kết nối lại). Hợp với thông báo, giá cổ phiếu, trạng thái job, stream câu trả lời của chatbot AI.\n- WebSocket: sau một lần bắt tay HTTP (Upgrade), có kênh hai chiều, độ trễ thấp, overhead mỗi tin nhỏ. Hợp với chat, game, cộng tác thời gian thực. Đổi lại phải tự lo xác thực, kết nối lại, heartbeat; scale ngang khó hơn (cần sticky session hoặc pub/sub như Redis để các server chuyển tin cho nhau).\n\nChọn: cập nhật hiếm, chấp nhận trễ → polling. Server đẩy một chiều → SSE. Hai chiều liên tục → WebSocket. Long polling chủ yếu là phương án dự phòng khi môi trường chặn hai cách kia.",
+      "en": "The problem: the server has new data (a message, an order status) and must tell the client.\n\n- Polling: the client asks periodically (GET /status every 5 seconds). The simplest and works everywhere, but up to one interval of delay and many wasted requests when nothing changes.\n- Long polling: the client sends a request and the server holds it until there is new data (or a timeout), then responds; the client immediately sends the next one. Near real-time and still plain HTTP, but every message costs a request round trip and the server holds many hanging connections.\n- Server-Sent Events (SSE): one long-lived HTTP connection over which the server pushes events one way to the client (EventSource in the browser, with automatic reconnect). Good for notifications, stock prices, job status, streaming an AI chatbot's answer.\n- WebSocket: after one HTTP handshake (Upgrade) you get a two-way channel with low latency and little per-message overhead. Good for chat, games, real-time collaboration. In exchange you handle authentication, reconnects and heartbeats yourself, and horizontal scaling is harder (sticky sessions or pub/sub such as Redis so servers can relay messages).\n\nChoosing: rare updates where delay is fine → polling. One-way server push → SSE. Continuous two-way traffic → WebSocket. Long polling is mostly a fallback when the environment blocks the other two."
+    },
+    "code": "// SSE phía client: server đẩy một chiều, tự kết nối lại\nconst es = new EventSource(\"/api/orders/42/events\");\nes.onmessage = (e) => render(JSON.parse(e.data));\n\n// WebSocket: hai chiều\nconst ws = new WebSocket(\"wss://chat.example.com\");\nws.onmessage = (e) => addMessage(JSON.parse(e.data));\nws.send(JSON.stringify({ room: \"team\", text: \"hello\" }));",
+    "tip": {
+      "vi": "Nhiều ứng viên nhảy ngay vào WebSocket. Nói \"nếu chỉ cần server đẩy xuống thì SSE đơn giản hơn\" cho thấy bạn chọn công cụ theo bài toán.",
+      "en": "Many candidates jump straight to WebSocket. Saying \"if the server only pushes, SSE is simpler\" shows you pick tools by the problem."
+    },
+    "followUps": [
+      {
+        "vi": "Scale WebSocket lên nhiều server thì tin nhắn giữa hai người ở hai server khác nhau đi thế nào?",
+        "en": "When WebSocket is scaled across servers, how does a message reach a user connected to a different server?"
+      },
+      {
+        "vi": "Xác thực kết nối WebSocket bằng cách nào?",
+        "en": "How do you authenticate a WebSocket connection?"
+      }
+    ],
+    "source": "https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events"
+  },
+  {
+    "id": "cs-sec-hash-encrypt-encode",
+    "level": "junior",
+    "topic": "Security & Encoding",
+    "q": {
+      "vi": "Hashing, encryption và encoding khác nhau thế nào? Lưu mật khẩu người dùng nên dùng cái nào?",
+      "en": "How do hashing, encryption and encoding differ? Which should you use to store user passwords?"
+    },
+    "a": {
+      "vi": "- Encoding (mã hoá dạng biểu diễn): đổi dữ liệu sang định dạng khác để truyền hoặc lưu, ai cũng giải ngược được, không có khoá. Ví dụ Base64, URL encoding, UTF-8. Không phải bảo mật: Base64 một mật khẩu không bảo vệ gì cả.\n- Encryption (mã hoá bảo mật): biến dữ liệu thành bản mã, chỉ ai có khoá mới giải ngược được. Hai chiều. Ví dụ AES để mã hoá dữ liệu nhạy cảm trong DB, TLS cho dữ liệu trên đường truyền. Dùng khi cần đọc lại dữ liệu gốc (số thẻ, token của bên thứ ba).\n- Hashing (băm): biến dữ liệu thành chuỗi có độ dài cố định, một chiều — không giải ngược được; cùng đầu vào luôn cho cùng kết quả. Ví dụ SHA-256 để kiểm tra file có bị sửa không, tạo checksum, khoá cache.\n\nLưu mật khẩu: dùng hash, nhưng phải là hàm băm chuyên cho mật khẩu — bcrypt, scrypt hoặc Argon2 — vì chúng:\n- Có salt ngẫu nhiên cho mỗi người dùng, nên hai người cùng mật khẩu ra hash khác nhau và rainbow table vô dụng.\n- Cố tình chậm (có tham số cost) để dò mật khẩu hàng tỉ lần trở nên quá đắt.\nKhông dùng MD5/SHA-256 trần cho mật khẩu (quá nhanh để brute force), và không dùng encryption (lộ khoá là lộ toàn bộ mật khẩu). Đăng nhập thì băm mật khẩu nhập vào rồi so sánh.",
+      "en": "- Encoding: converts data into another format for transport or storage; anyone can reverse it and there is no key. E.g. Base64, URL encoding, UTF-8. It is not security: Base64-ing a password protects nothing.\n- Encryption: turns data into ciphertext that only key holders can reverse. Two-way. E.g. AES for sensitive columns in a database, TLS for data in transit. Use it when you need the original back (card numbers, third-party tokens).\n- Hashing: maps data to a fixed-length string, one way — it cannot be reversed; the same input always gives the same output. E.g. SHA-256 to check a file was not modified, checksums, cache keys.\n\nStoring passwords: hash them, but with a password-specific function — bcrypt, scrypt or Argon2 — because they:\n- Use a random salt per user, so two users with the same password get different hashes and rainbow tables are useless.\n- Are deliberately slow (with a cost parameter), making billions of guesses too expensive.\nDo not use plain MD5/SHA-256 for passwords (too fast to brute-force), and do not use encryption (leak the key and every password leaks). At login, hash the entered password and compare."
+    },
+    "code": "import bcrypt from \"bcrypt\";\n\n// đăng ký: salt được sinh và lưu sẵn trong chuỗi hash\nconst hash = await bcrypt.hash(password, 12);   // cost 12\n\n// đăng nhập\nconst ok = await bcrypt.compare(input, user.passwordHash);\n\n// encoding KHÔNG phải bảo mật\nBuffer.from(\"secret\").toString(\"base64\"); // \"c2VjcmV0\" — ai cũng giải được",
+    "tip": {
+      "vi": "Hai từ khoá người phỏng vấn chờ: \"salt\" và \"cố tình chậm\". Nêu tên bcrypt/Argon2 và nói vì sao không dùng SHA-256 trần.",
+      "en": "The two keywords interviewers wait for: \"salt\" and \"deliberately slow\". Name bcrypt/Argon2 and say why plain SHA-256 is not enough."
+    },
+    "followUps": [
+      {
+        "vi": "Pepper là gì và khác salt thế nào?",
+        "en": "What is a pepper and how does it differ from a salt?"
+      },
+      {
+        "vi": "HMAC dùng để làm gì? Khác hash thường ra sao?",
+        "en": "What is HMAC for, and how does it differ from a plain hash?"
+      }
+    ],
+    "source": "https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html"
+  },
+  {
+    "id": "cs-sec-symmetric-asymmetric",
+    "level": "junior",
+    "topic": "Security & Encoding",
+    "q": {
+      "vi": "Mã hoá đối xứng và bất đối xứng khác nhau thế nào? Chữ ký số hoạt động ra sao?",
+      "en": "How do symmetric and asymmetric encryption differ? How do digital signatures work?"
+    },
+    "a": {
+      "vi": "- Mã hoá đối xứng: dùng cùng một khoá để mã hoá và giải mã (AES, ChaCha20). Rất nhanh, hợp mã hoá lượng dữ liệu lớn. Khó khăn là chia sẻ khoá an toàn cho bên kia: gửi khoá qua mạng thì ai nghe lén cũng lấy được.\n- Mã hoá bất đối xứng: mỗi bên có một cặp khoá — public key công khai cho mọi người, private key giữ bí mật (RSA, elliptic curve). Mã hoá bằng public key thì chỉ private key tương ứng giải được. Giải quyết được bài toán trao đổi khoá, nhưng chậm hơn đối xứng rất nhiều.\n\nThực tế kết hợp cả hai: TLS dùng bất đối xứng (trao đổi khoá kiểu Diffie-Hellman, chứng chỉ của server) để hai bên thống nhất một khoá phiên, rồi dùng khoá đối xứng đó mã hoá toàn bộ dữ liệu.\n\nChữ ký số — chứng minh ai gửi và nội dung không bị sửa:\n1. Người gửi băm nội dung, rồi ký giá trị băm bằng private key của mình.\n2. Người nhận dùng public key của người gửi để kiểm tra chữ ký khớp với giá trị băm của nội dung nhận được.\nSửa một byte nội dung là chữ ký không khớp; không có private key thì không giả được chữ ký.\n\nGặp ở đâu: JWT ký bằng RS256 (server ký bằng private key, các service khác chỉ cần public key để kiểm tra), chứng chỉ HTTPS, SSH key, ký commit Git, webhook từ cổng thanh toán.",
+      "en": "- Symmetric encryption: the same key encrypts and decrypts (AES, ChaCha20). Very fast, suitable for large amounts of data. The hard part is sharing the key safely: send it over the network and any eavesdropper gets it.\n- Asymmetric encryption: each party has a key pair — a public key shared with everyone and a private key kept secret (RSA, elliptic curves). Data encrypted with the public key can only be decrypted with the matching private key. It solves key exchange but is much slower than symmetric encryption.\n\nIn practice they are combined: TLS uses asymmetric techniques (Diffie-Hellman key exchange, the server's certificate) so both sides agree on a session key, then encrypts all data with that symmetric key.\n\nDigital signatures — proving who sent something and that it was not modified:\n1. The sender hashes the content and signs the hash with their private key.\n2. The receiver uses the sender's public key to verify that the signature matches the hash of the content received.\nChange one byte and the signature no longer matches; without the private key the signature cannot be forged.\n\nWhere you meet them: JWTs signed with RS256 (the issuer signs with a private key, other services only need the public key to verify), HTTPS certificates, SSH keys, signed Git commits, payment-gateway webhooks."
+    },
+    "tip": {
+      "vi": "Ví dụ JWT RS256 so với HS256 (một khoá chung cho mọi service) là cách hay để nối lý thuyết với kiến trúc microservice.",
+      "en": "Comparing JWT RS256 with HS256 (one shared key for every service) is a good way to link the theory to microservice architecture."
+    },
+    "followUps": [
+      {
+        "vi": "Chứng chỉ SSL/TLS và certificate authority (CA) đóng vai trò gì?",
+        "en": "What role do SSL/TLS certificates and certificate authorities (CAs) play?"
+      },
+      {
+        "vi": "Bạn sẽ xác minh webhook từ cổng thanh toán là thật bằng cách nào?",
+        "en": "How would you verify that a payment-gateway webhook is genuine?"
+      }
+    ]
+  },
+  {
+    "id": "cs-encoding-unicode-utf8",
+    "level": "junior",
+    "topic": "Security & Encoding",
+    "q": {
+      "vi": "Unicode và UTF-8 là gì? Vì sao tiếng Việt hay bị lỗi font (mojibake) và xử lý thế nào?",
+      "en": "What are Unicode and UTF-8? Why does Vietnamese text often turn into garbled characters (mojibake), and how do you fix it?"
+    },
+    "a": {
+      "vi": "- Unicode: bảng gán cho mỗi ký tự của mọi ngôn ngữ một mã số (code point), ví dụ \"ệ\" là U+1EC7. Unicode chỉ nói ký tự nào có số nào, chưa nói lưu thành byte ra sao.\n- UTF-8: một cách mã hoá code point thành byte, dùng 1–4 byte mỗi ký tự: chữ ASCII 1 byte (tương thích ngược với ASCII), chữ tiếng Việt có dấu thường 2–3 byte. Là chuẩn mặc định của web. UTF-16 (dùng bên trong Java, JavaScript, Windows) dùng 2 hoặc 4 byte.\n\nVì sao lỗi font: dữ liệu được ghi bằng một bảng mã nhưng đọc bằng bảng mã khác. Ví dụ byte UTF-8 của \"Việt\" bị đọc như Latin-1/Windows-1252 thành \"Viá»‡t\".\n\nĐặc thù tiếng Việt — hai dạng Unicode: dựng sẵn (NFC: \"ệ\" là một code point) và tổ hợp (NFD: \"e\" + dấu mũ + dấu nặng). Nhìn giống hệt nhau nhưng so sánh chuỗi, tìm kiếm, đếm độ dài ra khác. Dữ liệu copy từ macOS hoặc bộ gõ cũ hay là dạng tổ hợp.\n\nCách xử lý:\n- Dùng UTF-8 ở mọi tầng: file mã nguồn, header Content-Type: text/html; charset=utf-8, kết nối và bảng database (MySQL dùng utf8mb4, không phải utf8 cũ chỉ 3 byte — thiếu emoji), file CSV xuất cho Excel thêm BOM.\n- Chuẩn hoá về NFC trước khi lưu và so sánh: str.normalize(\"NFC\").\n- Độ dài chuỗi: \"ệ\".length là 1 ở dạng NFC nhưng 3 ở dạng NFD; byte UTF-8 nhiều hơn số ký tự, cẩn thận khi giới hạn VARCHAR hay cắt chuỗi.",
+      "en": "- Unicode: a table assigning every character of every language a number (code point), e.g. \"ệ\" is U+1EC7. Unicode only says which character has which number, not how it is stored as bytes.\n- UTF-8: one way to encode code points as bytes, using 1–4 bytes per character: ASCII letters take 1 byte (backward compatible with ASCII), accented Vietnamese letters usually 2–3 bytes. It is the web's default. UTF-16 (used inside Java, JavaScript and Windows) uses 2 or 4 bytes.\n\nWhy text gets garbled: data is written in one encoding and read in another. E.g. the UTF-8 bytes of \"Việt\" read as Latin-1/Windows-1252 become \"Viá»‡t\".\n\nA Vietnamese-specific trap — two Unicode forms: precomposed (NFC: \"ệ\" is one code point) and decomposed (NFD: \"e\" + circumflex + dot below). They look identical, but string comparison, search and length differ. Text copied from macOS or old input methods is often decomposed.\n\nFixes:\n- Use UTF-8 at every layer: source files, the Content-Type: text/html; charset=utf-8 header, database connections and tables (MySQL needs utf8mb4, not the legacy 3-byte utf8 that cannot store emoji), and add a BOM to CSV files exported for Excel.\n- Normalize to NFC before storing and comparing: str.normalize(\"NFC\").\n- String length: \"ệ\".length is 1 in NFC but 3 in NFD; UTF-8 byte counts exceed character counts, so be careful with VARCHAR limits and truncation."
+    },
+    "code": "const a = \"Việt\";                       // NFC (dựng sẵn)\nconst b = \"Việt\".normalize(\"NFD\");      // tổ hợp: e + ̂ + ̣\na === b;                                // false — nhìn giống nhau!\na === b.normalize(\"NFC\");               // true\n[a.length, b.length];                   // [4, 6]\nnew TextEncoder().encode(a).length;     // 6 byte UTF-8",
+    "tip": {
+      "vi": "Nhắc dạng dựng sẵn/tổ hợp (NFC/NFD) và utf8mb4 của MySQL — hai lỗi rất hay gặp với dữ liệu tiếng Việt mà ít ứng viên biết.",
+      "en": "Mention precomposed vs decomposed (NFC/NFD) and MySQL's utf8mb4 — two very common Vietnamese-data bugs few candidates know."
+    },
+    "followUps": [
+      {
+        "vi": "Làm sao tìm kiếm \"viet\" mà khớp được \"Việt\" (bỏ dấu)?",
+        "en": "How do you make a search for \"viet\" match \"Việt\" (accent-insensitive)?"
+      },
+      {
+        "vi": "Vì sao emoji có thể làm hỏng việc cắt chuỗi theo length trong JavaScript?",
+        "en": "Why can emoji break substring/length logic in JavaScript?"
+      }
+    ],
+    "source": "https://unicode.org/reports/tr15/"
+  }
+]

@@ -17,7 +17,8 @@
     "ai": "Luyện với AI",
     "streak": "{n} ngày liên tiếp",
     "keepStreak": "Luyện 1 câu nữa để giữ chuỗi!",
-    "streakDone": "Hôm nay đã học — giữ vững nhé!"
+    "streakDone": "Hôm nay đã học — giữ vững nhé!",
+    "weak": "Câu yếu"
   },
   "header": {
     "search": "Tìm câu hỏi, chủ đề…"
@@ -29,6 +30,7 @@
     "devops": "DevOps / Cloud",
     "mobile": "Mobile",
     "data": "Data",
+    "cs": "CS nền tảng",
     "dsa": "Thuật toán (DSA)",
     "system-design": "System Design",
     "behavioral": "Behavioral"
@@ -99,7 +101,14 @@
     "noDateTitle": "Chưa đặt ngày phỏng vấn",
     "noDateHint": "Đặt ngày để biết còn bao lâu và mỗi ngày nên luyện bao nhiêu câu.",
     "setDate": "Đặt ngày",
-    "activeDays": "{n} ngày · 6 tháng"
+    "activeDays": "{n} ngày · 6 tháng",
+    "aiTitle": "Phỏng vấn AI",
+    "aiLast": "Buổi gần nhất",
+    "aiSessions": "{n} buổi",
+    "aiEmpty": "Chưa có buổi nào — phỏng vấn thử để theo dõi điểm qua từng buổi.",
+    "weakTitle": "Câu yếu từ phỏng vấn AI",
+    "weakCount": "{n} câu",
+    "weakProject": "Project"
   },
   "questions": {
     "allTracks": "Tất cả mảng",
@@ -222,7 +231,11 @@
     "attachCode": "Gửi kèm code",
     "codeSent": "Đã gửi kèm câu trả lời",
     "tabIndent": "Tab để thụt lề",
-    "codeLines": "{n} dòng"
+    "codeLines": "{n} dòng",
+    "weakAdded": "{n} câu yếu đã lưu — xem ở Câu yếu",
+    "inReview": "Đã vào ôn tập",
+    "inBank": "Xem trong ngân hàng",
+    "savedWeak": "Đã lưu câu yếu"
   },
   "project": {
     "title": "Project Deep-dive",
@@ -267,5 +280,38 @@
       "github_rate_limit": "GitHub đang giới hạn lượt gọi, thử lại sau ít phút (hoặc thêm GITHUB_TOKEN vào .env.local).",
       "invalid_request": "Dữ liệu gửi lên không hợp lệ."
     }
+  },
+  "weak": {
+    "title": "Câu trả lời yếu",
+    "count": "{n} câu cần ôn",
+    "tabs": {
+      "todo": "Cần ôn",
+      "interview": "Phỏng vấn",
+      "project": "Project",
+      "done": "Đã nắm"
+    },
+    "allTracks": "Mảng: Tất cả",
+    "sortNew": "Mới nhất",
+    "sortLow": "Điểm thấp nhất",
+    "inFlash": "Trong flashcards",
+    "project": "Project {name}",
+    "from": "Phỏng vấn {date}",
+    "yourAnswer": "Bạn đã trả lời",
+    "noAnswer": "(Không trả lời)",
+    "feedback": "Nhận xét",
+    "better": "Câu trả lời tốt nên có",
+    "nextTime": "Lần sau nên",
+    "added": "Thêm vào danh sách {date}",
+    "openProject": "Mở project",
+    "openBank": "Xem trong ngân hàng",
+    "retry": "Luyện lại với AI",
+    "done": "Đã nắm",
+    "undo": "Ôn lại",
+    "empty": "Chưa có câu yếu nào. Câu dưới 5 điểm trong phỏng vấn AI sẽ được lưu ở đây.",
+    "emptyTab": "Không có câu nào ở mục này.",
+    "startInterview": "Phỏng vấn thử",
+    "back": "← Câu yếu",
+    "retryTitle": "Luyện lại câu yếu",
+    "retrySubtitle": "AI hỏi lại câu bạn trả lời yếu và đào sâu phần còn thiếu."
   }
 }

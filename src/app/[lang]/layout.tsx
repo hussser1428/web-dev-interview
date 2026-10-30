@@ -31,11 +31,12 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
     { href: `/${lang}`, label: nav.home, icon: "dash", exact: true },
     { href: `/${lang}/questions`, label: nav.questions, icon: "book", count: questions.length },
     { href: `/${lang}/roadmap`, label: nav.roadmap, icon: "map" },
-    { href: `/${lang}/flashcards`, label: nav.flashcards, icon: "layers", due: true },
+    { href: `/${lang}/flashcards`, label: nav.flashcards, icon: "layers", badge: "due" },
   ] as const;
   const ai = [
     { href: `/${lang}/interview`, label: nav.interview, icon: "chat" },
     { href: `/${lang}/project`, label: nav.project, icon: "git" },
+    { href: `/${lang}/weak`, label: nav.weak, icon: "alert", badge: "weak" },
   ] as const;
 
   return (

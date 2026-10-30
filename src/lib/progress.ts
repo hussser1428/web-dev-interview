@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { emptyProgress, type Progress } from "./srs";
+import { emptyProgress, migrate, type Progress } from "./srs";
 
 // ponytail: tiến độ lưu trong localStorage (1 trình duyệt); thêm đăng nhập + database khi cần đồng bộ nhiều máy.
 const KEY = "devinterview:progress:v1";
@@ -13,7 +13,7 @@ function read(): Progress {
   if (raw !== cache.raw) {
     let value = emptyProgress;
     try {
-      if (raw) value = { ...emptyProgress, ...JSON.parse(raw) };
+      if (raw) value = migrate({ ...emptyProgress, ...JSON.parse(raw) });
     } catch {
       // dữ liệu hỏng -> coi như chưa có tiến độ
     }

@@ -1,11 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import Icon, { trackIcon, type IconName } from "@/components/icon";
 import type { Dict } from "@/i18n";
 import type { Turn } from "@/lib/ai";
 import { hue, levelColor, levels, styles, trackColor, tracks, type Level, type Style, type Track } from "@/lib/catalog";
-import type { Report } from "@/lib/report";
+import { updateProgress } from "@/lib/progress";
+import { WEAK, type Report } from "@/lib/report";
+import { logInterview, today } from "@/lib/srs";
 import { fmt, type Locale } from "@/locales";
 
 type Props = {
@@ -17,6 +20,8 @@ type Props = {
   initialLevel: Level;
   /** Có thì phỏng vấn xoay quanh project này (từ trang Project Deep-dive). */
   context?: string;
+  /** Tên project, lưu kèm câu yếu để biết câu đó thuộc project nào. */
+  project?: string;
 };
 
 // Web Speech API chưa có trong lib.dom của TypeScript, khai báo phần cần dùng.
@@ -70,7 +75,7 @@ function renderText(text: string, mine: boolean, linesLabel: string) {
 const scoreHue = (s: number) => hue(s >= 8 ? levelColor.intern : s >= 5 ? levelColor.mid : levelColor.senior);
 const mmss = (s: number) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 
-export default function InterviewRoom({ lang, t, trackNames, levelNames, initialTrack, initialLevel, context }: Props) {
+export default function InterviewRoom({ lang, t, trackNames, levelNames, initialTrack, initialLevel, context, project }: Props) {
   const [stage, setStage] = useState<"setup" | "chat" | "report">("setup");
   const [track, setTrack] = useState(initialTrack);
   const [level, setLevel] = useState(initialLevel);
@@ -140,8 +145,13 @@ export default function InterviewRoom({ lang, t, trackNames, levelNames, initial
 
   const grade = (msgs: Turn[]) =>
     run("grading", async () => {
-      const data = await call("report", msgs);
-      setReport(data.report);
+      const r: Report = (await call("report", msgs)).report;
+      const date = today();
+      const weak = r.questions
+        .filter((q) => q.score < WEAK)
+        .map((q) => ({ ...q, id: crypto.randomUUID(), date, track, level, style, project }));
+      updateProgress((p) => logInterview(p, { date, track, level, style, overall: r.overall }, weak));
+      setReport(r);
       setStage("report");
     });
 
@@ -223,7 +233,7 @@ export default function InterviewRoom({ lang, t, trackNames, levelNames, initial
           </div>
         </header>
 
-        <div className="grid items-start gap-6 lg:grid-cols-[1fr_390px]">
+        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_390px]">
           <div className="card divide-y divide-line p-0">
             <Section icon="target" title={t.track}>
               <div className="grid gap-3 sm:grid-cols-3">
@@ -317,6 +327,7 @@ export default function InterviewRoom({ lang, t, trackNames, levelNames, initial
       </>
     );
 
+  const weakCount = report?.questions.filter((q) => q.score < WEAK).length ?? 0;
   if (stage === "report" && report)
     return (
       <>
@@ -333,7 +344,7 @@ export default function InterviewRoom({ lang, t, trackNames, levelNames, initial
           </button>
         </header>
 
-        <div className="grid gap-5 md:grid-cols-[280px_1fr]">
+        <div className="grid gap-5 md:grid-cols-[280px_minmax(0,1fr)]">
           <div className="vivid g-hero flex flex-col items-center justify-center gap-3 rounded-2xl p-6">
             <div
               className="relative grid size-40 place-items-center rounded-full"
@@ -384,6 +395,11 @@ export default function InterviewRoom({ lang, t, trackNames, levelNames, initial
           <div className="card-h">
             <span className="chipi sm"><Icon name="chat" size={15} /></span>
             <h2 className="font-semibold">{t.perQuestion}</h2>
+            {weakCount > 0 && (
+              <Link href={`/${lang}/weak`} className="ml-auto flex items-center gap-1 text-xs font-medium text-brand hover:underline">
+                {fmt(t.weakAdded, { n: weakCount })} <Icon name="chev" size={14} />
+              </Link>
+            )}
           </div>
           {report.questions.map((q, i) => (
             <details key={i} className="group border-b border-line last:border-0">
@@ -392,6 +408,13 @@ export default function InterviewRoom({ lang, t, trackNames, levelNames, initial
                   {q.score.toFixed(1)}
                 </span>
                 <span className="flex-1 font-medium">{q.question}</span>
+                {q.related ? (
+                  <Link href={`/${lang}/questions/${q.related}`} className="tagc shrink-0 hover:underline" style={q.score < WEAK ? red : violet}>
+                    <Icon name={q.score < WEAK ? "rotate" : "book"} size={13} /> {q.score < WEAK ? t.inReview : t.inBank}
+                  </Link>
+                ) : (
+                  q.score < WEAK && <span className="tagc shrink-0" style={red}><Icon name="bookmark" size={13} /> {t.savedWeak}</span>
+                )}
                 <Icon name="chev" className="text-subtle transition group-open:rotate-90" />
               </summary>
               <div className="grid gap-3.5 px-5 pb-5 md:grid-cols-2 md:pl-21">

@@ -38,6 +38,9 @@ export default function Dashboard({ lang, t, trackNames, levelNames, items }: Pr
   const streakDays = loaded ? streak(p.days, now) : 0;
   const todayCount = p.days[now] ?? 0;
   const fresh = Math.max(0, DAILY_GOAL - todayCount);
+  const logs = p.interviews ?? [];
+  const last = logs.at(-1);
+  const weak = (p.weak ?? []).filter((w) => !w.done);
 
   // Mảng đang học = mảng của câu luyện gần nhất.
   const focus = items.find((q) => q.id === p.last)?.track;
@@ -121,7 +124,7 @@ export default function Dashboard({ lang, t, trackNames, levelNames, items }: Pr
         </Stat>
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-[1fr_380px]">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div className="flex flex-col gap-5">
           <section className="card overflow-hidden p-0">
             <div className="card-h">
@@ -167,6 +170,30 @@ export default function Dashboard({ lang, t, trackNames, levelNames, items }: Pr
             </div>
           </section>
 
+          {weak.length > 0 && (
+            <section className="card overflow-hidden p-0">
+              <div className="card-h">
+                <span className="chipi sm" style={hue(levelColor.senior)}><Icon name="alert" size={15} /></span>
+                <h2 className="font-semibold">{t.weakTitle}</h2>
+                <span className="text-xs text-subtle">{fmt(t.weakCount, { n: weak.length })}</span>
+                <Link href={`/${lang}/weak`} className="ml-auto flex items-center gap-1 text-xs font-medium text-brand hover:underline">
+                  {t.seeAll} <Icon name="chev" size={14} />
+                </Link>
+              </div>
+              {weak.slice(-3).reverse().map((w) => (
+                <Link key={w.id} href={`/${lang}/weak`} className="flex items-center gap-3.5 border-b border-line px-5 py-3 last:border-0 hover:bg-panel2">
+                  <span className="soft grid h-7 w-11 shrink-0 place-items-center rounded-lg border-0! text-sm font-extrabold text-(--c)" style={hue(levelColor.senior)}>
+                    {w.score.toFixed(1)}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate font-medium">{w.question}</div>
+                    <div className="text-xs text-subtle">{w.project ? `${t.weakProject} ${w.project}` : trackNames[w.track]}</div>
+                  </div>
+                </Link>
+              ))}
+            </section>
+          )}
+
           <section className="card overflow-hidden p-0">
             <div className="card-h">
               <span className="chipi sm"><Icon name="map" size={15} /></span>
@@ -204,6 +231,32 @@ export default function Dashboard({ lang, t, trackNames, levelNames, items }: Pr
 
         <div className="flex flex-col gap-5">
           <Countdown t={t} date={loaded ? p.interviewDate : undefined} loaded={!!loaded} remaining={paceTrack ? items.filter((q) => q.track === paceTrack && !isDone(s(q.id))).length : 0} trackName={paceTrack ? trackNames[paceTrack] : ""} />
+
+          <section className="card overflow-hidden p-0">
+            <div className="card-h">
+              <span className="chipi sm"><Icon name="bot" size={15} /></span>
+              <h2 className="font-semibold">{t.aiTitle}</h2>
+              {logs.length > 0 && <span className="ml-auto text-xs text-subtle">{fmt(t.aiSessions, { n: logs.length })}</span>}
+            </div>
+            {last ? (
+              <Link href={`/${lang}/interview?track=${last.track}&level=${last.level}`} className="flex items-end gap-4 p-4 hover:bg-panel2">
+                <div>
+                  <div className="text-xs text-subtle">{t.aiLast}</div>
+                  <b className="text-[34px] font-extrabold leading-tight tracking-tight">{last.overall.toFixed(1)}</b>
+                  <span className="text-sm text-subtle"> / 10</span>
+                  <div className="text-xs text-subtle">{trackNames[last.track]} · {levelNames[last.level]}</div>
+                </div>
+                {/* điểm các buổi gần nhất, cũ -> mới */}
+                <div className="flex h-16 flex-1 items-end justify-end gap-1">
+                  {logs.slice(-12).map((l, i) => (
+                    <span key={i} title={`${l.date} · ${l.overall}`} className="max-w-4 flex-1 rounded-t bg-[image:var(--grad)]" style={{ height: `${Math.max(l.overall, 0.5) * 10}%` }} />
+                  ))}
+                </div>
+              </Link>
+            ) : (
+              <Link href={`/${lang}/interview`} className="block p-4 text-sm text-muted hover:bg-panel2">{t.aiEmpty}</Link>
+            )}
+          </section>
 
           <section className="card overflow-hidden p-0">
             <div className="card-h">
