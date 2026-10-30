@@ -20,10 +20,6 @@ type Props = {
   items: QuestionItem[];
 };
 
-/** fmt nhưng chèn được ReactNode: rich("Có {n} thẻ", { n: <b>3</b> }) */
-const rich = (s: string, vars: Record<string, ReactNode>) =>
-  s.split(/\{(\w+)\}/).map((part, i) => (i % 2 ? <span key={i}>{vars[part]}</span> : part));
-
 export default function Dashboard({ lang, t, trackNames, levelNames, items }: Props) {
   const loaded = useProgress();
   const p = loaded ?? emptyProgress;
@@ -37,7 +33,6 @@ export default function Dashboard({ lang, t, trackNames, levelNames, items }: Pr
   const saved = items.filter((q) => s(q.id)?.saved).length;
   const streakDays = loaded ? streak(p.days, now) : 0;
   const todayCount = p.days[now] ?? 0;
-  const fresh = Math.max(0, DAILY_GOAL - todayCount);
   const logs = p.interviews ?? [];
   const last = logs.at(-1);
   const weak = (p.weak ?? []).filter((w) => !w.done);
@@ -52,10 +47,6 @@ export default function Dashboard({ lang, t, trackNames, levelNames, items }: Pr
   const next = suggestions[0];
   const interviewTrack = focus ?? "backend";
   const paceTrack = focus ?? next?.track;
-
-  // Giờ của trình duyệt chỉ đọc sau khi hydrate (loaded) để HTML server/client khớp nhau.
-  const hour = loaded ? new Date().getHours() : 0;
-  const greeting = hour < 11 ? t.greetMorning : hour < 18 ? t.greetAfternoon : t.greetEvening;
 
   // Kế hoạch hôm nay: việc chưa xong đầu tiên tô cam (ưu tiên), xong thì gạch ngang.
   const tasks = [
@@ -82,16 +73,7 @@ export default function Dashboard({ lang, t, trackNames, levelNames, items }: Pr
 
   return (
     <>
-      <header className="flex flex-wrap items-end gap-3">
-        <div className="min-w-0 flex-1 max-sm:basis-full">
-          <h1 className={`text-[28px] font-bold tracking-tight ${loaded ? "" : "invisible"}`}>{greeting}</h1>
-          <p className={`mt-0.5 text-[17px] text-muted ${loaded ? "" : "invisible"}`}>
-            {rich(t.todayLine, {
-              due: <b className="text-[#c2410c]">{fmt(t.dueCards, { n: dueItems.length })}</b>,
-              fresh: <b className="text-brand">{fmt(t.newQs, { n: fresh })}</b>,
-            })}
-          </p>
-        </div>
+      <header className="flex flex-wrap justify-end gap-3">
         <Link href={`/${lang}/flashcards`} className="btn-ghost h-11 max-sm:flex-1">
           <Icon name="layers" className="text-brand" /> {t.flashBtn}
         </Link>

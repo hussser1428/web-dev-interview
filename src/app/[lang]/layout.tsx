@@ -44,7 +44,7 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
   return (
     <html lang={lang} className={`${inter.variable} ${mono.variable}`}>
       <body className="flex min-h-screen font-sans antialiased max-md:flex-col">
-        <aside className="flex shrink-0 gap-1 border-line bg-side px-3 max-md:sticky max-md:top-0 max-md:z-20 max-md:items-center max-md:justify-between max-md:border-b max-md:py-2 md:sticky md:top-0 md:h-screen md:w-59 md:flex-col md:border-r md:py-4">
+        <aside className="flex shrink-0 gap-1 border-line bg-side px-3 max-md:sticky max-md:top-0 max-md:z-20 max-md:items-center max-md:justify-between max-md:border-b max-md:py-2 md:sticky md:top-0 md:z-20 md:h-screen md:w-59 md:flex-col md:border-r md:border-line2 md:py-4 md:shadow-[6px_0_24px_-12px_rgb(15_23_42/0.22)]">
           <Link href={`/${lang}`} className="flex shrink-0 items-center gap-2.5 px-2 text-[15px] font-bold md:pb-3.5 md:pt-1">
             <span className="grid size-7.5 place-items-center rounded-[9px] bg-[image:var(--grad)] text-white shadow-[0_4px_12px_-4px_rgb(109_40_217/0.6)]">
               <Icon name="code" size={15} strokeWidth={2.2} />

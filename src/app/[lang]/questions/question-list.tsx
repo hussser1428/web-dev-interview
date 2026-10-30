@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import type { CSSProperties, ReactNode } from "react";
+import { useEffect, type CSSProperties, type ReactNode } from "react";
 import Icon, { trackIcon, type IconName } from "@/components/icon";
 import type { Dict } from "@/i18n";
 import { hue, levelColor, levels, trackColor, tracks, type QuestionItem, type Track } from "@/lib/catalog";
@@ -60,6 +60,12 @@ export default function QuestionList({ lang, t, trackNames, levelNames, items }:
   const list = filtered.filter((q) => match(status, q));
   const topics = [...new Set(items.filter((q) => !track || q.track === track).map((q) => q.topic))];
   const qs = sp.toString();
+
+  // Màn rộng không để khung phải trống: tự mở câu chưa làm đầu tiên theo bộ lọc. Mobile giữ danh sách (khung phải ẩn).
+  const first = loaded && !activeId ? (list.find((q) => !isDone(p.q[q.id])) ?? list[0])?.id : undefined;
+  useEffect(() => {
+    if (first && matchMedia("(min-width: 768px)").matches) router.replace(`/${lang}/questions/${first}${qs ? `?${qs}` : ""}`, { scroll: false });
+  }, [first, lang, qs, router]);
 
   return (
     <aside

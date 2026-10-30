@@ -8,6 +8,7 @@ export default async function Home() {
 
   return (
     <div className="page">
+      <h1 className="sr-only">{t.nav.home}</h1>
       <Dashboard
         lang={lang}
         t={t.dashboard}
