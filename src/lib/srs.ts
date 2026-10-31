@@ -15,6 +15,8 @@ export type Progress = {
   interviews?: InterviewLog[]; // các buổi phỏng vấn AI, cũ -> mới
   weak?: WeakItem[]; // câu phỏng vấn AI bị chấm yếu, cũ -> mới
   terms?: Record<string, true>; // thuật ngữ đã đánh dấu "Đã hiểu"
+  drafts?: Record<string, string>; // bản nháp tự trả lời theo id câu hỏi
+  viewed?: string; // id câu mở gần nhất trong ngân hàng (last = câu chấm gần nhất)
 };
 export type InterviewLog = { date: string; track: Track; level: Level; style: Style; overall: number };
 /**
@@ -29,6 +31,7 @@ export type WeakItem = {
 const MAX_LOGS = 30;
 // ponytail: giữ 100 câu yếu gần nhất (kể cả câu đã nắm) trong localStorage; muốn giữ hết thì cần database.
 const MAX_WEAK = 100;
+
 export const emptyProgress: Progress = { q: {}, days: {} };
 
 export function today(d = new Date()): string {
@@ -132,4 +135,12 @@ export const toggleWeak = (p: Progress, id: string): Progress => ({
 export function toggleTerm(p: Progress, id: string): Progress {
   const { [id]: was, ...rest } = p.terms ?? {};
   return { ...p, terms: was ? rest : { ...rest, [id]: true } };
+}
+
+/** Lưu bản nháp tự trả lời; nháp rỗng thì xoá khỏi tiến độ. */
+export function setDraft(p: Progress, id: string, text: string): Progress {
+  const drafts = { ...p.drafts };
+  if (text) drafts[id] = text;
+  else delete drafts[id];
+  return { ...p, drafts };
 }

@@ -1,13 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Icon from "@/components/icon";
 import Rich from "@/components/rich-text";
 import type { Dict } from "@/i18n";
 import type { Seg, TermMap } from "@/lib/glossary-match";
+import { updateProgress, useProgress } from "@/lib/progress";
+import { setDraft } from "@/lib/srs";
 
 type Props = {
   t: Dict["questions"];
+  id: string;
   lang: string;
   /** Đáp án đã đánh dấu thuật ngữ: đoạn đầu = bản trả lời ngắn, phần còn lại = giải thích thêm. */
   quick: Seg[];
@@ -21,9 +24,11 @@ type Props = {
   followUps: string[];
 };
 
-export default function AnswerTabs({ t, lang, quick, example, rest, terms, termT, code, tip, followUps }: Props) {
+export default function AnswerTabs({ t, id, lang, quick, example, rest, terms, termT, code, tip, followUps }: Props) {
   const [tab, setTab] = useState<"try" | "answer" | "followUps">("try");
-  const [draft, setDraft] = useState("");
+  const progress = useProgress();
+  // Ghi câu vừa mở để lần sau vào Ngân hàng mở lại đúng câu này.
+  useEffect(() => updateProgress((p) => (p.viewed === id ? p : { ...p, viewed: id })), [id]);
   const [copied, setCopied] = useState(false);
   const tabs = [
     ["try", t.tabs.try],
@@ -53,8 +58,9 @@ export default function AnswerTabs({ t, lang, quick, example, rest, terms, termT
           <p className="text-muted">{t.tryFirst}</p>
           <textarea
             placeholder={t.draft}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
+            value={progress?.drafts?.[id] ?? ""}
+            disabled={!progress}
+            onChange={(e) => updateProgress((p) => setDraft(p, id, e.target.value))}
             className="field min-h-40 resize-y"
           />
           <button className="btn self-start" onClick={() => setTab("answer")}>

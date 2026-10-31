@@ -61,8 +61,11 @@ export default function QuestionList({ lang, t, trackNames, levelNames, items }:
   const topics = [...new Set(items.filter((q) => !track || q.track === track).map((q) => q.topic))];
   const qs = sp.toString();
 
-  // Màn rộng không để khung phải trống: tự mở câu chưa làm đầu tiên theo bộ lọc. Mobile giữ danh sách (khung phải ẩn).
-  const first = loaded && !activeId ? (list.find((q) => !isDone(p.q[q.id])) ?? list[0])?.id : undefined;
+  // Màn rộng không để khung phải trống: mở lại câu vừa xem (nếu còn trong bộ lọc), không thì câu chưa làm đầu tiên.
+  // Mobile giữ danh sách (khung phải ẩn).
+  const first = loaded && !activeId
+    ? (list.find((q) => q.id === p.viewed) ?? list.find((q) => !isDone(p.q[q.id])) ?? list[0])?.id
+    : undefined;
   useEffect(() => {
     if (first && matchMedia("(min-width: 768px)").matches) router.replace(`/${lang}/questions/${first}${qs ? `?${qs}` : ""}`, { scroll: false });
   }, [first, lang, qs, router]);

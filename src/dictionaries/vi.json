@@ -36,7 +36,7 @@
     "data": "Data",
     "java": "Java & Spring",
     "qa": "QA / Tester",
-    "cs": "CS nền tảng",
+    "cs": "Nền tảng CS",
     "dsa": "Thuật toán (DSA)",
     "system-design": "System Design",
     "behavioral": "Behavioral"
@@ -128,7 +128,7 @@
       "followUps": "Follow-up"
     },
     "tryFirst": "Hãy tự trả lời trước (nói thành tiếng hoặc viết nháp bên dưới), rồi mới xem đáp án — bạn sẽ nhớ lâu hơn nhiều.",
-    "draft": "Viết nháp câu trả lời của bạn… (không được lưu lại)",
+    "draft": "Viết nháp câu trả lời của bạn… (tự lưu trên trình duyệt này)",
     "showAnswer": "Xem đáp án gợi ý",
     "tip": "Mẹo ghi điểm",
     "followUpsHint": "Sau câu này, người phỏng vấn thường hỏi tiếp:",
