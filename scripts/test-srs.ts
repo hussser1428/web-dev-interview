@@ -74,3 +74,13 @@ assert.equal(iv.weak?.length, 83);
 for (let i = 0; i < 20; i++) iv = logInterview(iv, log, [w(`S${i}`)]);
 assert.equal(iv.weak?.length, 100);
 assert.equal(iv.weak?.at(-1)?.question, "S19");
+// Đầy thì bỏ câu đã nắm trước, câu chưa nắm cũ nhất vẫn còn.
+const oldest = iv.weak![0].question;
+iv = toggleWeak(iv, iv.weak![50].id);
+const doneQ = iv.weak![50].question;
+iv = logInterview(iv, log, [w("T1")]);
+assert.equal(iv.weak?.length, 100);
+assert.equal(iv.weak?.[0].question, oldest);
+assert.ok(!iv.weak?.some((x) => x.question === doneQ));
+iv = logInterview(iv, log, [w("T2")]);
+assert.ok(!iv.weak?.some((x) => x.question === oldest), "hết câu đã nắm thì bỏ câu cũ nhất");

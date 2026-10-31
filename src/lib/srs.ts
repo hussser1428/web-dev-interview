@@ -30,9 +30,22 @@ export type WeakItem = {
   related?: string; project?: string; done?: boolean;
 };
 const MAX_LOGS = 30;
-// ponytail: giữ 100 câu yếu gần nhất (kể cả câu đã nắm) trong localStorage; muốn giữ hết thì cần database.
+// ponytail: giữ tối đa 100 câu yếu trong localStorage; muốn giữ hết thì cần database.
 const MAX_WEAK = 100;
 
+/** Vượt MAX_WEAK thì bỏ câu đã nắm cũ nhất trước, hết câu đã nắm mới bỏ câu chưa nắm cũ nhất. */
+function capWeak(all: WeakItem[]): WeakItem[] {
+  let extra = all.length - MAX_WEAK;
+  if (extra <= 0) return all;
+  const drop = new Set<WeakItem>();
+  for (const done of [true, false])
+    for (const w of all)
+      if (extra > 0 && !!w.done === done) {
+        drop.add(w);
+        extra--;
+      }
+  return all.filter((w) => !drop.has(w));
+}
 export const emptyProgress: Progress = { q: {}, days: {} };
 
 export function today(d = new Date()): string {
@@ -116,7 +129,7 @@ export function logInterview(p: Progress, log: InterviewLog, weak: WeakItem[]): 
     ...p,
     q,
     interviews: [...(p.interviews ?? []), log].slice(-MAX_LOGS),
-    weak: [...(p.weak ?? []), ...weak].slice(-MAX_WEAK),
+    weak: capWeak([...(p.weak ?? []), ...weak]),
   };
 }
 
