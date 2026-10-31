@@ -234,7 +234,11 @@
     "weakAdded": "{n} weak answers saved — see Weak answers",
     "inReview": "Added to review",
     "inBank": "View in bank",
-    "savedWeak": "Saved as weak"
+    "savedWeak": "Saved as weak",
+    "myQuestions": "Your questions",
+    "myQuestionsHint": "Optional · one per line",
+    "myQuestionsPlaceholder": "E.g. questions from the job description, ones you were asked before and struggled with…\nLeave empty and the AI picks the questions.",
+    "myQuestionsMore": "{n} questions — each session picks {total} at random, so a few sessions cover the whole list."
   },
   "project": {
     "title": "Project Deep-dive",

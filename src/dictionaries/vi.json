@@ -234,7 +234,11 @@
     "weakAdded": "{n} câu yếu đã lưu — xem ở Câu yếu",
     "inReview": "Đã vào ôn tập",
     "inBank": "Xem trong ngân hàng",
-    "savedWeak": "Đã lưu câu yếu"
+    "savedWeak": "Đã lưu câu yếu",
+    "myQuestions": "Câu hỏi của bạn",
+    "myQuestionsHint": "Tuỳ chọn · mỗi dòng một câu",
+    "myQuestionsPlaceholder": "VD: câu trong JD, câu từng bị hỏi mà chưa trả lời được…\nĐể trống thì AI tự ra câu hỏi.",
+    "myQuestionsMore": "Có {n} câu, mỗi buổi sẽ bốc ngẫu nhiên {total} câu — luyện vài buổi là đi hết danh sách."
   },
   "project": {
     "title": "Project Deep-dive",

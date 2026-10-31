@@ -6,7 +6,8 @@ import Icon, { trackIcon, type IconName } from "@/components/icon";
 import type { Dict } from "@/i18n";
 import type { Turn } from "@/lib/ai";
 import { hue, levelColor, levels, styles, trackColor, tracks, type Level, type Style, type Track } from "@/lib/catalog";
-import { updateProgress } from "@/lib/progress";
+import { updateProgress, useProgress } from "@/lib/progress";
+import { MAX_CONTEXT } from "@/lib/project";
 import { WEAK, type Report } from "@/lib/report";
 import { logInterview, today } from "@/lib/srs";
 import { fmt, type Locale } from "@/locales";
@@ -72,6 +73,16 @@ function renderText(text: string, mine: boolean, linesLabel: string) {
   });
 }
 
+/** Bốc ngẫu nhiên tối đa n phần tử (Fisher–Yates). */
+function sample<T>(list: T[], n: number): T[] {
+  const a = [...list];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a.slice(0, n);
+}
+
 const scoreHue = (s: number) => hue(s >= 8 ? levelColor.intern : s >= 5 ? levelColor.mid : levelColor.senior);
 const mmss = (s: number) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 
@@ -91,11 +102,15 @@ export default function InterviewRoom({ lang, t, trackNames, levelNames, initial
   const [codeLang, setCodeLang] = useState(codeLangs[0]);
   const [sentCode, setSentCode] = useState("");
   const [elapsed, setElapsed] = useState(0);
+  const mine = useProgress()?.myQuestions ?? ""; // câu hỏi tự nhập, mỗi dòng một câu (lưu cùng tiến độ)
   const retry = useRef<() => void>(() => {});
   const rec = useRef<Recognition | null>(null);
   const bottom = useRef<HTMLDivElement>(null);
   const editor = useRef<HTMLTextAreaElement>(null);
+  // Kế hoạch của buổi đang chạy, chốt lúc bắt đầu (ref để lượt hỏi đầu tiên dùng được ngay).
+  const plan = useRef(context);
 
+  const mineList = mine.split("\n").map((l) => l.trim()).filter(Boolean);
   const asked = messages.filter((m) => m.role === "model").length;
   // Chỉ gửi kèm code khi có thay đổi so với lần gửi trước.
   const codePending = code.trim() !== "" && code !== sentCode;
@@ -117,7 +132,7 @@ export default function InterviewRoom({ lang, t, trackNames, levelNames, initial
     const res = await fetch("/api/interview", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action, lang, track, level, style, total, messages: msgs, context }),
+      body: JSON.stringify({ action, lang, track, level, style, total, messages: msgs, context: plan.current }),
     });
     const data = await res.json().catch(() => ({ error: res.statusText }));
     if (!res.ok) throw new Error(data.error === "missing_key" ? t.missingKey : fmt(t.error, { msg: data.error }));
@@ -156,6 +171,11 @@ export default function InterviewRoom({ lang, t, trackNames, levelNames, initial
     });
 
   function start() {
+    // Không có kế hoạch từ Deep-dive / câu yếu thì dùng câu tự nhập; nhiều hơn số câu của buổi thì bốc ngẫu nhiên.
+    const picked = sample(mineList, total);
+    plan.current =
+      context ??
+      (picked.length ? `Questions the candidate wrote and wants to be asked:\n${picked.join("\n")}`.slice(0, MAX_CONTEXT) : undefined);
     setMessages([]);
     setReport(null);
     setCode("");
@@ -276,6 +296,19 @@ export default function InterviewRoom({ lang, t, trackNames, levelNames, initial
                 ))}
               </div>
             </Section>
+            {!context && (
+              <Section icon="list" title={t.myQuestions} hint={t.myQuestionsHint}>
+                <textarea
+                  className="field min-h-28 resize-y"
+                  placeholder={t.myQuestionsPlaceholder}
+                  value={mine}
+                  onChange={(e) => updateProgress((p) => ({ ...p, myQuestions: e.target.value || undefined }))}
+                />
+                {mineList.length > total && (
+                  <p className="text-sm text-muted">{fmt(t.myQuestionsMore, { n: mineList.length, total })}</p>
+                )}
+              </Section>
+            )}
           </div>
 
           <div className="flex flex-col gap-5 lg:sticky lg:top-20">

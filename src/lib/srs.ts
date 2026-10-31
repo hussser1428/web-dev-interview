@@ -16,6 +16,7 @@ export type Progress = {
   weak?: WeakItem[]; // câu phỏng vấn AI bị chấm yếu, cũ -> mới
   terms?: Record<string, true>; // thuật ngữ đã đánh dấu "Đã hiểu"
   drafts?: Record<string, string>; // bản nháp tự trả lời theo id câu hỏi
+  myQuestions?: string; // câu hỏi tự nhập cho phỏng vấn thử
   viewed?: string; // id câu mở gần nhất trong ngân hàng (last = câu chấm gần nhất)
 };
 export type InterviewLog = { date: string; track: Track; level: Level; style: Style; overall: number };
