@@ -1,5 +1,6 @@
 import "server-only";
 import { GoogleGenAI } from "@google/genai";
+import { headers } from "next/headers";
 
 // Mọi lời gọi AI đi qua file này. Đổi sang Claude API sau này: chỉ sửa thân hàm ask().
 export type Turn = { role: "user" | "model"; text: string };
@@ -8,12 +9,12 @@ export type Attachment = { mimeType: string; data: string };
 
 export class MissingKeyError extends Error {}
 
-let client: GoogleGenAI | undefined;
-
 export async function ask(system: string, turns: Turn[], jsonSchema?: object, files: Attachment[] = []): Promise<string> {
-  const apiKey = process.env.GEMINI_API_KEY;
+  // App mobile gửi "X-Client: app" để dùng key riêng (tách chi phí); chưa đặt key riêng thì dùng chung key web.
+  const fromApp = (await headers()).get("x-client") === "app";
+  const apiKey = (fromApp && process.env.GEMINI_API_KEY_APP) || process.env.GEMINI_API_KEY;
   if (!apiKey) throw new MissingKeyError();
-  client ??= new GoogleGenAI({ apiKey });
+  const client = new GoogleGenAI({ apiKey });
 
   const res = await client.models.generateContent({
     // Tên model Gemini đổi thường xuyên; "gemini-flash-latest" luôn trỏ tới bản Flash mới nhất.
