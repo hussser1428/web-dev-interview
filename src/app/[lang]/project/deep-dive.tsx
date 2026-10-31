@@ -51,14 +51,14 @@ function context(p: Project, first?: ProjectQuestion) {
 }
 
 const kindColor = {
-  strength: "border-green-200 bg-green-50 text-green-700",
-  likely: "border-amber-200 bg-amber-50 text-amber-700",
-  risk: "border-red-200 bg-red-50 text-red-700",
+  strength: "border-green-200 bg-green-50 text-green-700 dark:border-green-500/30 dark:bg-green-500/10 dark:text-green-300",
+  likely: "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300",
+  risk: "border-red-200 bg-red-50 text-red-700 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300",
 };
 const diffColor = {
   easy: "",
-  medium: "border-amber-200 bg-amber-50 text-amber-700",
-  hard: "border-red-200 bg-red-50 text-red-700",
+  medium: "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300",
+  hard: "border-red-200 bg-red-50 text-red-700 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300",
 };
 
 export default function DeepDive({ lang, t, ratings, room }: Props) {
@@ -153,7 +153,7 @@ export default function DeepDive({ lang, t, ratings, room }: Props) {
 
       {busy && <p className="text-sm text-muted">● ● ● {t.analyzing}</p>}
       {error && (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
+        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300">{error}</div>
       )}
 
       {!project ? (
@@ -173,7 +173,7 @@ export default function DeepDive({ lang, t, ratings, room }: Props) {
                     project.name
                   )}
                 </h2>
-                <span className="tag ml-auto border-green-200 bg-green-50 text-green-700">{t.analyzed}</span>
+                <span className="tag ml-auto border-green-200 bg-green-50 text-green-700 dark:border-green-500/30 dark:bg-green-500/10 dark:text-green-300">{t.analyzed}</span>
               </div>
               <p className="mt-2 text-sm text-muted">
                 {project.summary}

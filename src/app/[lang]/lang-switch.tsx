@@ -15,7 +15,7 @@ export default function LangSwitch({ current }: { current: Locale }) {
           // Ghi nhớ lựa chọn để lần sau vào "/" sẽ tự mở đúng ngôn ngữ (xem proxy.ts).
           onClick={() => (document.cookie = `lang=${l}; path=/; max-age=31536000`)}
           className={`flex-1 whitespace-nowrap rounded-md px-2.5 py-1 text-center text-xs font-semibold ${
-            l === current ? "bg-white text-fg shadow-[var(--shadow)]" : "text-subtle hover:text-fg"
+            l === current ? "bg-panel text-fg shadow-[var(--shadow)]" : "text-subtle hover:text-fg"
           }`}
         >
           {localeNames[l]}

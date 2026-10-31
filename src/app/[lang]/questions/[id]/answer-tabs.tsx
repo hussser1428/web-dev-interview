@@ -44,11 +44,11 @@ export default function AnswerTabs({ t, id, lang, quick, example, rest, terms, t
             key={key}
             onClick={() => setTab(key)}
             className={`flex cursor-pointer items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-sm ${
-              tab === key ? "bg-white font-semibold text-brand shadow-[var(--shadow)]" : "font-medium text-muted hover:text-fg"
+              tab === key ? "bg-panel font-semibold text-brand shadow-[var(--shadow)]" : "font-medium text-muted hover:text-fg"
             }`}
           >
             {label}
-            {key === "followUps" && <span className="rounded-full border border-line2 bg-white px-1.5 text-[11px] font-semibold">{followUps.length}</span>}
+            {key === "followUps" && <span className="rounded-full border border-line2 bg-panel px-1.5 text-[11px] font-semibold">{followUps.length}</span>}
           </button>
         ))}
       </div>
@@ -71,7 +71,7 @@ export default function AnswerTabs({ t, id, lang, quick, example, rest, terms, t
 
       {tab === "answer" && (
         <>
-          <div className="flex gap-3 rounded-xl border border-brand-line bg-brand-soft px-4 py-3.5 leading-[1.65] text-[#1e1b4b]">
+          <div className="flex gap-3 rounded-xl border border-brand-line bg-brand-soft px-4 py-3.5 leading-[1.65] text-brand-ink">
             <span className="grid size-8 shrink-0 place-items-center rounded-[9px] bg-[image:var(--grad)] text-white">
               <Icon name="spark" />
             </span>
@@ -82,19 +82,19 @@ export default function AnswerTabs({ t, id, lang, quick, example, rest, terms, t
           </div>
 
           {example && (
-            <div className="flex gap-3 rounded-xl border border-[#bae6fd] bg-[#f0f9ff] px-4 py-3.25 leading-relaxed text-[#0c4a6e]">
+            <div className="flex gap-3 rounded-xl border border-ex-line bg-ex px-4 py-3.25 leading-relaxed text-ex-ink">
               <span className="grid size-8 shrink-0 place-items-center rounded-[9px] bg-[linear-gradient(135deg,#0284c7,#0d9488)] text-white">
                 <Icon name="target" />
               </span>
               <div>
-                <b className="text-[#0369a1]">{t.example}</b>
+                <b className="text-ex-head">{t.example}</b>
                 <p className="whitespace-pre-line"><Rich segs={example} terms={terms} lang={lang} t={termT} /></p>
               </div>
             </div>
           )}
 
           {rest.length > 0 && (
-            <p className="whitespace-pre-line leading-[1.7] text-[#334155]"><Rich segs={rest} terms={terms} lang={lang} t={termT} /></p>
+            <p className="whitespace-pre-line leading-[1.7] text-body"><Rich segs={rest} terms={terms} lang={lang} t={termT} /></p>
           )}
 
           {code && (
@@ -120,12 +120,12 @@ export default function AnswerTabs({ t, id, lang, quick, example, rest, terms, t
           )}
 
           {tip && (
-            <div className="flex gap-3 rounded-xl border border-[#fed7aa] bg-[#fff7ed] px-4 py-3.25 leading-relaxed text-[#431407]">
+            <div className="flex gap-3 rounded-xl border border-tip-line bg-tip px-4 py-3.25 leading-relaxed text-tip-ink">
               <span className="grid size-8 shrink-0 place-items-center rounded-[9px] bg-[image:var(--g-warm)] text-white">
                 <Icon name="bulb" />
               </span>
               <div>
-                <b className="text-[#c2410c]">{t.tip}</b>
+                <b className="text-tip-head">{t.tip}</b>
                 <p>{tip}</p>
               </div>
             </div>

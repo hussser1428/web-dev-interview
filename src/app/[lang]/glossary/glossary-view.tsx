@@ -98,7 +98,7 @@ export default function GlossaryView({ lang, t, trackNames, levelNames, items }:
         <div className="flex gap-0.5 border-b border-line px-5">
           {tabs.map((tb) => {
             const on = tab === tb;
-            const badge = tb === "todo" ? "bg-[#fff4e5] text-[#b45309]" : tb === "known" ? "bg-brand-soft text-brand" : "bg-hover text-muted";
+            const badge = tb === "todo" ? "bg-due text-due-ink" : tb === "known" ? "bg-brand-soft text-brand" : "bg-hover text-muted";
             return (
               <button
                 key={tb}
@@ -158,15 +158,15 @@ export default function GlossaryView({ lang, t, trackNames, levelNames, items }:
                 <h2 className="text-[25px] font-bold leading-tight tracking-tight">{active.term}</h2>
                 {active.full && <p className="mt-1 text-muted">{active.full}</p>}
               </div>
-              <p className="text-[15.5px] leading-[1.75] text-[#1e293b]">{active.def}</p>
+              <p className="text-[15.5px] leading-[1.75] text-fg">{active.def}</p>
 
               {active.example && (
-                <div className="flex gap-3 rounded-xl border border-[#bae6fd] bg-[#f0f9ff] px-4 py-3.25 leading-relaxed text-[#0c4a6e]">
+                <div className="flex gap-3 rounded-xl border border-ex-line bg-ex px-4 py-3.25 leading-relaxed text-ex-ink">
                   <span className="grid size-8 shrink-0 place-items-center rounded-[9px] bg-[linear-gradient(135deg,#0284c7,#0d9488)] text-white">
                     <Icon name="target" />
                   </span>
                   <div>
-                    <b className="text-[#0369a1]">{t.example}</b>
+                    <b className="text-ex-head">{t.example}</b>
                     <p>{active.example}</p>
                   </div>
                 </div>
@@ -195,7 +195,7 @@ export default function GlossaryView({ lang, t, trackNames, levelNames, items }:
                 <Section title={t.related}>
                   <div className="flex flex-wrap gap-2">
                     {active.related.map((r) => (
-                      <button key={r.id} onClick={() => open(r.id)} className="cursor-pointer rounded-full border border-line2 bg-panel px-3 py-1 text-[12.5px] font-semibold text-[#334155] hover:border-brand hover:text-brand">
+                      <button key={r.id} onClick={() => open(r.id)} className="cursor-pointer rounded-full border border-line2 bg-panel px-3 py-1 text-[12.5px] font-semibold text-body hover:border-brand hover:text-brand">
                         {r.term}
                       </button>
                     ))}
@@ -236,7 +236,7 @@ function QLink({ lang, q, levelName, primary }: { lang: string; q: GlossaryItem[
     >
       <span className="chipi sm" style={hue(trackColor[q.track])}><Icon name={trackIcon[q.track]} size={14} /></span>
       <span className="min-w-0 flex-1 text-[13.5px] font-medium">{q.title}</span>
-      {primary && <span className="text-[11px] font-semibold" style={{ color: levelColor[q.level][0] }}>{levelName}</span>}
+      {primary && <span className="text-[11px] font-semibold text-(--c)" style={hue(levelColor[q.level])}>{levelName}</span>}
       <Icon name={primary ? "arrow" : "chev"} size={15} className={primary ? "text-brand" : "text-subtle"} />
     </Link>
   );

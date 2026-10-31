@@ -22,7 +22,12 @@
     "keepStreak": "Practice 1 more to keep it!",
     "streakDone": "Done for today — keep it up!",
     "weak": "Weak answers",
-    "glossary": "Glossary"
+    "glossary": "Glossary",
+    "theme": "Theme: {mode}",
+    "themes": {
+      "light": "light",
+      "dark": "dark"
+    }
   },
   "header": {
     "search": "Search questions, topics…"

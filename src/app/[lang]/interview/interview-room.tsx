@@ -392,7 +392,7 @@ export default function InterviewRoom({ lang, t, trackNames, levelNames, initial
             </div>
           </div>
           <div className="card flex flex-col gap-4">
-            <p className="leading-relaxed text-[#334155]">{report.summary}</p>
+            <p className="leading-relaxed text-body">{report.summary}</p>
             <div className="grid gap-3 sm:grid-cols-3">
               {(Object.keys(t.criteria) as (keyof Report["criteria"])[]).map((k, i) => (
                 <div key={k} className="tint flex flex-col gap-2 rounded-xl px-3.5 py-3" style={hue([["#1d4ed8", "#047857", "#b45309"][i], "#4f46e5"])}>
@@ -413,7 +413,7 @@ export default function InterviewRoom({ lang, t, trackNames, levelNames, initial
                   <div key={title} className="soft rounded-xl px-4 py-3" style={hue(color)}>
                     <h2 className="mb-1 text-xs font-bold uppercase tracking-wide text-(--c)">{title}</h2>
                     {items.map((s, i) => (
-                      <div key={i} className="flex gap-2 py-0.5 text-sm text-[#334155]">
+                      <div key={i} className="flex gap-2 py-0.5 text-sm text-body">
                         <Icon name={icon} size={15} strokeWidth={2.4} className="mt-0.5 shrink-0 text-(--c)" /> {s}
                       </div>
                     ))}
@@ -451,8 +451,8 @@ export default function InterviewRoom({ lang, t, trackNames, levelNames, initial
                 <Icon name="chev" className="text-subtle transition group-open:rotate-90" />
               </summary>
               <div className="grid gap-3.5 px-5 pb-5 md:grid-cols-2 md:pl-21">
-                <div className="soft rounded-xl px-4 py-3 text-sm leading-relaxed text-[#334155]" style={red}>{q.feedback}</div>
-                <div className="soft rounded-xl px-4 py-3 text-sm leading-relaxed text-[#334155]" style={green}>
+                <div className="soft rounded-xl px-4 py-3 text-sm leading-relaxed text-body" style={red}>{q.feedback}</div>
+                <div className="soft rounded-xl px-4 py-3 text-sm leading-relaxed text-body" style={green}>
                   <h4 className="mb-1 text-xs font-bold uppercase tracking-wide text-(--c)">{t.betterAnswer}</h4>
                   {q.betterAnswer}
                 </div>
@@ -539,7 +539,7 @@ export default function InterviewRoom({ lang, t, trackNames, levelNames, initial
                 <button
                   onClick={toggleMic}
                   disabled={!!busy}
-                  className="flex cursor-pointer items-center gap-2 rounded-full bg-hover pr-3 text-sm text-red-600 disabled:opacity-50"
+                  className="flex cursor-pointer items-center gap-2 rounded-full bg-hover pr-3 text-sm text-red-600 dark:text-red-400 disabled:opacity-50"
                 >
                   <span className={`grid size-9 place-items-center rounded-full text-white ${listening ? "shadow-[0_0_0_5px_rgb(239_68_68/0.2)]" : ""}`} style={{ background: "var(--g-red)" }}>
                     <Icon name="mic" size={17} />
@@ -658,7 +658,7 @@ function Row({ icon, label, value, color }: { icon: IconName; label: string; val
     <div className="flex items-center gap-3">
       <Icon name={icon} size={20} className="text-subtle" />
       <dt className="text-muted">{label}</dt>
-      <dd className="ml-auto font-semibold" style={{ color }}>{value}</dd>
+      <dd className={`ml-auto font-semibold ${color ? "text-(--c)" : ""}`} style={color ? hue([color, color]) : undefined}>{value}</dd>
     </div>
   );
 }

@@ -5,7 +5,7 @@
 <title>DevInterview – UI v2</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* Mockup v2 – mở bằng index.html?s=dashboard|bank|setup|room|report|weak|term|glossary
+/* Mockup v2 – mở bằng index.html?s=dashboard|bank|widget|tutor|setup|room|report|weak|term|glossary (&theme=dark: nền tối)
    Hệ màu nền sáng:
    - 1 màu thương hiệu (tím → chàm) cho hành động chính, mục đang chọn, điểm nhấn.
    - Màu trạng thái chỉ để báo nghĩa: xanh = tốt/xong, cam = cần ôn, đỏ = yếu.
@@ -36,14 +36,14 @@ svg.i{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stro
 /* màu theo mảng / level (bản đậm để đọc được trên nền trắng) */
 .k-fe{--c:#0891b2}.k-be{--c:#7c3aed}.k-ai{--c:#d97706}.k-do{--c:#059669}.k-mo{--c:#db2777}.k-da{--c:#2563eb}.k-ds{--c:#ea580c}.k-sd{--c:#dc2626}.k-bh{--c:#475569}
 .k-intern{--c:#059669}.k-junior{--c:#2563eb}.k-mid{--c:#d97706}.k-senior{--c:#dc2626}
-.chipi{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;flex:none;color:var(--c,var(--brand));background:color-mix(in srgb,var(--c,var(--brand)) 11%,#fff)}
+.chipi{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;flex:none;color:var(--c,var(--brand));background:color-mix(in srgb,var(--c,var(--brand)) 11%,var(--surface))}
 .chipi.sm{width:28px;height:28px;border-radius:8px}
 .chipi.sm svg{width:15px;height:15px}
-.tagc{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:99px;color:var(--c,var(--brand));background:color-mix(in srgb,var(--c,var(--brand)) 10%,#fff);border:1px solid color-mix(in srgb,var(--c,var(--brand)) 22%,#fff)}
+.tagc{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:99px;color:var(--c,var(--brand));background:color-mix(in srgb,var(--c,var(--brand)) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--c,var(--brand)) 22%,var(--surface))}
 .fill{display:block;height:100%;border-radius:99px;background:var(--c,var(--brand))}
 
 /* sidebar */
-.side{width:236px;flex:none;border-right:1px solid var(--line);background:#fff;display:flex;flex-direction:column;padding:16px 12px;gap:2px;position:sticky;top:0;height:100vh}
+.side{width:236px;flex:none;border-right:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;padding:16px 12px;gap:2px;position:sticky;top:0;height:100vh}
 .logo{display:flex;align-items:center;gap:10px;padding:4px 8px 18px;font-weight:700;font-size:15px}
 .logo b{width:30px;height:30px;border-radius:9px;background:var(--grad);display:grid;place-items:center;color:#fff;box-shadow:0 4px 12px -4px rgba(109,40,217,.6)}
 .logo b svg{width:15px;height:15px}
@@ -63,7 +63,7 @@ svg.i{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stro
 .week span.d{background:var(--g-warm)}
 .seg{display:flex;padding:3px;border-radius:9px;background:var(--hover);border:1px solid var(--line)}
 .seg span{flex:1;text-align:center;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;color:var(--subtle)}
-.seg span.on{background:#fff;color:var(--text);box-shadow:var(--shadow)}
+.seg span.on{background:var(--surface);color:var(--text);box-shadow:var(--shadow)}
 
 /* main */
 .main{flex:1;min-width:0;display:flex;flex-direction:column;background:radial-gradient(900px 320px at 15% -10%,rgba(124,58,237,.07),transparent 70%)}
@@ -71,7 +71,7 @@ svg.i{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stro
 .crumb{display:flex;align-items:center;gap:6px;color:var(--subtle);font-size:13px}
 .crumb b{color:var(--text);font-weight:600}
 .search{margin-left:auto;width:340px;display:flex;align-items:center;gap:8px;height:34px;padding:0 10px;border:1px solid var(--line);border-radius:9px;background:var(--surface2);color:var(--subtle);font-size:13px}
-kbd{font:11px "JetBrains Mono",monospace;padding:1px 5px;border-radius:4px;border:1px solid var(--line2);background:#fff;color:var(--muted)}
+kbd{font:11px "JetBrains Mono",monospace;padding:1px 5px;border-radius:4px;border:1px solid var(--line2);background:var(--surface);color:var(--muted)}
 .search kbd{margin-left:auto}
 .content{padding:28px;display:flex;flex-direction:column;gap:20px;max-width:1240px;width:100%;margin:0 auto}
 
@@ -85,7 +85,7 @@ h2{font-size:15px;font-weight:600}
 .card-h a{margin-left:auto;font-size:12px;font-weight:500;color:var(--brand);display:flex;align-items:center;gap:4px}
 .btn{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 15px;border-radius:9px;font:600 13px Inter,sans-serif;border:1px solid transparent;cursor:pointer;white-space:nowrap;color:var(--text)}
 .btn.primary{background:var(--grad);color:#fff;box-shadow:0 6px 16px -6px rgba(109,40,217,.55),inset 0 1px 0 rgba(255,255,255,.2)}
-.btn.ghost{background:#fff;border-color:var(--line2);box-shadow:0 1px 2px rgba(15,23,42,.05)}
+.btn.ghost{background:var(--surface);border-color:var(--line2);box-shadow:0 1px 2px rgba(15,23,42,.05)}
 .btn.white{background:#fff;color:#3b0764}
 .btn.sm{height:30px;padding:0 11px;font-size:12px}
 .btn.lg{height:44px;padding:0 18px;font-size:14px}
@@ -93,7 +93,7 @@ h2{font-size:15px;font-weight:600}
 .grow{flex:1;min-width:0}
 .meta{display:flex;align-items:center;gap:6px;color:var(--subtle);font-size:12px}
 .meta i{font-style:normal;opacity:.6}
-.badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;border:1px solid var(--line2);color:var(--muted);background:#fff}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;border:1px solid var(--line2);color:var(--muted);background:var(--surface)}
 .bar{height:6px;border-radius:99px;background:#eceef4;overflow:hidden}
 
 /* khối gradient: chỉ dùng cho thẻ thống kê và thẻ hero */
@@ -104,7 +104,7 @@ h2{font-size:15px;font-weight:600}
 .g-blue{--c:#4f46e5;background:var(--glow),var(--g-ocean);box-shadow:0 10px 24px -12px rgba(79,70,229,.55)}
 .g-pink{--c:#9333ea;background:var(--glow),var(--g-berry);box-shadow:0 10px 24px -12px rgba(147,51,234,.55)}
 .g-hero{background:radial-gradient(260px 160px at 100% 0%,rgba(34,211,238,.45),transparent 70%),var(--grad);box-shadow:0 14px 30px -14px rgba(109,40,217,.6)}
-.gborder{border:1px solid var(--brand-line);background:#fff;box-shadow:0 0 0 4px var(--brand-soft)}
+.gborder{border:1px solid var(--brand-line);background:var(--surface);box-shadow:0 0 0 4px var(--brand-soft)}
 
 /* dashboard */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
@@ -160,10 +160,10 @@ h2{font-size:15px;font-weight:600}
 
 /* bank */
 .split{display:flex;height:calc(100vh - 56px)}
-.list{width:440px;flex:none;border-right:1px solid var(--line);display:flex;flex-direction:column;background:#fff}
+.list{width:440px;flex:none;border-right:1px solid var(--line);display:flex;flex-direction:column;background:var(--surface)}
 .list-h{padding:18px 20px 12px;display:flex;flex-direction:column;gap:12px}
 .filters{display:flex;gap:8px;flex-wrap:wrap}
-.chip{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:8px;border:1px solid var(--line2);font-size:12px;font-weight:500;color:var(--muted);background:#fff}
+.chip{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:8px;border:1px solid var(--line2);font-size:12px;font-weight:500;color:var(--muted);background:var(--surface)}
 .tabs-s{display:flex;gap:2px;border-bottom:1px solid var(--line);padding:0 20px}
 .tabs-s span{padding:10px 8px;font-size:13px;font-weight:500;color:var(--subtle);border-bottom:2px solid transparent;margin-bottom:-1px;display:flex;align-items:center;gap:6px}
 .tabs-s span.on{color:var(--brand);font-weight:600;border-bottom-color:var(--brand)}
@@ -184,7 +184,45 @@ h2{font-size:15px;font-weight:600}
 .detail h1{font-size:25px;line-height:1.35}
 .tabs{display:flex;gap:4px;padding:4px;border-radius:11px;background:var(--hover);align-self:flex-start}
 .tabs span{padding:6px 14px;border-radius:8px;font-weight:500;color:var(--muted);display:flex;align-items:center;gap:6px}
-.tabs span.on{background:#fff;color:var(--brand);font-weight:600;box-shadow:var(--shadow)}
+.tabs span.on{background:var(--surface);color:var(--brand);font-weight:600;box-shadow:var(--shadow)}
+/* chatbot nổi góc phải (?s=widget) */
+.fab{position:fixed;right:28px;bottom:92px;width:56px;height:56px;border-radius:99px;display:grid;place-items:center;background:var(--grad);color:#fff;box-shadow:0 12px 28px -10px rgba(79,70,229,.8);z-index:20}
+.fab svg{width:24px;height:24px}
+.fab em{position:absolute;top:-2px;right:-2px;min-width:18px;height:18px;padding:0 5px;border-radius:99px;background:var(--red);color:#fff;font:700 10.5px/18px Inter;text-align:center;border:2px solid var(--surface)}
+.bot{position:fixed;right:28px;bottom:160px;width:380px;height:540px;border-radius:18px;background:var(--surface);border:1px solid var(--line);box-shadow:0 24px 60px -18px rgba(15,23,42,.35),0 4px 12px rgba(15,23,42,.06);display:flex;flex-direction:column;overflow:hidden;z-index:20}
+.bot-h{display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--grad);color:#fff}
+.bot-h .av{background:rgba(255,255,255,.2);box-shadow:none}
+.bot-h small{display:flex;align-items:center;gap:5px;font-size:11.5px;opacity:.85}
+.bot-h small i{width:7px;height:7px;border-radius:99px;background:#4ade80}
+.bot-h .x{margin-left:auto;display:flex;gap:4px}
+.bot-h .x span{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:rgba(255,255,255,.14)}
+.bot-ctx{display:flex;align-items:center;gap:8px;margin:12px 14px 0;padding:8px 10px;border-radius:10px;background:var(--brand-soft);border:1px solid var(--brand-line);font-size:12px;color:var(--muted)}
+.bot-ctx b{color:var(--brand);font-weight:600;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.bot-ctx .tg{margin-left:auto;flex:none;font-size:11px;color:var(--subtle)}
+.bot-m{flex:1;overflow:hidden;padding:14px;display:flex;flex-direction:column;gap:12px;background:var(--surface2)}
+.bot-m .b{max-width:85%;padding:9px 12px;border-radius:4px 14px 14px 14px;background:var(--surface);border:1px solid var(--line);font-size:13px;line-height:1.6}
+.bot-m .b.me{align-self:flex-end;background:var(--grad);color:#fff;border:0;border-radius:14px 4px 14px 14px}
+.bot-m .b ul{padding-left:16px;margin-top:4px}
+.bot-m .b a{color:var(--brand);font-weight:600;text-decoration:none}
+.bot-m .sc{display:inline-block;padding:0 7px;border-radius:6px;font-weight:700;color:#b45309;background:#fff4e5;margin-right:4px}
+.bot-s{display:flex;gap:6px;padding:10px 14px 0;overflow:hidden;flex-wrap:nowrap}
+.bot-s span{flex:none;height:28px;display:inline-flex;align-items:center;gap:5px;padding:0 10px;border-radius:99px;border:1px solid var(--brand-line);color:var(--brand);font-size:12px;font-weight:500;background:var(--surface)}
+.bot-i{display:flex;align-items:center;gap:8px;margin:10px 14px 14px;padding:6px 6px 6px 12px;border-radius:12px}
+.bot-i .ph{flex:1;color:var(--subtle);font-size:13px}
+.bot-i .send{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:var(--grad);color:#fff}
+/* chat gia sư AI trong trang câu hỏi (?s=tutor) */
+.tutor{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:14px;background:var(--surface2);overflow:hidden}
+.tutor .msgs{padding:18px 20px;gap:16px}
+.tutor .msg{max-width:none}.tutor .msg.me{max-width:80%}
+.tutor .composer{margin:0 14px 14px}
+.ctx{display:flex;align-items:center;gap:8px;padding:9px 16px;border-bottom:1px solid var(--line);background:var(--surface);font-size:12px;color:var(--subtle)}
+.ctx b{color:var(--text);font-weight:600}
+.sugg{display:flex;flex-wrap:wrap;gap:8px;padding:0 20px 12px}
+.sugg span{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border-radius:99px;border:1px solid var(--brand-line);background:var(--surface);color:var(--brand);font-size:12.5px;font-weight:500}
+.grade{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:12px 14px;display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.grade .sc{display:inline-grid;place-items:center;min-width:46px;height:26px;border-radius:7px;font-weight:700;font-size:13px;color:#b45309;background:#fff4e5}
+.grade ul{padding-left:18px;display:flex;flex-direction:column;gap:3px}
+.bubble a{color:var(--brand);font-weight:600;text-decoration:none}
 .prose{color:#334155;line-height:1.7}
 .prose b{color:var(--text)}
 .tldr{border-radius:12px;padding:14px 16px;display:flex;gap:12px;line-height:1.65;color:#1e1b4b;background:var(--brand-soft);border:1px solid var(--brand-line)}
@@ -199,10 +237,10 @@ h2{font-size:15px;font-weight:600}
 .tip{border-radius:12px;padding:13px 16px;display:flex;gap:12px;color:#431407;background:#fff7ed;border:1px solid #fed7aa}
 .tip b{color:#c2410c}
 .tip .chipi{background:var(--g-warm);color:#fff}
-.rate{border-top:1px solid var(--line);padding:14px 40px;display:flex;align-items:center;gap:10px;background:#fff}
+.rate{border-top:1px solid var(--line);padding:14px 40px;display:flex;align-items:center;gap:10px;background:var(--surface)}
 .rbtn{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 13px;border-radius:9px;font-weight:700;font-size:13px;border:1px solid}
 .rbtn small{font-weight:500;font-size:11px;opacity:.8}
-.rbtn kbd{background:#fff;font-size:10px;border-color:currentColor;color:inherit}
+.rbtn kbd{background:var(--surface);font-size:10px;border-color:currentColor;color:inherit}
 .rbtn.h{color:#b91c1c;background:#fef2f2;border-color:#fecaca}.rbtn.m{color:#b45309;background:#fffbeb;border-color:#fde68a}.rbtn.e{color:#047857;background:#ecfdf5;border-color:#a7f3d0}
 
 /* setup */
@@ -212,16 +250,16 @@ h2{font-size:15px;font-weight:600}
 .sec-t{display:flex;align-items:baseline;gap:8px;font-weight:600}
 .sec-t span{font-size:12px;color:var(--subtle);font-weight:400}
 .opts{display:grid;gap:10px}
-.opt{border:1px solid var(--line2);border-radius:11px;padding:9px 11px;display:flex;align-items:center;gap:10px;font-weight:600;background:#fff}
+.opt{border:1px solid var(--line2);border-radius:11px;padding:9px 11px;display:flex;align-items:center;gap:10px;font-weight:600;background:var(--surface)}
 .opt.on{border-color:var(--brand);background:var(--brand-soft);box-shadow:0 0 0 3px #ede7fe;color:var(--brand)}
 .opt.on .chipi{background:var(--grad);color:#fff}
 .opt.big{flex-direction:column;align-items:flex-start;gap:8px;padding:14px}
 .opt.big p{font-size:12px;color:var(--muted);font-weight:400;line-height:1.5}
 .levels{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.lvl{padding:10px;border-radius:10px;text-align:center;font-weight:600;border:1px solid var(--line2);background:#fff;color:var(--muted)}
+.lvl{padding:10px;border-radius:10px;text-align:center;font-weight:600;border:1px solid var(--line2);background:var(--surface);color:var(--muted)}
 .lvl.on{background:var(--grad);border-color:transparent;color:#fff;box-shadow:0 6px 16px -8px rgba(109,40,217,.6)}
 .segbig{display:flex;gap:8px}
-.segbig span{flex:1;text-align:center;padding:10px;border-radius:10px;font-weight:600;color:var(--muted);border:1px solid var(--line2);background:#fff}
+.segbig span{flex:1;text-align:center;padding:10px;border-radius:10px;font-weight:600;color:var(--muted);border:1px solid var(--line2);background:var(--surface)}
 .segbig span.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 6px 16px -8px rgba(109,40,217,.6)}
 .sum{position:sticky;top:84px;overflow:hidden}
 .sum .head{padding:20px;color:#fff;position:relative;overflow:hidden;border-radius:0}
@@ -232,7 +270,7 @@ h2{font-size:15px;font-weight:600}
 .feat{display:flex;gap:10px;padding:7px 0;color:var(--muted);font-size:13px;align-items:center}
 
 /* room */
-.room-h{height:58px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 24px;background:#fff}
+.room-h{height:58px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 24px;background:var(--surface)}
 .steps{display:flex;gap:4px;margin-left:16px}
 .steps span{width:30px;height:5px;border-radius:3px;background:#e5e7ef}
 .steps span.d{background:var(--grad)}
@@ -248,11 +286,11 @@ h2{font-size:15px;font-weight:600}
 .msg .who{font-size:12px;color:var(--subtle);margin-bottom:4px}
 .msg .who b{color:var(--text);font-weight:600;margin-right:6px}
 .msg.me{align-self:flex-end;flex-direction:row-reverse}
-.bubble{background:#fff;border:1px solid var(--line);border-radius:4px 16px 16px 16px;padding:11px 15px;line-height:1.65;box-shadow:var(--shadow)}
+.bubble{background:var(--surface);border:1px solid var(--line);border-radius:4px 16px 16px 16px;padding:11px 15px;line-height:1.65;box-shadow:var(--shadow)}
 .msg.me .bubble{background:var(--grad);border:0;border-radius:16px 4px 16px 16px;color:#fff;box-shadow:0 8px 20px -12px rgba(79,70,229,.7)}
 .msg.me .mono{color:#ede9fe}
 .attach{margin-top:8px;display:inline-flex;align-items:center;gap:6px;font-size:12px;border-radius:7px;padding:3px 9px;background:rgba(255,255,255,.18);color:#fff}
-.typing{display:flex;gap:5px;padding:14px 16px;background:#fff;border:1px solid var(--line);border-radius:4px 16px 16px 16px}
+.typing{display:flex;gap:5px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:4px 16px 16px 16px}
 .typing i{width:7px;height:7px;border-radius:99px;background:var(--brand)}
 .composer{margin:0 40px 22px;border-radius:16px;padding:12px 12px 10px 16px;display:flex;flex-direction:column;gap:10px}
 .composer .ph{color:var(--subtle);min-height:44px}
@@ -278,7 +316,7 @@ h2{font-size:15px;font-weight:600}
 .crit .row span:nth-child(2){font-weight:600;color:var(--text)}
 .crit .row span:last-child{margin-left:auto;font-weight:800;font-size:18px;color:var(--c)}
 .lists{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.lbox{border-radius:12px;padding:12px 14px;background:color-mix(in srgb,var(--c) 7%,#fff);border:1px solid color-mix(in srgb,var(--c) 22%,#fff)}
+.lbox{border-radius:12px;padding:12px 14px;background:color-mix(in srgb,var(--c) 7%,var(--surface));border:1px solid color-mix(in srgb,var(--c) 22%,var(--surface))}
 .lbox h4{font-size:12px;font-weight:700;color:var(--c);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
 .li{display:flex;gap:8px;color:#334155;font-size:13px;padding:3px 0}
 .li svg{margin-top:3px;color:var(--c);stroke-width:2.4}
@@ -306,8 +344,8 @@ h2{font-size:15px;font-weight:600}
 .term{border-bottom:1.5px dotted var(--brand);cursor:help;color:inherit}
 .term.on{background:var(--brand-soft);border-radius:4px;border-bottom-style:solid}
 .term.self{border-bottom-color:var(--subtle)}
-.pop{position:absolute;z-index:5;width:340px;background:#fff;border:1px solid var(--line2);border-radius:12px;box-shadow:0 18px 40px -12px rgba(15,23,42,.28);padding:14px 16px;display:flex;flex-direction:column;gap:8px}
-.pop:before{content:"";position:absolute;top:-7px;left:var(--ax,28px);width:12px;height:12px;background:#fff;border-left:1px solid var(--line2);border-top:1px solid var(--line2);transform:rotate(45deg)}
+.pop{position:absolute;z-index:5;width:340px;background:var(--surface);border:1px solid var(--line2);border-radius:12px;box-shadow:0 18px 40px -12px rgba(15,23,42,.28);padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.pop:before{content:"";position:absolute;top:-7px;left:var(--ax,28px);width:12px;height:12px;background:var(--surface);border-left:1px solid var(--line2);border-top:1px solid var(--line2);transform:rotate(45deg)}
 .pop .hd{display:flex;align-items:center;gap:8px}
 .pop .hd b{font-size:14.5px}
 .pop p{color:#334155;font-size:13px;line-height:1.6}
@@ -320,7 +358,7 @@ h2{font-size:15px;font-weight:600}
 .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
 .legend span{display:flex;align-items:center;gap:6px}
 /* Trang thuật ngữ */
-.gsearch{display:flex;align-items:center;gap:8px;height:36px;padding:0 12px;border:1px solid var(--line2);border-radius:9px;background:#fff;color:var(--subtle);font-size:13px}
+.gsearch{display:flex;align-items:center;gap:8px;height:36px;padding:0 12px;border:1px solid var(--line2);border-radius:9px;background:var(--surface);color:var(--subtle);font-size:13px}
 .alpha{display:flex;flex-wrap:wrap;gap:2px;padding:0 20px 10px}
 .alpha span{width:22px;height:22px;display:grid;place-items:center;border-radius:6px;font-size:11.5px;font-weight:600;color:var(--muted)}
 .alpha span.on{background:var(--brand);color:#fff}
@@ -333,12 +371,54 @@ h2{font-size:15px;font-weight:600}
 .gitem .ok{position:absolute;right:20px;top:12px;color:var(--green,#059669)}
 .gdef{font-size:15.5px;line-height:1.75;color:#1e293b}
 .gsec h3{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-.qlink{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;margin-bottom:8px}
+.qlink{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);margin-bottom:8px}
 .qlink .grow{font-size:13.5px;font-weight:500}
 .qlink.primary{border-color:var(--brand-line);background:var(--brand-soft)}
 .rel{display:flex;flex-wrap:wrap;gap:8px}
-.rel span{font-size:12.5px;font-weight:600;padding:5px 11px;border-radius:99px;border:1px solid var(--line2);background:#fff;color:#334155}
+.rel span{font-size:12.5px;font-weight:600;padding:5px 11px;border-radius:99px;border:1px solid var(--line2);background:var(--surface);color:#334155}
 .new{font-size:10px;font-weight:800;padding:1px 6px;border-radius:4px;background:#f97316;color:#fff;letter-spacing:.04em}
+
+/* ===== Chế độ tối (?theme=dark): "đêm tím" — nền xanh than ngả tím, giữ nguyên gradient thương hiệu ===== */
+html.dark{
+  --bg:#0b0d16; --surface:#131624; --surface2:#191d2e; --hover:#20253a;
+  --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.13);
+  --text:#e6e8f2; --muted:#a3abc2; --subtle:#7c859e;
+  --brand:#a78bfa; --brand-soft:rgba(124,58,237,.16); --brand-line:rgba(139,92,246,.38);
+  --green:#34d399; --amber:#fbbf24; --red:#f87171;
+  --shadow:0 1px 0 rgba(255,255,255,.04) inset,0 8px 24px -12px rgba(0,0,0,.6);
+  --code:#080a12;
+  color-scheme:dark;
+}
+html.dark body{background:
+  radial-gradient(1000px 560px at 0% -8%,rgba(124,58,237,.16),transparent 65%),
+  radial-gradient(900px 560px at 100% -8%,rgba(34,211,238,.09),transparent 65%),
+  radial-gradient(rgba(255,255,255,.035) 1px,transparent 1.6px) 0 0/22px 22px,
+  var(--bg);background-attachment:fixed}
+html.dark .k-fe{--c:#22d3ee}html.dark .k-be{--c:#a78bfa}html.dark .k-ai{--c:#fbbf24}html.dark .k-do{--c:#34d399}html.dark .k-mo{--c:#f472b6}
+html.dark .k-da{--c:#60a5fa}html.dark .k-ds{--c:#fb923c}html.dark .k-sd{--c:#f87171}html.dark .k-bh{--c:#94a3b8}
+html.dark .k-intern{--c:#34d399}html.dark .k-junior{--c:#60a5fa}html.dark .k-mid{--c:#fbbf24}html.dark .k-senior{--c:#f87171}
+html.dark .card,html.dark .bubble,html.dark .bot,html.dark .pop{box-shadow:var(--shadow)}
+html.dark .code,html.dark .editor{border:1px solid rgba(255,255,255,.07)}
+html.dark .prose{color:#c3c9db}
+html.dark .tldr{color:#ddd6fe}
+html.dark .tip{color:#fed7aa;background:rgba(249,115,22,.1);border-color:rgba(249,115,22,.3)}
+html.dark .tip b{color:#fb923c}
+html.dark .tip .mono{background:rgba(249,115,22,.18)!important;color:#fdba74!important}
+html.dark .example{color:#bae6fd;background:rgba(14,165,233,.1);border-color:rgba(14,165,233,.3)}
+html.dark .example b{color:#38bdf8}
+html.dark .rbtn.h{color:#fca5a5;background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.32)}
+html.dark .rbtn.m{color:#fcd34d;background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.32)}
+html.dark .rbtn.e{color:#6ee7b7;background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.32)}
+html.dark .nav .pill{background:rgba(249,115,22,.16);color:#fdba74}
+html.dark .heat i{background:#1c2133}html.dark .heat i.l1{background:#3b2a6b}html.dark .heat i.l2{background:#6d4fd1}html.dark .heat i.l3{background:#a78bfa}
+html.dark .tabs-s em.am{background:rgba(245,158,11,.16);color:#fcd34d}
+html.dark .grade .sc,html.dark .bot-m .sc{background:rgba(245,158,11,.16);color:#fcd34d}
+html.dark .btn.white{background:#fff;color:#3b0764}
+html.dark .top{background:rgba(11,13,22,.75)}
+html.dark .streak-card{background:rgba(249,115,22,.1);border-color:rgba(249,115,22,.3);color:#fdba74}
+html.dark .streak-card .row{color:#fb923c}
+html.dark .task.hot{background:rgba(249,115,22,.07)}
+html.dark .s-g{background:rgba(16,185,129,.14);color:#6ee7b7}html.dark .s-a{background:rgba(245,158,11,.14);color:#fcd34d}html.dark .s-r{background:rgba(239,68,68,.14);color:#fca5a5}
 </style>
 </head>
 <body>
@@ -522,6 +602,175 @@ h2{font-size:15px;font-weight:600}
 Idempotency-Key: <span class="s">"a1b2-c3d4"</span>   <span class="c"># server bỏ qua request trùng</span></pre>
           </div>
           <div class="tip"><span class="chipi"><svg class="i"><use href="#bulb"/></svg></span><div><b>Mẹo ghi điểm</b><br>Nhắc tới <span class="mono" style="font-size:12.5px;padding:1px 6px;border-radius:5px;background:#ffedd5;color:#9a3412">Idempotency-Key</span> khi làm thanh toán — cho thấy bạn đã nghĩ tới retry và trùng giao dịch.</div></div>
+        </div>
+        <div class="rate">
+          <span class="sub small">Tự chấm · ôn lại sau</span>
+          <span class="rbtn h">Khó <small>1 ngày</small><kbd>1</kbd></span><span class="rbtn m">Vừa <small>4 ngày</small><kbd>2</kbd></span><span class="rbtn e">Dễ <small>9 ngày</small><kbd>3</kbd></span>
+          <div class="grow"></div>
+          <button class="btn ghost">Câu tiếp<svg class="i" style="width:14px"><use href="#arrow"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ CHATBOT NỔI GÓC PHẢI ============ -->
+<div class="screen app" id="widget">
+  <slot data-side="bank"></slot>
+  <main class="main">
+    <div class="top"><div class="crumb">Ngân hàng câu hỏi<svg class="i" style="width:14px"><use href="#chev"/></svg><b>Backend</b></div><slot data-search></slot></div>
+    <div class="split">
+      <div class="list">
+        <div class="list-h">
+          <div class="row"><h2 style="font-size:17px">Ngân hàng câu hỏi</h2><span class="sub small">41 / 296 câu</span></div>
+          <div class="filters">
+            <span class="tagc k-be" style="height:28px;border-radius:8px"><svg class="i" style="width:13px"><use href="#t-be"/></svg>Backend<svg class="i" style="width:12px"><use href="#x"/></svg></span>
+            <span class="chip">Level: Tất cả<svg class="i" style="width:12px"><use href="#down"/></svg></span>
+            <span class="chip">Chủ đề<svg class="i" style="width:12px"><use href="#down"/></svg></span>
+          </div>
+        </div>
+        <div class="tabs-s"><span class="on">Tất cả<em>41</em></span><span>Chưa làm<em>17</em></span><span>Cần ôn<em class="am">5</em></span><span>Đã lưu<em class="vi">4</em></span></div>
+        <div style="overflow:hidden">
+          <div class="item"><span class="st ok"><svg class="i"><use href="#check"/></svg></span><div class="grow"><div class="t">Client–server, request/response là gì? Điều gì xảy ra khi gõ URL vào trình duyệt?</div><div class="meta">HTTP & REST<i>·</i><span class="lv k-intern">Intern</span></div></div></div>
+          <div class="item on"><span class="st due"><svg class="i"><use href="#clock"/></svg></span><div class="grow"><div class="t">Các HTTP method phổ biến khác nhau thế nào? "Safe" và "idempotent" nghĩa là gì?</div><div class="meta">HTTP & REST<i>·</i><span class="lv k-intern">Intern</span><i>·</i><span style="color:#b45309;font-weight:600">Đến hạn ôn</span></div></div><svg class="i" style="color:#fbbf24;width:14px;fill:#fbbf24"><use href="#star"/></svg></div>
+          <div class="item"><span class="st ok"><svg class="i"><use href="#check"/></svg></span><div class="grow"><div class="t">Status code 2xx, 3xx, 4xx, 5xx — khi nào trả về 400, 401, 403, 404, 409, 422?</div><div class="meta">HTTP & REST<i>·</i><span class="lv k-junior">Junior</span></div></div></div>
+          <div class="item"><span class="st"></span><div class="grow"><div class="t">Thiết kế REST API thế nào cho chuẩn? Đặt tên resource, versioning, phân trang.</div><div class="meta">HTTP & REST<i>·</i><span class="lv k-junior">Junior</span></div></div></div>
+          <div class="item"><span class="st"></span><div class="grow"><div class="t">REST và GraphQL khác nhau thế nào? Khi nào chọn GraphQL?</div><div class="meta">HTTP & REST<i>·</i><span class="lv k-mid">Mid</span></div></div></div>
+          <div class="item"><span class="st ok"><svg class="i"><use href="#check"/></svg></span><div class="grow"><div class="t">Cookie, session và JWT khác nhau thế nào? Lưu token ở đâu an toàn?</div><div class="meta">Auth & Security<i>·</i><span class="lv k-junior">Junior</span></div></div></div>
+          <div class="item"><span class="st"></span><div class="grow"><div class="t">OAuth 2.0 hoạt động thế nào? Authorization Code + PKCE là gì?</div><div class="meta">Auth & Security<i>·</i><span class="lv k-mid">Mid</span></div></div></div>
+          <div class="item"><span class="st due"><svg class="i"><use href="#clock"/></svg></span><div class="grow"><div class="t">SQL injection, XSS, CSRF là gì và phòng chống ra sao?</div><div class="meta">Auth & Security<i>·</i><span class="lv k-junior">Junior</span></div></div></div>
+          <div class="item"><span class="st"></span><div class="grow"><div class="t">Index trong database hoạt động ra sao? Khi nào index làm chậm hệ thống?</div><div class="meta">Database<i>·</i><span class="lv k-senior">Senior</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="detail">
+        <div class="detail-body">
+          <div class="row" style="gap:8px">
+            <span class="tagc k-be"><svg class="i" style="width:13px"><use href="#t-be"/></svg>Backend</span><span class="badge">HTTP & REST</span><span class="tagc k-intern">Intern</span>
+            <span class="tagc" style="--c:#d97706"><svg class="i" style="width:12px"><use href="#clock"/></svg>Đến hạn ôn</span>
+            <div class="grow"></div>
+            <button class="btn sm ghost"><svg class="i" style="width:14px;color:#fbbf24;fill:#fbbf24"><use href="#star"/></svg>Đã lưu</button>
+          </div>
+          <h1>Các HTTP method phổ biến khác nhau thế nào? "Safe" và "idempotent" nghĩa là gì?</h1>
+          <div class="tabs"><span>Tự trả lời</span><span class="on">Đáp án gợi ý</span><span>Follow-up <span class="badge" style="padding:0 6px">2</span></span></div>
+          <div class="tldr"><span class="chipi"><svg class="i"><use href="#spark"/></svg></span><div><b>Trả lời 30 giây</b><br>GET đọc, POST tạo, PUT thay toàn bộ, PATCH sửa một phần, DELETE xoá. <b style="color:#0e7490">Safe</b> = không đổi dữ liệu (GET, HEAD). <b style="color:#047857">Idempotent</b> = gọi nhiều lần cho kết quả như một lần (GET, PUT, DELETE).</div></div>
+          <div class="prose"><b>Vì sao quan trọng:</b> client, proxy và retry logic dựa vào hai tính chất này. Request idempotent có thể tự động gửi lại khi timeout mà không sợ tạo bản ghi trùng; POST thì không.</div>
+          <div class="code">
+            <div class="code-h"><span class="dots"><i></i><i></i><i></i></span>http<span><svg class="i" style="width:13px"><use href="#copy"/></svg>Sao chép</span></div>
+<pre><span class="k">PUT</span> <span class="f">/users/</span><span class="nu">42</span>      <span class="c"># gọi 3 lần → user 42 vẫn như nhau</span>
+<span class="k">POST</span> <span class="f">/orders</span>        <span class="c"># gọi 3 lần → 3 đơn hàng</span>
+<span class="k">POST</span> <span class="f">/orders</span>
+Idempotency-Key: <span class="s">"a1b2-c3d4"</span>   <span class="c"># server bỏ qua request trùng</span></pre>
+          </div>
+          <div class="tip"><span class="chipi"><svg class="i"><use href="#bulb"/></svg></span><div><b>Mẹo ghi điểm</b><br>Nhắc tới <span class="mono" style="font-size:12.5px;padding:1px 6px;border-radius:5px;background:#ffedd5;color:#9a3412">Idempotency-Key</span> khi làm thanh toán — cho thấy bạn đã nghĩ tới retry và trùng giao dịch.</div></div>
+        </div>
+        <div class="rate">
+          <span class="sub small">Tự chấm · ôn lại sau</span>
+          <span class="rbtn h">Khó <small>1 ngày</small><kbd>1</kbd></span><span class="rbtn m">Vừa <small>4 ngày</small><kbd>2</kbd></span><span class="rbtn e">Dễ <small>9 ngày</small><kbd>3</kbd></span>
+          <div class="grow"></div>
+          <button class="btn ghost">Câu tiếp<svg class="i" style="width:14px"><use href="#arrow"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </main>
+  <div class="bot">
+    <div class="bot-h">
+      <span class="av"><svg class="i"><use href="#spark"/></svg></span>
+      <div><b style="font-size:14px">Gia sư AI</b><small><i></i>Hỏi về câu bạn đang xem</small></div>
+      <div class="x"><span><svg class="i" style="width:14px"><use href="#rotate"/></svg></span><span><svg class="i" style="width:14px"><use href="#x"/></svg></span></div>
+    </div>
+    <div class="bot-ctx"><svg class="i" style="width:14px;color:var(--brand)"><use href="#book"/></svg><b>Các HTTP method phổ biến khác nhau thế nào? "Safe" và "idempotent"…</b><span class="tg">đang xem</span></div>
+    <div class="bot-m">
+      <div class="b">Chào bạn 👋 Mình đã đọc câu này và đáp án gợi ý. Bạn muốn mình giải thích lại, cho ví dụ, hay chấm bản nháp?</div>
+      <div class="b me">Chấm bản nháp giúp mình</div>
+      <div class="b"><span class="sc">6.5</span>Đúng phần method, còn thiếu:
+        <ul><li>Định nghĩa <i>idempotent</i>: gọi nhiều lần như một lần.</li><li>Vì sao quan trọng: retry khi timeout, POST dễ tạo đơn trùng.</li></ul>
+      </div>
+      <div class="b me">DELETE lần 2 trả 404 thì vẫn idempotent à?</div>
+      <div class="b">Đúng vậy. Idempotent xét <b>trạng thái server</b>, không xét status code: sau lần 1 hay lần 2, user 42 đều đã bị xoá.<br>Xem thêm: <a href="#">Status code 2xx–5xx →</a></div>
+    </div>
+    <div class="bot-s">
+      <span><svg class="i" style="width:12px"><use href="#target"/></svg>Chấm bản nháp</span>
+      <span><svg class="i" style="width:12px"><use href="#bulb"/></svg>Giải thích dễ hơn</span>
+      <span><svg class="i" style="width:12px"><use href="#chat"/></svg>Bị hỏi vặn gì?</span>
+    </div>
+    <div class="bot-i gborder"><span class="ph">Hỏi gì cũng được…</span><span class="small sub">8/20</span><span class="send"><svg class="i" style="width:15px"><use href="#send"/></svg></span></div>
+  </div>
+  <div class="fab"><svg class="i"><use href="#x"/></svg></div>
+</div>
+
+<!-- ============ HỎI AI (gia sư theo câu hỏi) ============ -->
+<div class="screen app" id="tutor">
+  <slot data-side="bank"></slot>
+  <main class="main">
+    <div class="top"><div class="crumb">Ngân hàng câu hỏi<svg class="i" style="width:14px"><use href="#chev"/></svg><b>Backend</b></div><slot data-search></slot></div>
+    <div class="split">
+      <div class="list">
+        <div class="list-h">
+          <div class="row"><h2 style="font-size:17px">Ngân hàng câu hỏi</h2><span class="sub small">41 / 296 câu</span></div>
+          <div class="filters">
+            <span class="tagc k-be" style="height:28px;border-radius:8px"><svg class="i" style="width:13px"><use href="#t-be"/></svg>Backend<svg class="i" style="width:12px"><use href="#x"/></svg></span>
+            <span class="chip">Level: Tất cả<svg class="i" style="width:12px"><use href="#down"/></svg></span>
+            <span class="chip">Chủ đề<svg class="i" style="width:12px"><use href="#down"/></svg></span>
+          </div>
+        </div>
+        <div class="tabs-s"><span class="on">Tất cả<em>41</em></span><span>Chưa làm<em>17</em></span><span>Cần ôn<em class="am">5</em></span><span>Đã lưu<em class="vi">4</em></span></div>
+        <div style="overflow:hidden">
+          <div class="item"><span class="st ok"><svg class="i"><use href="#check"/></svg></span><div class="grow"><div class="t">Client–server, request/response là gì? Điều gì xảy ra khi gõ URL vào trình duyệt?</div><div class="meta">HTTP & REST<i>·</i><span class="lv k-intern">Intern</span></div></div></div>
+          <div class="item on"><span class="st due"><svg class="i"><use href="#clock"/></svg></span><div class="grow"><div class="t">Các HTTP method phổ biến khác nhau thế nào? "Safe" và "idempotent" nghĩa là gì?</div><div class="meta">HTTP & REST<i>·</i><span class="lv k-intern">Intern</span><i>·</i><span style="color:#b45309;font-weight:600">Đến hạn ôn</span></div></div><svg class="i" style="color:#fbbf24;width:14px;fill:#fbbf24"><use href="#star"/></svg></div>
+          <div class="item"><span class="st ok"><svg class="i"><use href="#check"/></svg></span><div class="grow"><div class="t">Status code 2xx, 3xx, 4xx, 5xx — khi nào trả về 400, 401, 403, 404, 409, 422?</div><div class="meta">HTTP & REST<i>·</i><span class="lv k-junior">Junior</span></div></div></div>
+          <div class="item"><span class="st"></span><div class="grow"><div class="t">Thiết kế REST API thế nào cho chuẩn? Đặt tên resource, versioning, phân trang.</div><div class="meta">HTTP & REST<i>·</i><span class="lv k-junior">Junior</span></div></div></div>
+          <div class="item"><span class="st"></span><div class="grow"><div class="t">REST và GraphQL khác nhau thế nào? Khi nào chọn GraphQL?</div><div class="meta">HTTP & REST<i>·</i><span class="lv k-mid">Mid</span></div></div></div>
+          <div class="item"><span class="st ok"><svg class="i"><use href="#check"/></svg></span><div class="grow"><div class="t">Cookie, session và JWT khác nhau thế nào? Lưu token ở đâu an toàn?</div><div class="meta">Auth & Security<i>·</i><span class="lv k-junior">Junior</span></div></div></div>
+          <div class="item"><span class="st"></span><div class="grow"><div class="t">OAuth 2.0 hoạt động thế nào? Authorization Code + PKCE là gì?</div><div class="meta">Auth & Security<i>·</i><span class="lv k-mid">Mid</span></div></div></div>
+          <div class="item"><span class="st due"><svg class="i"><use href="#clock"/></svg></span><div class="grow"><div class="t">SQL injection, XSS, CSRF là gì và phòng chống ra sao?</div><div class="meta">Auth & Security<i>·</i><span class="lv k-junior">Junior</span></div></div></div>
+          <div class="item"><span class="st"></span><div class="grow"><div class="t">Index trong database hoạt động ra sao? Khi nào index làm chậm hệ thống?</div><div class="meta">Database<i>·</i><span class="lv k-senior">Senior</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="detail">
+        <div class="detail-body">
+          <div class="row" style="gap:8px">
+            <span class="tagc k-be"><svg class="i" style="width:13px"><use href="#t-be"/></svg>Backend</span><span class="badge">HTTP & REST</span><span class="tagc k-intern">Intern</span>
+            <span class="tagc" style="--c:#d97706"><svg class="i" style="width:12px"><use href="#clock"/></svg>Đến hạn ôn</span>
+            <div class="grow"></div>
+            <button class="btn sm ghost"><svg class="i" style="width:14px;color:#fbbf24;fill:#fbbf24"><use href="#star"/></svg>Đã lưu</button>
+          </div>
+          <h1>Các HTTP method phổ biến khác nhau thế nào? "Safe" và "idempotent" nghĩa là gì?</h1>
+          <div class="tabs"><span>Tự trả lời</span><span>Đáp án gợi ý</span><span>Follow-up <span class="badge" style="padding:0 6px">2</span></span><span class="on"><svg class="i" style="width:14px"><use href="#spark"/></svg>Hỏi AI</span></div>
+          <div class="tutor">
+            <div class="ctx"><svg class="i" style="width:14px;color:var(--brand)"><use href="#spark"/></svg>Gia sư AI đã đọc <b>câu hỏi, đáp án gợi ý và bản nháp của bạn</b><span style="margin-left:auto">Beta</span></div>
+            <div class="msgs">
+              <div class="msg me"><span class="av me">B</span><div><div class="who" style="text-align:right"><b>Bạn</b></div><div class="bubble">Chấm bản nháp giúp mình</div></div></div>
+              <div class="msg"><span class="av ai"><svg class="i"><use href="#spark"/></svg></span><div style="flex:1"><div class="who"><b>Gia sư AI</b></div><div class="bubble">
+                Bạn nắm đúng phần method, nhưng còn thiếu ý chính mà người phỏng vấn muốn nghe.
+                <div class="grade">
+                  <div class="row" style="gap:10px"><span class="sc">6.5</span><b>So với đáp án gợi ý</b></div>
+                  <ul>
+                    <li><b style="color:var(--green)">Đúng:</b> GET đọc, POST tạo, PUT thay toàn bộ, PATCH sửa một phần.</li>
+                    <li><b style="color:var(--amber)">Thiếu:</b> chưa giải thích <i>idempotent</i>: gọi nhiều lần vẫn cho kết quả như một lần.</li>
+                    <li><b style="color:var(--amber)">Thiếu:</b> chưa nói vì sao quan trọng: retry khi timeout, POST có thể tạo đơn trùng.</li>
+                  </ul>
+                </div>
+              </div></div></div>
+              <div class="msg me"><span class="av me">B</span><div><div class="who" style="text-align:right"><b>Bạn</b></div><div class="bubble">Vậy DELETE gọi 2 lần, lần 2 trả 404 thì sao vẫn là idempotent?</div></div></div>
+              <div class="msg"><span class="av ai"><svg class="i"><use href="#spark"/></svg></span><div><div class="who"><b>Gia sư AI</b></div><div class="bubble">Idempotent nói về <b>trạng thái trên server</b>, không phải status code. Sau lần 1 hay lần 2, user 42 đều đã bị xoá, trạng thái như nhau, nên lần 2 trả 404 vẫn hợp lệ.<br>Liên quan: <a href="#">Status code 2xx–5xx, khi nào trả 404, 409?</a></div></div></div>
+            </div>
+            <div class="sugg">
+              <span><svg class="i" style="width:13px"><use href="#bulb"/></svg>Giải thích như cho người mới</span>
+              <span><svg class="i" style="width:13px"><use href="#code"/></svg>Cho ví dụ bằng Java</span>
+              <span><svg class="i" style="width:13px"><use href="#chat"/></svg>Người phỏng vấn sẽ hỏi vặn gì?</span>
+            </div>
+            <div class="composer gborder">
+              <div class="ph">Hỏi gì về câu này cũng được… <span class="small">(Ctrl+Enter để gửi)</span></div>
+              <div class="tools">
+                <span class="tagc"><svg class="i" style="width:13px"><use href="#target"/></svg>Chấm bản nháp</span>
+                <div class="grow"></div>
+                <span class="small sub">8/20 tin</span>
+                <button class="btn primary sm"><svg class="i" style="width:14px"><use href="#send"/></svg>Gửi</button>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="rate">
           <span class="sub small">Tự chấm · ôn lại sau</span>
@@ -915,6 +1164,7 @@ Idempotency-Key: <span class="s">"a1b2-c3d4"</span>   <span class="c"># server b
     h.insertAdjacentHTML("beforeend", `<i class="${lv ? "l" + lv : ""}"></i>`);
   }
   const s = new URLSearchParams(location.search).get("s") || "dashboard";
+  if (new URLSearchParams(location.search).get("theme") === "dark") document.documentElement.classList.add("dark");
   document.getElementById(s).classList.add("on");
   // Mockup thuật ngữ: đặt popup ngay dưới chữ "SLO", mũi tên chỉ vào nó
   const slo = document.getElementById("slo"), pop = document.getElementById("slo-pop");

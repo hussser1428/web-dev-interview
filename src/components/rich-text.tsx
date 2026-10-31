@@ -66,7 +66,7 @@ function Term({ text, self, item, lang, t }: { text: string; self: boolean; item
         popover="auto"
         onBeforeToggle={place}
         onToggle={flip}
-        className="term-pop fixed m-0 rounded-xl border border-line2 bg-white p-0 text-left text-[13px] font-normal leading-relaxed tracking-normal text-[#334155] shadow-[0_18px_40px_-12px_rgb(15_23_42/0.28)]"
+        className="term-pop fixed m-0 rounded-xl border border-line2 bg-panel p-0 text-left text-[13px] font-normal leading-relaxed tracking-normal text-body shadow-[0_18px_40px_-12px_rgb(15_23_42/0.28)]"
       >
         <span className="flex flex-col gap-2 px-4 py-3.5">
           <span className="flex items-start gap-2">

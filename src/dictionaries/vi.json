@@ -22,7 +22,12 @@
     "keepStreak": "Luyện 1 câu nữa để giữ chuỗi!",
     "streakDone": "Hôm nay đã học — giữ vững nhé!",
     "weak": "Câu yếu",
-    "glossary": "Thuật ngữ"
+    "glossary": "Thuật ngữ",
+    "theme": "Giao diện: {mode}",
+    "themes": {
+      "light": "sáng",
+      "dark": "tối"
+    }
   },
   "header": {
     "search": "Tìm câu hỏi, chủ đề…"

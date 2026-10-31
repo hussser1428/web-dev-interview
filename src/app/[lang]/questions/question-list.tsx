@@ -106,7 +106,7 @@ export default function QuestionList({ lang, t, trackNames, levelNames, items }:
         {statuses.map((st) => {
           const n = filtered.filter((q) => match(st, q)).length;
           const on = status === st;
-          const badge = st === "due" ? "bg-[#fff4e5] text-[#b45309]" : st === "saved" ? "bg-brand-soft text-brand" : "bg-hover text-muted";
+          const badge = st === "due" ? "bg-due text-due-ink" : st === "saved" ? "bg-brand-soft text-brand" : "bg-hover text-muted";
           return (
             <button
               key={st}
@@ -145,17 +145,17 @@ export default function QuestionList({ lang, t, trackNames, levelNames, items }:
                 <div className="flex flex-wrap items-center gap-1.5 text-xs text-subtle">
                   {!track && (
                     <>
-                      <span style={{ color: trackColor[q.track][0] }}>{trackNames[q.track]}</span>
+                      <span className="text-(--c)" style={hue(trackColor[q.track])}>{trackNames[q.track]}</span>
                       <i className="not-italic opacity-60">·</i>
                     </>
                   )}
                   {q.topic}
                   <i className="not-italic opacity-60">·</i>
-                  <span className="text-[11px] font-semibold" style={{ color: levelColor[q.level][0] }}>{levelNames[q.level]}</span>
+                  <span className="text-[11px] font-semibold text-(--c)" style={hue(levelColor[q.level])}>{levelNames[q.level]}</span>
                   {due && (
                     <>
                       <i className="not-italic opacity-60">·</i>
-                      <span className="font-semibold text-amber-800">{t.due}</span>
+                      <span className="font-semibold text-due-ink">{t.due}</span>
                     </>
                   )}
                 </div>

@@ -35,7 +35,7 @@ export default function TopBar({ lang, sections, trackNames, search }: Props) {
   const track = trackNames[sp.get("track") ?? ""] ?? trackNames[path.split("/")[3] ?? ""];
 
   return (
-    <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-1.5 border-b border-line bg-white/80 px-7 text-[13px] text-subtle backdrop-blur-md max-md:hidden">
+    <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-1.5 border-b border-line bg-panel/80 px-7 text-[13px] text-subtle backdrop-blur-md max-md:hidden">
       {section && (
         <Link href={section[0]} className={track ? "hover:text-fg" : "font-semibold text-fg"}>
           {section[1]}
@@ -50,7 +50,7 @@ export default function TopBar({ lang, sections, trackNames, search }: Props) {
       <form action={`/${lang}/questions`} className="ml-auto flex h-8.5 w-[340px] items-center gap-2 rounded-[9px] border border-line bg-panel2 px-2.5 focus-within:border-brand">
         <Icon name="search" />
         <input ref={input} key={sp.get("q")} name="q" type="search" defaultValue={sp.get("q") ?? ""} placeholder={search} className="min-w-0 flex-1 bg-transparent text-fg outline-none placeholder:text-subtle" />
-        <kbd className="rounded border border-line2 bg-white px-1.5 font-mono text-[11px] text-muted">Ctrl K</kbd>
+        <kbd className="rounded border border-line2 bg-panel px-1.5 font-mono text-[11px] text-muted">Ctrl K</kbd>
       </form>
     </header>
   );

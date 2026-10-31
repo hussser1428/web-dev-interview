@@ -99,11 +99,11 @@ export default function Session({ lang, t, ratings, cards }: Props) {
         {flipped ? (
           <>
             <hr className="border-line" />
-            <p className="whitespace-pre-line leading-relaxed text-[#334155]">{card.answer}</p>
+            <p className="whitespace-pre-line leading-relaxed text-body">{card.answer}</p>
             {card.code && (
               <pre className="overflow-x-auto rounded-xl bg-code p-4 font-mono text-[13px] text-[#e2e8f0]">{card.code}</pre>
             )}
-            {card.tip && <p className="text-sm text-[#c2410c]">💡 {card.tip}</p>}
+            {card.tip && <p className="text-sm text-tip-head">💡 {card.tip}</p>}
           </>
         ) : (
           <button className="btn mt-auto self-center" onClick={() => setFlipped(true)}>{t.flip}</button>

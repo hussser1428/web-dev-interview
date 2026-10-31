@@ -68,8 +68,8 @@ export function RateBar({ id, t, ratings }: { id: string; t: Dict["questions"]; 
           }`}
         >
           {ratings[ratingKey[r]]}
-          <small className="text-[11px] font-medium opacity-80">{fmt(t.inDays, { n: nextInterval(s?.interval, r) })}</small>
-          <kbd className="rounded border border-current bg-white px-1.25 font-mono text-[10px]">{r}</kbd>
+          <small className="text-[11px] font-medium">{fmt(t.inDays, { n: nextInterval(s?.interval, r) })}</small>
+          <kbd className="rounded border border-current bg-panel px-1.25 font-mono text-[10px]">{r}</kbd>
         </button>
       ))}
     </div>

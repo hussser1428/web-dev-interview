@@ -125,7 +125,7 @@ export default function Dashboard({ lang, t, trackNames, levelNames, items }: Pr
                     key={i}
                     href={x.href}
                     className={`flex items-center gap-3.5 border-b border-line px-5 py-3.25 last:border-0 hover:bg-panel2 ${
-                      kind === "hot" ? "bg-[#fffbf5] shadow-[inset_3px_0_0_#f97316]" : ""
+                      kind === "hot" ? "bg-tip/60 shadow-[inset_3px_0_0_#f97316]" : ""
                     }`}
                   >
                     <span
@@ -265,7 +265,7 @@ export default function Dashboard({ lang, t, trackNames, levelNames, items }: Pr
                 <div className="min-w-0 flex-1">
                   <div className="truncate font-semibold">{q.title}</div>
                   <div className="text-xs text-subtle">
-                    {trackNames[q.track]} · <span className="font-semibold" style={{ color: levelColor[q.level][0] }}>{levelNames[q.level]}</span>
+                    {trackNames[q.track]} · <span className="font-semibold text-(--c)" style={hue(levelColor[q.level])}>{levelNames[q.level]}</span>
                   </div>
                 </div>
               </Link>
@@ -357,12 +357,12 @@ function Heatmap({ days, now }: { days: Record<string, number>; now: string }) {
     : Array<number>(WEEKS * 7).fill(0);
   const color = (n: number) =>
     n === 0
-      ? "bg-[#eef0f5]"
+      ? "bg-heat-0"
       : n < 3
-        ? "bg-[#ddd6fe]"
+        ? "bg-heat-1"
         : n < 6
-          ? "bg-[#a78bfa]"
-          : "bg-[#6d28d9]";
+          ? "bg-heat-2"
+          : "bg-heat-3";
   return (
     <div className="grid grid-flow-col grid-rows-7 gap-[3px] p-4">
       {cells.map((n, i) => (

@@ -95,7 +95,7 @@ export default function WeakList({ lang, t, trackNames, levelNames, styleNames, 
         <div className="flex gap-0.5 border-b border-line px-5">
           {tabs.map((tb) => {
             const on = tab === tb;
-            const badge = tb === "todo" ? "bg-[#fff4e5] text-[#b45309]" : tb === "project" ? "bg-brand-soft text-brand" : "bg-hover text-muted";
+            const badge = tb === "todo" ? "bg-due text-due-ink" : tb === "project" ? "bg-brand-soft text-brand" : "bg-hover text-muted";
             return (
               <button
                 key={tb}
@@ -144,7 +144,7 @@ export default function WeakList({ lang, t, trackNames, levelNames, styleNames, 
                   {w.related && !w.done && (
                     <>
                       <i className="not-italic opacity-60">·</i>
-                      <span className="font-semibold text-amber-800">{t.inFlash}</span>
+                      <span className="font-semibold text-due-ink">{t.inFlash}</span>
                     </>
                   )}
                 </div>
@@ -185,12 +185,12 @@ export default function WeakList({ lang, t, trackNames, levelNames, styleNames, 
                 <Box title={t.better} className="soft" style={hue(levelColor.intern)} titleCls="text-(--c)">{active.betterAnswer}</Box>
               </div>
               {active.nextTime && (
-                <div className="flex gap-3 rounded-xl border border-[#fed7aa] bg-[#fff7ed] px-4 py-3.25 leading-relaxed text-[#431407]">
+                <div className="flex gap-3 rounded-xl border border-tip-line bg-tip px-4 py-3.25 leading-relaxed text-tip-ink">
                   <span className="grid size-8 shrink-0 place-items-center rounded-[9px] bg-[image:var(--g-warm)] text-white">
                     <Icon name="bulb" />
                   </span>
                   <div>
-                    <b className="text-[#c2410c]">{t.nextTime}</b>
+                    <b className="text-tip-head">{t.nextTime}</b>
                     <p>{active.nextTime}</p>
                   </div>
                 </div>
@@ -235,7 +235,7 @@ const Score = ({ s, className, suffix = "" }: { s: number; className: string; su
 
 function Box({ title, className, titleCls, style, children }: { title: string; className: string; titleCls: string; style?: CSSProperties; children: ReactNode }) {
   return (
-    <div className={`rounded-xl px-4 py-3 leading-relaxed text-[#334155] ${className}`} style={style}>
+    <div className={`rounded-xl px-4 py-3 leading-relaxed text-body ${className}`} style={style}>
       <h2 className={`mb-1 text-xs font-bold uppercase tracking-wide ${titleCls}`}>{title}</h2>
       {children}
     </div>

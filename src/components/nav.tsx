@@ -57,7 +57,7 @@ export default function Nav({ groups, t }: Props) {
                     <span className="ml-auto text-[11px] text-subtle">{it.count}</span>
                   )}
                   {badge(it) > 0 && (
-                    <span className="ml-auto rounded-full bg-[#fff1e6] px-[7px] text-[10px] font-bold text-[#c2410c]">
+                    <span className="ml-auto rounded-full bg-due px-[7px] text-[10px] font-bold text-due-ink">
                       {badge(it)}
                     </span>
                   )}
@@ -69,7 +69,7 @@ export default function Nav({ groups, t }: Props) {
       </nav>
 
       {/* Mobile: thanh tab cố định dưới đáy, mục phụ nằm trong popover "Thêm". */}
-      <nav className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-5 border-t border-line bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md md:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-5 border-t border-line bg-panel/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md md:hidden">
         {tabs.map((it) => (
           <Link key={it.href} href={it.href} className="flex flex-col items-center">
             <Tab icon={it.icon} label={it.short!} active={isActive(it)} n={badge(it)} />
@@ -79,7 +79,7 @@ export default function Nav({ groups, t }: Props) {
           <Tab icon="menu" label={t.more} active={moreActive} n={moreBadge} />
         </button>
       </nav>
-      <div id={MORE} popover="auto" className="inset-auto bottom-[calc(64px+env(safe-area-inset-bottom))] right-3 m-0 w-60 rounded-2xl border border-line bg-white p-1.5 shadow-[0_12px_32px_-8px_rgb(15_23_42/0.25)] md:hidden">
+      <div id={MORE} popover="auto" className="inset-auto bottom-[calc(64px+env(safe-area-inset-bottom))] right-3 m-0 w-60 rounded-2xl border border-line bg-panel p-1.5 shadow-[0_12px_32px_-8px_rgb(15_23_42/0.25)] md:hidden">
         {more.map((it) => (
           <Link
             key={it.href}
@@ -89,20 +89,20 @@ export default function Nav({ groups, t }: Props) {
           >
             <Icon name={it.icon} size={17} className={isActive(it) ? "" : "text-subtle"} />
             {it.label}
-            {badge(it) > 0 && <span className="ml-auto rounded-full bg-[#fff1e6] px-[7px] text-[10px] font-bold text-[#c2410c]">{badge(it)}</span>}
+            {badge(it) > 0 && <span className="ml-auto rounded-full bg-due px-[7px] text-[10px] font-bold text-due-ink">{badge(it)}</span>}
           </Link>
         ))}
       </div>
 
       <div className="mt-auto max-md:hidden" />
       {p && (
-        <div className="rounded-xl border border-[#fed7aa] bg-[#fff7ed] p-3 text-[#9a3412] max-md:hidden">
-          <div className="flex items-center gap-2 font-bold text-[#c2410c]">
+        <div className="rounded-xl border border-tip-line bg-tip p-3 text-tip-ink max-md:hidden">
+          <div className="flex items-center gap-2 font-bold text-tip-head">
             <Icon name="flame" /> {fmt(t.streak, { n: days })}
           </div>
           <div className="mt-2.5 flex gap-1">
             {Array.from({ length: 7 }, (_, i) => (
-              <span key={i} className={`h-1.5 flex-1 rounded-[3px] ${p.days[addDays(now, i - 6)] ? "bg-[image:var(--g-warm)]" : "bg-[#fed7aa]"}`} />
+              <span key={i} className={`h-1.5 flex-1 rounded-[3px] ${p.days[addDays(now, i - 6)] ? "bg-[image:var(--g-warm)]" : "bg-tip-line"}`} />
             ))}
           </div>
           <div className="mt-2 text-xs">{p.days[now] ? t.streakDone : t.keepStreak}</div>
