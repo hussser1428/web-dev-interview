@@ -7,6 +7,11 @@ import { isTrack, tracks } from "@/lib/catalog";
 import { roadmap } from "@/lib/questions";
 import { fmt, pick } from "@/locales";
 
+// ponytail: chặn render tới khi có params (không bọc Suspense) để id lạ vẫn trả 404 thật — cacheComponents
+// không cho dùng dynamicParams, còn notFound() trong Suspense thành soft 404. Dữ liệu là JSON tĩnh nên không chậm;
+// cần navigation tức thì thì chuyển phần đọc params vào Suspense và chấp nhận soft 404.
+export const instant = false;
+
 export function generateStaticParams() {
   return tracks.map((track) => ({ track }));
 }
