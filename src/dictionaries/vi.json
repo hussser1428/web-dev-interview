@@ -344,5 +344,49 @@
     "related": "Thuật ngữ liên quan",
     "position": "Thuật ngữ {i} / {n}",
     "next": "Từ tiếp"
+  },
+  "chat": {
+    "title": "Gia sư AI",
+    "subTopic": "Hỏi đáp quanh câu hỏi bên dưới",
+    "subGeneral": "Hỏi gì về phỏng vấn cũng được",
+    "viewing": "đang xem",
+    "recent": "vừa xem",
+    "clearTopic": "Bỏ câu này, hỏi chung",
+    "greetTopic": "Chào bạn 👋 Mình đã đọc câu này và đáp án gợi ý. Bạn muốn mình giải thích lại, cho ví dụ, hay chấm bản nháp?",
+    "greetGeneral": "Chào bạn 👋 Hỏi mình bất cứ điều gì về chuẩn bị phỏng vấn IT: nên ôn gì, trả lời câu khó thế nào, deal lương… Mở một câu hỏi trong ngân hàng thì mình sẽ hỏi đáp quanh câu đó.",
+    "grade": "Chấm bản nháp",
+    "gradePrompt": "Chấm bản nháp giúp mình",
+    "noDraft": "Bạn chưa viết nháp cho câu này. Viết ở tab Tự trả lời rồi bấm lại nhé.",
+    "quickTopic": [
+      [
+        "Giải thích dễ hơn",
+        "Giải thích lại câu này dễ hiểu hơn, như cho người mới học."
+      ],
+      [
+        "Cho ví dụ khác",
+        "Cho mình một ví dụ thực tế khác về ý này."
+      ],
+      [
+        "Bị hỏi vặn gì?",
+        "Người phỏng vấn có thể hỏi vặn gì sau câu này? Gợi ý ngắn cách trả lời."
+      ]
+    ],
+    "quickGeneral": [
+      [
+        "Nên ôn gì trước?",
+        "Mình mới bắt đầu chuẩn bị phỏng vấn, nên ôn gì trước?"
+      ],
+      [
+        "Mẹo trả lời",
+        "Cho mình vài mẹo trả lời câu hỏi kỹ thuật khi phỏng vấn."
+      ]
+    ],
+    "placeholder": "Hỏi gì cũng được…",
+    "send": "Gửi",
+    "reset": "Cuộc trò chuyện mới",
+    "close": "Đóng",
+    "open": "Mở gia sư AI",
+    "limit": "Đã dùng hết {n} tin cho cuộc trò chuyện này. Bấm làm mới để bắt đầu lại.",
+    "error": "Có lỗi xảy ra: {msg}"
   }
 }

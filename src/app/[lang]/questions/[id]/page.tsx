@@ -9,6 +9,7 @@ import { DueTag, KeepQueryLink, RateBar, SaveButton } from "./actions";
 import Rich from "@/components/rich-text";
 import { richQuestion } from "@/lib/glossary";
 import AnswerTabs from "./answer-tabs";
+import { ChatTopic } from "@/components/chat-widget";
 
 export function generateStaticParams() {
   return questions.map((q) => ({ id: q.id }));
@@ -48,12 +49,13 @@ export default async function QuestionPage({ params }: PageProps<"/[lang]/questi
           <Rich segs={rich.title} terms={rich.terms} lang={lang} t={t.terms} />
         </h1>
 
+        <ChatTopic id={q.id} title={pick(q.q, lang)} />
         <AnswerTabs
           key={q.id}
           t={t2}
+          id={q.id}
           lang={lang}
           quick={rich.quick}
-          id={q.id}
           example={rich.example}
           rest={rich.rest}
           terms={rich.terms}

@@ -344,5 +344,49 @@
     "related": "Related terms",
     "position": "Term {i} / {n}",
     "next": "Next term"
+  },
+  "chat": {
+    "title": "AI tutor",
+    "subTopic": "Focused on the question below",
+    "subGeneral": "Ask anything about interviews",
+    "viewing": "viewing",
+    "recent": "recent",
+    "clearTopic": "Drop this question, ask in general",
+    "greetTopic": "Hi 👋 I have read this question and its suggested answer. Want me to explain it again, give an example, or grade your draft?",
+    "greetGeneral": "Hi 👋 Ask me anything about preparing for IT interviews: what to study, how to answer tough questions, salary talks… Open a question from the bank and I will focus on it.",
+    "grade": "Grade my draft",
+    "gradePrompt": "Please grade my draft",
+    "noDraft": "You have not written a draft for this question yet. Write one in the Try it tab, then press again.",
+    "quickTopic": [
+      [
+        "Explain simpler",
+        "Explain this again in simpler terms, as if I were a beginner."
+      ],
+      [
+        "Another example",
+        "Give me another real-world example of this."
+      ],
+      [
+        "Likely follow-ups?",
+        "What follow-up questions might the interviewer ask after this? Briefly suggest how to answer."
+      ]
+    ],
+    "quickGeneral": [
+      [
+        "What to study first?",
+        "I am just starting to prepare for interviews. What should I study first?"
+      ],
+      [
+        "Answering tips",
+        "Give me a few tips for answering technical interview questions."
+      ]
+    ],
+    "placeholder": "Ask anything…",
+    "send": "Send",
+    "reset": "New conversation",
+    "close": "Close",
+    "open": "Open AI tutor",
+    "limit": "You have used all {n} messages for this conversation. Start a new one to continue.",
+    "error": "Something went wrong: {msg}"
   }
 }

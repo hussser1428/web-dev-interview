@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import Link from "next/link";
 import { Suspense } from "react";
+import ChatWidget from "@/components/chat-widget";
 import Icon from "@/components/icon";
 import Nav from "@/components/nav";
 import TopBar from "@/components/topbar";
@@ -73,6 +74,12 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
           </Suspense>
           {children}
         </main>
+        {/* Gia sư AI chỉ hiện khi đã cấu hình key. */}
+        {process.env.GEMINI_API_KEY && (
+          <Suspense>
+            <ChatWidget lang={lang} t={t.chat} />
+          </Suspense>
+        )}
       </body>
     </html>
   );
